@@ -4,8 +4,8 @@ import { GameComponent } from "./game-component/game.component";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 
 const routes: Routes = [
-  { path: "/race", component: GameComponent },
-  { path: "/crosswords", component: CrosswordsComponent }
+  { path: "race", component: GameComponent },
+  { path: "crosswords", component: CrosswordsComponent }
 ];
 
 @NgModule({
