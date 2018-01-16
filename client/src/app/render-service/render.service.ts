@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import Stats = require("stats.js");
-import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight, OrthographicCamera } from "three";
+import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight, OrthographicCamera, Vector3 } from "three";
 import { Car } from "../car/car";
 
 const FAR_CLIPPING_PLANE: number = 1000;
@@ -22,8 +22,8 @@ export enum CameraType { Ortho, Pers }
 
 @Injectable()
 export class RenderService {
-    private cameraPerspective: PerspectiveCamera;
-    private cameraOrthographic: OrthographicCamera;
+    private perspCamera: PerspectiveCamera;
+    private orthoCamera: OrthographicCamera;
     private cameraType: CameraType;
     private container: HTMLDivElement;
     private _car: Car;
@@ -65,14 +65,14 @@ export class RenderService {
     private async createScene(): Promise<void> {
         this.scene = new Scene();
 
-        this.cameraPerspective = new PerspectiveCamera(
+        this.perspCamera = new PerspectiveCamera(
             FIELD_OF_VIEW,
             this.getAspectRatio(),
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
 
-        this.cameraOrthographic = new OrthographicCamera(
+        this.orthoCamera = new OrthographicCamera(
             -this.container.clientWidth / DOUBLE_MULTIPLIER,
             this.container.clientWidth / DOUBLE_MULTIPLIER,
             this.container.clientHeight / DOUBLE_MULTIPLIER,
@@ -82,8 +82,8 @@ export class RenderService {
         );
 
         await this._car.init();
-        this.cameraPerspective.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this.cameraPerspective.lookAt(this._car.position);
+        this.perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
+        this.perspCamera.lookAt(this._car.position);
         this.scene.add(this._car);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
     }
@@ -107,10 +107,10 @@ export class RenderService {
         this.update();
         switch (this.cameraType) {
             case CameraType.Ortho:
-                this.renderer.render(this.scene, this.cameraPerspective);
+                this.renderer.render(this.scene, this.perspCamera);
                 break;
             case CameraType.Pers:
-                this.renderer.render(this.scene, this.cameraPerspective);
+                this.renderer.render(this.scene, this.perspCamera);
                 break;
             default:
                 break;
@@ -119,17 +119,17 @@ export class RenderService {
     }
 
     public onResize(): void {
-        this.cameraPerspective.aspect = this.getAspectRatio();
-        this.cameraPerspective.updateProjectionMatrix();
+        this.perspCamera.aspect = this.getAspectRatio();
+        this.perspCamera.updateProjectionMatrix();
         this.resizeOrtho();
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
 
     public resizeOrtho(): void {
-        this.cameraOrthographic.left = -this.container.clientWidth / DOUBLE_MULTIPLIER;
-        this.cameraOrthographic.right = this.container.clientWidth / DOUBLE_MULTIPLIER;
-        this.cameraOrthographic.top = this.container.clientHeight / DOUBLE_MULTIPLIER;
-        this.cameraOrthographic.bottom = -this.container.clientHeight / DOUBLE_MULTIPLIER;
+        this.orthoCamera.left = -this.container.clientWidth / DOUBLE_MULTIPLIER;
+        this.orthoCamera.right = this.container.clientWidth / DOUBLE_MULTIPLIER;
+        this.orthoCamera.top = this.container.clientHeight / DOUBLE_MULTIPLIER;
+        this.orthoCamera.bottom = -this.container.clientHeight / DOUBLE_MULTIPLIER;
     }
 
     public switchCamera(): void {
@@ -140,12 +140,20 @@ export class RenderService {
         }
     }
 
-    public getCameraType(): CameraType {
+    public get CameraType(): CameraType {
         return this.cameraType;
     }
 
-    public setCameraType(type: CameraType): void {
+    public set CameraType(type: CameraType) {
         this.cameraType = type;
+    }
+
+    public testUpdate(): void {
+        this.update();
+    }
+
+    public testOrthoCameraPosition(): Vector3 {
+        return this.orthoCamera.position;
     }
     // TODO: Create an event handler service.
     public handleKeyDown(event: KeyboardEvent): void {

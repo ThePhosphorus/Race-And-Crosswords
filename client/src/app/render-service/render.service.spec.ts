@@ -1,6 +1,7 @@
 import { TestBed, inject } from "@angular/core/testing";
 
 import { RenderService, CameraType } from "./render.service";
+import { Vector3, Vector2 } from "three";
 
 describe("RenderService", () => {
     beforeEach(() => {
@@ -14,19 +15,27 @@ describe("RenderService", () => {
     }));
 
     it("should change camera to Perspective", inject([RenderService], (service: RenderService) => {
-        service.setCameraType(CameraType.Pers);
-        expect(service.getCameraType()).toBe(CameraType.Pers);
-        service.setCameraType(CameraType.Ortho);
-        expect(service.getCameraType()).toBe(CameraType.Ortho);
+        service.CameraType = CameraType.Pers;
+        expect(service.CameraType).toBe(CameraType.Pers);
+        service.CameraType = CameraType.Ortho;
+        expect(service.CameraType).toBe(CameraType.Ortho);
     }));
 
     it("should switch camera", inject([RenderService], (service: RenderService) => {
-        service.setCameraType(CameraType.Pers);
+        service.CameraType = CameraType.Pers;
         service.switchCamera();
-        expect(service.getCameraType()).toBe(CameraType.Ortho);
+        expect(service.CameraType).toBe(CameraType.Ortho);
         service.switchCamera();
-        expect(service.getCameraType()).toBe(CameraType.Pers); // Doing multiple switch to see if come and go works
+        expect(service.CameraType).toBe(CameraType.Pers); // Doing multiple switch to see if come and go works
         service.switchCamera();
-        expect(service.getCameraType()).toBe(CameraType.Ortho);
+        expect(service.CameraType).toBe(CameraType.Ortho);
+    }));
+
+    it("TopDown Camera should follow the car", inject([RenderService], (service: RenderService) => {
+        // tslint:disable-next-line:no-magic-numbers
+        const teleportPosition: Vector3 = new Vector3(10, 10, 0);
+        service.car.position = teleportPosition;
+        service.testUpdate();
+        expect(service.testOrthoCameraPosition()).toBe(teleportPosition);
     }));
 });
