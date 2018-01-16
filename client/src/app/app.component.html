@@ -1,16 +1,11 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
     <h1>
-        Welcome to {{title}}!
+        {{title}}
     </h1>
 </div>
-<ul>
-    <li>
-        <h2>Message from the localhost:3000 : {{message}} </h2>
-    </li>
-</ul>
 <nav>
-    <a routerLink="/race">Race</a>
-    <a routerLink="/crosswords">Crosswords</a>
+    <button routerLink="/race">Race</button>
+    <button routerLink="/crosswords">Crosswords</button>
 </nav>
 <router-outlet></router-outlet>
