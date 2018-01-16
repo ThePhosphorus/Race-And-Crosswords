@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import Stats = require("stats.js");
-import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight } from "three";
+import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight, OrthographicCamera, Camera } from "three";
 import { Car } from "../car/car";
 
 const FAR_CLIPPING_PLANE: number = 1000;
@@ -15,10 +15,12 @@ const RIGHT_KEYCODE: number = 68;       // d
 const INITIAL_CAMERA_POSITION_Y: number = 25;
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
+const DOUBLE_MULTIPLIER: number = 2;
 
 @Injectable()
 export class RenderService {
-    private camera: PerspectiveCamera;
+    private cameraPerspective: PerspectiveCamera;
+    private cameraOrthographic: OrthographicCamera;
     private container: HTMLDivElement;
     private _car: Car;
     private renderer: WebGLRenderer;
@@ -59,16 +61,25 @@ export class RenderService {
     private async createScene(): Promise<void> {
         this.scene = new Scene();
 
-        this.camera = new PerspectiveCamera(
+        this.cameraPerspective = new PerspectiveCamera(
             FIELD_OF_VIEW,
             this.getAspectRatio(),
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
 
+        this.cameraOrthographic = new OrthographicCamera(
+            -this.container.clientWidth / DOUBLE_MULTIPLIER,
+            this.container.clientWidth / DOUBLE_MULTIPLIER,
+            this.container.clientHeight / DOUBLE_MULTIPLIER,
+            -this.container.clientHeight / DOUBLE_MULTIPLIER,
+            NEAR_CLIPPING_PLANE,
+            FAR_CLIPPING_PLANE
+        );
+
         await this._car.init();
-        this.camera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this.camera.lookAt(this._car.position);
+        this.cameraPerspective.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
+        this.cameraPerspective.lookAt(this._car.position);
         this.scene.add(this._car);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
     }
@@ -90,13 +101,13 @@ export class RenderService {
     private render(): void {
         requestAnimationFrame(() => this.render());
         this.update();
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.cameraPerspective);
         this.stats.update();
     }
 
     public onResize(): void {
-        this.camera.aspect = this.getAspectRatio();
-        this.camera.updateProjectionMatrix();
+        this.cameraPerspective.aspect = this.getAspectRatio();
+        this.cameraPerspective.updateProjectionMatrix();
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
 
