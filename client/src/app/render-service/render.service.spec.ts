@@ -1,7 +1,7 @@
 import { TestBed, inject } from "@angular/core/testing";
 
 import { RenderService, CameraType } from "./render.service";
-import { Vector3, Vector2 } from "three";
+import { Vector3 } from "three";
 
 describe("RenderService", () => {
     beforeEach(() => {
