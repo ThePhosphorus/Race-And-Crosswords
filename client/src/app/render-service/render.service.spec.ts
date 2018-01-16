@@ -1,6 +1,6 @@
 import { TestBed, inject } from "@angular/core/testing";
 
-import { RenderService } from "./render.service";
+import { RenderService, CameraType } from "./render.service";
 
 describe("RenderService", () => {
     beforeEach(() => {
@@ -11,5 +11,22 @@ describe("RenderService", () => {
 
     it("should be created", inject([RenderService], (service: RenderService) => {
         expect(service).toBeTruthy();
+    }));
+
+    it("should change camera to Perspective", inject([RenderService], (service: RenderService) => {
+        service.setCameraType(CameraType.Pers);
+        expect(service.getCameraType()).toBe(CameraType.Pers);
+        service.setCameraType(CameraType.Ortho);
+        expect(service.getCameraType()).toBe(CameraType.Ortho);
+    }));
+
+    it("should switch camera", inject([RenderService], (service: RenderService) => {
+        service.setCameraType(CameraType.Pers);
+        service.switchCamera();
+        expect(service.getCameraType()).toBe(CameraType.Ortho);
+        service.switchCamera();
+        expect(service.getCameraType()).toBe(CameraType.Pers); // Doing multiple switch to see if come and go works
+        service.switchCamera();
+        expect(service.getCameraType()).toBe(CameraType.Ortho);
     }));
 });

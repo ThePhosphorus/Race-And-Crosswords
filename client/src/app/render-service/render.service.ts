@@ -1,26 +1,30 @@
 import { Injectable } from "@angular/core";
 import Stats = require("stats.js");
-import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight, OrthographicCamera, Camera } from "three";
+import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight, OrthographicCamera } from "three";
 import { Car } from "../car/car";
 
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 
-const ACCELERATE_KEYCODE: number = 87;  // w
-const LEFT_KEYCODE: number = 65;        // a
-const BRAKE_KEYCODE: number = 83;       // s
-const RIGHT_KEYCODE: number = 68;       // d
+const ACCELERATE_KEYCODE: number = 87;      // w
+const LEFT_KEYCODE: number = 65;            // a
+const BRAKE_KEYCODE: number = 83;           // s
+const RIGHT_KEYCODE: number = 68;           // d
+const CHANGE_CAMERA_KEYCODE: number = 67;   // c
 
 const INITIAL_CAMERA_POSITION_Y: number = 25;
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
 const DOUBLE_MULTIPLIER: number = 2;
 
+export enum CameraType { Ortho, Pers }
+
 @Injectable()
 export class RenderService {
     private cameraPerspective: PerspectiveCamera;
     private cameraOrthographic: OrthographicCamera;
+    private cameraType: CameraType;
     private container: HTMLDivElement;
     private _car: Car;
     private renderer: WebGLRenderer;
@@ -101,16 +105,48 @@ export class RenderService {
     private render(): void {
         requestAnimationFrame(() => this.render());
         this.update();
-        this.renderer.render(this.scene, this.cameraPerspective);
+        switch (this.cameraType) {
+            case CameraType.Ortho:
+                this.renderer.render(this.scene, this.cameraPerspective);
+                break;
+            case CameraType.Pers:
+                this.renderer.render(this.scene, this.cameraPerspective);
+                break;
+            default:
+                break;
+        }
         this.stats.update();
     }
 
     public onResize(): void {
         this.cameraPerspective.aspect = this.getAspectRatio();
         this.cameraPerspective.updateProjectionMatrix();
+        this.resizeOrtho();
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
 
+    public resizeOrtho(): void {
+        this.cameraOrthographic.left = -this.container.clientWidth / DOUBLE_MULTIPLIER;
+        this.cameraOrthographic.right = this.container.clientWidth / DOUBLE_MULTIPLIER;
+        this.cameraOrthographic.top = this.container.clientHeight / DOUBLE_MULTIPLIER;
+        this.cameraOrthographic.bottom = -this.container.clientHeight / DOUBLE_MULTIPLIER;
+    }
+
+    public switchCamera(): void {
+        if (this.cameraType === CameraType.Ortho) {
+            this.cameraType = CameraType.Pers;
+        } else if (this.cameraType === CameraType.Pers) {
+            this.cameraType = CameraType.Ortho;
+        }
+    }
+
+    public getCameraType(): CameraType {
+        return this.cameraType;
+    }
+
+    public setCameraType(type: CameraType): void {
+        this.cameraType = type;
+    }
     // TODO: Create an event handler service.
     public handleKeyDown(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -125,6 +161,9 @@ export class RenderService {
                 break;
             case BRAKE_KEYCODE:
                 this._car.brake();
+                break;
+            case CHANGE_CAMERA_KEYCODE:
+                this.switchCamera();
                 break;
             default:
                 break;
