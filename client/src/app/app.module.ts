@@ -7,15 +7,19 @@ import { GameComponent } from "./game-component/game.component";
 
 import { RenderService } from "./render-service/render.service";
 import { BasicService } from "./basic.service";
+import { AppRoutingModule } from "./app-routing.module";
+import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 
 @NgModule({
     declarations: [
         AppComponent,
-        GameComponent
+        GameComponent,
+        CrosswordsComponent
     ],
     imports: [
         BrowserModule,
-        HttpClientModule
+        HttpClientModule,
+        AppRoutingModule
     ],
     providers: [
         RenderService,
