@@ -1,3 +1,9 @@
-<p>
-  crosswords works!
-</p>
+<div>
+  <table>
+    <tbody>
+      <tr *ngFor="let word of words">
+        <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">{{letter}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
