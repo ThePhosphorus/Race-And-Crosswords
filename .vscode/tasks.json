@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "start",
+      "type": "shell",
+      "command":
+        "npm start --silent --prefix ./server/ & npm start --prefix ./client/ ",
+      "problemMatcher": ["$tsc-watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "client",
+      "type": "shell",
+      "command": "npm start --prefix ./client/",
+      "problemMatcher": ["$tsc"],
+      "group": "build"
+    },
+    {
+      "label": "server",
+      "type": "shell",
+      "command": "npm start --prefix ./server/",
+      "group": "build"
+    },
+    {
+      "label": "test-server",
+      "type": "shell",
+      "command": "npm start --prefix ./server/",
+      "group": "test"
+    },
+    {
+      "label": "test-client",
+      "type": "shell",
+      "command": "npm start --prefix ./client/",
+      "group": "test"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "npm start --prefix ./server/ & npm start --prefix ./client/",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    }
+  ]
+}
