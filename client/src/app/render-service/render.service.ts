@@ -13,6 +13,7 @@ import { Car } from "../car/car";
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
+const ORTHO_CAMERA_VIEW_SIZE: number = 20;
 
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
@@ -23,7 +24,6 @@ const CHANGE_CAMERA_KEYCODE: number = 67; // c
 export const INITIAL_CAMERA_POSITION_Y: number = 25;
 const WHITE: number = 0xffffff;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
-const DOUBLE_MULTIPLIER: number = 2;
 
 export enum CameraType {
     Ortho,
@@ -76,6 +76,7 @@ export class RenderService {
             INITIAL_CAMERA_POSITION_Y,
             this._car.position.z
         );
+        this.orthoCamera.lookAt(this._car.position);
     }
 
     private async createScene(): Promise<void> {
@@ -89,10 +90,10 @@ export class RenderService {
         );
 
         this.orthoCamera = new OrthographicCamera(
-            -this.container.clientWidth / DOUBLE_MULTIPLIER,
-            this.container.clientWidth / DOUBLE_MULTIPLIER,
-            this.container.clientHeight / DOUBLE_MULTIPLIER,
-            -this.container.clientHeight / DOUBLE_MULTIPLIER,
+            -ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio(),
+            ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio(),
+            ORTHO_CAMERA_VIEW_SIZE,
+            -ORTHO_CAMERA_VIEW_SIZE,
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
@@ -153,12 +154,12 @@ export class RenderService {
         );
     }
 
-    public resizeOrtho(): void {
-        this.orthoCamera.left = -this.container.clientWidth / DOUBLE_MULTIPLIER;
-        this.orthoCamera.right = this.container.clientWidth / DOUBLE_MULTIPLIER;
-        this.orthoCamera.top = this.container.clientHeight / DOUBLE_MULTIPLIER;
-        this.orthoCamera.bottom =
-            -this.container.clientHeight / DOUBLE_MULTIPLIER;
+    private resizeOrtho(): void {
+        this.orthoCamera.left = -ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio();
+        this.orthoCamera.right = ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio();
+        this.orthoCamera.top = ORTHO_CAMERA_VIEW_SIZE;
+        this.orthoCamera.bottom = -ORTHO_CAMERA_VIEW_SIZE;
+        this.orthoCamera.updateProjectionMatrix();
     }
 
     public switchCamera(): void {
