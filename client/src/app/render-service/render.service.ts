@@ -71,12 +71,8 @@ export class RenderService {
         this._car.update(timeSinceLastFrame);
         this.lastDate = Date.now();
 
-        this.orthoCamera.position.set(
-            this._car.position.x,
-            INITIAL_CAMERA_POSITION_Y,
-            this._car.position.z
-        );
-        this.orthoCamera.lookAt(this._car.position);
+        this.orthoCamera.position.copy(this._car.getPosition());
+        this.orthoCamera.position.setY(INITIAL_CAMERA_POSITION_Y);
     }
 
     private async createScene(): Promise<void> {
