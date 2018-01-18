@@ -18,7 +18,7 @@
           <tr *ngFor="let word of words">
             <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">
               <span *ngIf="letter != '-'">
-                {{letter}}
+                {{letter | uppercase}}
               </span>
             </td>
           </tr>
