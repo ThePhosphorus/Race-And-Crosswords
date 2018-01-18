@@ -13,7 +13,7 @@ import { Car } from "../car/car";
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
-const ORTHO_CAMERA_VIEW_SIZE: number = 20;
+const INITIAL_CAMERA_DISTANCE: number = 20;
 
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
@@ -41,6 +41,8 @@ export class RenderService {
     private scene: THREE.Scene;
     private stats: Stats;
     private lastDate: number;
+
+    private cameraDistance: number; // for zoom Use
 
     public get car(): Car {
         return this._car;
@@ -75,9 +77,14 @@ export class RenderService {
         this.orthoCamera.position.setY(INITIAL_CAMERA_POSITION_Y);
     }
 
+    private initVariables(): void {
+        this.cameraDistance = INITIAL_CAMERA_DISTANCE;
+        this.cameraType = CameraType.Pers;
+    }
+
     private async createScene(): Promise<void> {
         this.scene = new Scene();
-
+        this.initVariables();
         this.perspCamera = new PerspectiveCamera(
             FIELD_OF_VIEW,
             this.getAspectRatio(),
@@ -86,10 +93,10 @@ export class RenderService {
         );
 
         this.orthoCamera = new OrthographicCamera(
-            -ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio(),
-            ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio(),
-            ORTHO_CAMERA_VIEW_SIZE,
-            -ORTHO_CAMERA_VIEW_SIZE,
+            -this.cameraDistance * this.getAspectRatio(),
+            this.cameraDistance * this.getAspectRatio(),
+            this.cameraDistance,
+            -this.cameraDistance,
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
@@ -102,7 +109,6 @@ export class RenderService {
             this._car.position.z
         );
         this.orthoCamera.lookAt(this._car.position);
-        this.cameraType = CameraType.Pers;
         this.scene.add(this._car);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
     }
@@ -151,10 +157,10 @@ export class RenderService {
     }
 
     private resizeOrtho(): void {
-        this.orthoCamera.left = -ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio();
-        this.orthoCamera.right = ORTHO_CAMERA_VIEW_SIZE * this.getAspectRatio();
-        this.orthoCamera.top = ORTHO_CAMERA_VIEW_SIZE;
-        this.orthoCamera.bottom = -ORTHO_CAMERA_VIEW_SIZE;
+        this.orthoCamera.left = -this.cameraDistance * this.getAspectRatio();
+        this.orthoCamera.right = this.cameraDistance * this.getAspectRatio();
+        this.orthoCamera.top = this.cameraDistance;
+        this.orthoCamera.bottom = -this.cameraDistance;
         this.orthoCamera.updateProjectionMatrix();
     }
 
