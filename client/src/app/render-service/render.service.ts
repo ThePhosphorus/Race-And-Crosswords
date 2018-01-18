@@ -70,6 +70,9 @@ export class RenderService {
         const timeSinceLastFrame: number = Date.now() - this.lastDate;
         this._car.update(timeSinceLastFrame);
         this.lastDate = Date.now();
+
+        this.orthoCamera.position = this._car.position;
+        this.orthoCamera.position.setY(INITIAL_CAMERA_POSITION_Y);
     }
 
     private async createScene(): Promise<void> {
@@ -94,6 +97,12 @@ export class RenderService {
         await this._car.init();
         this.perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this.perspCamera.lookAt(this._car.position);
+        this.orthoCamera.position.set(
+            this._car.position.x,
+            INITIAL_CAMERA_POSITION_Y,
+            this._car.position.z
+        );
+        this.orthoCamera.lookAt(this._car.position);
         this.scene.add(this._car);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
     }
