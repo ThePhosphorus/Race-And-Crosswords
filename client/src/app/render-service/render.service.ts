@@ -1,24 +1,34 @@
 import { Injectable } from "@angular/core";
 import Stats = require("stats.js");
-import { PerspectiveCamera, WebGLRenderer, Scene, AmbientLight, OrthographicCamera, Vector3 } from "three";
+import {
+    PerspectiveCamera,
+    WebGLRenderer,
+    Scene,
+    AmbientLight,
+    OrthographicCamera,
+    Vector3
+} from "three";
 import { Car } from "../car/car";
 
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 
-const ACCELERATE_KEYCODE: number = 87;      // w
-const LEFT_KEYCODE: number = 65;            // a
-const BRAKE_KEYCODE: number = 83;           // s
-const RIGHT_KEYCODE: number = 68;           // d
-const CHANGE_CAMERA_KEYCODE: number = 67;   // c
+const ACCELERATE_KEYCODE: number = 87; // w
+const LEFT_KEYCODE: number = 65; // a
+const BRAKE_KEYCODE: number = 83; // s
+const RIGHT_KEYCODE: number = 68; // d
+const CHANGE_CAMERA_KEYCODE: number = 67; // c
 
 const INITIAL_CAMERA_POSITION_Y: number = 25;
-const WHITE: number = 0xFFFFFF;
+const WHITE: number = 0xffffff;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
 const DOUBLE_MULTIPLIER: number = 2;
 
-export enum CameraType { Ortho, Pers }
+export enum CameraType {
+    Ortho,
+    Pers
+}
 
 @Injectable()
 export class RenderService {
@@ -95,7 +105,10 @@ export class RenderService {
     private startRenderingLoop(): void {
         this.renderer = new WebGLRenderer();
         this.renderer.setPixelRatio(devicePixelRatio);
-        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setSize(
+            this.container.clientWidth,
+            this.container.clientHeight
+        );
 
         this.lastDate = Date.now();
         this.container.appendChild(this.renderer.domElement);
@@ -107,7 +120,7 @@ export class RenderService {
         this.update();
         switch (this.cameraType) {
             case CameraType.Ortho:
-                this.renderer.render(this.scene, this.perspCamera);
+                this.renderer.render(this.scene, this.orthoCamera);
                 break;
             case CameraType.Pers:
                 this.renderer.render(this.scene, this.perspCamera);
@@ -122,14 +135,18 @@ export class RenderService {
         this.perspCamera.aspect = this.getAspectRatio();
         this.perspCamera.updateProjectionMatrix();
         this.resizeOrtho();
-        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setSize(
+            this.container.clientWidth,
+            this.container.clientHeight
+        );
     }
 
     public resizeOrtho(): void {
         this.orthoCamera.left = -this.container.clientWidth / DOUBLE_MULTIPLIER;
         this.orthoCamera.right = this.container.clientWidth / DOUBLE_MULTIPLIER;
         this.orthoCamera.top = this.container.clientHeight / DOUBLE_MULTIPLIER;
-        this.orthoCamera.bottom = -this.container.clientHeight / DOUBLE_MULTIPLIER;
+        this.orthoCamera.bottom =
+            -this.container.clientHeight / DOUBLE_MULTIPLIER;
     }
 
     public switchCamera(): void {
