@@ -28,19 +28,19 @@
     {
       "label": "test-server",
       "type": "shell",
-      "command": "npm start --prefix ./server/",
+      "command": "npm test --prefix ./server/",
       "group": "test"
     },
     {
       "label": "test-client",
       "type": "shell",
-      "command": "npm start --prefix ./client/",
+      "command": "npm test --prefix ./client/",
       "group": "test"
     },
     {
       "label": "test",
       "type": "shell",
-      "command": "npm start --prefix ./server/ & npm start --prefix ./client/",
+      "command": "npm test --prefix ./server/ & npm test --prefix ./client/",
       "group": {
         "kind": "test",
         "isDefault": true
