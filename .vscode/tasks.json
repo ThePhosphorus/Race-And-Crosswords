@@ -13,7 +13,7 @@
       }
     },
     {
-      "label": "serve",
+      "label": "client",
       "type": "shell",
       "command": "npm start --prefix ./client/",
       "problemMatcher": ["$tsc"],
