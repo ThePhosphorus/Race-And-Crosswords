@@ -6,9 +6,9 @@
           <th>Across</th>
           <th>Down</th>
         </tr>
-        <tr>
-          <td>elem</td>
-          <td>elem</td>
+        <tr *ngFor="let item of definitions">
+          <td>{{item[0]}}</td>
+          <td>{{item[1]}}</td>
         </tr>
       </table>
     </div>

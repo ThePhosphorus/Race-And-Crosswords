@@ -20,6 +20,9 @@ export class CrosswordsComponent implements OnInit {
                               ["a", "b", "c", "d", "e", "f", "-", "h", "i", "j"],
                               ["a", "b", "c", "d", "e", "f", "-", "h", "i", "j"],
                               ];
+  public definitions: string [][] = [["Across definition", "Down definition"],
+                                     ["Across definition", "Down definition"],
+                                     ["", "Down definition"]];
 
   public ngOnInit(): void {
   }
