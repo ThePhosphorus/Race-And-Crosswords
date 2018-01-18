@@ -43,11 +43,4 @@ describe("RenderService", () => {
             expect(service.CameraType).toBe(CameraType.Ortho);
         })
     );
-
-    it(
-        "TopDown Camera should follow the car",
-        inject([RenderService], (service: RenderService) => {
-            expect(true);
-        })
-    );
 });
