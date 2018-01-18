@@ -1,13 +1,29 @@
 <div>
-  <table>
-    <tbody>
-      <tr *ngFor="let word of words">
-        <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">
-          <span *ngIf="letter != '-'">
-            {{letter}}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div id="container">
+    <div id="hints">
+      <table>
+        <tr>
+          <th>Across</th>
+          <th>Down</th>
+        </tr>
+        <tr>
+          <td>elem</td>
+          <td>elem</td>
+        </tr>
+      </table>
+    </div>
+    <div id="grid">
+      <table>
+        <tbody>
+          <tr *ngFor="let word of words">
+            <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">
+              <span *ngIf="letter != '-'">
+                {{letter}}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

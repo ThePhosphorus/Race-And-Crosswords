@@ -1,21 +1,50 @@
-table {
+.black {
+    background-color: black;
+}
+
+#container {
+    margin: auto;
     margin-top: 40px;
 }
 
-table, tr, td {
-    text-align: center;
-    border: solid black 2px;
-    border-collapse: collapse;
+#hints {
+    height: 75vh;
+    width: 48%;
+    float: left;
+    overflow-y: auto;
+}
+
+#hints table {
     margin-left: auto;
+    width: 90%;
+    border-collapse: collapse;
+}
+
+#hints th, #hints td {
+    text-align: left;
+    border-bottom: solid rgb(190, 190, 190) 1px;
+    padding: 15px;
+    cursor: pointer;
+}
+
+#hints td:hover {
+    background-color: #f2f2f2;
+}
+
+#grid {
+    width: 48%;
+    float: right;
+}
+
+#grid table {
     margin-right: auto;
+    border-collapse: collapse;
+    text-align: center;
 }
 
-td {
-    font-size: 40px;;
-    width: 60px;
-    height: 60px;
-}
-
-.black {
-    background-color: black;
+#grid td {
+    font-size: 5vmin;
+    width: 7vmin;
+    height: 7vmin;
+    border: solid black 2px;
 }
