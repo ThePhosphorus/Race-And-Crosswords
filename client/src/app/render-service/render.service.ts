@@ -22,7 +22,7 @@ const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
 
 export const INITIAL_CAMERA_POSITION_Y: number = 25;
-const WHITE: number = 0xffffff;
+const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
 
 export enum CameraType {

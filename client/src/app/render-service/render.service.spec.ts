@@ -1,10 +1,8 @@
 import { TestBed, inject } from "@angular/core/testing";
-import { Vector3 } from "three";
 
 import {
     RenderService,
-    CameraType,
-    INITIAL_CAMERA_POSITION_Y
+    CameraType
 } from "./render.service";
 
 describe("RenderService", () => {
