@@ -1,9 +1,5 @@
 import { TestBed, inject } from "@angular/core/testing";
-
-import {
-    RenderService,
-    CameraType
-} from "./render.service";
+import { RenderService, CameraType } from "./render.service";
 
 describe("RenderService", () => {
     beforeEach(() => {
@@ -41,4 +37,10 @@ describe("RenderService", () => {
             expect(service.CameraType).toBe(CameraType.Ortho);
         })
     );
+
+    it("Perspective camera should be at (cameraDistance) of distance", inject([RenderService], (service: RenderService) => {
+        service.CameraType = CameraType.Pers;
+        // Let's assume that the starting position of the car is {0,0,0}
+        expect(service.calcPosPerspCamera().length()).toBe(service.cameraDistance);
+    }));
 });

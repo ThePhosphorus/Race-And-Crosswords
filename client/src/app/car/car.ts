@@ -104,7 +104,7 @@ export class Car extends Object3D {
             const loader: ObjectLoader = new ObjectLoader();
             loader.load(
                 "../../assets/camero/camero-2010-low-poly.json",
-                object => {
+                (object) => {
                     resolve(object);
                 }
             );

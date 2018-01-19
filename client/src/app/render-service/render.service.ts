@@ -9,11 +9,13 @@ import {
     Vector3
 } from "three";
 import { Car } from "../car/car";
+import { DEG_TO_RAD } from "../constants";
 
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 const INITIAL_CAMERA_DISTANCE: number = 20;
+const PERS_CAMERA_ANGLE: number = 10;
 
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
@@ -42,9 +44,21 @@ export class RenderService {
     private stats: Stats;
     private lastDate: number;
 
-    private cameraDistance: number; // for zoom Use
+    public cameraDistance: number; // for zoom Use
     public constructor() {
         this._car = new Car();
+    }
+
+    public calcPosPerspCamera(): Vector3 {
+        const carPos: Vector3 = this.carPosition;
+        const carAngle: number = this._car.angle;
+        const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
+
+        return new Vector3(
+            carPos.x + (Math.sin(carAngle * DEG_TO_RAD) * projectionXZ),
+            carPos.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
+            carPos.z + (Math.cos(carAngle * DEG_TO_RAD) * projectionXZ)
+        );
     }
 
     public get car(): Car {
@@ -74,6 +88,8 @@ export class RenderService {
 
         this.orthoCamera.position.copy(this._car.getPosition());
         this.orthoCamera.position.setY(INITIAL_CAMERA_POSITION_Y);
+        this.perspCamera.position.copy(this.calcPosPerspCamera());
+        this.perspCamera.lookAt(this._car.getPosition());
     }
 
     private initVariables(): void {
