@@ -1,11 +1,14 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-    <h1>
+<div class="container-fluid">
+  <div class="row mt-2">
+    <div class="col text-center">
+      <h1>
         {{title}}
-    </h1>
+      </h1>
+      <nav>
+          <button class="btn btn-primary btn-lg mr-5" routerLink="/race">Race</button>
+          <button class="btn btn-primary btn-lg" routerLink="/crosswords">Crosswords</button>
+        </nav>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
 </div>
-<nav>
-    <button routerLink="/race">Race</button>
-    <button routerLink="/crosswords">Crosswords</button>
-</nav>
-<router-outlet></router-outlet>

@@ -2,49 +2,18 @@
     background-color: black;
 }
 
-#container {
-    margin: auto;
-    margin-top: 40px;
-}
-
-#hints {
-    height: 75vh;
-    width: 48%;
-    float: left;
-    overflow-y: auto;
-}
-
-#hints table {
-    margin-left: auto;
-    width: 90%;
-    border-collapse: collapse;
-}
-
-#hints th, #hints td {
-    text-align: left;
-    border-bottom: solid rgb(190, 190, 190) 1px;
-    padding: 15px;
-    cursor: pointer;
-}
-
 #hints td:hover {
-    background-color: #f2f2f2;
-}
-
-#grid {
-    width: 48%;
-    float: right;
+    background-color: #e7e7e7;
 }
 
 #grid table {
-    margin-right: auto;
     border-collapse: collapse;
     text-align: center;
 }
 
 #grid td {
-    font-size: 5vmin;
+    font-size: 4vmin;
     width: 7vmin;
     height: 7vmin;
-    border: solid black 2px;
+    border: solid black 0.1vmin;
 }
