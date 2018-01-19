@@ -182,6 +182,11 @@ export class RenderService {
     public testOrthoCameraPosition(): Vector3 {
         return this.orthoCamera.position;
     }
+
+    public get carPosition(): Vector3 {
+        return this._car.getPosition();
+    }
+
     // TODO: Create an event handler service.
     public handleKeyDown(event: KeyboardEvent): void {
         switch (event.keyCode) {
