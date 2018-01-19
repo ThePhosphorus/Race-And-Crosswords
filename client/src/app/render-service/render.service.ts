@@ -51,13 +51,14 @@ export class RenderService {
 
     public calcPosPerspCamera(): Vector3 {
         const carPos: Vector3 = this.carPosition;
-        const carAngle: number = this._car.angle;
+        // const carAngle: number = this._car.angle;
+        const carDirection: Vector3 = this._car.direction;
         const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
 
         return new Vector3(
-            carPos.x + (Math.sin(carAngle * DEG_TO_RAD) * projectionXZ),
+            carPos.x + (- carDirection.x * projectionXZ),
             carPos.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
-            carPos.z + (Math.cos(carAngle * DEG_TO_RAD) * projectionXZ)
+            carPos.z + (- carDirection.z * projectionXZ)
         );
     }
 

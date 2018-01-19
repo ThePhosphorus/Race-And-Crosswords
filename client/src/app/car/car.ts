@@ -52,7 +52,7 @@ export class Car extends Object3D {
         return this.mesh.rotation.y * RAD_TO_DEG;
     }
 
-    private get direction(): Vector3 {
+    public get direction(): Vector3 {
         const rotationMatrix: Matrix4 = new Matrix4();
         const carDirection: Vector3 = new Vector3(0, 0, -1);
 
