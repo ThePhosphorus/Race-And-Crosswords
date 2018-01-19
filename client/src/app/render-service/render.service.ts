@@ -43,11 +43,6 @@ export class RenderService {
     private lastDate: number;
 
     private cameraDistance: number; // for zoom Use
-
-    public get car(): Car {
-        return this._car;
-    }
-
     public constructor() {
         this._car = new Car();
     }
