@@ -47,6 +47,10 @@ export class RenderService {
         this._car = new Car();
     }
 
+    public get car(): Car {
+        return this._car;
+    }
+
     public async initialize(container: HTMLDivElement): Promise<void> {
         if (container) {
             this.container = container;
