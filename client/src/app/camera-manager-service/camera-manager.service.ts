@@ -58,7 +58,6 @@ export class CameraManagerService {
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
-
      }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
@@ -101,11 +100,11 @@ export class CameraManagerService {
      }
 
     public get cameraType(): CameraType {
-        return this.cameraType;
+        return this.type;
      }
 
     public set cameraType(type: CameraType) {
-        this.cameraType = type;
+        this.type = type;
      }
 
     public get position(): Vector3 {
@@ -121,6 +120,13 @@ export class CameraManagerService {
 
     public get realPosition(): Vector3 {
         return this.camera.position;
+     }
+
+    public get cameraDistanceToCar(): number {
+         return this.cameraDistance;
+     }
+    public set cameraDistanceToCar(distance: number) {
+         this.cameraDistance = distance;
      }
 
     private calcPosPerspCamera(): Vector3 {
