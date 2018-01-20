@@ -42,7 +42,7 @@ describe("CameraManagerService", () => {
         manager.cameraDistanceToCar = 25;
         manager.init();
         manager.update();
-        expect(manager.position.distanceTo(new Vector3(10, 0, 25))).toBe(manager.cameraDistanceToCar);
+        expect(manager.position.distanceTo(new Vector3(10, 0, 25))).toBeCloseTo(manager.cameraDistanceToCar, 0);
   }) );
 
 });

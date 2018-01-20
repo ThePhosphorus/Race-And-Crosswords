@@ -133,6 +133,8 @@ export class CameraManagerService {
         const carPos: Vector3 = this.carInfos.position;
         const carDirection: Vector3 = this.carInfos.direction;
         const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
+        carDirection.setY(0);
+        carDirection.normalize();
 
         return new Vector3(
             carPos.x + (- carDirection.x * projectionXZ),
