@@ -14,7 +14,7 @@ const LEFT_KEYCODE: number = 65; // a
 const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
-const ENABLE_CAMERA_EFFECT_MODE: number = 88;
+const TOOGLE_CAMERA_EFFECT_MODE: number = 88;
 
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
@@ -128,7 +128,7 @@ export class RenderService {
             case CHANGE_CAMERA_KEYCODE:
                 this.cameraManager.switchCamera();
                 break;
-                case ENABLE_CAMERA_EFFECT_MODE:
+                case TOOGLE_CAMERA_EFFECT_MODE:
                 this.cameraManager.effectModeEnabled = !this.cameraManager.effectModeEnabled;
                 break;
             default:
