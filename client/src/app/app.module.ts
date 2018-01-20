@@ -9,6 +9,7 @@ import { RenderService } from "./render-service/render.service";
 import { BasicService } from "./basic.service";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
+import { CameraManagerService } from "./camera-manager-service/camera-manager.service";
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { CrosswordsComponent } from "./crosswords-component/crosswords.component
     ],
     providers: [
         RenderService,
-        BasicService
+        BasicService,
+        CameraManagerService
     ],
     bootstrap: [AppComponent]
 })

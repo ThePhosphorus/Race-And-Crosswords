@@ -1,21 +1,13 @@
 import { Injectable } from "@angular/core";
 import Stats = require("stats.js");
 import {
-    PerspectiveCamera,
     WebGLRenderer,
     Scene,
     AmbientLight,
-    OrthographicCamera,
     Vector3
 } from "three";
 import { Car } from "../car/car";
-import { DEG_TO_RAD } from "../constants";
-
-const FAR_CLIPPING_PLANE: number = 1000;
-const NEAR_CLIPPING_PLANE: number = 1;
-const FIELD_OF_VIEW: number = 70;
-const INITIAL_CAMERA_DISTANCE: number = 20;
-const PERS_CAMERA_ANGLE: number = 10;
+import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
@@ -23,20 +15,11 @@ const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
 
-export const INITIAL_CAMERA_POSITION_Y: number = 25;
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.5;
 
-export enum CameraType {
-    Ortho,
-    Pers
-}
-
 @Injectable()
 export class RenderService {
-    private perspCamera: PerspectiveCamera;
-    private orthoCamera: OrthographicCamera;
-    private cameraType: CameraType;
     private container: HTMLDivElement;
     private _car: Car;
     private renderer: WebGLRenderer;
@@ -44,27 +27,13 @@ export class RenderService {
     private stats: Stats;
     private lastDate: number;
 
-    public cameraDistance: number; // for zoom Use
-    public constructor() {
+    public constructor(private cameraManager: CameraManagerService) {
         this._car = new Car();
-    }
-
-    public calcPosPerspCamera(): Vector3 {
-        const carPos: Vector3 = this.carPosition;
-        // const carAngle: number = this._car.angle;
-        const carDirection: Vector3 = this._car.direction;
-        const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
-
-        return new Vector3(
-            carPos.x + (- carDirection.x * projectionXZ),
-            carPos.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
-            carPos.z + (- carDirection.z * projectionXZ)
-        );
-    }
+     }
 
     public get car(): Car {
         return this._car;
-    }
+     }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         if (container) {
@@ -74,64 +43,34 @@ export class RenderService {
         await this.createScene();
         this.initStats();
         this.startRenderingLoop();
-    }
+     }
 
     private initStats(): void {
         this.stats = new Stats();
         this.stats.dom.style.position = "absolute";
         this.container.appendChild(this.stats.dom);
-    }
+     }
 
     private update(): void {
         const timeSinceLastFrame: number = Date.now() - this.lastDate;
         this._car.update(timeSinceLastFrame);
+        this.cameraManager.updatecarInfos(this._car.getPosition(), this._car.direction);
+        this.cameraManager.update();
         this.lastDate = Date.now();
-
-        this.orthoCamera.position.copy(this._car.getPosition());
-        this.orthoCamera.position.setY(INITIAL_CAMERA_POSITION_Y);
-        this.perspCamera.position.copy(this.calcPosPerspCamera());
-        this.perspCamera.lookAt(this._car.getPosition());
-    }
-
-    private initVariables(): void {
-        this.cameraDistance = INITIAL_CAMERA_DISTANCE;
-        this.cameraType = CameraType.Pers;
-    }
-
+     }
     private async createScene(): Promise<void> {
         this.scene = new Scene();
-        this.initVariables();
-        this.perspCamera = new PerspectiveCamera(
-            FIELD_OF_VIEW,
-            this.getAspectRatio(),
-            NEAR_CLIPPING_PLANE,
-            FAR_CLIPPING_PLANE
-        );
 
-        this.orthoCamera = new OrthographicCamera(
-            -this.cameraDistance * this.getAspectRatio(),
-            this.cameraDistance * this.getAspectRatio(),
-            this.cameraDistance,
-            -this.cameraDistance,
-            NEAR_CLIPPING_PLANE,
-            FAR_CLIPPING_PLANE
-        );
         await this._car.init();
-        this.perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this.perspCamera.lookAt(this._car.position);
-        this.orthoCamera.position.set(
-            this._car.position.x,
-            INITIAL_CAMERA_POSITION_Y,
-            this._car.position.z
-        );
-        this.orthoCamera.lookAt(this._car.position);
+        this.cameraManager.updatecarInfos(this._car.getPosition(), this._car.direction);
+        this.cameraManager.init();
         this.scene.add(this._car);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
-    }
+     }
 
     private getAspectRatio(): number {
         return this.container.clientWidth / this.container.clientHeight;
-    }
+     }
 
     private startRenderingLoop(): void {
         this.renderer = new WebGLRenderer();
@@ -144,69 +83,30 @@ export class RenderService {
         this.lastDate = Date.now();
         this.container.appendChild(this.renderer.domElement);
         this.render();
-    }
+     }
 
     private render(): void {
         requestAnimationFrame(() => this.render());
         this.update();
-        switch (this.cameraType) {
-            case CameraType.Ortho:
-                this.renderer.render(this.scene, this.orthoCamera);
-                break;
-            case CameraType.Pers:
-                this.renderer.render(this.scene, this.perspCamera);
-                break;
-            default:
-                break;
-        }
+        this.renderer.render(this.scene , this.cameraManager.camera);
         this.stats.update();
-    }
+     }
 
     public onResize(): void {
-        this.perspCamera.aspect = this.getAspectRatio();
-        this.perspCamera.updateProjectionMatrix();
-        this.resizeOrtho();
+        this.cameraManager.onResize(this.getAspectRatio());
         this.renderer.setSize(
             this.container.clientWidth,
             this.container.clientHeight
         );
-    }
-
-    private resizeOrtho(): void {
-        this.orthoCamera.left = -this.cameraDistance * this.getAspectRatio();
-        this.orthoCamera.right = this.cameraDistance * this.getAspectRatio();
-        this.orthoCamera.top = this.cameraDistance;
-        this.orthoCamera.bottom = -this.cameraDistance;
-        this.orthoCamera.updateProjectionMatrix();
-    }
-
-    public switchCamera(): void {
-        if (this.cameraType === CameraType.Ortho) {
-            this.cameraType = CameraType.Pers;
-        } else if (this.cameraType === CameraType.Pers) {
-            this.cameraType = CameraType.Ortho;
-        }
-    }
-
-    public get CameraType(): CameraType {
-        return this.cameraType;
-    }
-
-    public set CameraType(type: CameraType) {
-        this.cameraType = type;
-    }
+     }
 
     public testUpdate(): void {
         this.update();
-    }
-
-    public testOrthoCameraPosition(): Vector3 {
-        return this.orthoCamera.position;
-    }
+     }
 
     public get carPosition(): Vector3 {
         return this._car.getPosition();
-    }
+     }
 
     // TODO: Create an event handler service.
     public handleKeyDown(event: KeyboardEvent): void {
@@ -224,12 +124,12 @@ export class RenderService {
                 this._car.brake();
                 break;
             case CHANGE_CAMERA_KEYCODE:
-                this.switchCamera();
+                this.cameraManager.switchCamera();
                 break;
             default:
                 break;
         }
-    }
+     }
 
     // TODO: Create an event handler service.
     public handleKeyUp(event: KeyboardEvent): void {
@@ -247,5 +147,5 @@ export class RenderService {
             default:
                 break;
         }
-    }
+     }
 }
