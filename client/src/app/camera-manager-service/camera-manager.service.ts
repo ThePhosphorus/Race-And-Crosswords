@@ -25,10 +25,12 @@ export class CameraManagerService {
     private type: CameraType;
     private carInfos: {position: Vector3, direction: Vector3};
     private thirdPersonPoint: Vector3;
+    private effectModeisEnabled: boolean;
 
     public constructor() {
         this.carInfos = {position: new Vector3(), direction: new Vector3()};
         this.thirdPersonPoint = new Vector3();
+        this.effectModeisEnabled = false;
      }
 
     public init(): void  {
@@ -127,6 +129,14 @@ export class CameraManagerService {
          this.cameraDistance = distance;
      }
 
+    public get effectModeEnabled(): boolean {
+         return this.effectModeisEnabled;
+     }
+
+    public set effectModeEnabled(value: boolean) {
+        this.effectModeisEnabled = value;
+     }
+
     private updateCameraPostion(deltaTime: number): void {
         switch (this.type) {
         case CameraType.Persp:
@@ -165,9 +175,12 @@ export class CameraManagerService {
      }
 
     private perspCameraPhisicUpdate(deltaTime: number): void {
-        deltaTime = deltaTime / MS_TO_SECONDS;
-        const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this.persp.position);
-        deltaPos.multiplyScalar(PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime);
-        this.persp.position.add(deltaPos);
-        }
+        if (this.effectModeisEnabled) {
+
+            deltaTime = deltaTime / MS_TO_SECONDS;
+            const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this.persp.position);
+            deltaPos.multiplyScalar(PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime);
+            this.persp.position.add(deltaPos);
+        } else { this.persp.position.copy(this.thirdPersonPoint); }
+     }
 }
