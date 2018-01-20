@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { PerspectiveCamera, OrthographicCamera, Vector3, Camera } from "three";
-import { DEG_TO_RAD } from "../constants";
+import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
 
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
-const INITIAL_CAMERA_DISTANCE: number = 20;
+const INITIAL_CAMERA_DISTANCE: number = 10;
 const PERS_CAMERA_ANGLE: number = 10;
 const INITIAL_CAMERA_POSITION_Y: number = 25;
+const PERSP_CAMERA_ACCELERATION_FACTOR: number = 3;
 
 export enum CameraType {
     Ortho,
@@ -65,12 +66,9 @@ export class CameraManagerService {
         this.carInfos.direction = direction;
      }
 
-    public update(): void {
-        this.ortho.position.copy(this.carInfos.position);
-        this.ortho.position.setY(INITIAL_CAMERA_POSITION_Y);
+    public update(deltaTime: number): void {
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
-        this.persp.position.copy(this.thirdPersonPoint); // TODO : add wobble effect
-        this.persp.lookAt(this.carInfos.position);
+        this.updateCameraPostion(deltaTime);
      }
 
     public get camera(): Camera {
@@ -129,6 +127,22 @@ export class CameraManagerService {
          this.cameraDistance = distance;
      }
 
+    private updateCameraPostion(deltaTime: number): void {
+        switch (this.type) {
+        case CameraType.Persp:
+            this.perspCameraPhisicUpdate(deltaTime);
+            this.persp.lookAt(this.carInfos.position);
+            break;
+        case CameraType.Ortho:
+            this.ortho.position.copy(this.carInfos.position);
+            this.ortho.position.setY(INITIAL_CAMERA_POSITION_Y);
+            break;
+        default:
+            break;
+        }
+
+     }
+
     private calcPosPerspCamera(): Vector3 {
         const carDirection: Vector3 = this.carInfos.direction;
         const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
@@ -150,4 +164,10 @@ export class CameraManagerService {
         this.ortho.updateProjectionMatrix();
      }
 
+    private perspCameraPhisicUpdate(deltaTime: number): void {
+        deltaTime = deltaTime / MS_TO_SECONDS;
+        const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this.persp.position);
+        deltaPos.multiplyScalar(PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime);
+        this.persp.position.add(deltaPos);
+        }
 }

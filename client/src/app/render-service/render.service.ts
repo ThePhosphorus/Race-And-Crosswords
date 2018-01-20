@@ -55,7 +55,7 @@ export class RenderService {
         const timeSinceLastFrame: number = Date.now() - this.lastDate;
         this._car.update(timeSinceLastFrame);
         this.cameraManager.updatecarInfos(this._car.getPosition(), this._car.direction);
-        this.cameraManager.update();
+        this.cameraManager.update(timeSinceLastFrame);
         this.lastDate = Date.now();
      }
     private async createScene(): Promise<void> {
