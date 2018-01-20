@@ -66,6 +66,7 @@ export class RenderService {
         this.cameraManager.init();
         this.scene.add(this._car);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
+        this.cameraManager.onResize(this.getAspectRatio());
      }
 
     private getAspectRatio(): number {
