@@ -130,16 +130,15 @@ export class CameraManagerService {
      }
 
     private calcPosPerspCamera(): Vector3 {
-        const carPos: Vector3 = this.carInfos.position;
         const carDirection: Vector3 = this.carInfos.direction;
         const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
         carDirection.setY(0);
         carDirection.normalize();
 
         return new Vector3(
-            carPos.x + (- carDirection.x * projectionXZ),
-            carPos.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
-            carPos.z + (- carDirection.z * projectionXZ)
+            this.carInfos.position.x + (- carDirection.x * projectionXZ),
+            this.carInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
+            this.carInfos.position.z + (- carDirection.z * projectionXZ)
         );
      }
 
