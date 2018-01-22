@@ -11,13 +11,14 @@
 
 .container .col {
     font-size: 100%;
+    font-weight:lighter;
 }
-#info .col {
-    background-color: darkgray;
-    border-radius: 1vmin;
-    padding-top:1vmin;
-    border: black solid;
-    color: white;
+#info {
+    vertical-align:bottom;
+    border-bottom: darkgray solid 0.5vmin;
+    color: black;
+    text-align:match-parent;
+ 
 }
 
 

@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row mt-lg-3 justify-content-center" id="info">
+  <div class="row mt-lg-3 justify-content-around" id="info">
     <div class="col col-lg-3  " id="noPlayer">
       <p *ngIf="noPlayer == 1">
         SINGLE PLAYER
@@ -11,7 +11,7 @@
     </div>
    
 
-    <div class="col col-lg-3 offset-md-1 " id="level" [ngSwitch]="myLvl">
+    <div class="col col-lg-2 offset-md-1 " id="level" [ngSwitch]="myLvl">
       <b *ngSwitchCase="lvlEnum.Easy" [ngClass]="'easy'">EASY</b>
       <b *ngSwitchCase="lvlEnum.Medium" [ngClass]="'medium'">MEDIUM</b>
       <b *ngSwitchCase="lvlEnum.Hard" [ngClass]="'hard'">HARD</b>
