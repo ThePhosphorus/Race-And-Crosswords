@@ -1,20 +1,20 @@
 <div class="container">
-  <div class="row mt-lg-5 justify-content-center" id="info">
+  <div class="row mt-lg-3 justify-content-center" id="info">
     <div class="col col-lg-3  " id="noPlayer">
       <p *ngIf="noPlayer == 1">
-        Single Player
+        SINGLE PLAYER
       </p>
       <p *ngIf="noPlayer !== 1">
-        {{noPlayer}} Players
+        {{noPlayer}} PLAYERS
       </p>
      
     </div>
    
 
     <div class="col col-lg-3 offset-md-1 " id="level" [ngSwitch]="myLvl">
-      <b *ngSwitchCase="lvlEnum.Easy" [ngClass]="'easy'">Easy</b>
-      <b *ngSwitchCase="lvlEnum.Medium" [ngClass]="'medium'">Medium</b>
-      <b *ngSwitchCase="lvlEnum.Hard" [ngClass]="'hard'">Hard</b>
+      <b *ngSwitchCase="lvlEnum.Easy" [ngClass]="'easy'">EASY</b>
+      <b *ngSwitchCase="lvlEnum.Medium" [ngClass]="'medium'">MEDIUM</b>
+      <b *ngSwitchCase="lvlEnum.Hard" [ngClass]="'hard'">HARD</b>
       <b *ngSwitchDefault>No Direction</b>
     </div>
   </div>

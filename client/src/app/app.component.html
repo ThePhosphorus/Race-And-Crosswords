@@ -1,15 +1,18 @@
+
+
+
 <div class="container-fluid">
-  <div class="row mt-2">
-    <div class="col text-center">
-      <h1>
-        {{title}}
-      </h1>
-      <nav>
-        <button class="btn btn-primary btn-lg mr-5" routerLink="/race">Race</button>
-        <button class="btn btn-primary btn-lg" routerLink="/crosswords">Crosswords</button>
-      </nav>
-    </div>
-  </div>
+  <ul class="nav justify-content-end">
+    <li class="nav-item">
+      <a class="nav-link active"  href="#" routerLink="/crosswords">Crosswords</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="#" routerLink="/race" >Race</a>
+    </li>
+ 
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#" routerLink="/crosswords" >{{title}}</a>
+    </li>
+  </ul>
   <router-outlet></router-outlet>
-  <app-crosswords></app-crosswords>
 </div>

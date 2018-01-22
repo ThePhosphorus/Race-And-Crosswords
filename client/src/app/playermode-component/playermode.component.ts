@@ -9,7 +9,7 @@ import {difficlvlEnum} from './difficlvlEnum.ts';
 })
 export class PlayermodeComponent implements OnInit {
 
-   public noPlayer: int = 1;
+   public noPlayer: int = 2;
    public lvlEnum = difficlvlEnum;
    public myLvl = difficlvlEnum.Easy;
  
