@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {difficlvlEnum} from './difficlvlEnum.ts';  
+
 
 @Component({
   selector: 'app-playermode',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlayermodeComponent implements OnInit {
 
+   public noPlayer: int = 1;
+   public lvlEnum = difficlvlEnum;
+   public myLvl = difficlvlEnum.Easy;
+ 
+
   constructor() { }
 
-  ngOnInit() {
+  
+
+  ngOnInit() :void {
   }
 
 }

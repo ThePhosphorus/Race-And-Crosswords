@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row text-center mt-5">
+    <div class="col" id="noPlayer">
+      {{noPlayer}}
+    </div>
+    <div class="col" id="level" [ngSwitch]="myLvl">
+        <b *ngSwitchCase="lvlEnum.Easy"[ngClass]="'easy'">Easy</b>
+        <b *ngSwitchCase="lvlEnum.Medium"[ngClass]="'medium'">Medium</b>
+        <b *ngSwitchCase="lvlEnum.Hard"[ngClass]="'hard'">Hard</b> 
+        <b *ngSwitchDefault>No Direction</b>
+    </div>
+  </div>
+  </div>

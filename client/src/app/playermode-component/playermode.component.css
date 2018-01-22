@@ -1,0 +1,19 @@
+.easy {
+    background-color: green;
+}
+.medium {
+    background-color: orange;
+}
+.hard {
+    background-color: red;
+}
+#noPlayer{
+    text-align :center;
+    background-color:blue;
+    color: white
+
+}
+#level {
+    text-align: center;
+    color :white
+}
