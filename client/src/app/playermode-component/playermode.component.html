@@ -3,7 +3,7 @@
     <div class="col" id="noPlayer">
       {{noPlayer}}
     </div>
-    <div class="col offset-md-2" id="level" [ngSwitch]="myLvl">
+    <div class="col offset-md-0.5" id="level" [ngSwitch]="myLvl">
         <b *ngSwitchCase="lvlEnum.Easy"[ngClass]="'easy'">Easy</b>
         <b *ngSwitchCase="lvlEnum.Medium"[ngClass]="'medium'">Medium</b>
         <b *ngSwitchCase="lvlEnum.Hard"[ngClass]="'hard'">Hard</b> 

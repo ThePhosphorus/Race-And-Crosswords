@@ -9,6 +9,7 @@
 #grid table {
     border-collapse: collapse;
     text-align: center;
+    align-self:center;
 }
 
 #grid td {
@@ -16,4 +17,5 @@
     width: 7vmin;
     height: 7vmin;
     border: solid black 0.1vmin;
+    
 }
