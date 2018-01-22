@@ -10,6 +10,9 @@ const PERS_CAMERA_ANGLE: number = 30;
 const INITIAL_CAMERA_POSITION_Y: number = 25;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
+const MINIMAL_ZOOM: number = 4;
+const MAXIMAL_ZOOM: number = 25;
+const ZOOM_FACTOR: number = 0.5;
 
 export enum CameraType {
     Ortho,
@@ -24,17 +27,19 @@ export class CameraManagerService {
     private cameraDistance: number;
     private aspectRatio: number;
     private type: CameraType;
-    private carInfos: {position: Vector3, direction: Vector3};
+    private carInfos: { position: Vector3, direction: Vector3 };
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
+    private zoom: number;
 
     public constructor() {
-        this.carInfos = {position: new Vector3(), direction: new Vector3()};
+        this.carInfos = { position: new Vector3(), direction: new Vector3() };
         this.thirdPersonPoint = new Vector3();
         this.effectModeisEnabled = false;
-     }
+    }
 
-    public init(): void  {
+    public init(): void {
+        this.zoom = 0;
         this.cameraDistance = INITIAL_CAMERA_DISTANCE;
         this.type = CameraType.Persp;
 
@@ -62,35 +67,35 @@ export class CameraManagerService {
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
-     }
+    }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
         this.carInfos.position = position;
         this.carInfos.direction = direction;
-     }
+    }
 
     public update(deltaTime: number): void {
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.updateCameraPostion(deltaTime);
-     }
+    }
 
     public get camera(): Camera {
         switch (this.type) {
             case CameraType.Ortho:
-            return this.ortho;
+                return this.ortho;
             case CameraType.Persp:
-            return this.persp;
+                return this.persp;
             default:
-            return this.persp;
+                return this.persp;
         }
-     }
+    }
 
     public onResize(aspectRation: number): void {
         this.aspectRatio = aspectRation;
         this.persp.aspect = this.aspectRatio;
         this.persp.updateProjectionMatrix();
         this.resizeOrtho();
-     }
+    }
 
     public switchCamera(): void {
         if (this.type === CameraType.Ortho) {
@@ -98,61 +103,69 @@ export class CameraManagerService {
         } else if (this.type === CameraType.Persp) {
             this.type = CameraType.Ortho;
         }
-     }
+    }
 
     public get cameraType(): CameraType {
         return this.type;
-     }
+    }
 
     public set cameraType(type: CameraType) {
         this.type = type;
-     }
+    }
+
+    public set zoomFactor(zoom: number) {
+        this.zoom = zoom;
+    }
 
     public get position(): Vector3 {
         switch (this.type) {
             case CameraType.Ortho:
-            return this.ortho.position;
+                return this.ortho.position;
             case CameraType.Persp:
-            return this.thirdPersonPoint;
+                return this.thirdPersonPoint;
             default:
-            return this.thirdPersonPoint;
+                return this.thirdPersonPoint;
         }
-     }
+    }
 
     public get realPosition(): Vector3 {
         return this.camera.position;
-     }
+    }
 
     public get cameraDistanceToCar(): number {
-         return this.cameraDistance;
-     }
+        return this.cameraDistance;
+    }
     public set cameraDistanceToCar(distance: number) {
-         this.cameraDistance = distance;
-     }
+        this.cameraDistance = distance;
+    }
 
     public get effectModeEnabled(): boolean {
-         return this.effectModeisEnabled;
-     }
+        return this.effectModeisEnabled;
+    }
 
     public set effectModeEnabled(value: boolean) {
         this.effectModeisEnabled = value;
-     }
+    }
 
     private updateCameraPostion(deltaTime: number): void {
+        if ((this.zoom > 0 && this.cameraDistance > MINIMAL_ZOOM) || (this.zoom < 0 && this.cameraDistance < MAXIMAL_ZOOM)) {
+            this.cameraDistance -= this.zoom * ZOOM_FACTOR;
+        }
         switch (this.type) {
-        case CameraType.Persp:
-            this.perspCameraPhysicUpdate(deltaTime);
-            this.persp.lookAt(this.carInfos.position);
-            break;
-        case CameraType.Ortho:
-            this.ortho.position.copy(this.carInfos.position);
-            this.ortho.position.setY(INITIAL_CAMERA_POSITION_Y);
-            break;
-        default:
-            break;
+            case CameraType.Persp:
+                this.perspCameraPhysicUpdate(deltaTime);
+                this.persp.lookAt(this.carInfos.position);
+                break;
+            case CameraType.Ortho:
+                this.resizeOrtho();
+                this.ortho.position.copy(this.carInfos.position);
+                this.ortho.position.setY(INITIAL_CAMERA_POSITION_Y);
+                break;
+            default:
+                break;
         }
 
-     }
+    }
 
     private calcPosPerspCamera(): Vector3 {
         const carDirection: Vector3 = this.carInfos.direction;
@@ -165,7 +178,7 @@ export class CameraManagerService {
             this.carInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
             this.carInfos.position.z + (- carDirection.z * projectionXZ)
         );
-     }
+    }
 
     private resizeOrtho(): void {
         this.ortho.left = -this.cameraDistance * this.aspectRatio;
@@ -173,7 +186,7 @@ export class CameraManagerService {
         this.ortho.top = this.cameraDistance;
         this.ortho.bottom = -this.cameraDistance;
         this.ortho.updateProjectionMatrix();
-     }
+    }
 
     private perspCameraPhysicUpdate(deltaTime: number): void {
         if (this.effectModeisEnabled) {
@@ -187,5 +200,5 @@ export class CameraManagerService {
                 );
             this.persp.position.add(deltaPos);
         } else { this.persp.position.copy(this.thirdPersonPoint); }
-     }
+    }
 }
