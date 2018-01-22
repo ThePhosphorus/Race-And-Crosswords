@@ -4,7 +4,9 @@ import {
     WebGLRenderer,
     Scene,
     AmbientLight,
-    Vector3
+    Vector3,
+    GridHelper,
+    Color
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
@@ -15,9 +17,11 @@ const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
 const TOOGLE_CAMERA_EFFECT_MODE: number = 88;
+const GRID_DIMENSION: number = 10000;
+const GRID_DIVISIONS: number = 1000;
 
 const WHITE: number = 0xFFFFFF;
-const AMBIENT_LIGHT_OPACITY: number = 0.5;
+const AMBIENT_LIGHT_OPACITY: number = 0.85;
 
 @Injectable()
 export class RenderService {
@@ -27,6 +31,7 @@ export class RenderService {
     private scene: THREE.Scene;
     private stats: Stats;
     private lastDate: number;
+    private gridHelper: GridHelper;
 
     public constructor(private cameraManager: CameraManagerService) {
         this._car = new Car();
@@ -65,7 +70,9 @@ export class RenderService {
         await this._car.init();
         this.cameraManager.updatecarInfos(this._car.getPosition(), this._car.direction);
         this.cameraManager.init();
+        this.gridHelper = new GridHelper(GRID_DIMENSION, GRID_DIVISIONS, new Color(0xff0000), new Color(0x001188));
         this.scene.add(this._car);
+        this.scene.add(this.gridHelper);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
         this.cameraManager.onResize(this.getAspectRatio());
      }
