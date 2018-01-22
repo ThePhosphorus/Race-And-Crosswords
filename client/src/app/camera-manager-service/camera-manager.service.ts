@@ -141,7 +141,7 @@ export class CameraManagerService {
     private updateCameraPostion(deltaTime: number): void {
         switch (this.type) {
         case CameraType.Persp:
-            this.perspCameraPhisicUpdate(deltaTime);
+            this.perspCameraPhysicUpdate(deltaTime);
             this.persp.lookAt(this.carInfos.position);
             break;
         case CameraType.Ortho:
@@ -175,7 +175,7 @@ export class CameraManagerService {
         this.ortho.updateProjectionMatrix();
      }
 
-    private perspCameraPhisicUpdate(deltaTime: number): void {
+    private perspCameraPhysicUpdate(deltaTime: number): void {
         if (this.effectModeisEnabled) {
 
             deltaTime = deltaTime / MS_TO_SECONDS;
