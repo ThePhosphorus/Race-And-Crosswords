@@ -1,19 +1,31 @@
 .easy {
-    background-color: green;
+    color: green;
 }
 .medium {
-    background-color: orange;
+    color: orange;
 }
 .hard {
-    background-color: red;
+   color: red;
 }
-#noPlayer{
-    text-align :center;
-    background-color:blue;
-    color: white
 
+#noPlayer {
+    text-align: center;
+    background-color: blue;
+    color: white;
+    border-radius: 15px;
 }
 #level {
     text-align: center;
-    color :white
+    color: white;
+    background-color: black;
+    border-radius: 15px;
 }
+.container {
+    font-size: 200%;
+   
+}
+
+
+
+
+
