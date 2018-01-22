@@ -8,7 +8,7 @@ const FIELD_OF_VIEW: number = 70;
 const INITIAL_CAMERA_DISTANCE: number = 10;
 const PERS_CAMERA_ANGLE: number = 30;
 const INITIAL_CAMERA_POSITION_Y: number = 25;
-const PERSP_CAMERA_ACCELERATION_FACTOR: number = 3;
+const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
 
 export enum CameraType {
@@ -180,13 +180,12 @@ export class CameraManagerService {
 
             deltaTime = deltaTime / MS_TO_SECONDS;
             const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this.persp.position);
-            if (Math.abs(deltaPos.length()) > MAX_RECOIL_DISTANCE) {
-                deltaPos.setLength(MAX_RECOIL_DISTANCE);
-                this.persp.position.copy(this.thirdPersonPoint.clone().sub(deltaPos));
-            } else {
-                deltaPos.multiplyScalar(PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime);
-                this.persp.position.add(deltaPos);
-            }
+            deltaPos.multiplyScalar(
+                PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
+                (
+                    (deltaPos.length() >= MAX_RECOIL_DISTANCE) ? (deltaPos.length() - MAX_RECOIL_DISTANCE + 1) : 1)
+                );
+            this.persp.position.add(deltaPos);
         } else { this.persp.position.copy(this.thirdPersonPoint); }
      }
 }
