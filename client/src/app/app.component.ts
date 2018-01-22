@@ -16,6 +16,6 @@ export class AppComponent implements OnInit {
     public message: string;
 
     public ngOnInit(): void {
-     //this.basicService.basicGet().subscribe((message: Message) => this.message = message.title + message.body);
+    this.basicService.basicGet().subscribe((message: Message) => this.message = message.title + message.body);
     }
 }
