@@ -109,10 +109,6 @@ export class RenderService {
         );
      }
 
-    public testUpdate(): void {
-        this.update();
-     }
-
     public get carPosition(): Vector3 {
         return this._car.getPosition();
      }
