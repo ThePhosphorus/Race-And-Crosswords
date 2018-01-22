@@ -9,12 +9,14 @@ import { RenderService } from "./render-service/render.service";
 import { BasicService } from "./basic.service";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
+import { PlayermodeComponent } from './playermode/playermode.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         GameComponent,
-        CrosswordsComponent
+        CrosswordsComponent,
+        PlayermodeComponent
     ],
     imports: [
         BrowserModule,
