@@ -15,7 +15,7 @@
 }
 #info {
     vertical-align:bottom;
-    border-bottom: darkgray solid 0.2vmin;
+    border-bottom: solid 0.2vmin dimgray;
     color: black;
     text-align:match-parent;
  
