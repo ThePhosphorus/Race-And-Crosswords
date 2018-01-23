@@ -11,6 +11,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CameraManagerService } from "./camera-manager-service/camera-manager.service";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
+import { InputManagerService } from './input-manager-service/input-manager.service';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { PlayermodeComponent } from "./playermode-component/playermode.component
     ],
     providers: [
         RenderService,
-        CameraManagerService
+        CameraManagerService,
+        InputManagerService
     ],
     bootstrap: [AppComponent]
 })
