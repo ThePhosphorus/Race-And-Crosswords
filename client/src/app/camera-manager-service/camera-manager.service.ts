@@ -135,6 +135,7 @@ export class CameraManagerService {
     public get cameraDistanceToCar(): number {
         return this.cameraDistance;
     }
+
     public set cameraDistanceToCar(distance: number) {
         this.cameraDistance = distance;
     }

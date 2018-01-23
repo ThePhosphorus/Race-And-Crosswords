@@ -6,7 +6,6 @@ import { AppComponent } from "./app.component";
 import { GameComponent } from "./game-component/game.component";
 
 import { RenderService } from "./render-service/render.service";
-import { BasicService } from "./basic.service";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { CameraManagerService } from "./camera-manager-service/camera-manager.service";

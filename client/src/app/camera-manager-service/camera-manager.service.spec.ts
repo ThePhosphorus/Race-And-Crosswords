@@ -37,12 +37,29 @@ describe("CameraManagerService", () => {
 
   it("should be at distance distance of the car",
      inject([CameraManagerService], (manager: CameraManagerService) => {
-        // tslint:disable-next-line:no-magic-numbers
         manager.updatecarInfos(new Vector3(10, 0, 25), new Vector3(1, 1, 1));
         manager.cameraDistanceToCar = 25;
         manager.init();
         manager.update(5);
         expect(manager.position.distanceTo(new Vector3(10, 0, 25))).toBeCloseTo(manager.cameraDistanceToCar, 0);
+  }) );
+
+  it("should zoom in",
+     inject([CameraManagerService], (manager: CameraManagerService) => {
+        manager.init();
+        const cameraDistance: number = manager.cameraDistanceToCar;
+        manager.zoomFactor = 1;
+        manager.update(5);
+        expect(manager.cameraDistanceToCar).toBeLessThan(cameraDistance, 0);
+  }) );
+
+  it("should zoom out",
+     inject([CameraManagerService], (manager: CameraManagerService) => {
+        manager.init();
+        const cameraDistance: number = manager.cameraDistanceToCar;
+        manager.zoomFactor = -1;
+        manager.update(5);
+        expect(manager.cameraDistanceToCar).toBeGreaterThan(cameraDistance, 0);
   }) );
 
 });
