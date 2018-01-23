@@ -35,7 +35,7 @@ export class CameraManagerService {
     public constructor() {
         this.carInfos = { position: new Vector3(), direction: new Vector3() };
         this.thirdPersonPoint = new Vector3();
-        this.effectModeisEnabled = false;
+        this.effectModeisEnabled = true;
     }
 
     public init(): void {
