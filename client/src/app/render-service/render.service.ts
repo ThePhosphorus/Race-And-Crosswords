@@ -69,7 +69,6 @@ export class RenderService {
 
         await this._car.init();
         this.cameraManager.updatecarInfos(this._car.getPosition(), this._car.direction);
-        this.cameraManager.init();
         this.gridHelper = new GridHelper(GRID_DIMENSION, GRID_DIVISIONS, new Color(0xff0000), new Color(0x001188));
         this.scene.add(this._car);
         this.scene.add(this.gridHelper);
