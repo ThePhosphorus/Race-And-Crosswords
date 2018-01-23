@@ -1,66 +1,65 @@
-const assert = require('assert');
+/*const assert = require("assert");
+const http = require("http");
 
-let apiUrl = "";
-
-describe('Service Lexical', function () {
-    describe('#testApi()', function () {
+describe("Service Lexical", () => {
+    describe("When the Api is called", () => {
         testApi();
     });
 
-    describe('#testWord()', function () {
+    describe("When a word is received", () => {
         testWord();
     });
 
-    describe('#testDefinitions()', function () {
+    describe("When a definition is asked", () => {
         testDefinition();
     });
 
-    describe('#testWordRarety()', function () {
+    describe("When a specific rarety is asked", () => {
         testWordRarety();
     });
-
 
 });
 
 function testApi(): void {
-    it('can send request', (done) => {
-        assert.ok(true);
+    it("can send request", (done) => {
+        assert.ok(false);
         done();
     });
 
-    it('can receive word', (done) => {
-        assert.ok(true);
+    it("can receive word", (done) => {
+        assert.ok(false);
         done();
     });
 }
 
 function testWord(): void {
-    it('has correct length', (done) => {
-        assert.ok(true);
+    it("has correct length", (done) => {
+        assert.ok(false);
         done();
     });
 
-    it('respects letter criterias', (done) => {
-        assert.ok(true);
+    it("respects letter criterias", (done) => {
+        assert.ok(false);
         done();
     });
 }
 
 function testDefinition(): void {
-    it('can receive definition', (done) => {
-        assert.ok(true);
+    it("can receive definition", (done) => {
+        assert.ok(false);
         done();
     });
 }
 
 function testWordRarety(): void {
-    it('can receive common words', (done) => {
-        assert.ok(true);
+    it("can receive common words", (done) => {
+        assert.ok(false);
         done();
     });
 
-    it('can receive rare words', (done) => {
-        assert.ok(true);
+    it("can receive rare words", (done) => {
+        assert.ok(false);
         done();
     });
 }
+*/

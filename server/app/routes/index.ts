@@ -10,7 +10,7 @@ module Route {
 
         public helloWorld(req: Request, res: Response, next: NextFunction): void {
             const message: Message = new Message();
-            message.title = "Hello";
+            message.title = "Allo";
             message.body = "World";
             res.send(JSON.stringify(message));
         }
