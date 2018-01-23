@@ -9,9 +9,9 @@
       </p>
     </div>
 
-    <div class="col col-lg-2 offset-md-1 " id="level">
-      <b *ngIf="lvl">{{lvl}}</b>
-      <b *ngIf="!lvl">NO LEVEL</b>
+    <div class="col col-lg-3 offset-md-1 " id="level">
+      <p *ngIf="lvl">{{lvl | uppercase}}</p>
+      <p *ngIf="!lvl">NO LEVEL</p>
     </div>
   </div>
 </div>
