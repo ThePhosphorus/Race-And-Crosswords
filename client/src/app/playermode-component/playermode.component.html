@@ -10,7 +10,7 @@
     </div>
 
     <div class="col col-lg-3 offset-md-1 " id="level">
-      <p *ngIf="lvl">{{lvl | uppercase}}</p>
+      <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
       <p *ngIf="!lvl">NO LEVEL</p>
     </div>
   </div>
