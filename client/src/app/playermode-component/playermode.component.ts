@@ -14,8 +14,8 @@ enum DifficultyLevel {
 
 export class PlayermodeComponent implements OnInit {
 
-  public noPlayer: number = 2;
-  public lvlEnum: DifficultyLevel;
+  public nbPlayers: number = 2;
+  public lvl: DifficultyLevel;
 
   public constructor() { }
 

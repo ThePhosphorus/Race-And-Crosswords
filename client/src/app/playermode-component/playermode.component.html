@@ -1,17 +1,17 @@
 <div class="container">
   <div class="row mt-lg-3 justify-content-around" id="info">
-    <div class="col col-lg-3  " id="noPlayer">
-      <p *ngIf="noPlayer == 1">
+    <div class="col col-lg-3  " id="nbPlayers">
+      <p *ngIf="nbPlayers == 1">
         SINGLE PLAYER
       </p>
-      <p *ngIf="noPlayer !== 1">
-        {{noPlayer}} PLAYERS
+      <p *ngIf="nbPlayers !== 1">
+        {{nbPlayers}} PLAYERS
       </p>
     </div>
 
     <div class="col col-lg-2 offset-md-1 " id="level">
-      <b *ngIf="lvlEnum">{{lvlEnum}}</b>
-      <b *ngIf="!lvlEnum">No Direction</b>
+      <b *ngIf="lvl">{{lvl}}</b>
+      <b *ngIf="!lvl">No Direction</b>
     </div>
   </div>
 </div>
