@@ -1,0 +1,29 @@
+.black {
+    background-color: #212529;
+}
+
+#hints td:hover {
+    background-color: #e7e7e7;
+}
+
+#grid table {
+    border-collapse: collapse;
+    text-align: center;
+    align-self: center;
+    border: solid #212529 1vmin;
+    background-color: white;
+    box-shadow: 0.4vmin 0.4vmin 0.4vmin 0.4vmin gray;
+}
+
+#grid td {
+    font-size: 4vmin;
+    width: 7vmin;
+    height: 7vmin;
+    border: solid black 0.1vmin;
+}
+
+#hints{
+    font-size:100%
+
+}
+

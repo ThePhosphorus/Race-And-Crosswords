@@ -6,6 +6,9 @@
       "type": "shell",
       "command":
         "npm start --silent --prefix ./server/ & npm start --prefix ./client/ ",
+      "windows": {
+        "command": "npm start --prefix ./client/"
+      },
       "problemMatcher": ["$tsc-watch"],
       "group": {
         "kind": "build",

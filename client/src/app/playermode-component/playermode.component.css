@@ -1,0 +1,27 @@
+.easy {
+    color: green;
+}
+
+.medium {
+    color: rgb(160, 117, 0);
+}
+
+.hard {
+    color: rgb(126, 0, 0);
+}
+
+.container .col {
+    font-size: 100%;
+    font-weight:lighter;
+}
+#info {
+    vertical-align:bottom;
+    border-bottom: solid 0.2vmin dimgray;
+    color: black;
+    text-align:match-parent;
+}
+
+
+
+
+
