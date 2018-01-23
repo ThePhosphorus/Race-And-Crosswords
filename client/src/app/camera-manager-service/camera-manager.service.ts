@@ -10,6 +10,7 @@ const PERS_CAMERA_ANGLE: number = 30;
 const INITIAL_CAMERA_POSITION_Y: number = 25;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
+const STARTING_ASPECTRATIO: number = 16 / 9;
 
 export enum CameraType {
     Ortho,
@@ -29,9 +30,11 @@ export class CameraManagerService {
     private effectModeisEnabled: boolean;
 
     public constructor() {
-        this.carInfos = {position: new Vector3(), direction: new Vector3()};
-        this.thirdPersonPoint = new Vector3();
+        this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
+        this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
+        this.aspectRatio = STARTING_ASPECTRATIO;
+        this.init();
      }
 
     public init(): void  {
