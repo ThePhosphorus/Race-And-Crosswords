@@ -1,14 +1,14 @@
 <div class="container-fluid">
-  <ul class="nav justify-content-end">
+  <ul class="nav justify-content-end fixed-top">
     <li class="nav-item">
-      <a class="nav-link active" href="#" routerLink="/crosswords">CROSSWORDS</a>
+      <a class="nav-link active" href="#" routerLink="/crosswords" routerLinkActive="tab-open">CROSSWORDS</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#" routerLink="/race">RACE</a>
+      <a class="nav-link" href="#" routerLink="/race" routerLinkActive="tab-open">RACE</a>
     </li>
 
     <li class="nav-item">
-      <a class="nav-link disabled" href="#" routerLink="/crosswords">{{title}}</a>
+      <a class="nav-link disabled"  href="#" routerLink="/" id="home">{{title}}</a>
     </li>
   </ul>
   <router-outlet></router-outlet>

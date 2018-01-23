@@ -1,5 +1,20 @@
 .nav{
-	border-bottom: 0.5vmin solid darkgray;
-	border-bottom-color: dimgrey;
+	color:steelblue;
+    background-color:darkgray;
 }
+
+.tab-open {
+    background-color:lightgray;
+    border-bottom: none;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+.nav-link {
+    color: steelblue;
+}
+#home {
+    background-color:steelblue;
+    color: white;
+}
+
 

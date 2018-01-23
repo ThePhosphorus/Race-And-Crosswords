@@ -18,7 +18,10 @@
     border-bottom: solid 0.2vmin dimgray;
     color: black;
     text-align:match-parent;
- 
+}
+#level {
+    font-weight: lighter;
+    font-style:italic;
 }
 
 
