@@ -24,7 +24,6 @@ import { CameraManagerService } from "./camera-manager-service/camera-manager.se
     ],
     providers: [
         RenderService,
-        BasicService,
         CameraManagerService
     ],
     bootstrap: [AppComponent]
