@@ -7,15 +7,11 @@
       <p *ngIf="noPlayer !== 1">
         {{noPlayer}} PLAYERS
       </p>
-     
     </div>
-   
 
-    <div class="col col-lg-2 offset-md-1 " id="level" [ngSwitch]="myLvl">
-      <b *ngSwitchCase="lvlEnum.Easy" [ngClass]="'easy'">EASY</b>
-      <b *ngSwitchCase="lvlEnum.Medium" [ngClass]="'medium'">MEDIUM</b>
-      <b *ngSwitchCase="lvlEnum.Hard" [ngClass]="'hard'">HARD</b>
-      <b *ngSwitchDefault>No Direction</b>
+    <div class="col col-lg-2 offset-md-1 " id="level">
+      <b *ngIf="lvlEnum">{{lvlEnum}}</b>
+      <b *ngIf="!lvlEnum">No Direction</b>
     </div>
   </div>
-  </div>
+</div>
