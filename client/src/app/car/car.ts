@@ -4,11 +4,15 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    Quaternion
+    Quaternion,
+    Audio,
+    AudioLoader,
+    AudioBuffer
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../constants";
 import { Wheel } from "./wheel";
+import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 export const DEFAULT_WHEELBASE: number = 2.78;
 export const DEFAULT_MASS: number = 1515;
@@ -35,6 +39,7 @@ export class Car extends Object3D {
     private mesh: Object3D;
     private steeringWheelDirection: number;
     private weightRear: number;
+    private sound: Audio;
 
     public get speed(): Vector3 {
         return this._speed.clone();
@@ -63,6 +68,7 @@ export class Car extends Object3D {
     }
 
     public constructor(
+        private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
         rearWheel: Wheel = new Wheel(),
         wheelbase: number = DEFAULT_WHEELBASE,
@@ -96,6 +102,7 @@ export class Car extends Object3D {
         this.steeringWheelDirection = 0;
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
+        this.sound = new Audio(this.cameraManager.listener);
     }
 
     // TODO: move loading code outside of car class.
@@ -137,6 +144,22 @@ export class Car extends Object3D {
         this.isBraking = true;
     }
 
+    public handleSounds(): void {
+        if (!this.sound.isPlaying) {
+            const audioLoader: AudioLoader = new AudioLoader();
+            const s: Audio = this.sound;
+            audioLoader.load("../../assets/sounds/idle.ogg",
+                             (buffer: AudioBuffer) => {
+                                 s.setBuffer(buffer);
+                                 s.setLoop(true);
+                                 s.setVolume(0.5);
+                                 s.play();
+                             },
+                             () => { },
+                             () => { });
+        }
+    }
+
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
 
@@ -159,6 +182,8 @@ export class Car extends Object3D {
             Math.sin(this.steeringWheelDirection * deltaTime);
         const omega: number = this._speed.length() / R;
         this.mesh.rotateY(omega);
+
+        this.handleSounds();
     }
 
     private physicsUpdate(deltaTime: number): void {
@@ -213,8 +238,8 @@ export class Car extends Object3D {
         // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
             1 /
-                tirePressure *
-                (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) +
+            tirePressure *
+            (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) +
             0.005;
 
         return this.direction.multiplyScalar(
@@ -228,10 +253,10 @@ export class Car extends Object3D {
         const resistance: Vector3 = this.direction;
         resistance.multiplyScalar(
             airDensity *
-                carSurface *
-                -this.dragCoefficient *
-                this.speed.length() *
-                this.speed.length()
+            carSurface *
+            -this.dragCoefficient *
+            this.speed.length() *
+            this.speed.length()
         );
 
         return resistance;

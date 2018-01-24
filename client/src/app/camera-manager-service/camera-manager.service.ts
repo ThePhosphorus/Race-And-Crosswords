@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { PerspectiveCamera, OrthographicCamera, Vector3, Camera } from "three";
+import { PerspectiveCamera, OrthographicCamera, Vector3, Camera, AudioListener } from "three";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
 
 const FAR_CLIPPING_PLANE: number = 1000;
@@ -32,12 +32,14 @@ export class CameraManagerService {
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
     private zoom: number;
+    private _listener: AudioListener;
 
     public constructor() {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
         this.aspectRatio = STARTING_ASPECTRATIO;
+        this._listener = new AudioListener();
         this.init();
      }
 
@@ -45,14 +47,12 @@ export class CameraManagerService {
         this.zoom = 0;
         this.cameraDistance = INITIAL_CAMERA_DISTANCE;
         this.type = CameraType.Persp;
-
         this.persp = new PerspectiveCamera(
             FIELD_OF_VIEW,
             this.aspectRatio,
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
-
         this.ortho = new OrthographicCamera(
             -this.cameraDistance * this.aspectRatio,
             this.cameraDistance * this.aspectRatio,
@@ -70,6 +70,8 @@ export class CameraManagerService {
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
+        this.ortho.add(this._listener);
+        this.persp.add(this._listener);
     }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
@@ -149,6 +151,10 @@ export class CameraManagerService {
 
     public set effectModeEnabled(value: boolean) {
         this.effectModeisEnabled = value;
+    }
+
+    public get listener(): AudioListener {
+        return this._listener;
     }
 
     private updateCameraPostion(deltaTime: number): void {

@@ -36,7 +36,7 @@ export class RenderService {
     private gridHelper: GridHelper;
 
     public constructor(private cameraManager: CameraManagerService) {
-        this._car = new Car();
+        this._car = new Car(cameraManager);
      }
 
     public get car(): Car {
