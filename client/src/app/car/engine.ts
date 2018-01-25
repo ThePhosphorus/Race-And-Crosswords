@@ -21,7 +21,6 @@ export const DEFAULT_GEAR_RATIOS: number[] = [
 export class Engine {
     private _currentGear: number;
     private _rpm: number;
-    private _lastRpm: number;
     private gearRatios: number[];
     private driveRatio: number;
     private downshiftRPM: number;
@@ -35,10 +34,6 @@ export class Engine {
 
     public get rpm(): number {
         return this._rpm;
-    }
-
-    public get lastRpm(): number {
-        return this._lastRpm;
     }
 
     public constructor(
@@ -80,7 +75,6 @@ export class Engine {
     }
 
     public update(speed: number, wheelRadius: number): void {
-        this._lastRpm = this._rpm;
         this._rpm = this.getRPM(speed, wheelRadius);
         this.handleTransmission(speed, wheelRadius);
     }

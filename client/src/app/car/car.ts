@@ -35,11 +35,13 @@ export class Car extends Object3D {
     private readonly dragCoefficient: number;
 
     private _speed: Vector3;
+    private _lastSpeed: Vector3;
     private isBraking: boolean;
     private mesh: Object3D;
     private steeringWheelDirection: number;
     private weightRear: number;
-    private sound: Audio;
+    private idleSound: Audio;
+    private accelSound: Audio;
 
     public get speed(): Vector3 {
         return this._speed.clone();
@@ -67,6 +69,30 @@ export class Car extends Object3D {
         return carDirection;
     }
 
+    private loadSounds(): void {
+        const tmpIdle: Audio = this.idleSound = new Audio(this.cameraManager.listener);
+        const tmpAccel: Audio = this.accelSound = new Audio(this.cameraManager.listener);
+
+        const idleLoader: AudioLoader = new AudioLoader();
+        idleLoader.load("../../assets/sounds/idle.ogg",
+                        (buffer: AudioBuffer) => {
+                            tmpIdle.setBuffer(buffer);
+                            tmpIdle.setLoop(true);
+                            tmpIdle.setVolume(0.5);
+                        },
+                        () => { },
+                        () => { });
+        const accelLoader: AudioLoader = new AudioLoader();
+        accelLoader.load("../../assets/sounds/accel.ogg",
+                         (buffer: AudioBuffer) => {
+                            tmpAccel.setBuffer(buffer);
+                            tmpAccel.setLoop(false);
+                            tmpAccel.setVolume(0.5);
+                         },
+                         () => { },
+                         () => { });
+    }
+
     public constructor(
         private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
@@ -91,18 +117,18 @@ export class Car extends Object3D {
             console.error("Drag coefficient should be greater than 0.");
             dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
         }
-
         this.engine = engine;
         this.rearWheel = rearWheel;
         this.wheelbase = wheelbase;
         this.mass = mass;
         this.dragCoefficient = dragCoefficient;
-
         this.isBraking = false;
         this.steeringWheelDirection = 0;
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
-        this.sound = new Audio(this.cameraManager.listener);
+        this._lastSpeed = new Vector3(0, 0, 0);
+        this.idleSound = new Audio(this.cameraManager.listener);
+        this.accelSound = new Audio(this.cameraManager.listener);
     }
 
     // TODO: move loading code outside of car class.
@@ -122,6 +148,7 @@ export class Car extends Object3D {
         this.mesh = await this.load();
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.add(this.mesh);
+        this.loadSounds();
     }
 
     public steerLeft(): void {
@@ -145,22 +172,26 @@ export class Car extends Object3D {
     }
 
     public handleSounds(): void {
-        if (!this.sound.isPlaying) {
-            const audioLoader: AudioLoader = new AudioLoader();
-            const s: Audio = this.sound;
-            audioLoader.load("../../assets/sounds/idle.ogg",
-                             (buffer: AudioBuffer) => {
-                                 s.setBuffer(buffer);
-                                 s.setLoop(true);
-                                 s.setVolume(0.5);
-                                 s.play();
-                             },
-                             () => { },
-                             () => { });
+        if (this._speed.lengthSq() === 0) {
+            if (this.accelSound.isPlaying) {
+                this.accelSound.stop();
+            }
+            if (!this.idleSound.isPlaying) {
+                this.idleSound.play();
+            }
+        } else {
+            if (this.idleSound.isPlaying) {
+                this.idleSound.stop();
+            }
+            if (!this.accelSound.isPlaying) {
+                this.accelSound.play();
+            }
         }
     }
 
     public update(deltaTime: number): void {
+        this.handleSounds();
+        this._lastSpeed = this._speed;
         deltaTime = deltaTime / MS_TO_SECONDS;
 
         // Move to car coordinates
@@ -183,7 +214,6 @@ export class Car extends Object3D {
         const omega: number = this._speed.length() / R;
         this.mesh.rotateY(omega);
 
-        this.handleSounds();
     }
 
     private physicsUpdate(deltaTime: number): void {
