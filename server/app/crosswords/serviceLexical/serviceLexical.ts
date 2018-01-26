@@ -16,10 +16,10 @@ module ServiceLexicalMicroservice {
             res.send(JSON.stringify(message));
         }
         /*public makeQuery(isRare: boolean, lettres: string){
-            let query: string = "https://api.datamuse.com/words?sp=" + lettres + "&qe&md=df";
-            let correspondingWords = request('GET', query).body;
+            let query: string = "https://api.datamuse.com/words?sp=" + ????c????? + "&qe&md=df";
+            let correspondingWords = http.get('GET', query).body;*/
 
-        }*/
+        }
     }
 }
 
