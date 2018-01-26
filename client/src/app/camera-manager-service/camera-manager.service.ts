@@ -104,7 +104,6 @@ export class CameraManagerService {
     public switchCamera(): void {
         if (this.type === CameraType.Ortho) {
             this.type = CameraType.Persp;
-            this.persp.position = this.thirdPersonPoint;
         } else if (this.type === CameraType.Persp) {
             this.type = CameraType.Ortho;
         }
