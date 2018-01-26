@@ -3,12 +3,11 @@ import { Router, Request, Response, NextFunction } from "express";
 import {CrosswordsRoutes} from "./crosswords/crosswords-router";
 
 import Types from "./types";
-import { Index } from "./routes/index";
 
 @injectable()
 export class Routes {
     private crosswordsRoutes: CrosswordsRoutes;
-    public constructor( @inject(Types.Index) private index: Index ) {
+    public constructor() {
         this.crosswordsRoutes = new CrosswordsRoutes();
      }
 
@@ -16,7 +15,7 @@ export class Routes {
         const router: Router = Router();
 
         router.get("/",
-                   (req: Request, res: Response, next: NextFunction) => this.index.helloWorld(req, res, next));
+                   (req: Request, res: Response, next: NextFunction) => res.send("log2990 router test"));
 
         router.use("/crosswords", this.crosswordsRoutes.routes );
 
