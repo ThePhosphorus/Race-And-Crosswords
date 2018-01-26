@@ -11,6 +11,7 @@ const INITIAL_CAMERA_POSITION_Y: number = 25;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
 const STARTING_ASPECTRATIO: number = 16 / 9;
+const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
 const MINIMAL_ZOOM: number = 4;
 const MAXIMAL_ZOOM: number = 25;
 const ZOOM_FACTOR: number = 0.5;
@@ -200,7 +201,8 @@ export class CameraManagerService {
             deltaPos.multiplyScalar(
                 PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
                 (
-                    (deltaPos.length() >= MAX_RECOIL_DISTANCE) ? (deltaPos.length() - MAX_RECOIL_DISTANCE + 1) : 1)
+                    (deltaPos.length() >= MAX_RECOIL_DISTANCE ) ?
+                    (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE)  + 1) : 1)
                 );
             this.persp.position.add(deltaPos);
         } else { this.persp.position.copy(this.thirdPersonPoint); }
