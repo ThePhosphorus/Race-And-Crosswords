@@ -3,5 +3,7 @@ export default  {
         Application: Symbol("Application"),
         Routes: Symbol("Routes"),
         Crosswords: Symbol("Crosswords"),
-        Race: Symbol("Race")
+        Race: Symbol("Race"),
+        Lexical: Symbol("Lexical"),
+        Grid: Symbol("Grid")
 };

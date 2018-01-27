@@ -1,23 +1,22 @@
+import { injectable, inject } from "inversify";
 import { Router, Request, Response, NextFunction } from "express";
-import { injectable } from "inversify";
+import {Grid} from "./grid/grid";
+import {Lexical} from "./lexical/lexical";
+
+import Types from "../types";
 
 @injectable()
 export class Crosswords {
 
-    public constructor() {}
+    public constructor(@inject(Types.Lexical) private lexical: Lexical, @inject(Types.Grid) private grid: Grid) {}
 
     public get routes(): Router {
         const router: Router = Router();
 
-        router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            res.send("Crosswords enpoint");
-        });
+        router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("Crosswords enpoint"));
 
-        router.get("/service-lexical",
-                   (req: Request, res: Response, next: NextFunction) => {
-                res.send("Lexical service endpoint");
-            }
-        );
+        router.use("/lexical", this.lexical.routes );
+        router.use("/grid", this.grid.routes );
 
         return router;
     }
