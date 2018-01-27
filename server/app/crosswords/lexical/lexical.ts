@@ -1,10 +1,8 @@
-import { Router, Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
+import { Router, Request, Response, NextFunction } from "express";
 
 @injectable()
 export class Lexical {
-
-    public constructor() {}
 
     public get routes(): Router {
         const router: Router = Router();

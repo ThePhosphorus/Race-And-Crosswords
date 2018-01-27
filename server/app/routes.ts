@@ -14,7 +14,7 @@ export class Routes {
         const router: Router = Router();
 
         router.get("/",
-                   (req: Request, res: Response, next: NextFunction) => res.send("log2990 router test"));
+                   (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
 
         router.use("/crosswords", this.crosswords.routes );
         router.use("/race", this.race.routes );

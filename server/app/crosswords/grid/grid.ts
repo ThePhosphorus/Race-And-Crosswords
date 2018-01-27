@@ -4,8 +4,6 @@ import { injectable } from "inversify";
 @injectable()
 export class Grid {
 
-    public constructor() {}
-
     public get routes(): Router {
         const router: Router = Router();
 
