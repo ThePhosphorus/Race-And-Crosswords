@@ -1,8 +1,10 @@
 import { Router, Request, Response, NextFunction } from "express";
+import { injectable } from "inversify";
 
-export class CrosswordsRoutes {
+@injectable()
+export class Crosswords {
 
-    public constructor() { }
+    public constructor() {}
 
     public get routes(): Router {
         const router: Router = Router();

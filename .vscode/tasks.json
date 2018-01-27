@@ -4,9 +4,10 @@
     {
       "label": "start",
       "type": "shell",
-      "command":
-        "npm start --silent --prefix ./server/ & npm start --prefix ./client/ ",
-      "problemMatcher": ["$tsc-watch"],
+      "command": "npm start --silent --prefix ./server/ & npm start --prefix ./client/ ",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -16,14 +17,17 @@
       "label": "client",
       "type": "shell",
       "command": "npm start --prefix ./client/",
-      "problemMatcher": ["$tsc"],
+      "problemMatcher": [
+        "$tsc"
+      ],
       "group": "build"
     },
     {
       "label": "server",
       "type": "shell",
       "command": "npm start --prefix ./server/",
-      "group": "build"
+      "group": "build",
+      "problemMatcher": []
     },
     {
       "label": "test-server",
