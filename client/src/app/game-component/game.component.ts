@@ -1,12 +1,17 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, HostListener } from "@angular/core";
 import { RenderService } from "../render-service/render.service";
 import { Car } from "../car/car";
+import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 @Component({
     moduleId: module.id,
     selector: "app-game-component",
     templateUrl: "./game.component.html",
-    styleUrls: ["./game.component.css"]
+    styleUrls: ["./game.component.css"],
+    providers: [
+        RenderService,
+        CameraManagerService
+            ]
 })
 
 export class GameComponent implements AfterViewInit {

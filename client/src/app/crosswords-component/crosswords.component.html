@@ -1,3 +1,32 @@
-<p>
-  crosswords works!
-</p>
+<div class="row text-center justify-content-md-center mt-5">
+  <div class="col-7 mt-3" id="hints">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Across</th>
+          <th>Down</th>
+        </tr>
+      </thead>
+      <tr *ngFor="let item of definitions">
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="col-5 mt-3 " id="grid">
+    <table align="center">
+      <tbody>
+        <tr *ngFor="let word of words">
+          <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">
+            <span *ngIf="letter != '-'">
+              {{letter | uppercase}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <app-playermode></app-playermode>
+  </div>
+
+</div>
