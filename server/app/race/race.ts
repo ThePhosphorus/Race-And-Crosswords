@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 
 @injectable()
-export class Crosswords {
+export class Race {
 
     public constructor() {}
 
@@ -10,14 +10,8 @@ export class Crosswords {
         const router: Router = Router();
 
         router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            res.send("Crosswords enpoint");
+            res.send("Race endpoint");
         });
-
-        router.get("/service-lexical",
-                   (req: Request, res: Response, next: NextFunction) => {
-                res.send("Lexical service endpoint");
-            }
-        );
 
         return router;
     }
