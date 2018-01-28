@@ -8,6 +8,10 @@ describe("Generation de la grille", () => {
             assert.ok(false);
         });
 
+        it("the first row and column should not have black tiles", () => {
+            assert.ok(false);
+        });
+
         it("should have x% of black squares", () => {
             assert.ok(false);
         });

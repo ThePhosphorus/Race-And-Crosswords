@@ -1,12 +1,16 @@
-enum Orientation {
+export enum Orientation {
     Vertical = "Vertical",
     Horizontal = "Horizontal",
 }
 
-class Word {
+export class Position {
+    public column: number;
+    public row: number;
+}
 
-    public row: Number;
-    public column: Number;
+export class Word {
+
+    public position: Position;
     public wordString: string;
     public definitions: string[];
     public orientation: Orientation;
