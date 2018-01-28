@@ -7,9 +7,21 @@ class GenerateurGrille {
     // private words: Word[];
     private blackTiles: Position[];
     private wordPlacement: [boolean, number, number][];
+    private verticalWords: Word[][];
+    private horizontalWords: Word[][];
+
+    public GenerateurGrille(): void {
+        this.verticalWords = [];
+        this.horizontalWords = [];
+        for (let i: number = 0; i < this.gridSize; i++) {
+            this.verticalWords.push([]);
+            this.horizontalWords.push([]);
+        }
+    }
 
     public generateEmptyGrid(): void {
         this.generateBlackTiles();
+        this.generateEmptyWords();
     }
 
     private generateBlackTiles(): void {
@@ -20,6 +32,13 @@ class GenerateurGrille {
             newTile.row = Math.floor (Math.random() * (this.gridSize - 2)) + 1;
             this.blackTiles[i] = newTile;
         }
+    }
+
+    private generateEmptyWords(): void {
+        this.blackTiles.forEach((blackTile: Position) => {
+            this.verticalWords[blackTile.column].push(new Word());
+
+        });
     }
 
     public getWord(): void {
