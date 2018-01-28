@@ -1,19 +1,23 @@
 import { injectable, inject } from "inversify";
 import { Router, Request, Response, NextFunction } from "express";
+import {Crosswords} from "./crosswords/crosswords";
+import {Race} from "./race/race";
 
 import Types from "./types";
-import { Index } from "./routes/index";
 
 @injectable()
 export class Routes {
-
-    public constructor(@inject(Types.Index) private index: Index) {}
+    public constructor(@inject(Types.Crosswords) private crosswords: Crosswords, @inject(Types.Race) private race: Race) {
+    }
 
     public get routes(): Router {
         const router: Router = Router();
 
         router.get("/",
-                   (req: Request, res: Response, next: NextFunction) => this.index.helloWorld(req, res, next));
+                   (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
+
+        router.use("/crosswords", this.crosswords.routes );
+        router.use("/race", this.race.routes );
 
         return router;
     }
