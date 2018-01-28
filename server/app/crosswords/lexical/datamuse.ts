@@ -1,13 +1,13 @@
 import * as http from "http";
 import { IncomingMessage } from "https";
-import { Word } from "./word";
+import { Word } from "../../../../common/communication/word";
 
 const HTTP_STATUS_OK: number = 200;
 const HARD_THRESHOLD: number = 1000;
 
 export class Datamuse {
     public getWords(callback: (words: Array<Word>) => void): void {
-        http.get("http://api.datamuse.com/words?sp=t??k", (res: IncomingMessage) => {
+        http.get("http://api.datamuse.com/words?sp=t??k&md=def", (res: IncomingMessage) => {
             const { statusCode } = res;
 
             if (statusCode === HTTP_STATUS_OK) {
