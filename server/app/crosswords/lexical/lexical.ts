@@ -20,7 +20,7 @@ export class Lexical {
         });
 
         router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getEasyWord((word: Word) => {
+            this.datamuse.getEasyWord("t??t", (word: Word) => {
                 if (word) {
                     res.send(word);
                 } else {
@@ -30,7 +30,7 @@ export class Lexical {
         });
 
         router.get("/hard-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getHardWord((word: Word) => {
+            this.datamuse.getHardWord("a??o", (word: Word) => {
                 if (word) {
                     res.send(word);
                 } else {
