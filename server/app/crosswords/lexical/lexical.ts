@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Router, Request, Response, NextFunction } from "express";
 import { Datamuse } from "./datamuse";
-import { Words } from "./words";
+import { Word } from "./word";
 
 @injectable()
 export class Lexical {
@@ -19,10 +19,20 @@ export class Lexical {
             res.send("Lexical service enpoint");
         });
 
-        router.get("/word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getWords((words: Words) => {
-                if (!words.error) {
-                    res.send(words.words);
+        router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
+            this.datamuse.getEasyWord((word: Word) => {
+                if (word) {
+                    res.send(word.word);
+                } else {
+                    res.send("Bad request");
+                }
+            });
+        });
+
+        router.get("/hard-word", (req: Request, res: Response, next: NextFunction) => {
+            this.datamuse.getHardWord((word: Word) => {
+                if (word) {
+                    res.send(word.word);
                 } else {
                     res.send("Bad request");
                 }
