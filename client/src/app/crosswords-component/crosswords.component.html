@@ -20,7 +20,7 @@
         <tr *ngFor="let word of words">
           <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">
             <span *ngIf="letter != '-'">
-              {{letter | uppercase}}
+              <input type="text" maxlength="1" (keypress)="validateInput($event)" value="{{letter | uppercase}}">
             </span>
           </td>
         </tr>

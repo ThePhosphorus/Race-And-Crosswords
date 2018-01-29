@@ -22,6 +22,14 @@
     border: solid #212529 0.1vmin;
 }
 
+#grid td input {
+    border: none;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
 #hints{
     font-size:100%
 
