@@ -20,6 +20,7 @@ const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
 const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
+const APPROX_MAXIMUM_SPEED: number=220;
 
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
@@ -98,7 +99,7 @@ export class Car extends Object3D {
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
 
-        this.maximum_speed = 220;
+        this.maximum_speed = APPROX_MAXIMUM_SPEED;
 
         
     }
