@@ -35,6 +35,7 @@ export class Car extends Object3D {
     private mesh: Object3D;
     private steeringWheelDirection: number;
     private weightRear: number;
+    private maximum_speed: number;
 
     public get speed(): Vector3 {
         return this._speed.clone();
@@ -96,6 +97,10 @@ export class Car extends Object3D {
         this.steeringWheelDirection = 0;
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
+
+        this.maximum_speed = 220;
+
+        
     }
 
     // TODO: move loading code outside of car class.
@@ -118,11 +123,11 @@ export class Car extends Object3D {
     }
 
     public steerLeft(): void {
-        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE * (220-(this._speed.length()*3.6))/220;
+        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*3.6))/this.maximum_speed;
     }
 
     public steerRight(): void {
-        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE * (220-(this._speed.length()*3.60))/220;
+        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*3.60))/this.maximum_speed;
     }
 
     public releaseSteering(): void {
@@ -302,4 +307,8 @@ export class Car extends Object3D {
     public getPosition(): Vector3 {
         return this.mesh.position;
     }
+
+
+
+    
 }
