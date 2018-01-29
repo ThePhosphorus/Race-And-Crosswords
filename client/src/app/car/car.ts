@@ -118,11 +118,11 @@ export class Car extends Object3D {
     }
 
     public steerLeft(): void {
-        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE;
+        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE * (220-(this._speed.length()*3.6))/220;
     }
 
     public steerRight(): void {
-        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE;
+        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE * (220-(this._speed.length()*3.60))/220;
     }
 
     public releaseSteering(): void {
