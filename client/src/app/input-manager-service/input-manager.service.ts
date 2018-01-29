@@ -12,7 +12,7 @@ const TOOGLE_CAMERA_EFFECT_MODE: number = 88; //,
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const NIGHT_MODE: number = 78; // n
-const LIGTH: number = 76; // l
+const LIGTHS: number = 76; // l
 
 @Injectable()
 export class InputManagerService {
@@ -48,6 +48,12 @@ export class InputManagerService {
         case ZOOM_OUT_KEYCODE:
             this.cameraManager.zoomFactor = -1;
             break;
+        case NIGHT_MODE:
+            //TODO
+            break;
+        case LIGTHS:
+            //TODO
+            break;
         default:
             break;
     }
@@ -70,6 +76,12 @@ public handleKeyUp(event: KeyboardEvent, _car: Car): void {
             break;
         case ZOOM_OUT_KEYCODE:
             this.cameraManager.zoomFactor = 0;
+            break;
+        case NIGHT_MODE:
+            //TODO
+            break;
+        case LIGTHS:
+            //TODO
             break;
         default:
             break;
