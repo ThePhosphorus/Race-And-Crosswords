@@ -17,9 +17,12 @@ const LIGTHS: number = 76; // l
 @Injectable()
 export class InputManagerService {
     
+    private isLeftPressed: boolean;
+    private isRightPressed: boolean;
 
   constructor(private cameraManager: CameraManagerService) {
-     
+     this.isLeftPressed = false;
+     this.isRightPressed = false;
    }
 
   public handleKeyDown(event: KeyboardEvent, _car: Car): void {
@@ -29,9 +32,11 @@ export class InputManagerService {
             break;
         case LEFT_KEYCODE:
             _car.steerLeft();
+            this.isLeftPressed=true;
             break;
         case RIGHT_KEYCODE:
            _car.steerRight();
+           this.isRightPressed=true;
             break;
         case BRAKE_KEYCODE:
             _car.brake();
@@ -65,8 +70,19 @@ public handleKeyUp(event: KeyboardEvent, _car: Car): void {
            _car.isAcceleratorPressed = false;
             break;
         case LEFT_KEYCODE:
+             this.isLeftPressed=false;
+             if(this.isRightPressed)
+                _car.steerRight();
+             else
+                _car.releaseSteering();
+             break;
         case RIGHT_KEYCODE:
-            _car.releaseSteering();
+            this.isRightPressed=false;
+            if(this.isLeftPressed)
+                _car.steerLeft();
+             else
+                _car.releaseSteering();
+             break;
             break;
         case BRAKE_KEYCODE:
             _car.releaseBrakes();

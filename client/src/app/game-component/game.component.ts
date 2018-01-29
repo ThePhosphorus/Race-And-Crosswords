@@ -32,6 +32,8 @@ export class GameComponent implements AfterViewInit {
     this.inputmanager.handleKeyUp(event, this.car);
     }
 
+   
+
     public ngAfterViewInit(): void {
         this.renderService
             .initialize(this.containerRef.nativeElement)
