@@ -21,6 +21,7 @@ const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
 const APPROX_MAXIMUM_SPEED: number=220;
+const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
@@ -124,11 +125,11 @@ export class Car extends Object3D {
     }
 
     public steerLeft(): void {
-        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*3.6))/this.maximum_speed;
+        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*METER_TO_KM_SPEED_CONVERSION))/this.maximum_speed;
     }
 
     public steerRight(): void {
-        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*3.60))/this.maximum_speed;
+        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*METER_TO_KM_SPEED_CONVERSION))/this.maximum_speed;
     }
 
     public releaseSteering(): void {
