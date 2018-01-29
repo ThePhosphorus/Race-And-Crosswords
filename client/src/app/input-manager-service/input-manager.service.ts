@@ -3,14 +3,16 @@ import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 
-const ACCELERATE_KEYCODE: number = 38; // up arrow
-const LEFT_KEYCODE: number = 37; // left arrow
-const BRAKE_KEYCODE: number = 40; // down arrow
-const RIGHT_KEYCODE: number = 39; // rigth arrow
+const ACCELERATE_KEYCODE: number = 87; // w
+const LEFT_KEYCODE: number = 65; //a
+const BRAKE_KEYCODE: number = 83; // s
+const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
 const TOOGLE_CAMERA_EFFECT_MODE: number = 88; //,
-const ZOOM_IN_KEYCODE: number = 190; // .
-const ZOOM_OUT_KEYCODE: number = 188; // ,
+const ZOOM_IN_KEYCODE: number = 187; // +
+const ZOOM_OUT_KEYCODE: number = 189; // -
+const NIGHT_MODE: number = 78; // n
+const LIGTH: number = 76; // l
 
 @Injectable()
 export class InputManagerService {
