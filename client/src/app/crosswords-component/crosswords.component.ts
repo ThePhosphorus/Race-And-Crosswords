@@ -36,7 +36,7 @@ export class CrosswordsComponent implements OnInit {
             event.preventDefault();
         }
         if (lowerCase.test(inputChar)) {
-            event.target.value = inputChar.toUpperCase();
+            (event.target as HTMLInputElement).value = inputChar.toUpperCase();
         }
     }
 
