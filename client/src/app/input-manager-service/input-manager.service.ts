@@ -16,7 +16,7 @@ const LIGTHS: number = 76; // l
 
 @Injectable()
 export class InputManagerService {
-    
+
     private isLeftPressed: boolean;
     private isRightPressed: boolean;
 
@@ -36,7 +36,7 @@ export class InputManagerService {
             break;
         case RIGHT_KEYCODE:
            _car.steerRight();
-           this.isRightPressed=true;
+           this.isRightPressed =true;
             break;
         case BRAKE_KEYCODE:
             _car.brake();
@@ -54,10 +54,10 @@ export class InputManagerService {
             this.cameraManager.zoomFactor = -1;
             break;
         case NIGHT_MODE:
-            //TODO
+            // TODO
             break;
         case LIGTHS:
-            //TODO
+            // TODO
             break;
         default:
             break;
@@ -70,18 +70,21 @@ public handleKeyUp(event: KeyboardEvent, _car: Car): void {
            _car.isAcceleratorPressed = false;
             break;
         case LEFT_KEYCODE:
-             this.isLeftPressed=false;
-             if(this.isRightPressed)
+             this.isLeftPressed= false;
+             if(this.isRightPressed) {
                 _car.steerRight();
-             else
+             }
+             else {
                 _car.releaseSteering();
+             }
              break;
         case RIGHT_KEYCODE:
-            this.isRightPressed=false;
-            if(this.isLeftPressed)
+            this.isRightPressed =false;
+            if(this.isLeftPressed) {
                 _car.steerLeft();
-             else
+            } else {
                 _car.releaseSteering();
+            }
             break;
         case BRAKE_KEYCODE:
             _car.releaseBrakes();
@@ -93,10 +96,10 @@ public handleKeyUp(event: KeyboardEvent, _car: Car): void {
             this.cameraManager.zoomFactor = 0;
             break;
         case NIGHT_MODE:
-            //TODO
+            // TODO
             break;
         case LIGTHS:
-            //TODO
+            // TODO
             break;
         default:
             break;
