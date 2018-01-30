@@ -20,7 +20,7 @@ const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
 const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
-const APPROX_MAXIMUM_SPEED: number=220;
+const APPROX_MAXIMUM_SPEED: number = 220;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 
 export class Car extends Object3D {
@@ -37,7 +37,7 @@ export class Car extends Object3D {
     private mesh: Object3D;
     private steeringWheelDirection: number;
     private weightRear: number;
-    private maximum_speed: number;
+    private steeringWheelState: number;
 
     public get speed(): Vector3 {
         return this._speed.clone();
@@ -99,10 +99,6 @@ export class Car extends Object3D {
         this.steeringWheelDirection = 0;
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
-
-        this.maximum_speed = APPROX_MAXIMUM_SPEED;
-
-        
     }
 
     // TODO: move loading code outside of car class.
@@ -111,7 +107,7 @@ export class Car extends Object3D {
             const loader: ObjectLoader = new ObjectLoader();
             loader.load(
                 "../../assets/camero/camero-2010-low-poly.json",
-                (object) => {
+                object => {
                     resolve(object);
                 }
             );
@@ -125,15 +121,24 @@ export class Car extends Object3D {
     }
 
     public steerLeft(): void {
-        this.steeringWheelDirection = MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*METER_TO_KM_SPEED_CONVERSION))/this.maximum_speed;
+        this.steeringWheelState = 1;
     }
 
     public steerRight(): void {
-        this.steeringWheelDirection = -MAXIMUM_STEERING_ANGLE * (this.maximum_speed-(this._speed.length()*METER_TO_KM_SPEED_CONVERSION))/this.maximum_speed;
+        this.steeringWheelState = -1;
+    }
+
+    private updateSteering(): void {
+        this.steeringWheelDirection =
+            this.steeringWheelState *
+            MAXIMUM_STEERING_ANGLE *
+            (APPROX_MAXIMUM_SPEED -
+                this._speed.length() * METER_TO_KM_SPEED_CONVERSION) /
+            APPROX_MAXIMUM_SPEED;
     }
 
     public releaseSteering(): void {
-        this.steeringWheelDirection = 0;
+        this.steeringWheelState = 0;
     }
 
     public releaseBrakes(): void {
@@ -160,6 +165,7 @@ export class Car extends Object3D {
         // Move back to world coordinates
         this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
 
+        this.updateSteering();
         // Angular rotation of the car
         const R: number =
             DEFAULT_WHEELBASE /
@@ -218,14 +224,19 @@ export class Car extends Object3D {
 
         // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
-            1 /tirePressure *
-                (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) + 0.005;
+            1 /
+                tirePressure *
+                (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) +
+            0.005;
 
-        if (this.isGoingForward())
-        {
-            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
+        if (this.isGoingForward()) {
+            return this.direction.multiplyScalar(
+                rollingCoefficient * this.mass * GRAVITY
+            );
         }
-        return this.direction.multiplyScalar(-1*rollingCoefficient * this.mass * GRAVITY);
+        return this.direction.multiplyScalar(
+            -1 * rollingCoefficient * this.mass * GRAVITY
+        );
     }
 
     private getDragForce(): Vector3 {
@@ -308,8 +319,4 @@ export class Car extends Object3D {
     public getPosition(): Vector3 {
         return this.mesh.position;
     }
-
-
-
-    
 }
