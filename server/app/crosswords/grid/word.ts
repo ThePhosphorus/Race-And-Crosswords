@@ -4,23 +4,40 @@ export enum Orientation {
 }
 
 export class Position {
-    public column: number;
-    public row: number;
+    public constructor(public column: number, public row: number) {}
 }
 
 export class Word {
 
-    public position: Position;
-    public wordString: string;
-    public definitions: string[];
-    public orientation: Orientation;
+    private position: Position;
+    private wordString: string;
+    private definitions: string[];
+    private orientation: Orientation;
 
-    public Word(orientation: Orientation, position: Position, length: number): void {
+    public constructor(orientation: Orientation, position: Position, length: number) {
         this.orientation = orientation;
         this.position = position;
         for (let i: number = 0; i < length ; i++) {
             this.wordString += "?";
         }
+    }
+
+    public getPosition(): Position {
+        return this.position;
+    }
+
+    public getOrientation(): Orientation {
+        return this.orientation;
+    }
+
+    public getDefinitions(): string[] {
+        return this.definitions;
+    }
+
+    public addDefinitions(definitions: string[] ): void {
+        definitions.forEach((definition: string) => {
+           this.definitions.push(definition);
+        });
     }
 
     public setWord(word: string): void {
