@@ -82,7 +82,6 @@ public handleKeyUp(event: KeyboardEvent, _car: Car): void {
                 _car.steerLeft();
              else
                 _car.releaseSteering();
-             break;
             break;
         case BRAKE_KEYCODE:
             _car.releaseBrakes();
