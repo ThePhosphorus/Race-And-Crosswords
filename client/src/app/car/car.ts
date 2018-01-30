@@ -209,7 +209,6 @@ export class Car extends Object3D {
             const brakeForce: Vector3 = this.getBrakeForce();
             resultingForce.add(brakeForce);
         }
-
         return resultingForce;
     }
 
@@ -219,14 +218,14 @@ export class Car extends Object3D {
 
         // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
-            1 /
-                tirePressure *
-                (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) +
-            0.005;
+            1 /tirePressure *
+                (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) + 0.005;
 
-        return this.direction.multiplyScalar(
-            rollingCoefficient * this.mass * GRAVITY
-        );
+        if (this.isGoingForward())
+        {
+            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
+        }
+        return this.direction.multiplyScalar(-1*rollingCoefficient * this.mass * GRAVITY);
     }
 
     private getDragForce(): Vector3 {
