@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { CrosswordsComponent } from "./crosswords.component";
+import { PlayermodeComponent } from "../playermode-component/playermode.component";
 
 describe("CrosswordsComponent", () => {
   let component: CrosswordsComponent;
@@ -8,7 +9,7 @@ describe("CrosswordsComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CrosswordsComponent ]
+      declarations: [ CrosswordsComponent, PlayermodeComponent ]
     })
     .compileComponents();
   }));
