@@ -15,7 +15,7 @@ export class GridGenerator {
     private blackTilePercentage: number = 0.2;
     // private words: Word[];
     private blackTiles: Position[];
-    private wordPlacement: [boolean, number, number][];
+    private wordPlacement: [boolean, number, number][]; // Maybe we should make this into a class or struct
     private verticalWords: Word[][];
     private horizontalWords: Word[][];
 
@@ -80,11 +80,31 @@ export class GridGenerator {
         });
     }
 
-    public getWord(): void {
+    public populateGrid(): void {
+        for (let index: number = 0; index < this.verticalWords.length; index++) {
+            this.verticalWords[index].forEach((word: Word) => {
+                this.wordPlacement.push([true, index, word.length]);
+            });
+        }
+        for (let index: number = 0; index < this.verticalWords.length; index++) {
+            this.verticalWords[index].forEach((word: Word) => {
+                this.wordPlacement.push([true, index, word.length]);
+            });
+        }
+        this.wordPlacement.sort((w1, w2) => w1[2] - w2[2]);
 
+        this.addWordToGrid(0);
     }
 
-    public getConstraints(): void {
+    private addWordToGrid(index: number): boolean {
+        return true;
+    }
+
+    private getWords(): void {
+        
+    }
+
+    private getConstraints(): void {
 
     }
 }
