@@ -1,5 +1,5 @@
-import { Word, Orientation, Position } from "./word";
-import { Request } from "express-serve-static-core";
+import { Word, Orientation, Position } from "../../../../common/communication/crossword-grid";
+import * as request from "request-promise-native";
 
 const MIN_WORD_LENGTH: number = 2;
 
@@ -15,11 +15,11 @@ export class GridGenerator {
     private blackTilePercentage: number = 0.2;
     // private words: Word[];
     private blackTiles: Position[];
-    private wordPlacement: [boolean, number, number][]; // Maybe we should make this into a class or struct
+    private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
     private verticalWords: Word[][];
     private horizontalWords: Word[][];
 
-    public getNewGrid(difficulty: Difficulty ): any {
+    public getNewGrid(difficulty: Difficulty ): {} {
         let rep: JSON;
 
         return {
