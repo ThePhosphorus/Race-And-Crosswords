@@ -81,17 +81,21 @@ export class GridGenerator {
     }
 
     public populateGrid(): void {
-        for (let index: number = 0; index < this.verticalWords.length; index++) {
-            this.verticalWords[index].forEach((word: Word) => {
-                this.wordPlacement.push([true, index, word.length]);
-            });
+        for (let i: number = 0; i < this.verticalWords.length; i++) { // Faire des foreach
+            for (let j: number = 0; j < this.verticalWords[i].length; j++) {
+                this.wordPlacement.push([Orientation.Vertical,
+                                         this.verticalWords[i][j].getPosition(),
+                                         this.verticalWords[i][j].length]);
+            }
         }
-        for (let index: number = 0; index < this.verticalWords.length; index++) {
-            this.verticalWords[index].forEach((word: Word) => {
-                this.wordPlacement.push([true, index, word.length]);
-            });
+        for (let i: number = 0; i < this.horizontalWords.length; i++) { // Faire des foreach
+            for (let j: number = 0; j < this.verticalWords[i].length; j++) {
+                this.wordPlacement.push([Orientation.Horizontal,
+                                         this.horizontalWords[i][j].getPosition(),
+                                         this.horizontalWords[i][j].length]);
+            }
         }
-        this.wordPlacement.sort((w1, w2) => w1[2] - w2[2]);
+        this.wordPlacement.sort((word1, word2) => word1[2] - word2[2]);
 
         this.addWordToGrid(0);
     }
