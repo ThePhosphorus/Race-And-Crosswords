@@ -1,4 +1,4 @@
-import { Word, Orientation, Position } from "../../../../common/communication/crossword-grid";
+import { Word, Orientation, Position,CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import * as request from "request-promise-native";
 
 const MIN_WORD_LENGTH: number = 2;
@@ -13,26 +13,23 @@ export class GridGenerator {
 
     private gridSize: number = 10;
     private blackTilePercentage: number = 0.2;
-    // private words: Word[];
-    private blackTiles: Position[];
     private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
-    private verticalWords: Word[][];
-    private horizontalWords: Word[][];
+    private grid:CrosswordGrid;
 
     public getNewGrid(difficulty: Difficulty ): {} {
         let rep: JSON;
 
         return {
-            blackTiles: this.blackTiles,
+            blackTiles: this.grid.blackTiles,
         };
     }
 
     private generateGrid(): void {
-        this.verticalWords = [];
-        this.horizontalWords = [];
+        this.grid.down = [];
+        this.grid.across = [];
         for (let i: number = 0; i < this.gridSize; i++) {
-            this.verticalWords.push([]);
-            this.horizontalWords.push([]);
+            this.grid.down.push([]);
+            this.grid.across.push([]);
         }
         this.generateEmptyGrid();
     }
@@ -47,32 +44,32 @@ export class GridGenerator {
         for (let i: number = 0; i < numberOfBlackTile; i++) {
             const column: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
             const row: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
-            this.blackTiles[i] = new Position(column, row);
+            this.grid.blackTiles[i] = new Position(column, row);
         }
     }
 
     private generateEmptyWords(): void {
-        this.blackTiles.forEach((blackTile: Position) => {
+        this.grid.blackTiles.forEach((blackTile: Position) => {
             if (blackTile.column >= MIN_WORD_LENGTH) {
-                this.horizontalWords[blackTile.row].push(
+                this.grid.across[blackTile.row].push(
                     new Word(Orientation.Horizontal,
                              new Position(0, blackTile.row),
                              blackTile.column));
             }
             if (blackTile.column <= this.gridSize - MIN_WORD_LENGTH - 1) {
-                this.horizontalWords[blackTile.row].push(
+                this.grid.across[blackTile.row].push(
                     new Word(Orientation.Horizontal,
                              new Position(blackTile.column + 1, blackTile.row),
                              this.gridSize - blackTile.column + 1));
             }
             if (blackTile.row >= MIN_WORD_LENGTH) {
-                this.verticalWords[blackTile.column].push(
+                this.grid.down[blackTile.column].push(
                     new Word(Orientation.Vertical,
                              new Position(blackTile.column, 0),
                              blackTile.row));
             }
             if (blackTile.row <= this.gridSize - MIN_WORD_LENGTH - 1) {
-                this.verticalWords[blackTile.column].push(
+                this.grid.down[blackTile.column].push(
                     new Word(Orientation.Vertical,
                              new Position(blackTile.column, blackTile.row + 1),
                              this.gridSize - blackTile.row + 1));
@@ -81,18 +78,18 @@ export class GridGenerator {
     }
 
     public populateGrid(): void {
-        for (let i: number = 0; i < this.verticalWords.length; i++) { // Faire des foreach
-            for (let j: number = 0; j < this.verticalWords[i].length; j++) {
+        for (let i: number = 0; i < this.grid.down.length; i++) { // Faire des foreach
+            for (let j: number = 0; j < this.grid.down[i].length; j++) {
                 this.wordPlacement.push([Orientation.Vertical,
-                                         this.verticalWords[i][j].getPosition(),
-                                         this.verticalWords[i][j].length]);
+                                         this.grid.down[i][j].getPosition(),
+                                         this.grid.down[i][j].length]);
             }
         }
-        for (let i: number = 0; i < this.horizontalWords.length; i++) { // Faire des foreach
-            for (let j: number = 0; j < this.verticalWords[i].length; j++) {
+        for (let i: number = 0; i < this.grid.across.length; i++) { // Faire des foreach
+            for (let j: number = 0; j < this.grid.down[i].length; j++) {
                 this.wordPlacement.push([Orientation.Horizontal,
-                                         this.horizontalWords[i][j].getPosition(),
-                                         this.horizontalWords[i][j].length]);
+                                         this.grid.across[i][j].getPosition(),
+                                         this.grid.across[i][j].length]);
             }
         }
         this.wordPlacement.sort((word1, word2) => word1[2] - word2[2]);
@@ -103,9 +100,9 @@ export class GridGenerator {
     private addWordToGrid(index: number): boolean {
         let currentWord: Word;
         if (this.wordPlacement[index][0] === Orientation.Vertical) { // Aller chercher currentWord dans wordPlacement
-            currentWord = this.verticalWords[index];
+            currentWord = this.grid.down[index];
         } else {
-            currentWord = this.horizontalWords[index];
+            currentWord = this.grid.across[index];
         }
         this.getConstrainedWords(this.getWordConstraints(currentWord), this.placeWord);
 
