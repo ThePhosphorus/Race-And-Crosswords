@@ -98,6 +98,21 @@ export class GridGenerator {
 
     private addWordToGrid(index: number): boolean {
         return true;
+    public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
+        let url: string;
+        if (true) { // Need to change the condition
+            url = "http://localhost:3000/crossword/lexical/easy-word";
+        } else {
+            url = "http://localhost:3000/crossword/lexical/hard-word";
+        }
+        request(url)
+            .then((htmlString: string) => {
+                const words: Word[] = JSON.parse(htmlString);
+                callback(words);
+            })
+            .catch(() => {
+                callback([]);
+            });
     }
 
     private getWords(): void {
