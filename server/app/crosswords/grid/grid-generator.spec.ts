@@ -1,4 +1,8 @@
 const assert = require("assert");
+import { Word, Orientation, Position } from "../../../../common/communication/crossword-grid";
+import { GridGenerator } from "./grid-generator";
+
+const gridGenerator: GridGenerator = new GridGenerator();
 
 describe("Generation de la grille", () => {
 
@@ -25,7 +29,10 @@ describe("Generation de la grille", () => {
     describe("When an word is requested", () => {
 
         it("should accept request", () => {
-            assert.ok(false);
+            gridGenerator.getWords("", (words: Word[]) => {
+                assert.empty(words);
+                console.log(words);
+            });
         });
 
         it("should receive a word", () => {
