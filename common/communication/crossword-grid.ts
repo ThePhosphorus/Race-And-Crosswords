@@ -52,8 +52,8 @@ export class Word {
         return length;
     }
 
-    public set lenght(lenght: number) {
-        this.lenght = lenght;
+    public set length(length: number) {
+        this.length = length;
     }
 
     public addLetterConstraint(position: number, letter: string): boolean {
