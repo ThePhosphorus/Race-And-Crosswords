@@ -48,6 +48,14 @@ export class Word {
         return this.wordString;
     }
 
+    public get length(): number {
+        return length;
+    }
+
+    public set lenght(lenght: number) {
+        this.lenght = lenght;
+    }
+
     public addLetterConstraint(position: number, letter: string): boolean {
         if (letter.length !== 1) {
             return false;
