@@ -101,7 +101,17 @@ export class GridGenerator {
     }
 
     private addWordToGrid(index: number): boolean {
-        return true;
+        let currentWord: Word;
+        if (this.wordPlacement[index][0] === Orientation.Vertical) { // Aller chercher currentWord dans wordPlacement
+            currentWord = this.verticalWords[index];
+        } else {
+            currentWord = this.horizontalWords[index];
+        }
+        this.getConstrainedWords(this.getWordConstraints(currentWord), this.placeWord);
+
+        return false;
+    }
+
     public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
         let url: string;
         if (true) { // Need to change the condition
@@ -119,8 +129,18 @@ export class GridGenerator {
             });
     }
 
-    private getWords(): void {
-        
+    private placeWord(wordList: Word[]): void {
+        wordList.forEach((word: Word) => {
+            // Parcourir la liste de mots et ajouter celui qui marche a la grille
+        });
+    }
+
+    private cleanWord(word: Word): Word {
+        return word;
+    }
+
+    private getWordConstraints(word: Word): string {
+        return "";
     }
 
     private getConstraints(): void {
