@@ -25,6 +25,7 @@ export class GridGenerator {
 
     private generateGrid(): void {
         this.generateEmptyGrid();
+        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
     }
 
     public generateEmptyGrid(): void {
@@ -38,7 +39,6 @@ export class GridGenerator {
         this.generateBlackTiles();
         this.generateAllEmptyWords();
         this.populateWordLists();
-        this.placeNextWord(0);
     }
 
     private generateBlackTiles(): void {
@@ -51,39 +51,19 @@ export class GridGenerator {
     }
 
     private generateAllEmptyWords(): void { // Refactor to make shorter (fonction too long)
-        this.grid.blackTiles.forEach((blackTile: Position) => {
-            if (blackTile.column >= MIN_WORD_LENGTH) {
-                this.grid.across[blackTile.row].push(
-                    new Word(Orientation.Horizontal,
-                             new Position(0, blackTile.row),
-                             blackTile.column));
-            }
-            if (blackTile.column <= this.gridSize - MIN_WORD_LENGTH - 1) {
-                this.grid.across[blackTile.row].push(
-                    new Word(Orientation.Horizontal,
-                             new Position(blackTile.column + 1, blackTile.row),
-                             this.gridSize - blackTile.column + 1));
-            }
-            if (blackTile.row >= MIN_WORD_LENGTH) {
-                this.grid.down[blackTile.column].push(
-                    new Word(Orientation.Vertical,
-                             new Position(blackTile.column, 0),
-                             blackTile.row));
-            }
-            if (blackTile.row <= this.gridSize - MIN_WORD_LENGTH - 1) {
-                this.grid.down[blackTile.column].push(
-                    new Word(Orientation.Vertical,
-                             new Position(blackTile.column, blackTile.row + 1),
-                             this.gridSize - blackTile.row + 1));
-            }
-        });
+        for (let i: number = 0; i < this.gridSize; i++ ) {
+            this.grid.across[i].push(new Word(Orientation.Horizontal, new Position(0, i), this.gridSize));
+            this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), this.gridSize));
+
+            this.grid.blackTiles.forEach((blackTile: Position) => {
+
+            };
+        }
     }
 
     public populateWordLists(): void {
         this.populateWordList(Orientation.Horizontal);
         this.populateWordList(Orientation.Vertical);
-
-        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
     }
 
     private populateWordList(orientation: Orientation): void {
