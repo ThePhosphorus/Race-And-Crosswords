@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsc && concurrently --kill-others \"tsc -w \" \"nodemon out/server/app/www.js\" ",
     "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish",
-    "test": "mocha -r ts-node/register 'app/**/*.spec.ts'",
+    "test": "mocha -r ts-node/register app/**/*.spec.ts",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "clean": "rimraf out node_modules",
