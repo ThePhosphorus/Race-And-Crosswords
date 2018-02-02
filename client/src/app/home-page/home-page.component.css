@@ -1,26 +1,33 @@
-#home{
-    font-size: 200%;
+.card{
+    border: transparent;
+    font-family: "Title Font",'Times New Roman', Times, serif;
+    font-size: 500%;
+    text-align: center;
+    background-color: transparent;
+    text-shadow: 0.4vmin 0.4vmin 0.4vmin 0.4vmin gray;
 }
-.btn {
-    border: solid 0.7vmin
-}
+
 #raceBtn {
     font-family: "Race Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 400%;
+    text-align: center;
     background-color: steelblue;
+    border-radius: 15%;
+    border: solid 0.7vmin white;
+    padding-top: 5%;
+    padding-left: 5%;
+    padding-right: 7%;
+
 }
 #wordBtn {
     font-family: "Word Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     font-size: 400%;
-    background-color: steelblue;
-}
-#title {
-    font-family: "Title Font",'Times New Roman', Times, serif;
-    font-size: 400%;
     text-align: center;
-    background-color: transparent;
-
+    background-color: steelblue;
+    border-radius: 15%;
+    border: solid 0.7vmin white;
 }
+
 @font-face {
     font-family: "Race Font";
     src: url("/assets/fonts/Railway to Hells.ttf") format("truetype");
