@@ -59,5 +59,6 @@ export class CrosswordGrid {
             this.down.push(new Array<Word>());
             this.across.push(new Array<Word>());
         }
+        this.blackTiles = new Array<Position>();
     }
 }

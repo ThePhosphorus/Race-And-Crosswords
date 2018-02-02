@@ -1,5 +1,5 @@
 import { Word, Orientation, Position, CrosswordGrid } from "../../../../common/communication/crossword-grid";
-import * as request from "request-promise-native";
+// import * as request from "request-promise-native";
 
 const MIN_WORD_LENGTH: number = 2;
 
@@ -213,6 +213,7 @@ class WordPlacementList {
     constructor() {
         this._isSorted = false;
         this._currentIndex = 0;
+        this._orderedWords = new Array<Word>();
     }
 
     public set currentWord(word: Word) {
