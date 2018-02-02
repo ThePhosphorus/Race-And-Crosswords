@@ -81,4 +81,13 @@ export class CrosswordGrid {
     public blackTiles: Position[];
     public across: Word[][];
     public down: Word[][];
+
+    public constructor(gridSize: number){
+        this.down = new Array<Word[]>();
+        this.across = new Array<Word[]>();
+        for (let i: number = 0; i < gridSize; i++) {
+            this.down.push(new Array<Word>());
+            this.across.push(new Array<Word>());
+        }
+    }
 }
