@@ -2,5 +2,8 @@ export default  {
         Server: Symbol("Server"),
         Application: Symbol("Application"),
         Routes: Symbol("Routes"),
-        Index: Symbol("Index")
+        Crosswords: Symbol("Crosswords"),
+        Race: Symbol("Race"),
+        Lexical: Symbol("Lexical"),
+        Grid: Symbol("Grid")
 };

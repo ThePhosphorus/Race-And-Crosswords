@@ -20,6 +20,7 @@ export class PlayermodeComponent implements OnInit {
   public constructor() { }
 
   public ngOnInit(): void {
+      this.nbPlayers = 1;
   }
 
 }
