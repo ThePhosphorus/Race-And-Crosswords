@@ -1,5 +1,38 @@
 #home{
-
     font-size: 200%;
-   
 }
+.btn {
+    border: solid 0.7vmin
+}
+#raceBtn {
+    font-family: "Race Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 400%;
+    background-color: steelblue;
+}
+#wordBtn {
+    font-family: "Word Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    font-size: 400%;
+    background-color: steelblue;
+}
+#title {
+    font-family: "Title Font",'Times New Roman', Times, serif;
+    font-size: 400%;
+    text-align: center;
+    background-color: transparent;
+
+}
+@font-face {
+    font-family: "Race Font";
+    src: url("/assets/fonts/Railway to Hells.ttf") format("truetype");
+  }
+  @font-face {
+    font-family: "Word Font";
+    src: url("/assets/fonts/DK Uncle Edward.otf") format("opentype")
+
+  }
+
+  @font-face {
+    font-family: "Title Font";
+    src: url("/assets/fonts/imagine_font.otf") format("opentype")
+  }
+
