@@ -1,4 +1,4 @@
-import { Word, Orientation, Position,CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { Word, Orientation, Position, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import * as request from "request-promise-native";
 
 const MIN_WORD_LENGTH: number = 2;
@@ -14,8 +14,7 @@ export class GridGenerator {
     private gridSize: number = 10;
     private blackTilePercentage: number = 0.2;
     private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
-    private grid:CrosswordGrid;
-
+    private grid: CrosswordGrid;
 
     public getNewGrid(difficulty: Difficulty ): {} {
         let rep: JSON;
@@ -24,7 +23,6 @@ export class GridGenerator {
             blackTiles: this.grid.blackTiles,
         };
     }
-
 
     private generateGrid(): void {
         this.generateEmptyGrid();
@@ -53,7 +51,7 @@ export class GridGenerator {
         }
     }
 
-    private generateAllEmptyWords(): void { //Refactor to make shorter (fonction too long)
+    private generateAllEmptyWords(): void { // Refactor to make shorter (fonction too long)
         this.grid.blackTiles.forEach((blackTile: Position) => {
             if (blackTile.column >= MIN_WORD_LENGTH) {
                 this.grid.across[blackTile.row].push(
@@ -83,7 +81,7 @@ export class GridGenerator {
     }
 
     public populateWordLists(): void {
-        
+
         this.populateWordList(Orientation.Horizontal);
         this.populateWordList(Orientation.Vertical);
 
@@ -92,23 +90,21 @@ export class GridGenerator {
         this.addWordToGrid(0);
     }
 
-    private populateWordList(orientation:Orientation):void{
-        
+    private populateWordList(orientation: Orientation): void {
         let words: Word[][];
-        if(orientation==Orientation.Horizontal)
+        if (orientation === Orientation.Horizontal) {
             words = this.grid.down;
-        else
-            words=this.grid.across;
+        } else {
+            words = this.grid.across;
+        }
 
-        words.forEach(colomn => {
-            colomn.forEach(word=>{
+        words.forEach((colomn: Word[]) => {
+            colomn.forEach((word: Word) => {
                 this.wordPlacement.push([orientation,
-                    word.getPosition(),
-                    word.length]);
-            })
+                                         word.getPosition(),
+                                         word.length]);
+            });
         });
-
-
 
     }
 
@@ -141,23 +137,23 @@ export class GridGenerator {
             });
     }
 
-    private addConstraints(word:Word):void{
+    private addConstraints(word: Word): void {
 
        let oppositeOrientationWords: Word[][];
-       let startingIndex:number; //index de debut du mot (selon si horizontal ou vertical)
-        if(word.getOrientation() == Orientation.Horizontal){
+       let startingIndex: number; // index de debut du mot (selon si horizontal ou vertical)
+       if (word.getOrientation() === Orientation.Horizontal) {
             oppositeOrientationWords = this.grid.down;
-            startingIndex=word.getPosition().column;
-        }else{
+            startingIndex = word.getPosition().column;
+        } else {
             oppositeOrientationWords = this.grid.across;
-            startingIndex=word.getPosition().row;
+            startingIndex = word.getPosition().row;
         }
 
-        for (let i = startingIndex; i <= word.length; i++) {
-            oppositeOrientationWords[i].forEach(oppositeWord=>{
-                //TODO : verification de l'intersection
-                //TODO : Si intersection faire word.addConstraint(lettre)
-            } )
+       for (let i: number = startingIndex; i <= word.length; i++) {
+            oppositeOrientationWords[i].forEach((oppositeWord: Word) => {
+                // TODO : verification de l'intersection
+                // TODO : Si intersection faire word.addConstraint(lettre)
+            } );
         }
     }
 
