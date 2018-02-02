@@ -137,24 +137,51 @@ export class GridGenerator {
             });
     }
 
-    private addConstraints(word: Word): void {
+    private findConstraints(word: Word): string {
 
-       let oppositeOrientationWords: Word[][];
-       let startingIndex: number; // index de debut du mot (selon si horizontal ou vertical)
-       if (word.getOrientation() === Orientation.Horizontal) {
-            oppositeOrientationWords = this.grid.down;
-            startingIndex = word.getPosition().column;
-        } else {
-            oppositeOrientationWords = this.grid.across;
-            startingIndex = word.getPosition().row;
-        }
+       return word.getOrientation() === Orientation.Horizontal ?
+        this.findConstraintHorizontal(word) :
+        this.findConstraintVertical(word);
+}
 
-       for (let i: number = startingIndex; i <= word.length; i++) {
-            oppositeOrientationWords[i].forEach((oppositeWord: Word) => {
-                // TODO : verification de l'intersection
-                // TODO : Si intersection faire word.addConstraint(lettre)
-            } );
-        }
+    private findConstraintHorizontal(word: Word): string {
+        let constraint: string;
+        for (let i: number = word.getPosition().column; i <= word.length; i++) {
+
+            let foundConstraint: boolean = false;
+            this.grid.down[i].forEach((oppositeWord: Word) => {
+
+                if (word.getPosition().row - oppositeWord.getPosition().row < oppositeWord.length) {
+                    constraint += oppositeWord.getWord()[word.getPosition().row - oppositeWord.getPosition().row];
+                    foundConstraint = true;
+                }
+        } );
+            if (!foundConstraint) {
+                constraint += "?";
+            }
+            }
+
+        return constraint;
+    }
+
+    private findConstraintVertical(word: Word): string {
+        let constraint: string;
+        for (let i: number = word.getPosition().row; i <= word.length; i++) {
+
+            let foundConstraint: boolean = false;
+            this.grid.across[i].forEach((oppositeWord: Word) => {
+
+                if (word.getPosition().column - oppositeWord.getPosition().column < oppositeWord.length) {
+                    constraint += oppositeWord.getWord()[word.getPosition().column - oppositeWord.getPosition().column];
+                    foundConstraint = true;
+                }
+        } );
+            if (!foundConstraint) {
+                constraint += "?";
+            }
+            }
+
+        return constraint;
     }
 
     private placeWord(wordList: Word[]): void {
