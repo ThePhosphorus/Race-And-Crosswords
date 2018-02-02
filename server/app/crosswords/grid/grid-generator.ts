@@ -42,7 +42,7 @@ export class GridGenerator {
         for (let i: number = 0; i < numberOfBlackTile; i++) {
             const column: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
             const row: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
-            this.grid.blackTiles[i] = new Position(column, row);
+            this.grid.blackTiles.push(new Position(column, row));
         }
     }
 
@@ -168,7 +168,7 @@ export class GridGenerator {
             this.grid.down[i].forEach((oppositeWord: Word) => {
 
                 if (word.position.row - oppositeWord.position.row < oppositeWord.length) {
-                    constraint += oppositeWord.word[word.position.row - oppositeWord.position.row];
+                    constraint += oppositeWord.wordString[word.position.row - oppositeWord.position.row];
                     foundConstraint = true;
                 }
         } );
@@ -188,7 +188,7 @@ export class GridGenerator {
             this.grid.across[i].forEach((oppositeWord: Word) => {
 
                 if (word.position.column - oppositeWord.position.column < oppositeWord.length) {
-                    constraint += oppositeWord.word[word.position.column - oppositeWord.position.column];
+                    constraint += oppositeWord.wordSTring[word.position.column - oppositeWord.position.column];
                     foundConstraint = true;
                 }
         } );
