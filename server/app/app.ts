@@ -33,11 +33,7 @@ export class Application {
     }
 
     public routes(): void {
-        const router: express.Router = express.Router();
-
-        router.use(this.api.routes);
-
-        this.app.use(router);
+        this.app.use(this.api.router);
 
         this.errorHandeling();
     }
