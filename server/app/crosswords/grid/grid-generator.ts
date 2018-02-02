@@ -92,11 +92,9 @@ export class GridGenerator {
 
     private populateWordList(orientation: Orientation): void {
         let words: Word[][];
-        if (orientation === Orientation.Horizontal) {
-            words = this.grid.down;
-        } else {
-            words = this.grid.across;
-        }
+        orientation === Orientation.Horizontal ?
+        words = this.grid.down :
+        words = this.grid.across;
 
         words.forEach((colomn: Word[]) => {
             colomn.forEach((word: Word) => {
@@ -110,11 +108,10 @@ export class GridGenerator {
 
     private addWordToGrid(index: number): boolean {
         let currentWord: Word;
-        if (this.wordPlacement[index][0] === Orientation.Vertical) { // Aller chercher currentWord dans wordPlacement
-            currentWord = this.grid.down[index];
-        } else {
+        this.wordPlacement[index][0] === Orientation.Vertical ? // Aller chercher currentWord dans wordPlacement
+            currentWord = this.grid.down[index] :
             currentWord = this.grid.across[index];
-        }
+
         this.getConstrainedWords(this.getWordConstraints(currentWord), this.placeWord);
 
         return false;
