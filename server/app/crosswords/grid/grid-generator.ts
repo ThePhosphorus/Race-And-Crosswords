@@ -48,7 +48,7 @@ export class GridGenerator {
         for (let i: number = 0; i < numberOfBlackTile; i++) {
             const column: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
             const row: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
-            this.grid.blackTiles[i] = new Position(column, row);
+            this.grid.blackTiles.push(new Position(column, row));
         }
     }
 

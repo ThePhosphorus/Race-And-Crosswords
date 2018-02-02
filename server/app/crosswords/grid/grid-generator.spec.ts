@@ -58,8 +58,16 @@ describe("Generation de la grille", () => {
             assert.ok(grid.blackTiles.length === blackTilePercentage * gridSize * gridSize);
         });
 
-        it("each line/column should contain one or two words", () => {
-            assert.ok(false);
+        it("each line/column should contain one or more words", () => {
+
+            let hasAWord: boolean = true;
+            for (let i: number = 0; i < gridSize; i++) {
+                if (grid.across[i].length < 1
+                    || grid.down[i].length < 1) {
+                    hasAWord = false;
+                }
+            }
+            assert.ok(hasAWord);
         });
 
     });
