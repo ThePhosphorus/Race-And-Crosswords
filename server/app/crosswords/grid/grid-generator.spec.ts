@@ -72,29 +72,49 @@ describe("Generation de la grille", () => {
 
     });
 
-    describe("When an word is requested", () => {
+    describe("When a full grid is generated", () => {
+        const gridSize: number = 10;
+        const blackTilePercentage: number = 0.5;
+        const grid: CrosswordGrid = gridGenerator.getNewGrid(Difficulty.Easy, gridSize, blackTilePercentage);
 
-        it("should accept request", () => {
-            assert.ok(true);
+        it("should not have empty words", () => {
+            let hasEmptyWord: boolean = false;
+            grid.across.forEach((row: Word[]) => {
+                row.forEach((word: Word) => {
+                    if (word.wordString.length === 0) {
+                        hasEmptyWord = true;
+                    }
+                });
+            });
+
+            grid.down.forEach((column: Word[]) => {
+                column.forEach((word: Word) => {
+                    if (word.wordString.length === 0) {
+                        hasEmptyWord = true;
+                    }
+                });
+            });
+
+            assert.ok(!hasEmptyWord);
         });
-
-        it("should receive a word", () => {
-            assert.ok(true);
-        });
-
-        it("should have a definition", () => {
-            assert.ok(true);
-        });
-
-        it("should respect the constraints", () => {
-            assert.ok(true);
-        });
-
-    });
-
-    describe("When an word is cleaned", () => {
 
         it("should not have accents or special letters", () => {
+            grid.across.forEach((row: Word[]) => {
+                row.forEach((word: Word) => {
+                    if (word.wordString.length === 0) {
+                        // try for character
+                    }
+                });
+            });
+
+            grid.down.forEach((column: Word[]) => {
+                column.forEach((word: Word) => {
+                    if (word.wordString.length === 0) {
+                      // try for character
+                    }
+                });
+            });
+
             assert.ok(true);
         });
 
@@ -102,14 +122,9 @@ describe("Generation de la grille", () => {
             assert.ok(true);
         });
 
-    });
-
-    describe("When a grid is completed", () => {
-
         it("should not have multiples of the same word", () => {
             assert.ok(true);
         });
-
     });
 
     describe("When the generator is called", () => {
