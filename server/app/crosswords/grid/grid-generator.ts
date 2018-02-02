@@ -16,6 +16,7 @@ export class GridGenerator {
     private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
     private grid:CrosswordGrid;
 
+
     public getNewGrid(difficulty: Difficulty ): {} {
         let rep: JSON;
 
@@ -24,19 +25,21 @@ export class GridGenerator {
         };
     }
 
+
     private generateGrid(): void {
+        this.generateEmptyGrid();
+    }
+
+    public generateEmptyGrid(): void {
         this.grid.down = [];
         this.grid.across = [];
         for (let i: number = 0; i < this.gridSize; i++) {
             this.grid.down.push([]);
             this.grid.across.push([]);
         }
-        this.generateEmptyGrid();
-    }
 
-    public generateEmptyGrid(): void {
         this.generateBlackTiles();
-        this.generateEmptyWords();
+        this.generateAllEmptyWords();
     }
 
     private generateBlackTiles(): void {
@@ -48,7 +51,7 @@ export class GridGenerator {
         }
     }
 
-    private generateEmptyWords(): void {
+    private generateAllEmptyWords(): void {
         this.grid.blackTiles.forEach((blackTile: Position) => {
             if (blackTile.column >= MIN_WORD_LENGTH) {
                 this.grid.across[blackTile.row].push(
@@ -77,24 +80,34 @@ export class GridGenerator {
         });
     }
 
-    public populateGrid(): void {
-        for (let i: number = 0; i < this.grid.down.length; i++) { // Faire des foreach
-            for (let j: number = 0; j < this.grid.down[i].length; j++) {
-                this.wordPlacement.push([Orientation.Vertical,
-                                         this.grid.down[i][j].getPosition(),
-                                         this.grid.down[i][j].length]);
-            }
-        }
-        for (let i: number = 0; i < this.grid.across.length; i++) { // Faire des foreach
-            for (let j: number = 0; j < this.grid.down[i].length; j++) {
-                this.wordPlacement.push([Orientation.Horizontal,
-                                         this.grid.across[i][j].getPosition(),
-                                         this.grid.across[i][j].length]);
-            }
-        }
+    public populateFullGrid(): void {
+        
+        this.populateGrid(Orientation.Horizontal);
+        this.populateGrid(Orientation.Vertical);
+
         this.wordPlacement.sort((word1, word2) => word1[2] - word2[2]);
 
         this.addWordToGrid(0);
+    }
+
+    private populateGrid(orientation:Orientation):void{
+        
+        let words: Word[][];
+        if(orientation==Orientation.Horizontal)
+            words = this.grid.down;
+        else
+            words=this.grid.across;
+
+        words.forEach(colomn => {
+            colomn.forEach(word=>{
+                this.wordPlacement.push([orientation,
+                    word.getPosition(),
+                    word.length]);
+            })
+        });
+
+
+
     }
 
     private addWordToGrid(index: number): boolean {
