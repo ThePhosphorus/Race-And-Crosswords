@@ -9,8 +9,6 @@ import { GameComponent } from "./game-component/game.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
-import { InputManagerService } from "./input-manager-service/input-manager.service";
-
 
 @NgModule({
     declarations: [
@@ -25,9 +23,7 @@ import { InputManagerService } from "./input-manager-service/input-manager.servi
         AppRoutingModule,
         FormsModule
     ],
-    providers: [
-        InputManagerService
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
