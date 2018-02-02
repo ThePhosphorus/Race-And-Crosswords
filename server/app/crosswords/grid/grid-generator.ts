@@ -17,7 +17,9 @@ export class GridGenerator {
     // private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
     private grid: CrosswordGrid;
 
-    public getNewGrid(difficulty: Difficulty ): CrosswordGrid {
+    public getNewGrid(difficulty: Difficulty, size: number, blackTileRatio: number  ): CrosswordGrid {
+        this.gridSize = size;
+        this.blackTilePercentage = blackTileRatio;
         this.generateGrid();
 
         return this.grid;
