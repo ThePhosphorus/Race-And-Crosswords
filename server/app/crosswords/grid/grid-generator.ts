@@ -30,17 +30,17 @@ export class GridGenerator {
     }
 
     public generateEmptyGrid(): void {
-        this.grid.down = [];
-        this.grid.across = [];
+        this.grid.down = new Array<Word[]>();
+        this.grid.across = new Array<Word[]>();
         for (let i: number = 0; i < this.gridSize; i++) {
-            this.grid.down.push([]);
-            this.grid.across.push([]);
+            this.grid.down.push(new Array<Word>());
+            this.grid.across.push(new Array<Word>());
         }
 
         this.generateBlackTiles();
         this.generateAllEmptyWords();
         this.populateWordLists();
-        this.placeNextWord(0);
+        // this.placeNextWord(0);
     }
 
     private generateBlackTiles(): void {
