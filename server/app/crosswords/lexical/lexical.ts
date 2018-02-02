@@ -19,8 +19,8 @@ export class Lexical {
             res.send("Lexical service enpoint");
         });
 
-        router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getEasyWord("t??t", (word: Word) => {
+        router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
+            this.datamuse.getEasyWord(req, (word: Word) => {
                 if (word) {
                     res.send(word);
                 } else {
