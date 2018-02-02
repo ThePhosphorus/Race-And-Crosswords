@@ -20,7 +20,7 @@ export class Lexical {
         });
 
         router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getEasyWord(req, (word: Word) => {
+            this.datamuse.makeRequest(req, (word: Word) => { // TODO: must uses constraints and difficulty as query params
                 if (word) {
                     res.send(word);
                 } else {
