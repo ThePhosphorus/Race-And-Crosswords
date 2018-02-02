@@ -23,8 +23,7 @@ import { PlayermodeComponent } from "./playermode-component/playermode.component
         AppRoutingModule,
         FormsModule
     ],
-    providers: [
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
