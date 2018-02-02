@@ -40,6 +40,8 @@ export class GridGenerator {
 
         this.generateBlackTiles();
         this.generateAllEmptyWords();
+        this.populateWordLists();
+
     }
 
     private generateBlackTiles(): void {
@@ -80,17 +82,17 @@ export class GridGenerator {
         });
     }
 
-    public populateFullGrid(): void {
+    public populateWordLists(): void {
         
-        this.populateGrid(Orientation.Horizontal);
-        this.populateGrid(Orientation.Vertical);
+        this.populateWordList(Orientation.Horizontal);
+        this.populateWordList(Orientation.Vertical);
 
         this.wordPlacement.sort((word1, word2) => word1[2] - word2[2]);
 
         this.addWordToGrid(0);
     }
 
-    private populateGrid(orientation:Orientation):void{
+    private populateWordList(orientation:Orientation):void{
         
         let words: Word[][];
         if(orientation==Orientation.Horizontal)
@@ -142,6 +144,7 @@ export class GridGenerator {
     private placeWord(wordList: Word[]): void {
         wordList.forEach((word: Word) => {
             // Parcourir la liste de mots et ajouter celui qui marche a la grille
+
         });
     }
 
