@@ -27,20 +27,14 @@ export class GridGenerator {
 
     private generateGrid(): void {
         this.generateEmptyGrid();
+        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
     }
 
     public generateEmptyGrid(): void {
-        this.grid.down = new Array<Word[]>();
-        this.grid.across = new Array<Word[]>();
-        for (let i: number = 0; i < this.gridSize; i++) {
-            this.grid.down.push(new Array<Word>());
-            this.grid.across.push(new Array<Word>());
-        }
-
+        this.grid = new CrosswordGrid(this.gridSize);
         this.generateBlackTiles();
         this.generateAllEmptyWords();
         this.populateWordLists();
-        // this.placeNextWord(0);
     }
 
     private generateBlackTiles(): void {
@@ -48,44 +42,74 @@ export class GridGenerator {
         for (let i: number = 0; i < numberOfBlackTile; i++) {
             const column: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
             const row: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
-            this.grid.blackTiles[i] = new Position(column, row);
+            this.grid.blackTiles.push(new Position(column, row));
         }
     }
 
-    private generateAllEmptyWords(): void { // Refactor to make shorter (fonction too long)
-        this.grid.blackTiles.forEach((blackTile: Position) => {
-            if (blackTile.column >= MIN_WORD_LENGTH) {
-                this.grid.across[blackTile.row].push(
-                    new Word(Orientation.Horizontal,
-                             new Position(0, blackTile.row),
-                             blackTile.column));
+    private generateAllEmptyWords(): void {
+        this.generateEmptyWordsVertical();
+        this.generateEmptyWordsHorizontal();
+    }
+
+    private generateEmptyWordsVertical(): void {
+        for (let i: number = 0; i < this.gridSize; i++ ) {
+            const currentBlackTiles: Position[] = [];
+            this.grid.blackTiles.forEach((blackTile: Position) => {
+                if (blackTile.column === i) {
+                    currentBlackTiles.push(blackTile);
+                }
+            });
+            if (currentBlackTiles.length === 0) {
+                this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), this.gridSize));
+            } else {
+                currentBlackTiles.sort((tile1: Position, tile2: Position) => tile1.row - tile2.row);
+                for (let j: number = 0; j < currentBlackTiles.length; j++) {
+                    if (j === 0) {
+                        this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), currentBlackTiles[j].row));
+                    } else {
+                        this.grid.down[i].push(new Word(Orientation.Vertical,
+                                                        new Position(i, currentBlackTiles[j - 1].row + 1),
+                                                        currentBlackTiles[j].row - currentBlackTiles[j - 1].row - 1));
+                    }
+                    this.grid.down[i].push(new Word(Orientation.Vertical,
+                                                    new Position(i, 0),
+                                                    this.gridSize - currentBlackTiles[j].row - 1));
+                }
             }
-            if (blackTile.column <= this.gridSize - MIN_WORD_LENGTH - 1) {
-                this.grid.across[blackTile.row].push(
-                    new Word(Orientation.Horizontal,
-                             new Position(blackTile.column + 1, blackTile.row),
-                             this.gridSize - blackTile.column + 1));
+        }
+    }
+
+    private generateEmptyWordsHorizontal(): void {
+        for (let i: number = 0; i < this.gridSize; i++ ) {
+            const currentBlackTiles: Position[] = [];
+            this.grid.blackTiles.forEach((blackTile: Position) => {
+                if (blackTile.row === i) {
+                    currentBlackTiles.push(blackTile);
+                }
+            });
+            if (currentBlackTiles.length === 0) {
+                this.grid.across[i].push(new Word(Orientation.Horizontal, new Position(0, i), this.gridSize));
+            } else {
+                currentBlackTiles.sort((tile1: Position, tile2: Position) => tile1.column - tile2.column);
+                for (let j: number = 0; j < currentBlackTiles.length; j++) {
+                    if (j === 0) {
+                        this.grid.down[i].push(new Word(Orientation.Horizontal, new Position(0, i), currentBlackTiles[j].column));
+                    } else {
+                        this.grid.down[i].push(new Word(Orientation.Horizontal,
+                                                        new Position(i, currentBlackTiles[j - 1].column + 1),
+                                                        currentBlackTiles[j].column - currentBlackTiles[j - 1].column - 1));
+                    }
+                    this.grid.down[i].push(new Word(Orientation.Horizontal,
+                                                    new Position(i, 0),
+                                                    this.gridSize - currentBlackTiles[j].column - 1));
+                }
             }
-            if (blackTile.row >= MIN_WORD_LENGTH) {
-                this.grid.down[blackTile.column].push(
-                    new Word(Orientation.Vertical,
-                             new Position(blackTile.column, 0),
-                             blackTile.row));
-            }
-            if (blackTile.row <= this.gridSize - MIN_WORD_LENGTH - 1) {
-                this.grid.down[blackTile.column].push(
-                    new Word(Orientation.Vertical,
-                             new Position(blackTile.column, blackTile.row + 1),
-                             this.gridSize - blackTile.row + 1));
-            }
-        });
+        }
     }
 
     public populateWordLists(): void {
         this.populateWordList(Orientation.Horizontal);
         this.populateWordList(Orientation.Vertical);
-
-        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
     }
 
     private populateWordList(orientation: Orientation): void {
@@ -144,7 +168,7 @@ export class GridGenerator {
             this.grid.down[i].forEach((oppositeWord: Word) => {
 
                 if (word.position.row - oppositeWord.position.row < oppositeWord.length) {
-                    constraint += oppositeWord.word[word.position.row - oppositeWord.position.row];
+                    constraint += oppositeWord.wordString[word.position.row - oppositeWord.position.row];
                     foundConstraint = true;
                 }
         } );
@@ -164,7 +188,7 @@ export class GridGenerator {
             this.grid.across[i].forEach((oppositeWord: Word) => {
 
                 if (word.position.column - oppositeWord.position.column < oppositeWord.length) {
-                    constraint += oppositeWord.word[word.position.column - oppositeWord.position.column];
+                    constraint += oppositeWord.wordSTring[word.position.column - oppositeWord.position.column];
                     foundConstraint = true;
                 }
         } );
