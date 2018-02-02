@@ -101,7 +101,7 @@ export class GridGenerator {
         words.forEach((colomn: Word[]) => {
             colomn.forEach((word: Word) => {
                 this.wordPlacement.push([orientation,
-                                         word.getPosition(),
+                                         word.position,
                                          word.length]);
             });
         });
@@ -139,20 +139,20 @@ export class GridGenerator {
 
     private findConstraints(word: Word): string {
 
-       return word.getOrientation() === Orientation.Horizontal ?
+       return word.orientation === Orientation.Horizontal ?
         this.findConstraintHorizontal(word) :
         this.findConstraintVertical(word);
 }
 
     private findConstraintHorizontal(word: Word): string {
         let constraint: string;
-        for (let i: number = word.getPosition().column; i <= word.length; i++) {
+        for (let i: number = word.position.column; i <= word.length; i++) {
 
             let foundConstraint: boolean = false;
             this.grid.down[i].forEach((oppositeWord: Word) => {
 
-                if (word.getPosition().row - oppositeWord.getPosition().row < oppositeWord.length) {
-                    constraint += oppositeWord.getWord()[word.getPosition().row - oppositeWord.getPosition().row];
+                if (word.position.row - oppositeWord.position.row < oppositeWord.length) {
+                    constraint += oppositeWord.word[word.position.row - oppositeWord.position.row];
                     foundConstraint = true;
                 }
         } );
@@ -166,13 +166,13 @@ export class GridGenerator {
 
     private findConstraintVertical(word: Word): string {
         let constraint: string;
-        for (let i: number = word.getPosition().row; i <= word.length; i++) {
+        for (let i: number = word.position.row; i <= word.length; i++) {
 
             let foundConstraint: boolean = false;
             this.grid.across[i].forEach((oppositeWord: Word) => {
 
-                if (word.getPosition().column - oppositeWord.getPosition().column < oppositeWord.length) {
-                    constraint += oppositeWord.getWord()[word.getPosition().column - oppositeWord.getPosition().column];
+                if (word.position.column - oppositeWord.position.column < oppositeWord.length) {
+                    constraint += oppositeWord.word[word.position.column - oppositeWord.position.column];
                     foundConstraint = true;
                 }
         } );
