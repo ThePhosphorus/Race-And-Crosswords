@@ -9,9 +9,8 @@ import { GameComponent } from "./game-component/game.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
-import { InputManagerService } from './input-manager-service/input-manager.service';
-import { CameraManagerService } from './camera-manager-service/camera-manager.service';
-import { RenderService } from './render-service/render.service';
+import { InputManagerService } from "./input-manager-service/input-manager.service";
+
 
 @NgModule({
     declarations: [
@@ -27,8 +26,6 @@ import { RenderService } from './render-service/render.service';
         FormsModule
     ],
     providers: [
-        RenderService,
-        CameraManagerService,
         InputManagerService
     ],
     bootstrap: [AppComponent]
