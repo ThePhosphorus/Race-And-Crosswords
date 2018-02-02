@@ -1,16 +1,17 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
+import { WebService } from "../../webServices";
 
 @injectable()
-export class Grid {
+export class Grid extends WebService {
 
-    public get routes(): Router {
-        const router: Router = Router();
+    constructor() {
+        super("grid");
+    }
 
-        router.get("/", (req: Request, res: Response, next: NextFunction) => {
+    protected routes(): void {
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Grid generation enpoint");
         });
-
-        return router;
     }
 }
