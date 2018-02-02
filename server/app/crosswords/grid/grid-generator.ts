@@ -31,7 +31,13 @@ export class GridGenerator {
     }
 
     public generateEmptyGrid(): void {
-        this.grid = new CrosswordGrid(this.gridSize);
+        this.grid.down = new Array<Word[]>();
+        this.grid.across = new Array<Word[]>();
+        for (let i: number = 0; i < this.gridSize; i++) {
+            this.grid.down.push(new Array<Word>());
+            this.grid.across.push(new Array<Word>());
+        }
+
         this.generateBlackTiles();
         this.generateAllEmptyWords();
         this.populateWordLists();
@@ -144,13 +150,43 @@ export class GridGenerator {
 
     private placeWord(words: Word[]): void {
         if (words.length > 0) {
+            this.wordPlacement.currentWord = words[0];
             if (this.wordPlacement.next()) {
-                this.wordPlacement.currentWord = words[0];
                 this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
             }
         } else {
-            // backtrack
+            this.rollback();
         }
+    }
+
+    private rollback(): void {
+        const possibleFatalConstraints: string = this.findConstraints(this.wordPlacement.currentWord);
+        let targetIndex: number = 0;
+        let constraintsModifyingMask: string = "";
+        for (let i: number = 0; i < possibleFatalConstraints.length; i++) {
+                if (this.wordPlacement.currentWord.orientation === Orientation.Vertical) {
+                    const currentIndex: number =
+                        this.wordPlacement.getIndexInList(Orientation.Horizontal,
+                                                          new Position(this.wordPlacement.currentWord.position.column,
+                                                                       this.wordPlacement.currentWord.position.row + i));
+                    if (currentIndex > targetIndex) {
+                        targetIndex = currentIndex;
+                        constraintsModifyingMask = " ".repeat(this.wordPlacement.getWordAtIndex(targetIndex).length);
+                        const indexToModify: number = this.wordPlacement.currentWord.position.column -
+                                                    this.wordPlacement.getWordAtIndex(targetIndex).position.column;
+                        constraintsModifyingMask =
+                            constraintsModifyingMask.slice(0, indexToModify) +
+                            this.wordPlacement.getWordAtIndex(targetIndex).wordString[indexToModify] +
+                            constraintsModifyingMask.slice(indexToModify + 1, constraintsModifyingMask.length);
+                    }
+                } else {
+                    // same thing for vertical
+                }
+            }
+        this.wordPlacement.revert(targetIndex);
+        const newConstraints: string = this.findConstraints(this.wordPlacement.currentWord);
+        // modify constraint to prevent the letter contained in constraintsModifyingMask
+        this.getConstrainedWords(newConstraints, this.placeWord);
     }
 
     private findConstraints(word: Word): string {
@@ -162,40 +198,42 @@ export class GridGenerator {
 
     private findConstraintHorizontal(word: Word): string {
         let constraint: string;
-        for (let i: number = word.position.column; i <= word.length; i++) {
+        for (let i: number = word.position.column; i < word.length + word.position.column; i++) {
 
             let foundConstraint: boolean = false;
             this.grid.down[i].forEach((oppositeWord: Word) => {
 
-                if (word.position.row - oppositeWord.position.row < oppositeWord.length) {
-                    constraint += oppositeWord.word[word.position.row - oppositeWord.position.row];
+                if (word.position.row - oppositeWord.position.row < oppositeWord.length &&
+                    oppositeWord.wordString.length > 0) {
+                    constraint += oppositeWord.wordString[word.position.row - oppositeWord.position.row];
                     foundConstraint = true;
                 }
-        } );
+            } );
             if (!foundConstraint) {
                 constraint += "?";
             }
-            }
+        }
 
         return constraint;
     }
 
     private findConstraintVertical(word: Word): string {
         let constraint: string;
-        for (let i: number = word.position.row; i <= word.length; i++) {
+        for (let i: number = word.position.row; i < word.length + word.position.row; i++) {
 
             let foundConstraint: boolean = false;
             this.grid.across[i].forEach((oppositeWord: Word) => {
 
-                if (word.position.column - oppositeWord.position.column < oppositeWord.length) {
-                    constraint += oppositeWord.word[word.position.column - oppositeWord.position.column];
+                if (word.position.column - oppositeWord.position.column < oppositeWord.length &&
+                    oppositeWord.wordString.length > 0) {
+                    constraint += oppositeWord.wordString[word.position.column - oppositeWord.position.column];
                     foundConstraint = true;
                 }
-        } );
+            });
             if (!foundConstraint) {
                 constraint += "?";
             }
-            }
+        }
 
         return constraint;
     }
@@ -227,10 +265,29 @@ class WordPlacementList {
         return this._orderedWords[this._currentIndex];
     }
 
+    public getWordAtIndex(index: number): Word {
+        if (index >= this._orderedWords.length) {
+            return this._orderedWords[this._currentIndex];
+        } else {
+            return this._orderedWords[index];
+        }
+    }
+
+    public revert(targetIndex: number): void {
+        for (let i: number = 0; i < targetIndex - this._currentIndex; i++) {
+            this._orderedWords[this._currentIndex].wordString = "";
+            this._currentIndex--;
+        }
+    }
+
     public next(): boolean {
         this._currentIndex++;
 
         return this._currentIndex < this._orderedWords.length;
+    }
+
+    public getIndexInList(orientation: Orientation, position: Position): number {
+        return 0;
     }
 
     public addWord(word: Word): void {
