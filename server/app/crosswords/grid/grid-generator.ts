@@ -13,15 +13,14 @@ export class GridGenerator {
 
     private gridSize: number = 10;
     private blackTilePercentage: number = 0.2;
-    private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
+    private wordPlacement: WordPlacementList = new WordPlacementList();
+    // private wordPlacement: [Orientation, Position, number][]; // Maybe we should make this into a class or struct
     private grid: CrosswordGrid;
 
-    public getNewGrid(difficulty: Difficulty ): {} {
-        let rep: JSON;
+    public getNewGrid(difficulty: Difficulty ): CrosswordGrid {
+        this.generateGrid();
 
-        return {
-            blackTiles: this.grid.blackTiles,
-        };
+        return this.grid;
     }
 
     private generateGrid(): void {
@@ -39,7 +38,7 @@ export class GridGenerator {
         this.generateBlackTiles();
         this.generateAllEmptyWords();
         this.populateWordLists();
-
+        this.placeNextWord(0);
     }
 
     private generateBlackTiles(): void {
@@ -85,8 +84,6 @@ export class GridGenerator {
         this.populateWordList(Orientation.Horizontal);
         this.populateWordList(Orientation.Vertical);
 
-        this.wordPlacement.sort((word1, word2) => word1[2] - word2[2]);
-
         this.addWordToGrid(0);
     }
 
@@ -100,15 +97,12 @@ export class GridGenerator {
 
         words.forEach((colomn: Word[]) => {
             colomn.forEach((word: Word) => {
-                this.wordPlacement.push([orientation,
-                                         word.position,
-                                         word.length]);
+                this.wordPlacement.addWord(word);
             });
         });
-
     }
 
-    private addWordToGrid(index: number): boolean {
+    /*private addWordToGrid(index: number): boolean {
         let currentWord: Word;
         if (this.wordPlacement[index][0] === Orientation.Vertical) { // Aller chercher currentWord dans wordPlacement
             currentWord = this.grid.down[index];
@@ -118,7 +112,7 @@ export class GridGenerator {
         this.getConstrainedWords(this.getWordConstraints(currentWord), this.placeWord);
 
         return false;
-    }
+    }*/
 
     public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
         let url: string;
@@ -133,8 +127,18 @@ export class GridGenerator {
                 callback(words);
             })
             .catch(() => {
-                callback([]);
+                // Do something
             });
+    }
+
+    private placeWord(words: Word[]): void {
+        if (words.length > 0) {
+            this.wordPlacement.next();
+            this.wordPlacement.currentWord = words[0];
+            this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
+        } else {
+            // backtrack
+        }
     }
 
     private findConstraints(word: Word): string {
@@ -184,22 +188,41 @@ export class GridGenerator {
         return constraint;
     }
 
-    private placeWord(wordList: Word[]): void {
-        wordList.forEach((word: Word) => {
-            // Parcourir la liste de mots et ajouter celui qui marche a la grille
-
-        });
-    }
-
     private cleanWord(word: Word): Word {
         return word;
     }
+}
 
-    private getWordConstraints(word: Word): string {
-        return "";
+class WordPlacementList {
+    private _orderedWords: Word[];
+    private _currentIndex: number;
+    private _isSorted: boolean;
+
+    constructor() {
+        this._isSorted = false;
+        this._currentIndex = 0;
     }
 
-    private getConstraints(): void {
+    public set currentWord(word: Word) {
+        this._orderedWords[this._currentIndex] = word;
+    }
 
+    public get currentWord(): Word {
+        if (!this._isSorted) {
+            this._orderedWords.sort((word1: Word, word2: Word) => word1.length - word2.length);
+        }
+
+        return this._orderedWords[this._currentIndex];
+    }
+
+    public next(): boolean {
+        this._currentIndex++;
+
+        return this._currentIndex < this._orderedWords.length;
+    }
+
+    public addWord(word: Word): void {
+        this._orderedWords.push(word);
+        this._isSorted = false;
     }
 }
