@@ -9,18 +9,11 @@ export enum Orientation {
 
 export class Word {
 
-    private _position: Position;
     private _wordString: string;
     private _definitions: string[];
-    private _orientation: Orientation;
-    private _length: number;
-
-    public constructor(orientation: Orientation, position: Position, length: number) {
-        this._orientation = orientation;
-        this._position = position;
-        for (let i: number = 0; i < length ; i++) {
-            this._wordString += "?";
-        }
+    
+    public constructor(private _orientation: Orientation, private _position: Position, private _length: number) {
+        this._wordString = "";
     }
 
     public get position(): Position {
@@ -45,36 +38,13 @@ export class Word {
         this._wordString = word;
     }
 
-    public get word(): string {
+    public get wordString(): string {
         return this._wordString;
     }
 
     public get length(): number {
         return this._length;
     }
-
-    public addLetterConstraint(position: number, letter: string): boolean {
-        if (letter.length !== 1) {
-            return false;
-        }
-        let tempString: string;
-
-        for (let i: number = 0; i < position ; i++) {
-            tempString += this._wordString[i];
-        }
-
-        tempString += letter;
-
-        for (let i: number = position + 1; i < this._wordString.length ; i++) {
-            tempString += this._wordString[i];
-        }
-
-        this._wordString = tempString;
-
-        return true;
-
-    }
-
 }
 
 export class CrosswordGrid {
