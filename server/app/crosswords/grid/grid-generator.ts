@@ -52,14 +52,64 @@ export class GridGenerator {
         }
     }
 
-    private generateAllEmptyWords(): void { // Refactor to make shorter (fonction too long)
+    private generateAllEmptyWords(): void {
+        this.generateEmptyWordsVertical();
+        this.generateEmptyWordsHorizontal();
+    }
+
+    private generateEmptyWordsVertical(): void {
         for (let i: number = 0; i < this.gridSize; i++ ) {
-            this.grid.across[i].push(new Word(Orientation.Horizontal, new Position(0, i), this.gridSize));
-            this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), this.gridSize));
-
+            const currentBlackTiles: Position[] = [];
             this.grid.blackTiles.forEach((blackTile: Position) => {
+                if (blackTile.column === i) {
+                    currentBlackTiles.push(blackTile);
+                }
+            });
+            if (currentBlackTiles.length === 0) {
+                this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), this.gridSize));
+            } else {
+                currentBlackTiles.sort((tile1: Position, tile2: Position) => tile1.row - tile2.row);
+                for (let j: number = 0; j < currentBlackTiles.length; j++) {
+                    if (j === 0) {
+                        this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), currentBlackTiles[j].row));
+                    } else {
+                        this.grid.down[i].push(new Word(Orientation.Vertical,
+                                                        new Position(i, currentBlackTiles[j - 1].row + 1),
+                                                        currentBlackTiles[j].row - currentBlackTiles[j - 1].row - 1));
+                    }
+                    this.grid.down[i].push(new Word(Orientation.Vertical,
+                                                    new Position(i, 0),
+                                                    this.gridSize - currentBlackTiles[j].row - 1));
+                }
+            }
+        }
+    }
 
-            };
+    private generateEmptyWordsHorizontal(): void {
+        for (let i: number = 0; i < this.gridSize; i++ ) {
+            const currentBlackTiles: Position[] = [];
+            this.grid.blackTiles.forEach((blackTile: Position) => {
+                if (blackTile.row === i) {
+                    currentBlackTiles.push(blackTile);
+                }
+            });
+            if (currentBlackTiles.length === 0) {
+                this.grid.across[i].push(new Word(Orientation.Horizontal, new Position(0, i), this.gridSize));
+            } else {
+                currentBlackTiles.sort((tile1: Position, tile2: Position) => tile1.column - tile2.column);
+                for (let j: number = 0; j < currentBlackTiles.length; j++) {
+                    if (j === 0) {
+                        this.grid.down[i].push(new Word(Orientation.Horizontal, new Position(0, i), currentBlackTiles[j].column));
+                    } else {
+                        this.grid.down[i].push(new Word(Orientation.Horizontal,
+                                                        new Position(i, currentBlackTiles[j - 1].column + 1),
+                                                        currentBlackTiles[j].column - currentBlackTiles[j - 1].column - 1));
+                    }
+                    this.grid.down[i].push(new Word(Orientation.Horizontal,
+                                                    new Position(i, 0),
+                                                    this.gridSize - currentBlackTiles[j].column - 1));
+                }
+            }
         }
     }
 
