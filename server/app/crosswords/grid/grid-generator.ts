@@ -80,11 +80,10 @@ export class GridGenerator {
     }
 
     public populateWordLists(): void {
-
         this.populateWordList(Orientation.Horizontal);
         this.populateWordList(Orientation.Vertical);
 
-        this.addWordToGrid(0);
+        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
     }
 
     private populateWordList(orientation: Orientation): void {
@@ -99,17 +98,6 @@ export class GridGenerator {
             });
         });
     }
-
-    /*private addWordToGrid(index: number): boolean {
-        let currentWord: Word;
-        this.wordPlacement[index][0] === Orientation.Vertical ? // Aller chercher currentWord dans wordPlacement
-            currentWord = this.grid.down[index] :
-            currentWord = this.grid.across[index];
-
-        this.getConstrainedWords(this.getWordConstraints(currentWord), this.placeWord);
-
-        return false;
-    }*/
 
     public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
         let url: string;
@@ -130,9 +118,10 @@ export class GridGenerator {
 
     private placeWord(words: Word[]): void {
         if (words.length > 0) {
-            this.wordPlacement.next();
-            this.wordPlacement.currentWord = words[0];
-            this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
+            if (this.wordPlacement.next()) {
+                this.wordPlacement.currentWord = words[0];
+                this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
+            }
         } else {
             // backtrack
         }
