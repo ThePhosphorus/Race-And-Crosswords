@@ -10,6 +10,7 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
     templateUrl: "./game.component.html",
     styleUrls: ["./game.component.css"],
     providers: [
+        InputManagerService,
         RenderService,
         CameraManagerService
             ]
