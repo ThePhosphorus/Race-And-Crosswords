@@ -53,7 +53,7 @@ export class GridGenerator {
         }
     }
 
-    private generateAllEmptyWords(): void {
+    private generateAllEmptyWords(): void { //Refactor to make shorter (fonction too long)
         this.grid.blackTiles.forEach((blackTile: Position) => {
             if (blackTile.column >= MIN_WORD_LENGTH) {
                 this.grid.across[blackTile.row].push(
@@ -139,6 +139,26 @@ export class GridGenerator {
             .catch(() => {
                 callback([]);
             });
+    }
+
+    private addConstraints(word:Word):void{
+
+       let oppositeOrientationWords: Word[][];
+       let startingIndex:number; //index de debut du mot (selon si horizontal ou vertical)
+        if(word.getOrientation() == Orientation.Horizontal){
+            oppositeOrientationWords = this.grid.down;
+            startingIndex=word.getPosition().column;
+        }else{
+            oppositeOrientationWords = this.grid.across;
+            startingIndex=word.getPosition().row;
+        }
+
+        for (let i = startingIndex; i <= word.length; i++) {
+            oppositeOrientationWords[i].forEach(oppositeWord=>{
+                //TODO : verification de l'intersection
+                //TODO : Si intersection faire word.addConstraint(lettre)
+            } )
+        }
     }
 
     private placeWord(wordList: Word[]): void {
