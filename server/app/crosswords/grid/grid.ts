@@ -6,7 +6,7 @@ import {Difficulty} from "../../../../common/communication/crossword-grid"
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
-const DEFAULT_GRID_SIZE: number = 20;
+const DEFAULT_GRID_SIZE: number = 10;
 const DEFAULT_BLACK_TILES_RATIO: number = 0.3;
 
 @injectable()
@@ -23,7 +23,6 @@ export class Grid extends WebService {
     public get routes(): Router {
         const router: Router = Router();
         router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            res.send("Grid Endpoint. Please make a good Request to get grid");
             const difficulty: Difficulty = (req.query.difficulty !== undefined && Difficulty[req.query.difficulty] !== undefined)
                                             ? Difficulty[req.query.difficulty] as Difficulty : Difficulty.Easy;
             const blackTiles: number = (req.query.tiles !== undefined && Number(req.query.tiles))
