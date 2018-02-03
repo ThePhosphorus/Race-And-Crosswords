@@ -4,7 +4,7 @@ import { Word } from "../../../../common/communication/word";
 const HARD_THRESHOLD: number = 1000;
 
 export class Datamuse {
-    public makeRequest(constraint: string, callback: (words: Array<Word>) => void): void {
+    private makeRequest(constraint: string, callback: (words: Array<Word>) => void): void {
         request("http://api.datamuse.com/words?sp=" + constraint + "&md=def")
             .then((htmlString: string) => {
                 const parsedWords: Array<Word> = JSON.parse(htmlString);
