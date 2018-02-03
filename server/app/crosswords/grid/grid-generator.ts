@@ -1,7 +1,7 @@
 import { Word, Orientation, Position, CrosswordGrid, Difficulty, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 
-const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crossword/lexical/query-words";
+const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-words";
 
 export class GridGenerator {
     private gridSize: number = 10;
@@ -133,14 +133,18 @@ export class GridGenerator {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
-                constraint: constraint,
+                constraint: "???e",
                 easy: true
             },
             json: true
         };
         Request(LEXICAL_SERVICE_URL, options)
-            .then((htmlString: string) => callback(JSON.parse(htmlString) as Word[]))
-            .catch(() => callback(null));
+            .then((htmlString: string) => {
+                // console.log(htmlString);
+                callback(JSON.parse(htmlString) as Word[]); })
+            .catch(() => {
+                console.error("Could not get words from service lexical");
+                callback(new Array<Word>()); });
     }
 
     private placeWord(words: Word[]): void {
