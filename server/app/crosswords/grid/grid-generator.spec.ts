@@ -15,8 +15,8 @@ describe("Generation de la grille", () => {
         it("should be 10 by 10 ", () => {
             let columnSize: number[] = new Array<number>(gridSize);
             let rowSize: number[] = new Array<number>(gridSize);
-            columnSize.fill(0, 0, gridSize - 1);
-            rowSize.fill(0, 0, gridSize - 1);
+            columnSize.fill(0, 0, gridSize );
+            rowSize.fill(0, 0, gridSize );
 
             for (let i: number = 0; i < gridSize; i++) {
                 grid.across[i].forEach((word: Word) => {
