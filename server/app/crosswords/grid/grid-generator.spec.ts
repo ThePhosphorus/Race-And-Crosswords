@@ -32,7 +32,7 @@ describe("Generation de la grille", () => {
                 columnSize[tile.row]++;
             });
 
-            let answer:string ="";
+            let answer:string ="\n";
 
             let isCorrectSize: boolean = true;
             for (let i: number = 0; i < gridSize; i++) {
