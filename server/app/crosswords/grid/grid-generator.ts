@@ -138,10 +138,16 @@ export class GridGenerator {
             },
             json: true
         };
+
         Request(LEXICAL_SERVICE_URL, options)
-            .then((htmlString: string) => {
-                // console.log(htmlString);
-                callback(JSON.parse(htmlString) as Word[]); })
+            .then((words: Array<Word>) => {
+                try {
+                    callback(words as Word[]);
+                } catch (err) {
+                    console.error("Could not place word");
+                    console.error("Error : " + err);
+                }
+            })
             .catch(() => {
                 console.error("Could not get words from service lexical");
                 callback(new Array<Word>()); });
@@ -155,15 +161,15 @@ export class GridGenerator {
                 this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
             }
         } else {
-            this.rollback();
+           // this.rollback();
         }
     }
-
+/*
     private rollback(): void {
         const possibleFatalConstraints: string = this.findConstraints(this.wordPlacement.currentWord);
         let targetIndex: number = 0;
         let constraintsModifyingMask: string = "";
-        for (let i: number = 0; i < possibleFatalConstraints.length; i++) {
+        for (let i: number = 0; i < possibleFatalConstraints.length; i++) {  } {
                 if (this.wordPlacement.currentWord.orientation === Orientation.Vertical) {
                     const currentIndex: number =
                         this.wordPlacement.getIndexInList(Orientation.Horizontal,
@@ -202,7 +208,7 @@ export class GridGenerator {
         // modify constraint to prevent the letter contained in constraintsModifyingMask
         this.getConstrainedWords(newConstraints, this.placeWord);
     }
-
+*/
     private findConstraints(word: Word): string {
 
        return word.orientation === Orientation.Horizontal ?
