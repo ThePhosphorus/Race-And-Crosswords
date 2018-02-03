@@ -1,23 +1,29 @@
+import { Datamuse } from "./datamuse";
+import {Word} from "../../../../common/communication/word"
 const assert = require("assert");
 
-let apiUrl: string = "";
+let datamuse: Datamuse = new Datamuse();
 
 describe("Service Lexical", () => {
     describe("When the api is called", () => {
         it("should receive our request", (done) => {
-            assert.ok(true);
+           // assert.doesNotThrow(datamuse.getWord("????",true,(word:Word)=>{}),Error);
             done();
         });
 
         it("should send us a word", (done) => {
-            assert.ok(true);
+            datamuse.getWord("????",true,(word:Word)=>{
+                assert.notEqual(word,null);
+            })
             done();
         });
     });
 
     describe("When the word is received", () => {
         it("should have the correct length", (done) => {
-            assert.ok(true);
+            datamuse.getWord("??????",true,(word:Word)=>{
+                assert.Equal(word.word.length,);
+            })
             done();
         });
 
