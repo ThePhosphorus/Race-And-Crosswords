@@ -1,22 +1,12 @@
 import { Router } from "express";
+import { injectable } from "inversify";
 
+@injectable()
 export abstract class WebService {
-    constructor (
-        protected _routerName: string,
-        protected _router?: Router
-    ) {
-        if (_router == null) {
-            _router = Router();
-        }
-    }
 
-    public get router (): Router { return this._router; }
+    protected _routerName: string;
 
     public get routeName(): string { return this._routerName; }
 
-    public addSubService(subService: WebService): void {
-        this._router.use(subService._routerName, subService.router);
-    }
-
-    protected abstract routes(): void;
+    public abstract get routes(): Router;
 }

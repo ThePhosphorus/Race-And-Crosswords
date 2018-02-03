@@ -6,14 +6,17 @@ import { WebService } from "../webServices";
 export class Race extends WebService {
 
     public constructor() {
-        super("race/");
+        super();
+        this._routerName = "/race";
     }
 
-    protected routes(): void {
+    public get routes(): Router {
         const router: Router = Router();
 
         router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Race endpoint");
         });
+
+        return router;
     }
 }

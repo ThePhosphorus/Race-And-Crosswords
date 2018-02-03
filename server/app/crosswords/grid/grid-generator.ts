@@ -1,4 +1,5 @@
 import { Word, Orientation, Position, CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { injectable } from "inversify";
 // import * as request from "request-promise-native";
 
 const MIN_WORD_LENGTH: number = 2;
@@ -9,6 +10,7 @@ export enum Difficulty {
     Hard= "Hard",
 }
 
+@injectable()
 export class GridGenerator {
 
     private gridSize: number = 10;
@@ -127,12 +129,12 @@ export class GridGenerator {
     }
 
     public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
-        let url: string;
-        if (true) { // Need to change the condition
-            url = "http://localhost:3000/crossword/lexical/easy-word";
-        } else {
-            url = "http://localhost:3000/crossword/lexical/hard-word";
-        }
+        // let url: string;
+        // if (true) { // Need to change the condition
+        //     url = "http://localhost:3000/crossword/lexical/easy-word";
+        // } else {
+        //     url = "http://localhost:3000/crossword/lexical/hard-word";
+        // }
        /* request(url)
             .then((htmlString: string) => {
                 const words: Word[] = JSON.parse(htmlString);
@@ -233,9 +235,9 @@ export class GridGenerator {
         return constraint;
     }
 
-    private cleanWord(word: Word): Word {
-        return word;
-    }
+    // private cleanWord(word: Word): Word {
+    //     return word;
+    // }
 }
 
 class WordPlacementList {
