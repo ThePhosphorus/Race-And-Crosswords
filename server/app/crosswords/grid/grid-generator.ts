@@ -1,16 +1,6 @@
-import { Word, Orientation, Position, CrosswordGrid } from "../../../../common/communication/crossword-grid";
-import { injectable } from "inversify";
+import { Word, Orientation, Position, CrosswordGrid, Difficulty, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
 // import * as request from "request-promise-native";
 
-const MIN_WORD_LENGTH: number = 2;
-
-export enum Difficulty {
-    Easy= "Easy",
-    Medium= "Medium",
-    Hard= "Hard",
-}
-
-@injectable()
 export class GridGenerator {
 
     private gridSize: number = 10;

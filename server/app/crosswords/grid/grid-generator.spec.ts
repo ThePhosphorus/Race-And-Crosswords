@@ -1,6 +1,6 @@
 const assert = require("assert");
-import { Word, Position, CrosswordGrid } from "../../../../common/communication/crossword-grid";
-import { GridGenerator, Difficulty } from "./grid-generator";
+import { Word, Position, CrosswordGrid, Difficulty } from "../../../../common/communication/crossword-grid";
+import { GridGenerator } from "./grid-generator";
 
 const gridGenerator: GridGenerator = new GridGenerator();
 

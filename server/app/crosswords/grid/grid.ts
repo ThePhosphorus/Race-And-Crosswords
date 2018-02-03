@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction, Router } from "express";
 import { injectable, inject } from "inversify";
 import { WebService } from "../../webServices";
-import { Difficulty, GridGenerator } from "./grid-generator";
-import types from "../../types";
+import {GridGenerator } from "./grid-generator";
+import {Difficulty} from "../../../../common/communication/crossword-grid"
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
@@ -12,8 +12,11 @@ const DEFAULT_BLACK_TILES_RATIO: number = 0.3;
 @injectable()
 export class Grid extends WebService {
 
-    constructor( @inject(types.GridGenerator) private gridGenerator: GridGenerator) {
+    private gridGenerator: GridGenerator;
+
+    constructor() {
         super();
+        this.gridGenerator=new GridGenerator();
         this._routerName = "/grid";
     }
 
