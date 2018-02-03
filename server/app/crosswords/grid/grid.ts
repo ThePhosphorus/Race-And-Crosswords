@@ -23,8 +23,9 @@ export class Grid extends WebService {
     public get routes(): Router {
         const router: Router = Router();
         router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            const difficulty: Difficulty = (req.query.difficulty !== undefined && Difficulty[req.query.difficulty] !== undefined)
-                                            ? Difficulty[req.query.difficulty] as Difficulty : Difficulty.Easy;
+            const difficulty: Difficulty = (req.query.difficulty !== undefined && Number(req.query.difficulty))
+                                            ? Math.max(Difficulty.Easy, Math.min(Difficulty.Hard, Number(req.query.difficulty))) 
+                                            : Difficulty.Easy;
             const blackTiles: number = (req.query.tiles !== undefined && Number(req.query.tiles))
                                             ? Math.max(0, Math.min(1, Number(req.query.tiles))) : DEFAULT_BLACK_TILES_RATIO;
             const size: number = (req.query.tiles !== undefined && Number(req.query.tiles))
