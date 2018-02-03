@@ -22,7 +22,7 @@ describe("Service Lexical", () => {
     describe("When the word is received", () => {
         it("should have the correct length", (done) => {
             datamuse.getWord("??????",true,(word:Word)=>{
-                assert.Equal(word.word.length,);
+                assert.Equal(word.word.length,6);
             })
             done();
         });
