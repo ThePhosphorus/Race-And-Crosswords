@@ -18,6 +18,10 @@ export enum Orientation {
 
 export class Word {
     public constructor(_orientation?: Orientation, _position?: Position, _length?: number) {
+   
+        this.orientation = _orientation;
+        this.position = _position;
+        this.length = _length;
     }
 
     wordString: string;
