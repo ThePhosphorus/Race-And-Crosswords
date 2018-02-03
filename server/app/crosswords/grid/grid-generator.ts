@@ -66,7 +66,7 @@ export class GridGenerator {
                     j === 0 ? startingPosition = 0 : startingPosition = columnTiles[j - 1].row + 1;
                     this.grid.down[i].push(
                         new Word(Orientation.Vertical,
-                                 new Position(i, startingPosition), columnTiles[j].row - startingPosition));
+                                 new Position(i, startingPosition), columnTiles[j].row - startingPosition ));
                     if (j === columnTiles.length - 1) {
                         this.grid.down[i].push(
                             new Word(Orientation.Vertical,
@@ -97,12 +97,12 @@ export class GridGenerator {
                     j === 0 ? startingPosition = 0 : startingPosition = rowTiles[j - 1].column + 1;
                     this.grid.across[i].push(
                         new Word(Orientation.Horizontal,
-                                 new Position(startingPosition, i), rowTiles[j].column - startingPosition));
+                                 new Position(startingPosition, i), rowTiles[j].column - startingPosition ));
 
                     if (j === rowTiles.length - 1) {
                         this.grid.across[i].push(
                             new Word(Orientation.Horizontal,
-                                     new Position(i, rowTiles[j].column + 1), (this.gridSize - 1) - rowTiles[j].column));
+                                     new Position(i, rowTiles[j].column + 1), this.gridSize - 1 - rowTiles[j].column));
                     }
                 }
             } else {
@@ -134,7 +134,7 @@ export class GridGenerator {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
-                constraint: "???e",
+                constraint: constraint,
                 easy: true
             },
             json: true
@@ -147,11 +147,12 @@ export class GridGenerator {
                 } catch (err) {
                     console.error("Could not place word");
                     console.error("Error : " + err);
+                    throw err;
                 }
-            })
-            .catch(() => {
-                console.error("Could not get words from service lexical");
-                this.placeWord(new Array<Word>()); });
+            });
+            // .catch(() => {
+            //     console.error("Could not get words from service lexical");
+            //     this.placeWord(new Array<Word>()); });
     }
 
     private placeWord(words: Word[]): void {
@@ -219,13 +220,13 @@ export class GridGenerator {
 
     private findConstraintHorizontal(word: Word): string {
         let constraint: string = "";
-        for (let i: number = word.position.column; i < word.length + word.position.column; i++) {
+        for (let i: number = word.position.column; i < word.length + word.position.column - 1; i++) {
 
             let foundConstraint: boolean = false;
             this.grid.down[i].forEach((oppositeWord: Word) => {
 
                 if (word.position.row - oppositeWord.position.row < oppositeWord.length &&
-                    oppositeWord.wordString.length > 0) {
+                    oppositeWord.wordString !== null) {
                     constraint += oppositeWord.wordString[word.position.row - oppositeWord.position.row];
                     foundConstraint = true;
                 }
@@ -240,13 +241,13 @@ export class GridGenerator {
 
     private findConstraintVertical(word: Word): string {
         let constraint: string = "";
-        for (let i: number = word.position.row; i < word.length + word.position.row; i++) {
+        for (let i: number = word.position.row; i < word.length + word.position.row - 1; i++) {
 
             let foundConstraint: boolean = false;
             this.grid.across[i].forEach((oppositeWord: Word) => {
 
                 if (word.position.column - oppositeWord.position.column < oppositeWord.length &&
-                    oppositeWord.wordString.length > 0) {
+                    oppositeWord.wordString !== null) {
                     constraint += oppositeWord.wordString[word.position.column - oppositeWord.position.column];
                     foundConstraint = true;
                 }
