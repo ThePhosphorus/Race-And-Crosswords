@@ -13,8 +13,8 @@ describe("Generation de la grille", () => {
         const grid: CrosswordGrid = gridGenerator.getNewGrid(Difficulty.Easy, gridSize, blackTilePercentage);
 
         it("should be 10 by 10 ", () => {
-            let columnSize: number[] = new Array<number>(gridSize);
-            let rowSize: number[] = new Array<number>(gridSize);
+            const columnSize: number[] = new Array<number>(gridSize);
+            const rowSize: number[] = new Array<number>(gridSize);
             columnSize.fill(0, 0, gridSize );
             rowSize.fill(0, 0, gridSize );
 
@@ -26,23 +26,19 @@ describe("Generation de la grille", () => {
                     columnSize[i] += word.length;
                 });
             }
-
             grid.blackTiles.forEach((tile: Position) => {
                 rowSize[tile.row]++;
                 columnSize[tile.column]++;
             });
-
-            let answer:string ="\n";
-
+            let answer: string = "\n";
             let isCorrectSize: boolean = true;
             for (let i: number = 0; i < gridSize; i++) {
                 if (rowSize[i] !== gridSize
                     || columnSize[i] !== gridSize) {
                     isCorrectSize = false;
                 }
-                answer+="row" + i + " : " + rowSize[i] + "\n";
-                answer+="columns" + i + " : " + columnSize[i] + "\n";
-
+                answer += "row" + i + " : " + rowSize[i] + "\n";
+                answer += "columns" + i + " : " + columnSize[i] + "\n";
             }
             assert.ok(isCorrectSize, answer);
         });
