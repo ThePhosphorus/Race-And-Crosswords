@@ -9,7 +9,7 @@ describe("Generation de la grille", () => {
     describe("When an empty grid is generated", () => {
 
         const gridSize: number = 10;
-        const blackTilePercentage: number = 0.3;
+        const blackTilePercentage: number = 0.2;
         const grid: CrosswordGrid = gridGenerator.getNewGrid(Difficulty.Easy, gridSize, blackTilePercentage);
 
         it("should be 10 by 10 ", () => {
@@ -29,7 +29,7 @@ describe("Generation de la grille", () => {
 
             grid.blackTiles.forEach((tile: Position) => {
                 rowSize[tile.row]++;
-                columnSize[tile.row]++;
+                columnSize[tile.column]++;
             });
 
             let answer:string ="\n";
