@@ -97,7 +97,7 @@ export class GridGenerator {
                     j === 0 ? startingPosition = 0 : startingPosition = rowTiles[j - 1].column + 1;
                     this.grid.across[i].push(
                         new Word(Orientation.Horizontal,
-                                 new Position(i, startingPosition), rowTiles[j].column - startingPosition));
+                                 new Position(startingPosition, i), rowTiles[j].column - startingPosition));
 
                     if (j === rowTiles.length - 1) {
                         this.grid.across[i].push(
@@ -145,7 +145,8 @@ export class GridGenerator {
 
     private placeWord(words: Word[]): void {
         if (words.length > 0) {
-            this.wordPlacement.currentWord = words[0];
+            this.wordPlacement.currentWord.definitions = words[0].definitions;
+            this.wordPlacement.currentWord.wordString = words[0].wordString;
             if (this.wordPlacement.next()) {
                 this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
             }
@@ -270,6 +271,7 @@ class WordPlacementList {
     public get currentWord(): Word {
         if (!this._isSorted) {
             this._orderedWords.sort((word1: Word, word2: Word) => word1.length - word2.length);
+            this._isSorted = true;
         }
 
         return this._orderedWords[this._currentIndex];
