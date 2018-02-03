@@ -82,7 +82,7 @@ describe("Generation de la grille", () => {
             let hasEmptyWord: boolean = false;
             grid.across.forEach((row: Word[]) => {
                 row.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
+                    if (word.wordString == null) {
                         hasEmptyWord = true;
                     }
                 });
@@ -90,7 +90,7 @@ describe("Generation de la grille", () => {
 
             grid.down.forEach((column: Word[]) => {
                 column.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
+                    if (word.wordString == null) {
                         hasEmptyWord = true;
                     }
                 });
@@ -102,7 +102,7 @@ describe("Generation de la grille", () => {
         it("should not have accents or special letters", () => {
             grid.across.forEach((row: Word[]) => {
                 row.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
+                    if (word.wordString) {
                         // try for character
                     }
                 });
@@ -110,7 +110,7 @@ describe("Generation de la grille", () => {
 
             grid.down.forEach((column: Word[]) => {
                 column.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
+                    if (word.wordString) {
                       // try for character
                     }
                 });
