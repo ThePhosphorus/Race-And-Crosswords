@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, Router } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import {GridGenerator } from "./grid-generator";
-import {Difficulty} from "../../../../common/communication/crossword-grid"
+import {Difficulty} from "../../../../common/communication/crossword-grid";
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
