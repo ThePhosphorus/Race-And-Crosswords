@@ -19,17 +19,21 @@ export abstract class WebService {
     public get routeName(): string { return this._routeName; }
 
     public get routes(): Router {
-         if (!this._routingDefined) {
-          this.defineRoutes();
-          this._routingDefined = true;
-         }
+        this.initRoutes();
 
-         return this._router;
+        return this._router;
         }
+
+    private initRoutes(): void {
+        if (!this._routingDefined) {
+            this.defineRoutes();
+            this._routingDefined = true;
+           }
+    }
 
     protected abstract defineRoutes(): void;
 
-    public addSubService(subService: WebService): void {
-        this._router.use(subService._routeName, subService._router);
+    protected addSubService(subService: WebService): void {
+        this._router.use(subService.routeName, subService.routes);
     }
 }
