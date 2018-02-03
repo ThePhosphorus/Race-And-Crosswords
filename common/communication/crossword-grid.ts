@@ -1,3 +1,12 @@
+export const MIN_WORD_LENGTH: number = 2;
+
+export enum Difficulty {
+    Easy= "Easy",
+    Medium= "Medium",
+    Hard= "Hard",
+}
+
+
 export class Position {
     public constructor(public column: number, public row: number) {}
 }
