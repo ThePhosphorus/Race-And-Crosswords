@@ -15,11 +15,9 @@ export class Datamuse {
             });
     }
 
-    public getWord(constraint: string,  isEasy: boolean, callback: (word: Word) => void): void {
-        if(isEasy)
-        {
-            this.makeRequest(constraint, (words: Array<Word>) =>
-            {
+    public getWord(constraint: string, isEasy: boolean, callback: (word: Word) => void): void {
+        if (isEasy) {
+            this.makeRequest(constraint, (words: Array<Word>) => {
                 words = words.filter((w: Word) => w.score > HARD_THRESHOLD);
                 callback(words.length > 0 ? words[0] : null);
             });

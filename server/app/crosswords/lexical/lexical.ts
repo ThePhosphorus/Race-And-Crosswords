@@ -21,17 +21,7 @@ export class Lexical extends WebService {
         });
 
         this._router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.makeRequest(req, (word: Word) => { // TODO: must uses constraints and difficulty as query params
-                if (word) {
-                    res.send(word);
-                } else {
-                    res.send("Bad request");
-                }
-            });
-        });
-
-        this._router.get("/hard-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getHardWord("a??o", (word: Word) => {
+            this.datamuse.getWord("", true, (word: Word) => {
                 if (word) {
                     res.send(word);
                 } else {
