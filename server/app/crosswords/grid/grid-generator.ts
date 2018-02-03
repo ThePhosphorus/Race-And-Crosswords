@@ -155,7 +155,7 @@ export class GridGenerator {
     }
 
     private placeWord(words: Word[]): void {
-        if (words.length > 0) {
+        if (words != null && words.length > 0) {
             this.wordPlacement.currentWord.definitions = words[0].definitions;
             this.wordPlacement.currentWord.wordString = words[0].wordString;
             if (this.wordPlacement.next()) {
