@@ -14,7 +14,7 @@ export class Crosswords extends WebService {
         this.routeName = "/crosswords";
     }
 
-    public defineRoutes(): void {
+    protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("Crosswords endpoint"));
 
         this.addSubService(this.lexical);

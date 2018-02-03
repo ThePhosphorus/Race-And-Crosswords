@@ -12,7 +12,7 @@ export class Routes extends WebService {
         super();
     }
 
-    public defineRoutes(): void {
+    protected defineRoutes(): void {
 
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
 

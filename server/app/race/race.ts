@@ -10,7 +10,7 @@ export class Race extends WebService {
         this.routeName = "/race";
     }
 
-    public defineRoutes(): void {
+    protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Race endpoint");
         });

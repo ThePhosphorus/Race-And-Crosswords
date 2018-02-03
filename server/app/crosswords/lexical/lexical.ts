@@ -15,7 +15,7 @@ export class Lexical extends WebService {
         this.datamuse = new Datamuse();
     }
 
-    public defineRoutes(): void {
+    protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Lexical service enpoint");
         });

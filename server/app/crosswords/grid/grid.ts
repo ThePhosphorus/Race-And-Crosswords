@@ -20,7 +20,7 @@ export class Grid extends WebService {
         this.gridGenerator = new GridGenerator();
     }
 
-    public defineRoutes(): void {
+    protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             const difficulty: Difficulty = (req.query.difficulty !== undefined && Number(req.query.difficulty))
                                             ? Math.floor(Math.max(Difficulty.Easy, Math.min(Difficulty.Hard, Number(req.query.difficulty))))
