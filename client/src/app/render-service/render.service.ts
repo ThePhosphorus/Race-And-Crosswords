@@ -11,9 +11,10 @@ import {
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
-
 const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
+const GRID_PRIMARY_COLOR: number = 0xFF0000;
+const GRID_SECONDARY_COLOR: number = 0x001188;
 
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.85;
@@ -37,11 +38,10 @@ export class RenderService {
      }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
-        if (container) {
-            this.container = container;
-        }
+        this.container = container;
 
         await this.createScene();
+
         this.initStats();
         this.startRenderingLoop();
      }
@@ -64,7 +64,9 @@ export class RenderService {
 
         await this._car.init();
         this.cameraManager.updatecarInfos(this._car.getPosition(), this._car.direction);
-        this.gridHelper = new GridHelper(GRID_DIMENSION, GRID_DIVISIONS, new Color(0xff0000), new Color(0x001188));
+        this.gridHelper = new GridHelper(
+            GRID_DIMENSION, GRID_DIVISIONS,
+            new Color(GRID_PRIMARY_COLOR), new Color(GRID_SECONDARY_COLOR));
         this.scene.add(this._car);
         this.scene.add(this.gridHelper);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
@@ -107,5 +109,4 @@ export class RenderService {
         return this._car.getPosition();
      }
 
-   
 }
