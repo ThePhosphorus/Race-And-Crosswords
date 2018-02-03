@@ -9,14 +9,14 @@ describe("Generation de la grille", () => {
     describe("When an empty grid is generated", () => {
 
         const gridSize: number = 10;
-        const blackTilePercentage: number = 0.3;
+        const blackTilePercentage: number = 0.2;
         const grid: CrosswordGrid = gridGenerator.getNewGrid(Difficulty.Easy, gridSize, blackTilePercentage);
 
         it("should be 10 by 10 ", () => {
             let columnSize: number[] = new Array<number>(gridSize);
             let rowSize: number[] = new Array<number>(gridSize);
-            columnSize.fill(0, 0, gridSize - 1);
-            rowSize.fill(0, 0, gridSize - 1);
+            columnSize.fill(0, 0, gridSize );
+            rowSize.fill(0, 0, gridSize );
 
             for (let i: number = 0; i < gridSize; i++) {
                 grid.across[i].forEach((word: Word) => {
@@ -29,10 +29,10 @@ describe("Generation de la grille", () => {
 
             grid.blackTiles.forEach((tile: Position) => {
                 rowSize[tile.row]++;
-                columnSize[tile.row]++;
+                columnSize[tile.column]++;
             });
 
-            let answer:string ="";
+            let answer:string ="\n";
 
             let isCorrectSize: boolean = true;
             for (let i: number = 0; i < gridSize; i++) {

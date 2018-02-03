@@ -32,11 +32,15 @@ export class GridGenerator {
 
     private generateBlackTiles(): void {
         const numberOfBlackTile: number = this.gridSize * this.gridSize * this.blackTilePercentage;
-        for (let i: number = 0; i < numberOfBlackTile; i++) {
+        let blackTiles:Set<Position> = new Set<Position>();
+        while (blackTiles.size < numberOfBlackTile) {
             const column: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
             const row: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
-            this.grid.blackTiles.push(new Position(column, row));
+            blackTiles.add(new Position(column, row));
         }
+        blackTiles.forEach((tile:Position)=>{
+            this.grid.blackTiles.push(tile);
+        })
     }
 
     private generateAllEmptyWords(): void {
@@ -44,58 +48,98 @@ export class GridGenerator {
         this.generateEmptyWordsHorizontal();
     }
 
-    private generateEmptyWordsVertical(): void {
-        for (let i: number = 0; i < this.gridSize; i++ ) {
-            const currentBlackTiles: Position[] = [];
-            this.grid.blackTiles.forEach((blackTile: Position) => {
-                if (blackTile.column === i) {
-                    currentBlackTiles.push(blackTile);
+    private generateEmptyWordsVertical(): void{
+        for (let i = 0; i < this.gridSize; i++) {
+
+            let columnTiles: Position[] = new Array<Position>();
+            this.grid.blackTiles.forEach((tile: Position)=>{
+                if (tile.column===i)
+                    columnTiles.push(tile);
+            })
+
+            columnTiles.sort((tile1:Position, tile2:Position)=>{
+                return tile1.row - tile2.row;
+            })
+            if(columnTiles.length>0){
+
+                for (let j = 0; j < columnTiles.length; j++) {
+                    
+                    let startingPosition:number;
+
+                    j==0?startingPosition=0:startingPosition=columnTiles[j-1].row+1;
+
+                    this.grid.down[i].push(new Word(
+                        Orientation.Vertical,
+                        new Position(i,startingPosition),
+                        columnTiles[j].row - startingPosition
+                        )
+                    )
+
+                    if(j== columnTiles.length-1)
+                        this.grid.down[i].push(new Word(    
+                            Orientation.Vertical, 
+                            new Position(i,columnTiles[j].row +1),
+                            (this.gridSize-1) - columnTiles[j].row 
+                        )
+                    )
+                            
                 }
-            });
-            if (currentBlackTiles.length === 0) {
-                this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), this.gridSize));
-            } else {
-                currentBlackTiles.sort((tile1: Position, tile2: Position) => tile1.row - tile2.row);
-                for (let j: number = 0; j < currentBlackTiles.length; j++) {
-                    if (j === 0) {
-                        this.grid.down[i].push(new Word(Orientation.Vertical, new Position(i, 0), currentBlackTiles[j].row));
-                    } else {
-                        this.grid.down[i].push(new Word(Orientation.Vertical,
-                                                        new Position(i, currentBlackTiles[j - 1].row + 1),
-                                                        currentBlackTiles[j].row - currentBlackTiles[j - 1].row - 1));
-                    }
-                    this.grid.down[i].push(new Word(Orientation.Vertical,
-                                                    new Position(i, 0),
-                                                    this.gridSize - currentBlackTiles[j].row - 1));
-                }
+            }else
+            {
+                this.grid.down[i].push(new Word(    
+                            Orientation.Vertical, 
+                            new Position(i,0),
+                            this.gridSize
+                            )
+                        )
             }
         }
     }
 
-    private generateEmptyWordsHorizontal(): void {
-        for (let i: number = 0; i < this.gridSize; i++ ) {
-            const currentBlackTiles: Position[] = [];
-            this.grid.blackTiles.forEach((blackTile: Position) => {
-                if (blackTile.row === i) {
-                    currentBlackTiles.push(blackTile);
+    private generateEmptyWordsHorizontal(): void{
+        for (let i = 0; i < this.gridSize; i++) {
+
+            let rowTiles: Position[] = new Array<Position>();
+            this.grid.blackTiles.forEach((tile: Position)=>{
+                if (tile.row===i)
+                    rowTiles.push(tile);
+            })
+
+            rowTiles.sort((tile1:Position, tile2:Position)=>{
+                return tile1.column - tile2.column;
+            })
+            if(rowTiles.length>0){
+
+                for (let j = 0; j < rowTiles.length; j++) {
+                    
+                    let startingPosition:number;
+
+                    j==0?startingPosition=0:startingPosition=rowTiles[j-1].column +1;
+
+                    this.grid.across[i].push(new Word(
+                        Orientation.Horizontal,
+                        new Position(i,startingPosition),
+                        rowTiles[j].column - startingPosition
+                        )
+                    )
+
+                    if(j== rowTiles.length-1)
+                        this.grid.across[i].push(new Word(    
+                            Orientation.Horizontal, 
+                            new Position(i,rowTiles[j].column +1),
+                            (this.gridSize - 1) - rowTiles[j].column 
+                        )
+                    )
+                            
                 }
-            });
-            if (currentBlackTiles.length === 0) {
-                this.grid.across[i].push(new Word(Orientation.Horizontal, new Position(0, i), this.gridSize));
-            } else {
-                currentBlackTiles.sort((tile1: Position, tile2: Position) => tile1.column - tile2.column);
-                for (let j: number = 0; j < currentBlackTiles.length; j++) {
-                    if (j === 0) {
-                        this.grid.down[i].push(new Word(Orientation.Horizontal, new Position(0, i), currentBlackTiles[j].column));
-                    } else {
-                        this.grid.down[i].push(new Word(Orientation.Horizontal,
-                                                        new Position(i, currentBlackTiles[j - 1].column + 1),
-                                                        currentBlackTiles[j].column - currentBlackTiles[j - 1].column - 1));
-                    }
-                    this.grid.down[i].push(new Word(Orientation.Horizontal,
-                                                    new Position(i, 0),
-                                                    this.gridSize - currentBlackTiles[j].column - 1));
-                }
+            }else
+            {
+                this.grid.across[i].push(new Word(    
+                            Orientation.Horizontal, 
+                            new Position(i,0),
+                            this.gridSize
+                            )
+                        )
             }
         }
     }
@@ -168,6 +212,20 @@ export class GridGenerator {
                     }
                 } else {
                     // same thing for vertical
+                    const currentIndex: number =
+                        this.wordPlacement.getIndexInList(Orientation.Vertical,
+                                                          new Position(this.wordPlacement.currentWord.position.row,
+                                                                       this.wordPlacement.currentWord.position.column + i));
+                    if (currentIndex > targetIndex) {
+                        targetIndex = currentIndex;
+                        constraintsModifyingMask = " ".repeat(this.wordPlacement.getWordAtIndex(targetIndex).length);
+                        const indexToModify: number = this.wordPlacement.currentWord.position.row -
+                                                    this.wordPlacement.getWordAtIndex(targetIndex).position.row;
+                        constraintsModifyingMask =
+                            constraintsModifyingMask.slice(0, indexToModify) +
+                            this.wordPlacement.getWordAtIndex(targetIndex).wordString[indexToModify] +
+                            constraintsModifyingMask.slice(indexToModify + 1, constraintsModifyingMask.length);
+                    }
                 }
             }
         this.wordPlacement.revert(targetIndex);
