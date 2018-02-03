@@ -73,7 +73,6 @@ export class Car extends Object3D {
         dragCoefficient: number = DEFAULT_DRAG_COEFFICIENT
     ) {
         super();
-
         if (wheelbase <= 0) {
             console.error("Wheelbase should be greater than 0.");
             wheelbase = DEFAULT_WHEELBASE;
@@ -224,7 +223,7 @@ export class Car extends Object3D {
         // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
             1 / tirePressure *
-                (Math.pow(this.speed.length() * 3.6 / 100, 2) * 0.0095 + 0.01) + 0.005;
+                (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
         if (this.isGoingForward()) {
             return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
@@ -306,7 +305,7 @@ export class Car extends Object3D {
 
     private isGoingForward(): boolean {
         // tslint:disable-next-line:no-magic-numbers
-        return this.speed.normalize().dot(this.direction) > 0.05;
+        return this.speed.normalize().dot(this.direction) > MINIMUM_SPEED;
     }
 
     public getPosition(): Vector3 {
