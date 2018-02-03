@@ -18,7 +18,8 @@ export class Datamuse {
 
     public async getWords(constraint: string, isEasy: boolean): Promise<Array<Word>> {
         let words: Array<DatamuseWord> = await this.makeRequest(constraint);
-        words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD);
+        words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD)
+                     .filter((w: DatamuseWord) => w.defs !== undefined);
         const formatedWords: Array<Word> = new Array<Word>();
         words.forEach((w: DatamuseWord) => {
             const fw: Word = new Word();
