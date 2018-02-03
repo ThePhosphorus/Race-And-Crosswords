@@ -20,7 +20,7 @@ export class GridGenerator {
 
     private generateGrid(): void {
         this.generateEmptyGrid();
-        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
+        this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord));
     }
 
     public generateEmptyGrid(): void {
@@ -112,6 +112,7 @@ export class GridGenerator {
     }
 
     public populateWordLists(): void {
+        this.wordPlacement = new WordPlacementList();
         this.populateWordList(Orientation.Horizontal);
         this.populateWordList(Orientation.Vertical);
     }
@@ -129,7 +130,7 @@ export class GridGenerator {
         });
     }
 
-    public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
+    public getConstrainedWords(constraint: string): void {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
@@ -142,7 +143,7 @@ export class GridGenerator {
         Request(LEXICAL_SERVICE_URL, options)
             .then((words: Array<Word>) => {
                 try {
-                    callback(words as Word[]);
+                    this.placeWord(words as Word[]);
                 } catch (err) {
                     console.error("Could not place word");
                     console.error("Error : " + err);
@@ -150,7 +151,7 @@ export class GridGenerator {
             })
             .catch(() => {
                 console.error("Could not get words from service lexical");
-                callback(new Array<Word>()); });
+                this.placeWord(new Array<Word>()); });
     }
 
     private placeWord(words: Word[]): void {
@@ -158,7 +159,7 @@ export class GridGenerator {
             this.wordPlacement.currentWord.definitions = words[0].definitions;
             this.wordPlacement.currentWord.wordString = words[0].wordString;
             if (this.wordPlacement.next()) {
-                this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord), this.placeWord);
+                this.getConstrainedWords(this.findConstraints(this.wordPlacement.currentWord));
             }
         } else {
            // this.rollback();
@@ -217,7 +218,7 @@ export class GridGenerator {
 }
 
     private findConstraintHorizontal(word: Word): string {
-        let constraint: string;
+        let constraint: string = "";
         for (let i: number = word.position.column; i < word.length + word.position.column; i++) {
 
             let foundConstraint: boolean = false;
@@ -238,7 +239,7 @@ export class GridGenerator {
     }
 
     private findConstraintVertical(word: Word): string {
-        let constraint: string;
+        let constraint: string = "";
         for (let i: number = word.position.row; i < word.length + word.position.row; i++) {
 
             let foundConstraint: boolean = false;
