@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Request, Response, NextFunction } from "express";
 import { Datamuse } from "./datamuse";
-import { Word } from "../../../../common/communication/word";
+import { Word } from "../../../../common/communication/crossword-grid";
 import { WebService } from "../../webServices";
 
 @injectable()
@@ -20,13 +20,12 @@ export class Lexical extends WebService {
             res.send("Lexical service enpoint");
         });
 
-        this._router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getWord("", true, (word: Word) => {
-                if (word) {
-                    res.send(word);
-                } else {
-                    res.send("Bad request");
-                }
+        this._router.post("/query-words", (req: Request, res: Response, next: NextFunction) => {
+            const constraint: string = req.body["constraint"];
+            const easy: boolean = req.body["easy"];
+
+            this.datamuse.getWords(constraint, easy).then((words: Array<Word>) => {
+                res.send(words);
             });
         });
     }

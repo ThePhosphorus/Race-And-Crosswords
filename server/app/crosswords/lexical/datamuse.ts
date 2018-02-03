@@ -1,31 +1,32 @@
-import * as request from "request-promise-native";
-import { Word } from "../../../../common/communication/word";
+import * as Request from "request-promise-native";
+import { Word } from "../../../../common/communication/crossword-grid";
 
 const HARD_THRESHOLD: number = 1000;
 
+interface DatamuseWord {
+    word: string;
+    score: number;
+    defs: string[];
+}
+
 export class Datamuse {
-    private makeRequest(constraint: string, callback: (words: Array<Word>) => void): void {
-        request("http://api.datamuse.com/words?sp=" + constraint + "&md=def")
-            .then((htmlString: string) => {
-                const parsedWords: Array<Word> = JSON.parse(htmlString);
-                callback(parsedWords);
-            })
-            .catch(() => {
-                callback([]);
-            });
+    public async makeRequest(constraint: string): Promise<Array<DatamuseWord>> {
+        const htmlString: string = await Request("http://api.datamuse.com/words?sp=" + constraint + "&md=d");
+
+        return JSON.parse(htmlString) as Array<DatamuseWord>;
     }
 
-    public getWord(constraint: string, isEasy: boolean, callback: (word: Word) => void): void {
-        if (isEasy) {
-            this.makeRequest(constraint, (words: Array<Word>) => {
-                words = words.filter((w: Word) => w.score > HARD_THRESHOLD);
-                callback(words.length > 0 ? words[0] : null);
-            });
-        } else {
-            this.makeRequest(constraint, (words: Array<Word>) => {
-                words = words.filter((w: Word) => w.score <= HARD_THRESHOLD);
-                callback(words.length > 0 ? words[0] : null);
-            });
-        }
+    public async getWords(constraint: string, isEasy: boolean): Promise<Array<Word>> {
+        let words: Array<DatamuseWord> = await this.makeRequest(constraint);
+        words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD);
+        const formatedWords: Array<Word> = new Array<Word>();
+        words.forEach((w: DatamuseWord) => {
+            const fw: Word = new Word();
+            fw.definitions = w.defs;
+            fw.wordString = w.word;
+            formatedWords.push(fw);
+        });
+
+        return formatedWords;
     }
 }

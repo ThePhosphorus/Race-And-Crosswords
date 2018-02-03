@@ -17,43 +17,14 @@ export enum Orientation {
 }
 
 export class Word {
-
-    private _wordString: string;
-    private _definitions: string[];
-    
-    public constructor(private _orientation: Orientation, private _position: Position, private _length: number) {
-        this._wordString = "";
+    public constructor(_orientation?: Orientation, _position?: Position, _length?: number) {
     }
 
-    public get position(): Position {
-        return this._position;
-    }
-
-    public get orientation(): Orientation {
-        return this._orientation;
-    }
-
-    public get definitions(): string[] {
-        return this._definitions;
-    }
-
-    public addDefinitions(definitions: string[] ): void {
-        definitions.forEach((definition: string) => {
-           this._definitions.push(definition);
-        });
-    }
-
-    public set wordString(word: string) {
-        this._wordString = word;
-    }
-
-    public get wordString(): string {
-        return this._wordString;
-    }
-
-    public get length(): number {
-        return this._length;
-    }
+    wordString: string;
+    definitions: string[];
+    orientation: Orientation;
+    position: Position;
+    length: number;
 }
 
 export class CrosswordGrid {
