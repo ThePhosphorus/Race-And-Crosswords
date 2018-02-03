@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from "express";
-import { injectable, inject } from "inversify";
+import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import {GridGenerator } from "./grid-generator";
 import {Difficulty} from "../../../../common/communication/crossword-grid"
@@ -16,7 +16,7 @@ export class Grid extends WebService {
 
     constructor() {
         super();
-        this.gridGenerator=new GridGenerator();
+        this.gridGenerator = new GridGenerator();
         this._routerName = "/grid";
     }
 
