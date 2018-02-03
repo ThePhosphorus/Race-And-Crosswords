@@ -1,8 +1,9 @@
 import { Word, Orientation, Position, CrosswordGrid, Difficulty, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
-// import * as request from "request-promise-native";
+import * as Request from "request-promise-native";
+
+const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crossword/lexical/query-words";
 
 export class GridGenerator {
-
     private gridSize: number = 10;
     private blackTilePercentage: number = 0.2;
     private wordPlacement: WordPlacementList = new WordPlacementList();
@@ -163,20 +164,17 @@ export class GridGenerator {
     }
 
     public getConstrainedWords(constraint: string, callback: (words: Word[]) => void): void {
-        // let url: string;
-        // if (true) { // Need to change the condition
-        //     url = "http://localhost:3000/crossword/lexical/easy-word";
-        // } else {
-        //     url = "http://localhost:3000/crossword/lexical/hard-word";
-        // }
-       /* request(url)
-            .then((htmlString: string) => {
-                const words: Word[] = JSON.parse(htmlString);
-                callback(words);
-            })
-            .catch(() => {
-                // Do something
-            });*/
+        const options: Request.RequestPromiseOptions = {
+            method: "POST",
+            body: {
+                constraint: constraint,
+                easy: true
+            },
+            json: true
+        };
+        Request(LEXICAL_SERVICE_URL, options)
+            .then((htmlString: string) => callback(JSON.parse(htmlString) as Word[]))
+            .catch(() => callback(null));
     }
 
     private placeWord(words: Word[]): void {
