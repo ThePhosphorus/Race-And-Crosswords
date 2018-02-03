@@ -20,8 +20,8 @@ export class Lexical extends WebService {
             res.send("Lexical service enpoint");
         });
 
-        this._router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getEasyWord("t??t", (word: Word) => {
+        this._router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
+            this.datamuse.makeRequest(req, (word: Word) => { // TODO: must uses constraints and difficulty as query params
                 if (word) {
                     res.send(word);
                 } else {

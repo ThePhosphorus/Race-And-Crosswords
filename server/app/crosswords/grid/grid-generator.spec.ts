@@ -13,8 +13,8 @@ describe("Generation de la grille", () => {
         const grid: CrosswordGrid = gridGenerator.getNewGrid(Difficulty.Easy, gridSize, blackTilePercentage);
 
         it("should be 10 by 10 ", () => {
-            const columnSize: number[] = new Array<number>();
-            const rowSize: number[] = new Array<number>();
+            let columnSize: number[] = new Array<number>(gridSize);
+            let rowSize: number[] = new Array<number>(gridSize);
             columnSize.fill(0, 0, gridSize - 1);
             rowSize.fill(0, 0, gridSize - 1);
 
@@ -32,14 +32,19 @@ describe("Generation de la grille", () => {
                 columnSize[tile.row]++;
             });
 
+            let answer:string ="";
+
             let isCorrectSize: boolean = true;
             for (let i: number = 0; i < gridSize; i++) {
                 if (rowSize[i] !== gridSize
                     || columnSize[i] !== gridSize) {
                     isCorrectSize = false;
                 }
+                answer+="row" + i + " : " + rowSize[i] + "\n";
+                answer+="columns" + i + " : " + columnSize[i] + "\n";
+
             }
-            assert.ok(isCorrectSize);
+            assert.ok(isCorrectSize, answer);
         });
 
         it("the first row and column should not have black tiles", () => {

@@ -27,8 +27,8 @@ export class Grid extends WebService {
                                             : Difficulty.Easy;
             const blackTiles: number = (req.query.tiles !== undefined && Number(req.query.tiles))
                                             ? Math.max(0, Math.min(1, Number(req.query.tiles))) : DEFAULT_BLACK_TILES_RATIO;
-            const size: number = (req.query.tiles !== undefined && Number(req.query.tiles))
-                                            ? Math.max(MIN_GRID_SIZE, Math.min(MAX_GRID_SIZE, Number(req.query.tiles)))
+            const size: number = (req.query.size !== undefined && Number(req.query.size))
+                                            ? Math.max(MIN_GRID_SIZE, Math.min(MAX_GRID_SIZE, Number(req.query.size)))
                                             : DEFAULT_GRID_SIZE;
             res.send(this.gridGenerator.getNewGrid(difficulty, size, blackTiles));
         });
