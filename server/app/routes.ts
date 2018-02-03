@@ -1,24 +1,22 @@
 import { injectable, inject } from "inversify";
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import {Crosswords} from "./crosswords/crosswords";
 import {Race} from "./race/race";
 
 import Types from "./types";
+import { WebService } from "./webServices";
 
 @injectable()
-export class Routes {
-    public constructor(@inject(Types.Crosswords) private crosswords: Crosswords, @inject(Types.Race) private race: Race) {
+export class Routes extends WebService {
+    public constructor( @inject(Types.Crosswords) private crosswords: Crosswords, @inject(Types.Race) private race: Race ) {
+        super("/");
     }
 
-    public get routes(): Router {
-        const router: Router = Router();
+    protected routes(): void {
+        this._router.get("/",
+                         (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
 
-        router.get("/",
-                   (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
-
-        router.use("/crosswords", this.crosswords.routes );
-        router.use("/race", this.race.routes );
-
-        return router;
+        this.addSubService(this.crosswords);
+        this.addSubService(this.race);
     }
 }
