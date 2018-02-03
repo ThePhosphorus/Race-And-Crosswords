@@ -9,9 +9,9 @@ export class AppComponent implements OnInit {
 
     public constructor() { }
 
-    public readonly title: string = "LOG2990";
-    public message: string;
+    public title: string ;
 
     public ngOnInit(): void {
+        this.title = "LOG2990";
     }
 }
