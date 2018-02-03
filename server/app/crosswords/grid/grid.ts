@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction, Router } from "express";
+import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import {GridGenerator } from "./grid-generator";
-import {Difficulty} from "../../../../common/communication/crossword-grid"
+import {Difficulty} from "../../../../common/communication/crossword-grid";
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
@@ -16,13 +16,12 @@ export class Grid extends WebService {
 
     constructor() {
         super();
+        this.routeName = "/grid";
         this.gridGenerator = new GridGenerator();
-        this._routerName = "/grid";
     }
 
-    public get routes(): Router {
-        const router: Router = Router();
-        router.get("/", (req: Request, res: Response, next: NextFunction) => {
+    public defineRoutes(): void {
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             const difficulty: Difficulty = (req.query.difficulty !== undefined && Number(req.query.difficulty))
                                             ? Math.floor(Math.max(Difficulty.Easy, Math.min(Difficulty.Hard, Number(req.query.difficulty))))
                                             : Difficulty.Easy;
@@ -33,7 +32,5 @@ export class Grid extends WebService {
                                             : DEFAULT_GRID_SIZE;
             res.send(this.gridGenerator.getNewGrid(difficulty, size, blackTiles));
         });
-
-        return router;
     }
 }

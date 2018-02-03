@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Request, Response, NextFunction, Router } from "express";
+import { Request, Response, NextFunction } from "express";
 import { Datamuse } from "./datamuse";
 import { Word } from "../../../../common/communication/word";
 import { WebService } from "../../webServices";
@@ -11,17 +11,16 @@ export class Lexical extends WebService {
 
     constructor() {
         super();
+        this.routeName = "/lexical";
         this.datamuse = new Datamuse();
-        this._routerName = "/lexical";
     }
 
-    public get routes(): Router {
-        const router: Router = Router();
-        router.get("/", (req: Request, res: Response, next: NextFunction) => {
+    public defineRoutes(): void {
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Lexical service enpoint");
         });
 
-        router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
+        this._router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
             this.datamuse.getEasyWord("t??t", (word: Word) => {
                 if (word) {
                     res.send(word);
@@ -31,7 +30,7 @@ export class Lexical extends WebService {
             });
         });
 
-        router.get("/hard-word", (req: Request, res: Response, next: NextFunction) => {
+        this._router.get("/hard-word", (req: Request, res: Response, next: NextFunction) => {
             this.datamuse.getHardWord("a??o", (word: Word) => {
                 if (word) {
                     res.send(word);
@@ -40,7 +39,5 @@ export class Lexical extends WebService {
                 }
             });
         });
-
-        return router;
     }
 }

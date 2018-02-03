@@ -1,5 +1,5 @@
 import * as http from "http";
-import { IncomingMessage } from "https";
+import { IncomingMessage } from "http";
 import { Word } from "../../../../common/communication/word";
 
 const HTTP_STATUS_OK: number = 200;
