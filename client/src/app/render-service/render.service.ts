@@ -4,7 +4,6 @@ import {
     WebGLRenderer,
     Scene,
     AmbientLight,
-    Vector3,
     GridHelper,
     Color
 } from "three";
@@ -104,9 +103,4 @@ export class RenderService {
             this.container.clientHeight
         );
      }
-
-    public get carPosition(): Vector3 {
-        return this._car.getPosition();
-     }
-
 }
