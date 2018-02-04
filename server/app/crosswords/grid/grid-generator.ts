@@ -3,7 +3,7 @@ import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const BT_SWITCH_FACTOR: number = 2;
-
+const ROLLBACK_AMOUNT: number = 2;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -96,7 +96,8 @@ export class GridGenerator {
         let currentIndex: number = 0;
         let rollbackCount: number = 0;
         while (currentIndex < this.crossword.words.length && currentIndex >= 0 ) {
-            if (rollbackCount > this.crossword.size) {
+
+            if (rollbackCount > ( this.crossword.size)) {
                 this.nukeGrid();
                 currentIndex = 0;
                 rollbackCount = 0;
@@ -104,8 +105,9 @@ export class GridGenerator {
             const word: Word = this.crossword.words[currentIndex];
             const constraint: string = this.getConstraints(word);
             if (constraint.indexOf("?") === -1) {
-                currentIndex = this.rollback(currentIndex);
-                rollbackCount++;
+               currentIndex = this.rollback(currentIndex);
+               rollbackCount++;
+
             } else {
                 const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word);
                 if (receivedWord !== undefined) {
@@ -115,6 +117,7 @@ export class GridGenerator {
                 } else {
                     currentIndex = this.rollback(currentIndex);
                     rollbackCount++;
+
                     }
                 }
             }
@@ -150,14 +153,15 @@ export class GridGenerator {
      }
 
     private rollback(currentIndex: number): number {
-        let newIndex: number = Math.floor(currentIndex - MIN_WORD_LENGTH);
+        let newIndex: number = Math.floor(currentIndex / ROLLBACK_AMOUNT);
         if (newIndex < 0) { newIndex = 0; }
 
-        for (let index: number = currentIndex - 1; index > newIndex ; index--) {
-            this.unsetWord(this.crossword.words[currentIndex]);
+        for (let index: number = currentIndex - 1; index >= newIndex ; index--) {
+            this.unsetWord(this.crossword.words[index]);
+
         }
 
-        return newIndex;
+        return newIndex ;
      }
 
     private getConstraints(word: Word): string {
