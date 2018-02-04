@@ -17,11 +17,12 @@
   <div class="col-5 mt-3 " id="grid">
     <table align="center">
       <tbody>
-        <tr *ngFor="let word of words">
-          <td *ngFor="let letter of word" [ngClass]="{'black': letter=='-'}">
-            <span *ngIf="letter != '-'">
+        <tr *ngFor="let letters of twoDimensionGrid">
+          <td *ngFor="let letter of letters">
+            {{letter.char | uppercase}}
+            <!-- <span *ngIf="letter != '-'">
               {{letter | uppercase}}
-            </span>
+            </span> -->
           </td>
         </tr>
       </tbody>
