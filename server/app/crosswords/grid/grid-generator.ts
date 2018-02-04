@@ -79,14 +79,20 @@ export class GridGenerator {
     }
 
     private async findWords(difficulty: Difficulty): Promise<void> {
+
         for (const word of this.crossword.words) {
-            const receivedWord: DatamuseWord = await this.getWordsFromServer(this.getConstraints(word), word);
-            if (receivedWord) {
-                this.setWord(receivedWord, word);
+            const constraint: string = this.getConstraints(word);
+            if (constraint.indexOf("?") === -1) {
+                console.error("ERROR");
             } else {
-                word.letters.forEach((l: Letter) => {
-                    l.char = l.char ? l.char : "*";
-                });
+                const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word);
+                if (receivedWord !== undefined) {
+                    this.setWord(receivedWord, word);
+                } else {
+                    word.letters.forEach((l: Letter) => {
+                        l.char = l.char ? l.char : "*";
+                    });
+                }
             }
         }
     }
