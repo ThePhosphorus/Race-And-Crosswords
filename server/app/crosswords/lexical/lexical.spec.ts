@@ -11,7 +11,7 @@ describe("Service Lexical", () => {
          });
      });
 
-    describe("When the word is received", () => {
+    describe("When the words are received", () => {
         it("should not give us an empty array", (done: MochaDone) => {
             const testString: string = "????";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
