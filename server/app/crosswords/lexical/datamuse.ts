@@ -1,6 +1,6 @@
 import * as Request from "request-promise-native";
 
-export const HARD_THRESHOLD: number = 1000;
+export const HARD_THRESHOLD: number = 10000;
 
 export class DatamuseWord {
     public word: string;
