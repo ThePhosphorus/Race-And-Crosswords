@@ -15,7 +15,7 @@ export class CrosswordsComponent implements OnInit {
     public constructor() {
         this._gridSize = 5;
         this.words = [];
-        for (let j: number = 0; j < this._gridSize; j++) {
+        for (let i: number = 0; i < this._gridSize; i++) {
                 this.words[i] = [];
             }
      }
@@ -26,7 +26,7 @@ export class CrosswordsComponent implements OnInit {
     public ngOnInit(): void {
         // Temp
         this.fillEmptyGrid();
-    };
+    }
 
     private fillEmptyGrid(): void {
         for (let i: number = 0; i < this._gridSize; i++) {
