@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import {GridGenerator } from "./grid-generator";
-import {Difficulty} from "../../../../common/communication/crossword-grid";
+import {Difficulty, CrosswordGrid} from "../../../../common/communication/crossword-grid";
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
@@ -30,7 +30,7 @@ export class Grid extends WebService {
             const size: number = (req.query.size !== undefined && Number(req.query.size))
                                             ? Math.max(MIN_GRID_SIZE, Math.min(MAX_GRID_SIZE, Number(req.query.size)))
                                             : DEFAULT_GRID_SIZE;
-            res.send(this.gridGenerator.getNewGrid(difficulty, size, blackTiles));
+            this.gridGenerator.getNewGrid(difficulty, size, blackTiles).then((crossword: CrosswordGrid) => res.send(crossword));
         });
     }
 }
