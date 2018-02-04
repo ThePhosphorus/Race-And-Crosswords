@@ -9,13 +9,15 @@ import { GameComponent } from "./game-component/game.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         GameComponent,
         CrosswordsComponent,
-        PlayermodeComponent
+        PlayermodeComponent,
+        HomePageComponent
     ],
     imports: [
         BrowserModule,
