@@ -14,6 +14,7 @@ export class GridGenerator {
         this.generateBlackTiles(blackTileRatio);
         this.initializeWords();
         await this.findWords(difficulty);
+        this.displayGrid();
 
         return this.crossword;
     }
@@ -98,6 +99,7 @@ export class GridGenerator {
         }
         gridWord.definitions = receivedWord.defs;
     }
+
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
@@ -106,4 +108,17 @@ export class GridGenerator {
 
         return constraint;
     }
+
+    private displayGrid(): void {
+        let s: string = "";
+        for (let i: number = 0; i < this.crossword.size; i++) {
+            for (let j: number = 0; j < this.crossword.size; j++) {
+                const c: string = this.crossword.grid[(this.crossword.size * i) + j].char;
+                s += c ? c : "-";
+            }
+            s += "\n";
+        }
+        console.log(s);
+    }
+
 }
