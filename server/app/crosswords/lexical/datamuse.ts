@@ -1,7 +1,7 @@
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
-const HARD_THRESHOLD: number = 1000;
+export const HARD_THRESHOLD: number = 10000;
 
 export class Datamuse {
     public async makeRequest(constraint: string): Promise<Array<DatamuseWord>> {
