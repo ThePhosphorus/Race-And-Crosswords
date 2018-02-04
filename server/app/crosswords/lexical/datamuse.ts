@@ -22,4 +22,13 @@ export class Datamuse {
 
         return JSON.stringify(words);
     }
+
+    public async getWord(constraint: string, isEasy: boolean): Promise<string> {
+        let words: Array<DatamuseWord> = await this.makeRequest(constraint);
+        words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD)
+                     .filter((w: DatamuseWord) => w.defs !== undefined);
+        const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
+
+        return JSON.stringify(word);
+    }
 }
