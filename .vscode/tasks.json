@@ -25,6 +25,15 @@
       "group": "build"
     },
     {
+      "label": "client-host",
+      "type": "shell",
+      "command": "npm run host --prefix ./client/",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "group": "build"
+    },
+    {
       "label": "server",
       "type": "shell",
       "command": "npm start --prefix ./server/",
