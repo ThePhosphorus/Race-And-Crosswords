@@ -106,6 +106,7 @@ export class GridGenerator {
             },
             json: true
         };
+
         return await Request(LEXICAL_SERVICE_URL, options) as DatamuseWord;
     }
 
@@ -117,19 +118,20 @@ export class GridGenerator {
         gridWord.definitions = receivedWord.defs;
     }
 
-    private unsetWord(word: Word): void { 
-        for (const letter of word.letters) { 
-            if ((--letter.count) === 0) { 
-                letter.char = ""; 
-            } 
-        } 
-    } 
-    
+    private unsetWord(word: Word): void {
+        for (const letter of word.letters) {
+            if ((--letter.count) === 0) {
+                letter.char = "";
+            }
+        }
+    }
+
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
             constraint += letter.char === "" ? "?" : letter.char;
         });
+
         return constraint;
     }
 
