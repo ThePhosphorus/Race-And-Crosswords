@@ -1,7 +1,7 @@
 import { Word, CrosswordGrid, Letter, Difficulty, Orientation } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 
-const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-words";
+const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
 
@@ -12,6 +12,7 @@ export class GridGenerator {
         this.initializeGrid(size);
         this.generateBlackTiles(blackTileRatio);
         this.initializeWords();
+        this.findWords(difficulty);
 
         return this.crossword;
     }
@@ -65,7 +66,7 @@ export class GridGenerator {
         word = new Word();
     }
 
-    public getWordsFromServer(constraint: string): void {
+    private getWordsFromServer(constraint: string, word: Word): void {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
@@ -76,12 +77,37 @@ export class GridGenerator {
         };
 
         Request(LEXICAL_SERVICE_URL, options)
-            .then((words: Array<Word>) => {
-
-                // this.placeWord(words as Word[]);
-
+            .then((receivedWord: Word) => {
+                try {
+                    if (receivedWord != null) {
+                        this.setWord(receivedWord, word);
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
             }).catch(() => {
-                console.error("Could not get words from service lexical");
+                console.error("Could not get word from service lexical");
             });
+    }
+
+    private findWords(difficulty: Difficulty): void {
+        this.crossword.words.forEach((word: Word) => {
+            this.getWordsFromServer(this.getConstraints(word), word);
+        });
+    }
+
+    private setWord(receivedWord: Word, gridWord: Word): void {
+        for (let i: number = 0; i < gridWord.letters.length; i++) {
+            gridWord.letters[i].char = receivedWord.letters[i].char;
+        }
+        gridWord.definitions = receivedWord.definitions;
+    }
+    private getConstraints(word: Word): string {
+        let constraint: string = "";
+        word.letters.forEach((letter: Letter) => {
+            constraint += letter.char === "" ? "?" : letter.char;
+        });
+
+        return constraint;
     }
 }

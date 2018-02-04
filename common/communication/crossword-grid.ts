@@ -14,7 +14,7 @@ export enum Orientation {
 export class Letter {
     char: string;
     isBlackTile: boolean;
-    
+
     constructor(char?:string) {
         if(char !== undefined) {
             this.char = char;
