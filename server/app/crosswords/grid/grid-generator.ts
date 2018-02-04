@@ -2,7 +2,7 @@ import { Word, CrosswordGrid, Letter, Difficulty, Orientation } from "../../../.
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
-const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
+const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-words";
 
 export class GridGenerator {
 
@@ -14,7 +14,7 @@ export class GridGenerator {
         this.generateBlackTiles(blackTileRatio);
         this.initializeWords();
         this.sortWords();
-        await this.findWords(difficulty);
+        await this.findWord(difficulty, 0);
         this.displayGrid();
 
         return this.crossword;
@@ -75,7 +75,7 @@ export class GridGenerator {
             this.crossword.words.push(word);
         }
     }
-
+    /*
     private async findWords(difficulty: Difficulty): Promise<void> {
         for (const word of this.crossword.words) {
             const receivedWord: DatamuseWord = await this.getWordsFromServer(this.getConstraints(word), word);
@@ -87,9 +87,31 @@ export class GridGenerator {
                 });
             }
         }
+    }*/
+
+    private async findWord(difficulty: Difficulty, index: number): Promise<boolean> {
+        if (index === this.crossword.words.length) {
+            return true;
+        }
+
+        const receivedWord: DatamuseWord[] = await this.getWordsFromServer(
+            this.getConstraints(this.crossword.words[index]), this.crossword.words[index]);
+
+        let isSuccess: boolean = false;
+        for (const word of receivedWord) {
+                this.setWord(word, this.crossword.words[index]);
+                if (await this.findWord(difficulty, index + 1)) {
+                    isSuccess = true;
+                    break;
+                } else {
+                    this.unsetWord(this.crossword.words[index]);
+                }
+            }
+
+        return isSuccess;
     }
 
-    private async getWordsFromServer(constraint: string, word: Word): Promise<DatamuseWord> {
+    private async getWordsFromServer(constraint: string, word: Word): Promise<Array<DatamuseWord>> {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
@@ -98,14 +120,24 @@ export class GridGenerator {
             },
             json: true
         };
-        return await Request(LEXICAL_SERVICE_URL, options) as DatamuseWord;
+
+        return await Request(LEXICAL_SERVICE_URL, options) as Array<DatamuseWord>;
     }
 
     private setWord(receivedWord: DatamuseWord, gridWord: Word): void {
         for (let i: number = 0; i < gridWord.letters.length; i++) {
             gridWord.letters[i].char = gridWord.letters[i].char === "" ? receivedWord.word[i] : gridWord.letters[i].char;
+            gridWord.letters[i].count++;
         }
         gridWord.definitions = receivedWord.defs;
+    }
+
+    private unsetWord(word: Word): void {
+        for (const letter of word.letters) {
+            if ((--letter.count) === 0) {
+                letter.char = "";
+            }
+        }
     }
 
     private getConstraints(word: Word): string {
@@ -113,6 +145,7 @@ export class GridGenerator {
         word.letters.forEach((letter: Letter) => {
             constraint += letter.char === "" ? "?" : letter.char;
         });
+
         return constraint;
     }
 
