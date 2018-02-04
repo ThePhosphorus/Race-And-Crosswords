@@ -10,7 +10,6 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
-import { CommunicationService } from "./communication/communication.service";
 
 @NgModule({
     declarations: [
@@ -26,7 +25,7 @@ import { CommunicationService } from "./communication/communication.service";
         AppRoutingModule,
         FormsModule
     ],
-    providers: [ CommunicationService],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

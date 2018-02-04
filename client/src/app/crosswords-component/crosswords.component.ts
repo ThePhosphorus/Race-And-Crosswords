@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
+import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 
 @Component({
   selector: "app-crosswords",
   templateUrl: "./crosswords.component.html",
-  styleUrls: ["./crosswords.component.css"]
+  styleUrls: ["./crosswords.component.css"],
+  providers: [ CrosswordCommunicationService ]
 })
 export class CrosswordsComponent implements OnInit {
 
