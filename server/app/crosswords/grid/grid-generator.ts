@@ -1,4 +1,4 @@
-import { Word, CrosswordGrid, Letter, Difficulty, Orientation } from "../../../../common/communication/crossword-grid";
+import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
@@ -42,8 +42,8 @@ export class GridGenerator {
     }
     private generateBasicBlackTiles(): number {
         let blackTileCount: number = 0;
-        for (let i: number = 1; i < this.crossword.size ; i += 2) {
-            for (let j: number = 1; j < this.crossword.size ; j += 2) {
+        for (let i: number = 1; i < this.crossword.size ; i += MIN_WORD_LENGTH) {
+            for (let j: number = 1; j < this.crossword.size ; j += MIN_WORD_LENGTH) {
                 const id: number = j + (this.crossword.size * i);
                 this.crossword.grid[id].isBlackTile = true;
                 blackTileCount++;
@@ -152,7 +152,7 @@ export class GridGenerator {
     }
 
     private rollback(currentIndex: number): number {
-        let newIndex: number = Math.floor(currentIndex - 2);
+        let newIndex: number = Math.floor(currentIndex - MIN_WORD_LENGTH);
 
         if (newIndex < 0) {
             newIndex = 0;
