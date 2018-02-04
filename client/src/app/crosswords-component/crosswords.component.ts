@@ -4,7 +4,7 @@ import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Difficulty } from "../../../../common/communication/crossword-grid";
 
 const INITIAL_GRID_SIZE: number = 10;
-const INITIAL_BLACK_TILES_RATIO: number = 0.3;
+const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
   selector: "app-crosswords",

@@ -12,7 +12,7 @@ export class CrosswordCommunicationService {
 
   public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
     return this.http.get<CrosswordGrid>(
-        SERVER_URL + "/crossword/grid?" +
+        SERVER_URL + "/crosswords/grid?" +
         "difficulty=" + difficulty +
         "&tiles=" + blackTile + "&size=" + size );
   }
