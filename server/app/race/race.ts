@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../webServices";
 
@@ -6,13 +6,12 @@ import { WebService } from "../webServices";
 export class Race extends WebService {
 
     public constructor() {
-        super("race/");
+        super();
+        this.routeName = "/race";
     }
 
-    protected routes(): void {
-        const router: Router = Router();
-
-        router.get("/", (req: Request, res: Response, next: NextFunction) => {
+    protected defineRoutes(): void {
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Race endpoint");
         });
     }

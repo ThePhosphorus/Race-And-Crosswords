@@ -9,12 +9,12 @@ import { WebService } from "./webServices";
 @injectable()
 export class Routes extends WebService {
     public constructor( @inject(Types.Crosswords) private crosswords: Crosswords, @inject(Types.Race) private race: Race ) {
-        super("/");
+        super();
     }
 
-    protected routes(): void {
-        this._router.get("/",
-                         (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
+    protected defineRoutes(): void {
+
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("LOG2990 Server"));
 
         this.addSubService(this.crosswords);
         this.addSubService(this.race);

@@ -5,5 +5,6 @@ export default  {
         Crosswords: Symbol("Crosswords"),
         Race: Symbol("Race"),
         Lexical: Symbol("Lexical"),
-        Grid: Symbol("Grid")
+        Grid: Symbol("Grid"),
+        GridGenerator: Symbol("GridGenerator")
 };

@@ -1,45 +1,29 @@
-import * as http from "http";
-import { IncomingMessage } from "https";
-import { Word } from "../../../../common/communication/word";
+import * as Request from "request-promise-native";
+import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
-const HTTP_STATUS_OK: number = 200;
-const HARD_THRESHOLD: number = 1000;
+export const HARD_THRESHOLD: number = 10000;
 
 export class Datamuse {
-    public getWords(constraint: string, callback: (words: Array<Word>) => void): void {
-        http.get("http://api.datamuse.com/words?sp=" + constraint + "&md=def", (res: IncomingMessage) => {
-            const { statusCode } = res;
+    public async makeRequest(constraint: string): Promise<Array<DatamuseWord>> {
+        const htmlString: string = await Request("http://api.datamuse.com/words?sp=" + constraint + "&md=d");
 
-            if (statusCode === HTTP_STATUS_OK) {
-                res.setEncoding("utf8");
-                let rawData: string = "";
-
-                res.on("data", (chunk: string | Buffer) => { rawData += chunk; });
-                res.on("end", () => {
-                    try {
-                        const parsedWords: Array<Word> = JSON.parse(rawData);
-                        callback(parsedWords);
-                    } catch (e) {
-                        callback([]);
-                    }
-                });
-            } else {
-                callback([]);
-            }
-        });
+        return JSON.parse(htmlString) as Array<DatamuseWord>;
     }
 
-    public getEasyWord(constraint: string, callback: (word: Word) => void): void {
-        this.getWords(constraint, (words: Array<Word>) => {
-            words = words.filter((w: Word) => w.score > HARD_THRESHOLD);
-            callback(words.length > 0 ? words[0] : null);
-        });
+    public async getWords(constraint: string, isEasy: boolean): Promise<string> {
+        let words: Array<DatamuseWord> = await this.makeRequest(constraint);
+        words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD)
+                     .filter((w: DatamuseWord) => w.defs !== undefined);
+
+        return JSON.stringify(words);
     }
 
-    public getHardWord(constraint: string, callback: (word: Word) => void): void {
-        this.getWords(constraint, (words: Array<Word>) => {
-            words = words.filter((w: Word) => w.score < HARD_THRESHOLD);
-            callback(words.length > 0 ? words[0] : null);
-        });
+    public async getWord(constraint: string, isEasy: boolean): Promise<string> {
+        let words: Array<DatamuseWord> = await this.makeRequest(constraint);
+        words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD)
+                     .filter((w: DatamuseWord) => w.defs !== undefined);
+        const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
+
+        return JSON.stringify(word);
     }
 }
