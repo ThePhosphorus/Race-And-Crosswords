@@ -29,17 +29,29 @@ export class GridGenerator {
     }
 
     private generateBlackTiles(blackTileRatio: number): void {
-        const numberOfBlackTile: number = this.crossword.size * this.crossword.size * blackTileRatio;
-        const blackTiles: Set<number> = new Set<number>();
-        while (blackTiles.size < numberOfBlackTile) {
+        const maxBlackTile: number = this.crossword.size * this.crossword.size * blackTileRatio;
+        let generatedBlackTiles: number = this.generateBasicBlackTiles();
+        while (generatedBlackTiles < maxBlackTile) {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (id > this.crossword.size && id % this.crossword.size !== 0) {
-                blackTiles.add(id);
+            if (id > this.crossword.size && id % this.crossword.size !== 0 && !this.crossword.grid[id].isBlackTile) {
                 this.crossword.grid[id].isBlackTile = true;
+                generatedBlackTiles++;
             }
         }
-    }
 
+    }
+    private generateBasicBlackTiles(): number {
+        let blackTileCount: number = 0;
+        for (let i: number = 1; i < this.crossword.size ; i += 2) {
+            for (let j: number = 1; j < this.crossword.size ; j += 2) {
+                const id: number = j + (this.crossword.size * i);
+                this.crossword.grid[id].isBlackTile = true;
+                blackTileCount++;
+            }
+        }
+
+        return blackTileCount;
+    }
     private initializeWords(): void {
         let acrossWord: Word = new Word();
         let downWord: Word = new Word();
