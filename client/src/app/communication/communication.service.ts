@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 // import { CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 
-const SERVER_LINK: string = "localhost:3000";
+const SERVER_LINK: string = "http://localhost:3000";
 
 @Injectable()
 export class CommunicationService {
