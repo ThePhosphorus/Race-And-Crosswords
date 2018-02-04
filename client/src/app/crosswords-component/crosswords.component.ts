@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGrid, Letter, Difficulty } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
-const INITIAL_GRID_SIZE: number = 10;
+const INITIAL_GRID_SIZE: number = 5;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
@@ -39,6 +39,16 @@ export class CrosswordsComponent implements OnInit {
         }
 
         return formattedGrid;
+    }
+
+    private get acrossDefinitions(): string[] {
+        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Across)
+                              .map((w: Word) => w.definitions[0]);
+    }
+
+    private get downDefinitions(): string[] {
+        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down)
+                              .map((w: Word) => w.definitions[0]);
     }
 
     public ngOnInit(): void {
