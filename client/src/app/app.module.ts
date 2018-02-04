@@ -9,7 +9,8 @@ import { GameComponent } from "./game-component/game.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
-import { HomePageComponent } from './home-page/home-page.component';
+import { HomePageComponent } from "./home-page/home-page.component";
+import { CommunicationService } from "./communication/communication.service";
 
 @NgModule({
     declarations: [
@@ -25,7 +26,7 @@ import { HomePageComponent } from './home-page/home-page.component';
         AppRoutingModule,
         FormsModule
     ],
-    providers: [],
+    providers: [ CommunicationService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
