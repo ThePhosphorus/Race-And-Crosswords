@@ -21,6 +21,7 @@ export class PlayermodeComponent implements OnInit {
 
   public ngOnInit(): void {
       this.nbPlayers = 1;
+      this.lvl = DifficultyLevel.Easy;
   }
 
 }
