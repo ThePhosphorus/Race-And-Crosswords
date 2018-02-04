@@ -1,177 +1,42 @@
-const assert = require("assert");
-import { CrosswordGrid, Difficulty } from "../../../../common/communication/crossword-grid";
+import * as assert from "assert";
+import { CrosswordGrid, Difficulty, Word, Letter } from "../../../../common/communication/crossword-grid";
 import { GridGenerator } from "./grid-generator";
 
 const gridGenerator: GridGenerator = new GridGenerator();
+const btRatio: number = 0.4;
+const gridSize: number = 5;
 
-describe("Generation de la grille", () => {
-
-    describe("When an empty grid is generated", async () => {
-        const gridSize: number = 10;
-        const blackTilePercentage: number = 0.2;
-
-        it("should be 10 by 10 ", (done: MochaDone) => {
-
-           /*
-            const columnSize: number[] = new Array<number>(gridSize);
-            const rowSize: number[] = new Array<number>(gridSize);
-            columnSize.fill(0, 0, gridSize);
-            rowSize.fill(0, 0, gridSize);
-
-            for (const word of grid.words) {
-                if(word.orientation === Orientation.Across){
-
-                }
-            }
-            grid.blackTiles.forEach((tile: Position) => {
-                rowSize[tile.row]++;
-                columnSize[tile.column]++;
-            });
-            let answer: string = "\n";
-            let isCorrectSize: boolean = true;
-            for (let i: number = 0; i < gridSize; i++) {
-                if (rowSize[i] !== gridSize
-                    || columnSize[i] !== gridSize) {
-                    isCorrectSize = false;
-                }
-                answer += "row" + i + " : " + rowSize[i] + "\n";
-                answer += "columns" + i + " : " + columnSize[i] + "\n";
-            }
-            */
-
-            gridGenerator.getNewGrid(Difficulty.Hard, gridSize, blackTilePercentage).then((crossword: CrosswordGrid) => {
-                assert.equal(Math.sqrt(crossword.grid.length), gridSize);
+// tslint:disable-next-line:max-func-body-length
+gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then( (grid: CrosswordGrid) => {
+    describe("Grid generation", () => {
+        describe("When the grid is generated", () => {
+            it ("should give a grid with the right size", (done: MochaDone) => {
+                assert.strictEqual(grid.size, gridSize, "Attribute size of grid is not the expected size.");
+                assert.strictEqual(grid.words.length, gridSize * gridSize, "Vertical length is not the right length");
                 done();
-            }).catch(() => {
-                assert.ok(false, "Could not receive grid.");
-            });
+             });
 
-        });
-
-        it("the first row and column should not have black tiles", (done: MochaDone) => {
-
-            gridGenerator.getNewGrid(Difficulty.Hard, gridSize, blackTilePercentage).then((crossword: CrosswordGrid) => {
-                let hasBlackTile: boolean = false;
-                let answer: string = "Incorrect black tiles : ";
-                for (let i: number = 0; i < crossword.size; i++) {
-                if (crossword.grid[i].isBlackTile) {
-                    hasBlackTile = true;
-                    answer += i + "\t";
-                }
-
-                if (i > 0 && crossword.grid[crossword.size * i].isBlackTile) {
-                    hasBlackTile = true;
-                    answer += i + "\t";
-                }
-            }
-
-                assert.ok(!hasBlackTile, answer);
+            it("should give us a grid with the right amount of blackTiles", (done: MochaDone) => {
+                const nbOfBlackTilesExpected: number = btRatio * gridSize * gridSize;
+                let nbOfBlackTiles: number = 0;
+                grid.grid.forEach((letter: Letter) => {
+                    if (letter.isBlackTile) {nbOfBlackTiles++; }
+                });
+                assert.strictEqual(nbOfBlackTiles, nbOfBlackTilesExpected,
+                                   "got " + nbOfBlackTiles + "black tiles instead of " + nbOfBlackTilesExpected);
                 done();
-            }).catch(() => {
-                assert.ok(false, "Could not receive grid.");
-            });
+             });
 
-        });
-
-        it("should have " + (blackTilePercentage * 100) + "% of black squares", (done: MochaDone) => {
-
-            gridGenerator.getNewGrid(Difficulty.Hard, gridSize, blackTilePercentage).then((crossword: CrosswordGrid) => {
-                let blackTilesAmount: number = 0;
-                for (const letter of crossword.grid) {
-                    if (letter.isBlackTile) {
-                        blackTilesAmount++;
+            it("should give us a grid with no blackTiles in the first row and the first collumn ", (done: MochaDone) => {
+                for (let i: number = 0; i < gridSize; i++) {
+                    if (grid.grid[i].isBlackTile) {
+                        assert.fail("Detected blackTile on the first row");
+                    } else if (grid.grid[i * gridSize].isBlackTile) {
+                        assert.fail("Detected blackTile on the first collumn");
+                    }
                 }
-            }
-                assert.equal(blackTilesAmount, blackTilePercentage * gridSize * gridSize);
                 done();
-            }).catch(() => {
-                assert.ok(false, "Could not receive grid.");
-            });
-
-        });
-
-        it("each line/column should contain one or more words", () => {
-/*
-            let hasAWord: boolean = true;
-            for (let i: number = 0; i < gridSize; i++) {
-                if (crossword.across[i].length < 1
-                    || crossword.down[i].length < 1) {
-                    hasAWord = false;
-                }
-            }
-            assert.ok(hasAWord);*/
-        });
-
-    });
-    /*
-    describe("When a full grid is generated", () => {
-        const gridSize: number = 10;
-        const blackTilePercentage: number = 0.5;
-        const grid: CrosswordGrid = gridGenerator.getNewGrid(Difficulty.Easy, gridSize, blackTilePercentage);
-
-        it("should not have empty words", () => {
-            let hasEmptyWord: boolean = false;
-            grid.across.forEach((row: Word[]) => {
-                row.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
-                        hasEmptyWord = true;
-                    }
-                });
-            });
-
-            grid.down.forEach((column: Word[]) => {
-                column.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
-                        hasEmptyWord = true;
-                    }
-                });
-            });
-
-            assert.ok(!hasEmptyWord);
-        });
-
-        it("should not have accents or special letters", () => {
-            grid.across.forEach((row: Word[]) => {
-                row.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
-                        // try for character
-                    }
-                });
-            });
-
-            grid.down.forEach((column: Word[]) => {
-                column.forEach((word: Word) => {
-                    if (word.wordString.length === 0) {
-                        // try for character
-                    }
-                });
-            });
-
-            assert.ok(true);
-        });
-
-        it("should not have hyphens or apostrophies", () => {
-            assert.ok(true);
-        });
-
-        it("should not have multiples of the same word", () => {
-            assert.ok(true);
-        });
-    });*/
-
-    describe("When the generator is called", () => {
-
-        it("should be able to generate an 'easy' grid", () => {
-            assert.ok(true);
-        });
-
-        it("should be able to generate a 'normal' grid", () => {
-            assert.ok(true);
-        });
-
-        it("should be able to generate a 'hard' grid", () => {
-            assert.ok(true);
-        });
-
-    });
-});
+             });
+         });
+     });
+ });
