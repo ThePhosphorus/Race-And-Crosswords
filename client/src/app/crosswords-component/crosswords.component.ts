@@ -46,12 +46,21 @@ export class CrosswordsComponent implements OnInit {
 
     private get acrossDefinitions(): string[] {
         return this.grid.words.filter((w: Word) => w.orientation === Orientation.Across)
-                              .map((w: Word) => w.definitions[0]);
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
     }
 
     private get downDefinitions(): string[] {
         return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down)
-                              .map((w: Word) => w.definitions[0]);
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+    }
+
+    private toWord(letters: Letter[]): string {
+        let str: string = "";
+        letters.forEach((letter: Letter) => {
+            str += letter.char;
+        });
+
+        return str;
     }
 
     public ngOnInit(): void {
