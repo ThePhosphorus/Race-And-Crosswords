@@ -6,43 +6,25 @@ export enum Difficulty {
     Hard,
 }
 
-
-export class Position {
-    public constructor(public column: number, public row: number) {}
+export enum Orientation {
+    Across = "Across",
+    Down = "Down",
 }
 
-export enum Orientation {
-    Vertical = "Vertical",
-    Horizontal = "Horizontal",
+export class Letter {
+    char: string;
+    isBlackTile: boolean;
 }
 
 export class Word {
-    public constructor(_orientation?: Orientation, _position?: Position, _length?: number) {
-   
-        this.orientation = _orientation;
-        this.position = _position;
-        this.length = _length;
-    }
-
-    wordString: string;
-    definitions: string[];
-    orientation: Orientation;
-    position: Position;
-    length: number;
+    public id: number;
+    public letters: Letter[];
+    public definitions: string[];
+    public orientation: Orientation;
 }
 
 export class CrosswordGrid {
-    public blackTiles: Position[];
-    public across: Word[][];
-    public down: Word[][];
-
-    public constructor(gridSize: number){
-        this.down = new Array<Word[]>();
-        this.across = new Array<Word[]>();
-        for (let i: number = 0; i < gridSize; i++) {
-            this.down.push(new Array<Word>());
-            this.across.push(new Array<Word>());
-        }
-        this.blackTiles = new Array<Position>();
-    }
+    public words: Word[];
+    public grid: Letter[];
+    public size: number;
 }
