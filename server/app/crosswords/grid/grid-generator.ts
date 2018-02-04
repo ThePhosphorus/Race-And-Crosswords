@@ -40,14 +40,18 @@ export class GridGenerator {
                 if (!grid.grid[(grid.size * i) + j].isBlackTile) {
                     acrossWord.letters.push(grid.grid[(grid.size * i) + j]);
                 } else {
-                    grid.words.push(acrossWord);
+                    if (acrossWord.letters.length > 1) {
+                        grid.words.push(acrossWord);
+                    }
                     acrossWord = new Word();
                 }
 
                 if (!grid.grid[(grid.size * j) + i].isBlackTile) {
                     downWord.letters.push(grid.grid[(grid.size * j) + i]);
                 } else {
-                    grid.words.push(downWord);
+                    if (downWord.letters.length > 1) {
+                        grid.words.push(downWord);
+                    }
                     downWord = new Word();
                 }
             }
