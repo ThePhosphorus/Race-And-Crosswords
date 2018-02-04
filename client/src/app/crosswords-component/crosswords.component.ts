@@ -1,37 +1,39 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
+import { CrosswordService } from "../crossword-service/crossword.service";
 
 @Component({
   selector: "app-crosswords",
   templateUrl: "./crosswords.component.html",
   styleUrls: ["./crosswords.component.css"],
-  providers: [ CrosswordCommunicationService ]
+  providers: [ CrosswordCommunicationService, CrosswordService ]
 })
 export class CrosswordsComponent implements OnInit {
 
-  public constructor() { }
+    private _gridSize: number;
 
-  public words: string[][];
-  public definitions: string [][];
+    public constructor() {
+        this._gridSize = 5;
+        this.words = [];
+        for (let j: number = 0; j < this._gridSize; j++) {
+                this.words[i] = [];
+            }
+     }
 
-  public ngOnInit(): void {
-    // Temp
+    public words: string[][];
+    public definitions: string [][];
 
-    this.words = [["-", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "-", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "g", "h", "-", "j"],
-                  ["a", "-", "c", "d", "e", "f", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "-", "h", "i", "j"],
-                  ["a", "b", "c", "d", "e", "f", "-", "h", "i", "j"],
-                ];
-    this.definitions = [["Across definition", "Down definition"],
-                        ["Across definition", "Down definition"],
-                        ["", "Down definition"]
-                       ];
-  }
+    public ngOnInit(): void {
+        // Temp
+        this.fillEmptyGrid();
+    };
+
+    private fillEmptyGrid(): void {
+        for (let i: number = 0; i < this._gridSize; i++) {
+            for (let j: number = 0; j < this._gridSize; j++) {
+                this.words[i][j] = "";
+            }
+        }
+    }
 
 }
