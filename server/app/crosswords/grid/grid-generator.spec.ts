@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { CrosswordGrid, Difficulty, Word, Letter } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Difficulty, Letter } from "../../../../common/communication/crossword-grid";
 import { GridGenerator } from "./grid-generator";
 
 const gridGenerator: GridGenerator = new GridGenerator();
