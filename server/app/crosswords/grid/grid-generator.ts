@@ -68,7 +68,7 @@ export class GridGenerator {
     }
 
     private sortWords(): void {
-        this.crossword.words = this.crossword.words.sort((w1: Word, w2: Word) => w2.letters.length - w1.letters.length);
+         this.crossword.words = this.crossword.words.sort((w1: Word, w2: Word) => w2.letters.length - w1.letters.length);
     }
 
     private addWord(word: Word, orientation: Orientation): void {
@@ -80,22 +80,34 @@ export class GridGenerator {
 
     private async findWords(difficulty: Difficulty): Promise<void> {
 
-        for (const word of this.crossword.words) {
+        let currentIndex: number = 0;
+        let rollbackCount: number = 0;
+        while (currentIndex < this.crossword.words.length && currentIndex >= 0 ) {
+            if (rollbackCount > this.crossword.size) {
+                this.nukeGrid();
+                currentIndex = 0;
+                rollbackCount = 0;
+            }
+            console.error(currentIndex + "\t" + "/" + this.crossword.words.length);
+            const word: Word = this.crossword.words[currentIndex];
             const constraint: string = this.getConstraints(word);
             if (constraint.indexOf("?") === -1) {
                 console.error("ERROR");
+                currentIndex = this.rollback(currentIndex);
+                rollbackCount++;
             } else {
                 const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word);
                 if (receivedWord !== undefined) {
                     this.setWord(receivedWord, word);
+                    currentIndex++;
+                    this.displayGrid();
                 } else {
-                    word.letters.forEach((l: Letter) => {
-                        l.char = l.char ? l.char : "*";
-                    });
+                    currentIndex = this.rollback(currentIndex);
+                    rollbackCount++;
+                    }
                 }
             }
         }
-    }
 
     private async getWordsFromServer(constraint: string, word: Word): Promise<DatamuseWord> {
         const options: Request.RequestPromiseOptions = {
@@ -119,11 +131,26 @@ export class GridGenerator {
     }
 
     private unsetWord(word: Word): void {
+
         for (const letter of word.letters) {
-            if ((--letter.count) === 0) {
+            if ((--letter.count) <= 0) {
                 letter.char = "";
             }
         }
+    }
+
+    private rollback(currentIndex: number): number {
+        let newIndex: number = Math.floor(currentIndex - 2);
+
+        if (newIndex < 0) {
+            newIndex = 0;
+        }
+
+        for (let index: number = currentIndex - 1; index > newIndex ; index--) {
+            this.unsetWord(this.crossword.words[currentIndex]);
+        }
+
+        return newIndex;
     }
 
     private getConstraints(word: Word): string {
@@ -135,9 +162,25 @@ export class GridGenerator {
         return constraint;
     }
 
+    private nukeGrid(): void {
+        let blackTileCount: number = 0;
+        this.crossword.grid.forEach((letter: Letter) => {
+            letter.char = "";
+            letter.count = 0;
+            if (letter.isBlackTile) {
+                blackTileCount++;
+                letter.isBlackTile = false ;
+            }
+        });
+        this.generateBlackTiles(blackTileCount / (this.crossword.size * this.crossword.size));
+        this.crossword.words = new Array<Word>();
+        this.initializeWords();
+        this.sortWords();
+    }
+
     private displayGrid(): void {
         let s: string = "";
-        for (let i: number = 0; i < this.crossword.size; i++) {
+        for (let i: number = 0; i < this.crossword.size ; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
                 const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
                 s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
