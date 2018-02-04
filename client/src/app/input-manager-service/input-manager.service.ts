@@ -66,44 +66,44 @@ export class InputManagerService {
 
     // tslint:disable-next-line: max-func-body-length
     public handleKeyUp(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-        case ACCELERATE_KEYCODE:
-            this.renderService.handleCarInputsUp(CarControls.Accelerate);
-            break;
-        case LEFT_KEYCODE:
-             this.isLeftPressed = false;
-             if (this.isRightPressed) {
-                this.renderService.handleCarInputsDown(CarControls.Right);
-             } else {
-                this.renderService.handleCarInputsUp(CarControls.Left);
-             }
-             break;
-        case RIGHT_KEYCODE:
-            this.isRightPressed = false;
-            if (this.isLeftPressed) {
-                this.renderService.handleCarInputsDown(CarControls.Left);
-            } else {
-                this.renderService.handleCarInputsUp(CarControls.Right);
-            }
-            break;
-        case BRAKE_KEYCODE:
-            this.renderService.handleCarInputsUp(CarControls.Brake);
-            break;
-        case ZOOM_IN_KEYCODE:
-            this.cameraManager.zoomFactor = 0;
-            break;
-        case ZOOM_OUT_KEYCODE:
-            this.cameraManager.zoomFactor = 0;
-            break;
-        case NIGHT_MODE:
-            // TODO
-            break;
-        case LIGTHS:
-            // TODO
-            break;
-        default:
-            break;
-    }
- }
+        switch (event.keyCode) {
+            case ACCELERATE_KEYCODE:
+                this.renderService.handleCarInputsUp(CarControls.Accelerate);
+                break;
+            case LEFT_KEYCODE:
+                this.isLeftPressed = false;
+                if (this.isRightPressed) {
+                    this.renderService.handleCarInputsDown(CarControls.Right);
+                } else {
+                    this.renderService.handleCarInputsUp(CarControls.Left);
+                }
+                break;
+            case RIGHT_KEYCODE:
+                this.isRightPressed = false;
+                if (this.isLeftPressed) {
+                    this.renderService.handleCarInputsDown(CarControls.Left);
+                } else {
+                    this.renderService.handleCarInputsUp(CarControls.Right);
+                }
+                break;
+            case BRAKE_KEYCODE:
+                this.renderService.handleCarInputsUp(CarControls.Brake);
+                break;
+            case ZOOM_IN_KEYCODE:
+                this.cameraManager.zoomFactor = 0;
+                break;
+            case ZOOM_OUT_KEYCODE:
+                this.cameraManager.zoomFactor = 0;
+                break;
+            case NIGHT_MODE:
+                // TODO
+                break;
+            case LIGTHS:
+                // TODO
+                break;
+            default:
+                break;
+        }
+     }
 
 }

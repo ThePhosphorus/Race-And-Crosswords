@@ -15,4 +15,6 @@ describe("RenderService", () => {
             expect(service).toBeTruthy();
         })
     );
+
+    // No additional tests can be made because we cannot create a configurable HTMLDivElement
 });
