@@ -1,28 +1,30 @@
 <div class="row text-center justify-content-center mt-5">
   <div class="col-7 mt-3" id="hints">
-    <div class="col-md">
-      <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th>Across</th>
+    <div class="row">
+      <div class="col-md pr-0">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th>Across</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let item of acrossDefinitions">
+            <td>{{item}}</td>
           </tr>
-        </thead>
-        <tr *ngFor="let item of acrossDefinitions">
-          <td>{{item}}</td>
-        </tr>
-      </table>
-    </div>
-    <div class="col-md">
-      <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th>Down</th>
+        </table>
+      </div>
+      <div class="col-md pl-0">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th>Down</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let item of downDefinitions">
+            <td>{{item}}</td>
           </tr>
-        </thead>
-        <tr *ngFor="let item of downDefinitions">
-          <td>{{item}}</td>
-        </tr>
-      </table>
+        </table>
+      </div>
     </div>
   </div>
 
