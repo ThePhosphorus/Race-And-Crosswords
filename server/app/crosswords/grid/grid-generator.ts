@@ -33,8 +33,10 @@ export class GridGenerator {
         const blackTiles: Set<number> = new Set<number>();
         while (blackTiles.size < numberOfBlackTile) {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            blackTiles.add(id);
-            this.crossword.grid[id].isBlackTile = true;
+            if (id > this.crossword.size && id % this.crossword.size !== 0) {
+                blackTiles.add(id);
+                this.crossword.grid[id].isBlackTile = true;
+            }
         }
     }
 
