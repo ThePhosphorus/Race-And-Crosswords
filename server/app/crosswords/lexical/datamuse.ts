@@ -1,11 +1,11 @@
 import * as Request from "request-promise-native";
 
-const HARD_THRESHOLD: number = 1000;
+export const HARD_THRESHOLD: number = 1000;
 
-interface DatamuseWord {
-    word: string;
-    score: number;
-    defs: string[];
+export class DatamuseWord {
+    public word: string;
+    public score: number;
+    public defs: string[];
 }
 
 export class Datamuse {
