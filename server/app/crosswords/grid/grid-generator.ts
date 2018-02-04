@@ -7,26 +7,50 @@ export class GridGenerator {
 
     public getNewGrid(difficulty: Difficulty, size: number, blackTileRatio: number): CrosswordGrid {
         const grid: CrosswordGrid = new CrosswordGrid();
-        this.initializeGrid(grid, size, blackTileRatio);
+        this.initializeGrid(grid, size);
+        this.generateBlackTiles(grid, blackTileRatio);
+        this.initializeWords(grid);
 
         return grid;
     }
 
-    public initializeGrid(grid: CrosswordGrid, size: number, blackTileRatio: number): void {
+    private initializeGrid(grid: CrosswordGrid, size: number): void {
         grid.size = size;
         grid.grid = new Array<Letter>();
-        this.generateBlackTiles(grid, blackTileRatio);
+        for (let i: number = 0; i < size * size; i++) {
+            grid.grid[i] = new Letter("");
+        }
     }
 
     private generateBlackTiles(grid: CrosswordGrid, blackTileRatio: number): void {
         const numberOfBlackTile: number = grid.size * grid.size * blackTileRatio;
-        const blackTiles: Set<Position> = new Set<Position>();
+        const blackTiles: Set<number> = new Set<number>();
         while (blackTiles.size < numberOfBlackTile) {
             const id: number = Math.floor(Math.random() * (grid.size * grid.size));
-            if (!grid.grid[id]) {
-                grid.grid[id] = new Letter();
-            }
+            blackTiles.add(id);
             grid.grid[id].isBlackTile = true;
+        }
+    }
+
+    private initializeWords(grid: CrosswordGrid): void {
+        let acrossWord: Word = new Word();
+        let downWord: Word = new Word();
+        for (let i: number = 0; i < grid.size; i++) {
+            for (let j: number = 0; j < grid.size; j++) {
+                if (!grid.grid[(grid.size * i) + j].isBlackTile) {
+                    acrossWord.letters.push(grid.grid[(grid.size * i) + j]);
+                } else {
+                    grid.words.push(acrossWord);
+                    acrossWord = new Word();
+                }
+
+                if (!grid.grid[(grid.size * j) + i].isBlackTile) {
+                    downWord.letters.push(grid.grid[(grid.size * j) + i]);
+                } else {
+                    grid.words.push(downWord);
+                    downWord = new Word();
+                }
+            }
         }
     }
 
@@ -41,7 +65,6 @@ export class GridGenerator {
         };
         Request(LEXICAL_SERVICE_URL, options)
             .then((htmlString: string) => {
-                // console.log(htmlString);
                 callback(JSON.parse(htmlString) as Word[]);
             })
             .catch(() => {
