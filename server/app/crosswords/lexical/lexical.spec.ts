@@ -1,5 +1,6 @@
-import { Datamuse, DatamuseWord, HARD_THRESHOLD } from "./datamuse";
+import { Datamuse, HARD_THRESHOLD } from "./datamuse";
 import * as assert from "assert";
+import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 describe("Service Lexical", () => {
     const datamuse: Datamuse = new Datamuse();
