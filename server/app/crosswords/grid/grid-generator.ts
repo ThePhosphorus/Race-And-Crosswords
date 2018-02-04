@@ -50,7 +50,7 @@ export class GridGenerator {
     }
 
     private generateEmptyWordsVertical(): void {
-        for (let i: number = 0; i < this.gridSize; i++) {
+        for (let i: number = 0; i < this.gridSize; i++) {               // for each column
             const columnTiles: Position[] = new Array<Position>();
             this.grid.blackTiles.forEach((tile: Position) => {
                 if (tile.column === i) {
@@ -61,13 +61,11 @@ export class GridGenerator {
                 return tile1.row - tile2.row;
             });
             if (columnTiles.length > 0) {
-                for (let j: number = 0; j < columnTiles.length; j++) {
-                    let startingPosition: number;
-                    j === 0 ? startingPosition = 0 : startingPosition = columnTiles[j].row + 1;
+                for (let j: number = 0; j < columnTiles.length; j++) {  // for each black tile in column
+                    let startingPosition: number = (j === 0 ?  0 :  columnTiles[j-1].row + 1);
                     this.grid.down[i].push(
-                        new Word(Orientation.Vertical,
-                                 new Position(i, startingPosition), columnTiles[j].row - startingPosition ));
-                    if (j === columnTiles.length - 1) {
+                        new Word(Orientation.Vertical, new Position(i, startingPosition), columnTiles[j].row - startingPosition ));
+                    if (j === columnTiles.length - 1) {                 // if last black tile in column
                         this.grid.down[i].push(
                             new Word(Orientation.Vertical,
                                      new Position(i, columnTiles[j].row + 1), this.gridSize - 1 - columnTiles[j].row));
@@ -93,8 +91,7 @@ export class GridGenerator {
             });
             if (rowTiles.length > 0) {
                 for (let j: number = 0; j < rowTiles.length; j++) {
-                    let startingPosition: number;
-                    j === 0 ? startingPosition = 0 : startingPosition = rowTiles[j].column + 1;
+                    let startingPosition: number = (j === 0 ?  0 :  rowTiles[j-1].column + 1);
                     this.grid.across[i].push(
                         new Word(Orientation.Horizontal,
                                  new Position(startingPosition, i), rowTiles[j].column - startingPosition ));
