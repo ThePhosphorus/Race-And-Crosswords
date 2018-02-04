@@ -16,10 +16,13 @@ export class CrosswordsComponent implements OnInit {
 
     public grid: CrosswordGrid;
 
+    private _cheatmode: boolean;
+
     public constructor(private crosswordService: CrosswordService) {
         this.grid = new CrosswordGrid();
         this.grid.size = INITIAL_GRID_SIZE;
         this.initializeGrid();
+        this._cheatmode = false;
     }
 
     private initializeGrid(): void {
@@ -56,5 +59,13 @@ export class CrosswordsComponent implements OnInit {
             .subscribe((grid: CrosswordGrid) => {
                 this.grid = grid;
             });
+
+    }
+    public toogleCheatMode(): void {
+        this._cheatmode = this._cheatmode;
+    }
+
+    public get cheatMode(): boolean {
+        return this._cheatmode;
     }
 }

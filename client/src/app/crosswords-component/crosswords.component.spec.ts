@@ -25,4 +25,10 @@ describe("CrosswordsComponent", () => {
   it("should create", () => {
     expect(component).toBeTruthy();
   });
+
+  it("cheat mode should switch", () => {
+      const pastCheatmodeState: boolean = component.cheatMode;
+      component.toogleCheatMode();
+      expect(component.cheatMode).toEqual(!pastCheatmodeState);
+  });
 });
