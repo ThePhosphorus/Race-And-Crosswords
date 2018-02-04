@@ -112,10 +112,19 @@ export class GridGenerator {
     private setWord(receivedWord: DatamuseWord, gridWord: Word): void {
         for (let i: number = 0; i < gridWord.letters.length; i++) {
             gridWord.letters[i].char = gridWord.letters[i].char === "" ? receivedWord.word[i] : gridWord.letters[i].char;
+            gridWord.letters[i].count++;
         }
         gridWord.definitions = receivedWord.defs;
     }
 
+    private unsetWord(word: Word): void { 
+        for (const letter of word.letters) { 
+            if ((--letter.count) === 0) { 
+                letter.char = ""; 
+            } 
+        } 
+    } 
+    
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
