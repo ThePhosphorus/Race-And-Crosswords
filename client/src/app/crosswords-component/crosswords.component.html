@@ -41,6 +41,7 @@
       </tbody>
     </table>
     <app-playermode></app-playermode>
+    <button (click)="toogleCheatMode()" [ngClass]="{'btn-success': !cheatMode, 'btn-danger': cheatMode}">Cheat mode is {{ cheatMode? "Enabled" : "Disabled"}}</button>
   </div>
 
 </div>

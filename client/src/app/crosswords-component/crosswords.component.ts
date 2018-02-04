@@ -3,7 +3,7 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
-const INITIAL_GRID_SIZE: number = 10;
+const INITIAL_GRID_SIZE: number = 5;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
@@ -62,7 +62,8 @@ export class CrosswordsComponent implements OnInit {
 
     }
     public toogleCheatMode(): void {
-        this._cheatmode = this._cheatmode;
+        this._cheatmode = !this._cheatmode;
+        console.log("cheat mode is now :" + this._cheatmode);
     }
 
     public get cheatMode(): boolean {
