@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
 import { Request, Response, NextFunction } from "express";
 import { Datamuse } from "./datamuse";
-import { Word } from "../../../../common/communication/word";
 import { WebService } from "../../webServices";
 
 @injectable()
@@ -10,32 +9,31 @@ export class Lexical extends WebService {
     private datamuse: Datamuse;
 
     constructor() {
-        super("lexical");
+        super();
+        this.routeName = "/lexical";
         this.datamuse = new Datamuse();
     }
 
-    protected routes(): void {
+    protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("Lexical service enpoint");
         });
 
-        this._router.get("/easy-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getEasyWord("t??t", (word: Word) => {
-                if (word) {
-                    res.send(word);
-                } else {
-                    res.send("Bad request");
-                }
+        this._router.post("/query-words", (req: Request, res: Response, next: NextFunction) => {
+            const constraint: string = req.body["constraint"];
+            const isEasy: boolean = req.body["easy"];
+
+            this.datamuse.getWords(constraint, isEasy).then((words: string) => {
+                res.send(words);
             });
         });
 
-        this._router.get("/hard-word", (req: Request, res: Response, next: NextFunction) => {
-            this.datamuse.getHardWord("a??o", (word: Word) => {
-                if (word) {
-                    res.send(word);
-                } else {
-                    res.send("Bad request");
-                }
+        this._router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
+            const constraint: string = req.body["constraint"];
+            const isEasy: boolean = req.body["easy"];
+
+            this.datamuse.getWord(constraint, isEasy).then((word: string) => {
+                res.send(word);
             });
         });
     }

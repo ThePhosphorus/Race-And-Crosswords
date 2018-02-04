@@ -10,10 +10,11 @@ import { WebService } from "../webServices";
 export class Crosswords extends WebService {
 
     public constructor(@inject(Types.Lexical) private lexical: Lexical, @inject(Types.Grid) private grid: Grid) {
-        super("crossword/");
+        super();
+        this.routeName = "/crosswords";
     }
 
-    protected routes(): void {
+    protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("Crosswords endpoint"));
 
         this.addSubService(this.lexical);

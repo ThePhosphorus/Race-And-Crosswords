@@ -33,8 +33,7 @@ export class Application {
     }
 
     public routes(): void {
-        this.app.use(this.api.router);
-
+        this.app.use(this.api.routeName, this.api.routes);
         this.errorHandeling();
     }
 
