@@ -35,8 +35,8 @@ export class GridGenerator {
         const numberOfBlackTile: number = this.gridSize * this.gridSize * this.blackTilePercentage;
         const blackTiles: Set<Position> = new Set<Position>();
         while (blackTiles.size < numberOfBlackTile) {
-            const column: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
-            const row: number = Math.floor (Math.random() * (this.gridSize - MIN_WORD_LENGTH)) + 1;
+            const column: number = Math.ceil (Math.random() * (this.gridSize - MIN_WORD_LENGTH));
+            const row: number = Math.ceil (Math.random() * (this.gridSize - MIN_WORD_LENGTH));
             blackTiles.add(new Position(column, row));
         }
         blackTiles.forEach((tile: Position) => {
@@ -63,7 +63,7 @@ export class GridGenerator {
             if (columnTiles.length > 0) {
                 for (let j: number = 0; j < columnTiles.length; j++) {
                     let startingPosition: number;
-                    j === 0 ? startingPosition = 0 : startingPosition = columnTiles[j - 1].row + 1;
+                    j === 0 ? startingPosition = 0 : startingPosition = columnTiles[j].row + 1;
                     this.grid.down[i].push(
                         new Word(Orientation.Vertical,
                                  new Position(i, startingPosition), columnTiles[j].row - startingPosition ));
@@ -94,7 +94,7 @@ export class GridGenerator {
             if (rowTiles.length > 0) {
                 for (let j: number = 0; j < rowTiles.length; j++) {
                     let startingPosition: number;
-                    j === 0 ? startingPosition = 0 : startingPosition = rowTiles[j - 1].column + 1;
+                    j === 0 ? startingPosition = 0 : startingPosition = rowTiles[j].column + 1;
                     this.grid.across[i].push(
                         new Word(Orientation.Horizontal,
                                  new Position(startingPosition, i), rowTiles[j].column - startingPosition ));
