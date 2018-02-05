@@ -1,8 +1,8 @@
-<div class="container"  ng-controller="CollapseDemoCtrl">
-  <div class="row mb-0 no-gutters justify-content-md-center" id="info">
-    <div class="col-lg-7 mb-1" id="nbPlayers">
+<div class="container "  ng-controller="CollapseDemoCtrl">
+  <div class="row mb-0 " id="info">
+    <div class="col-lg-9 w-100 pr-0 pl-0" id="nbPlayers">
 
-        <button type="button" class="btn"  (click)="isCollapsed = !isCollapsed"   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseCard">
+        <button type="button" class="btn  w-100"  (click)="isCollapsed = !isCollapsed"   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseCard">
           <p *ngIf="nbPlayers == 1">
             SINGLE PLAYER ˅
           </p>
@@ -12,9 +12,10 @@
         </button>
 
     </div>
-    <div class="col-lg-5 mt-1  " id="level">
+    <div class="col-lg-3 w-100 " id="level">
       <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
     </div>
+
   </div>
 
   <div class="row row-md-auto mt-0 mb-1" >

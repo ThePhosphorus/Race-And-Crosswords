@@ -41,10 +41,10 @@
         </tr>
       </tbody>
     </table>
+    <button (click)="toogleCheatMode()" class="btn mt-3 w-100" [ngClass]="{'btn-outline-success': !cheatMode, 'btn-outline-danger': cheatMode}">
+        {{ (cheatMode? "Enabled" : "Disabled")| uppercase}}
+       </button>
 
-    <button (click)="toogleCheatMode()" class="btn mt-3" [ngClass]="{'btn-outline-success': !cheatMode, 'btn-outline-danger': cheatMode}">
-     {{ (cheatMode? "Enabled" : "Disabled")| uppercase}}
-    </button>
   </div>
 
 </div>
