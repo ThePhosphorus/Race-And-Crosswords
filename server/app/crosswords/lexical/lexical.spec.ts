@@ -85,7 +85,7 @@ describe("Service Lexical", () => {
 
     describe("When requested by rarity", () => {
         it("should receive common words", (done: MochaDone) => {
-            const testString: string = "????";
+            const testString: string = "???e";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
 
@@ -97,7 +97,7 @@ describe("Service Lexical", () => {
         });
 
         it("should receive rare words", (done: MochaDone) => {
-            const testString: string = "????";
+            const testString: string = "???e";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
 
