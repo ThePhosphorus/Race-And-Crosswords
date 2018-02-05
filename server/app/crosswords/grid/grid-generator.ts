@@ -142,7 +142,7 @@ export class GridGenerator {
             method: "POST",
             body: {
                 constraint: constraint,
-                easy: false
+                easy: isEasyWord
             },
             json: true
         };
@@ -173,8 +173,9 @@ export class GridGenerator {
     private backjump(currentWord: Word): void {
 
         let isProblemWord: boolean = false;
-        while (!isProblemWord) {
+        while (!isProblemWord && this.crossword.words.length) {
             const backtrackWord: Word = this.crossword.words.pop();
+            // console.log(backtrackWord);
             this.notPlacedWords.push(backtrackWord);
             for (const newLetter  of backtrackWord.letters) {
                 for (const currentLetter  of currentWord.letters) {
