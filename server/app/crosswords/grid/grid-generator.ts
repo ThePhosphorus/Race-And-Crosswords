@@ -3,7 +3,7 @@ import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const BT_SWITCH_FACTOR: number = 3;
-// const ROLLBACK_AMOUNT: number = 2;
+const MAX_ROLLBACKS: number = 100;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -107,8 +107,8 @@ export class GridGenerator {
 
         let rollbackCount: number = 0;
         while (this.notPlacedWords.length > 0) {
-            if (rollbackCount > ( this.crossword.size)) {
-                this.nukeGrid();
+            if (rollbackCount > MAX_ROLLBACKS) {
+                // this.nukeGrid();
                 rollbackCount = 0;
             }
             this.sortWords();
