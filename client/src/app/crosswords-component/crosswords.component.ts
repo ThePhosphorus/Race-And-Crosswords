@@ -3,7 +3,7 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
-const INITIAL_GRID_SIZE: number = 5;
+const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
@@ -46,12 +46,12 @@ export class CrosswordsComponent implements OnInit {
 
     private get acrossDefinitions(): string[] {
         return this.grid.words.filter((w: Word) => w.orientation === Orientation.Across)
-            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0].slice(w.definitions[0].indexOf(" ")));
     }
 
     private get downDefinitions(): string[] {
         return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down)
-            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0].slice(w.definitions[0].indexOf(" ")));
     }
 
     private toWord(letters: Letter[]): string {
