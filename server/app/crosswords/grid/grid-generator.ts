@@ -63,8 +63,20 @@ export class GridGenerator {
         let downWord: Word = new Word();
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
-                this.initialiseWord(acrossWord, (this.crossword.size * i) + j);
-                this.initialiseWord(downWord, (this.crossword.size * j) + i);
+                // ACROSS
+                if (!this.crossword.grid[(this.crossword.size * i) + j].isBlackTile) {
+                    acrossWord.letters.push(this.crossword.grid[(this.crossword.size * i) + j]);
+                } else { // IF BLACK TILE
+                    this.addWord(acrossWord, Orientation.Across);
+                    acrossWord = new Word();
+                }
+                // DOWN
+                if (!this.crossword.grid[(this.crossword.size * j) + i].isBlackTile) {
+                    downWord.letters.push(this.crossword.grid[(this.crossword.size * j) + i]);
+                } else {
+                    this.addWord(downWord, Orientation.Down);
+                    downWord = new Word();
+                }
             }
             this.addWord(acrossWord, Orientation.Across);
             this.addWord(downWord, Orientation.Down);
@@ -73,14 +85,6 @@ export class GridGenerator {
         }
     }
 
-    private initialiseWord(word: Word, position: number): void {
-        if (!this.crossword.grid[position].isBlackTile) {
-            word.letters.push(this.crossword.grid[position]);
-        } else {
-            this.addWord(word, Orientation.Down);
-            word = new Word();
-        }
-    }
     private getWordWeight(word: Word): number {
         let weight: number = 0;
         for (const letter of word.letters) {
