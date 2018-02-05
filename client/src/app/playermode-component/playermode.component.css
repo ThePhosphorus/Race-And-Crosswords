@@ -14,12 +14,29 @@
     font-size: 100%;
     font-weight:lighter;
 }
-#info {
+.container {
     vertical-align:bottom;
     border-bottom: solid 0.2vmin dimgray;
     color: black;
     text-align:match-parent;
 }
+
+#info button {
+    border: none;
+    color:gray;
+    font-weight:lighter;
+}
+#info button:hover {
+  border: none;
+  background-color: transparent;
+  box-shadow: transparent;
+  cursor: pointer;
+}
+#info button:active{
+    border: none;
+    background-color: transparent;
+    box-shadow: transparent;
+  }
 
 
 

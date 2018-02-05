@@ -1,14 +1,31 @@
-<div class="row mt-4 justify-content-around" id="info">
-  <div class="col col-lg-3  " id="nbPlayers">
-    <p *ngIf="nbPlayers == 1">
-      SINGLE PLAYER
-    </p>
-    <p *ngIf="nbPlayers !== 1">
-      {{nbPlayers}} PLAYERS
-    </p>
+<div class="container"  ng-controller="CollapseDemoCtrl">
+  <div class="row mt-lg-3 justify-content-around" id="info">
+    <div class="col col-lg-3  " id="nbPlayers">
+      <p>
+        <button type="button" class="btn btn-outline-primary"  (click)="isCollapsed = !isCollapsed"   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          <p *ngIf="nbPlayers == 1">
+            SINGLE PLAYER ˅
+          </p>
+          <p *ngIf="nbPlayers !== 1">
+            {{nbPlayers}} PLAYERS ˅
+          </p>
+        </button>
+      </p>
+    </div>
+    <div class="col col-lg-3 offset-md-1 " id="level">
+      <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
+    </div>
   </div>
 
-  <div class="col col-lg-3 offset-md-1 " id="level">
-    <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
+  <div class="row  justify-content-around" >
+    <div class="col" >
+      <div id="collapseExample" [hidden]="!isCollapsed" id="PlayerList">
+        <div class="card">
+          <div class="card-body" >
+           Player List
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
