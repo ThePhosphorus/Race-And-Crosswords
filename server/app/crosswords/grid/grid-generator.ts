@@ -17,6 +17,7 @@ export class GridGenerator {
         this.initializeWords();
         this.sortWords();
         await this.findWords(difficulty);
+        this.cleanGrid();
         this.displayGrid();
 
         return this.crossword;
@@ -188,6 +189,16 @@ export class GridGenerator {
         this.initializeWords();
         this.sortWords();
      }
+
+    private cleanGrid(): void {
+        for (const tile of this.crossword.grid) {
+            if (tile.char === "") {
+                tile.isBlackTile = true;
+            } else {
+                tile.char = tile.char.normalize("NFD")[0];
+            }
+        }
+    }
 
     private displayGrid(): void {
         let s: string = "";
