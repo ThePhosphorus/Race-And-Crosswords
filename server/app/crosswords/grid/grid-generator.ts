@@ -173,7 +173,7 @@ export class GridGenerator {
     private backjump(currentWord: Word): void {
 
         let isProblemWord: boolean = false;
-        while (!isProblemWord && this.crossword.words.length) {
+        while (!isProblemWord && this.crossword.words.length > 0) {
             const backtrackWord: Word = this.crossword.words.pop();
             // console.log(backtrackWord);
             this.notPlacedWords.push(backtrackWord);
