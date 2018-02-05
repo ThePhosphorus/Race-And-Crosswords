@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGrid, Letter, Difficulty } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
 const INITIAL_GRID_SIZE: number = 10;
-const INITIAL_BLACK_TILES_RATIO: number = 0.3;
+const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
   selector: "app-crosswords",
@@ -16,10 +16,13 @@ export class CrosswordsComponent implements OnInit {
 
     public grid: CrosswordGrid;
 
+    private _cheatmode: boolean;
+
     public constructor(private crosswordService: CrosswordService) {
         this.grid = new CrosswordGrid();
         this.grid.size = INITIAL_GRID_SIZE;
         this.initializeGrid();
+        this._cheatmode = false;
     }
 
     private initializeGrid(): void {
@@ -41,10 +44,38 @@ export class CrosswordsComponent implements OnInit {
         return formattedGrid;
     }
 
+    private get acrossDefinitions(): string[] {
+        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Across)
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0].slice(w.definitions[0].indexOf(" ")));
+    }
+
+    private get downDefinitions(): string[] {
+        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down)
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0].slice(w.definitions[0].indexOf(" ")));
+    }
+
+    private toWord(letters: Letter[]): string {
+        let str: string = "";
+        letters.forEach((letter: Letter) => {
+            str += letter.char;
+        });
+
+        return str;
+    }
+
     public ngOnInit(): void {
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO)
             .subscribe((grid: CrosswordGrid) => {
                 this.grid = grid;
             });
+
+    }
+    public toogleCheatMode(): void {
+        this._cheatmode = !this._cheatmode;
+        console.log("cheat mode is now :" + this._cheatmode);
+    }
+
+    public get cheatMode(): boolean {
+        return this._cheatmode;
     }
 }
