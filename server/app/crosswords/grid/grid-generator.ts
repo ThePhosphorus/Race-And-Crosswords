@@ -1,9 +1,10 @@
 import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+import { access } from "fs";
 
-const BT_SWITCH_FACTOR: number = 3;
-const MAX_ROLLBACKS: number = 100;
+const BT_SWITCH_FACTOR: number = 2;
+const MAX_ROLLBACKS: number = 30;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -17,9 +18,8 @@ export class GridGenerator {
         this.initializeGrid(size);
         this.generateBlackTiles(blackTileRatio);
         this.initializeWords();
-        this.sortWords();
         await this.findWords(difficulty);
-        this.cleanGrid();
+        // this.cleanGrid();
         this.displayGrid();
 
         return this.crossword;
@@ -29,7 +29,7 @@ export class GridGenerator {
         this.crossword.size = size;
         this.crossword.grid = new Array<Letter>(size * size);
         for (let i: number = 0; i < size * size; i++) {
-            this.crossword.grid[i] = new Letter("");
+            this.crossword.grid[i] = new Letter("", i);
         }
     }
 
@@ -49,9 +49,11 @@ export class GridGenerator {
         let blackTileCount: number = 0;
         for (let i: number = 1; i < this.crossword.size; i += BT_SWITCH_FACTOR) {
             for (let j: number = 1; j < this.crossword.size; j += BT_SWITCH_FACTOR) {
-                const id: number = j + (this.crossword.size * i);
-                this.crossword.grid[id].isBlackTile = true;
-                blackTileCount++;
+                if (i !== j) {
+                    const id: number = j + (this.crossword.size * i);
+                    this.crossword.grid[id].isBlackTile = true;
+                    blackTileCount++;
+                }
             }
         }
 
@@ -65,6 +67,9 @@ export class GridGenerator {
             for (let j: number = 0; j < this.crossword.size; j++) {
                 // ACROSS
                 if (!this.crossword.grid[(this.crossword.size * i) + j].isBlackTile) {
+                    if (acrossWord.letters.length === 0) {
+                        acrossWord.id = (this.crossword.size * i) + j;
+                    }
                     acrossWord.letters.push(this.crossword.grid[(this.crossword.size * i) + j]);
                 } else { // IF BLACK TILE
                     this.addWord(acrossWord, Orientation.Across);
@@ -72,6 +77,9 @@ export class GridGenerator {
                 }
                 // DOWN
                 if (!this.crossword.grid[(this.crossword.size * j) + i].isBlackTile) {
+                    if (downWord.letters.length === 0) {
+                        downWord.id = (this.crossword.size * j) + i;
+                    }
                     downWord.letters.push(this.crossword.grid[(this.crossword.size * j) + i]);
                 } else {
                     this.addWord(downWord, Orientation.Down);
@@ -106,14 +114,17 @@ export class GridGenerator {
 
     private async findWords(difficulty: Difficulty): Promise<void> {
 
-         while (this.notPlacedWords.length > 0) {
+        this.notPlacedWords = this.notPlacedWords.reverse();
+        await this.findWord(this.notPlacedWords.pop(), difficulty);
+
+        while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_ROLLBACKS) {
-                this.nukeGrid();
+               // this.nukeGrid();
                 this.rollbackCount = 0;
             }
-            this.sortWords();
 
             await this.findWord(this.notPlacedWords.pop(), difficulty);
+            this.sortWords();
         }
     }
 
@@ -189,7 +200,7 @@ export class GridGenerator {
             this.notPlacedWords.push(backtrackWord);
             for (const newLetter of backtrackWord.letters) {
                 for (const currentLetter of currentWord.letters) {
-                    if (currentLetter.char !== "" && newLetter === currentLetter) {
+                    if (currentLetter.char !== "" && newLetter.id === currentLetter.id) {
                         isProblemWord = true;
                     }
                 }
