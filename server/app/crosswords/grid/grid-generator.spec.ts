@@ -12,7 +12,7 @@ gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then( (grid: Crossw
         describe("When the grid is generated", () => {
             it ("should give a grid with the right size", (done: MochaDone) => {
                 assert.strictEqual(grid.size, gridSize, "Attribute size of grid is not the expected size.");
-                assert.strictEqual(grid.words.length, gridSize * gridSize, "Vertical length is not the right length");
+                assert.strictEqual(grid.grid.length, gridSize * gridSize, "Vertical length is not the right length");
                 done();
              });
 
