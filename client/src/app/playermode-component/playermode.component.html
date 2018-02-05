@@ -1,8 +1,8 @@
 <div class="container"  ng-controller="CollapseDemoCtrl">
-  <div class="row mt-lg-3 justify-content-around" id="info">
-    <div class="col col-lg-3  " id="nbPlayers">
-      <p>
-        <button type="button" class="btn btn-outline-primary"  (click)="isCollapsed = !isCollapsed"   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+  <div class="row mb-0 no-gutters justify-content-md-center" id="info">
+    <div class="col-lg-7 mb-1" id="nbPlayers">
+
+        <button type="button" class="btn"  (click)="isCollapsed = !isCollapsed"   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseCard">
           <p *ngIf="nbPlayers == 1">
             SINGLE PLAYER ˅
           </p>
@@ -10,19 +10,20 @@
             {{nbPlayers}} PLAYERS ˅
           </p>
         </button>
-      </p>
+
     </div>
-    <div class="col col-lg-3 offset-md-1 " id="level">
+    <div class="col-lg-5 mt-1  " id="level">
       <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
     </div>
   </div>
 
-  <div class="row  justify-content-around" >
+  <div class="row row-md-auto mt-0 mb-1" >
     <div class="col" >
-      <div id="collapseExample" [hidden]="!isCollapsed" id="PlayerList">
+      <div id="collapseCard" [hidden]="!isCollapsed">
         <div class="card">
           <div class="card-body" >
-           Player List
+           <p id="player">Player:</p>
+           <p id="result">Score</p>
           </div>
         </div>
       </div>

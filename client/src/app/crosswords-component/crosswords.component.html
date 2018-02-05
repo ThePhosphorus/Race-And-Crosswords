@@ -5,7 +5,7 @@
         <table class="table">
           <thead class="thead-dark">
             <tr>
-              <th>Across</th>
+              <th>ACROSS</th>
             </tr>
           </thead>
           <tr *ngFor="let item of acrossDefinitions">
@@ -17,7 +17,7 @@
         <table class="table">
           <thead class="thead-dark">
             <tr>
-              <th>Down</th>
+              <th>DOWN</th>
             </tr>
           </thead>
           <tr *ngFor="let item of downDefinitions">
@@ -29,6 +29,7 @@
   </div>
 
   <div class="col-5 mt-3 " id="grid">
+    <app-playermode></app-playermode>
     <table align="center">
       <tbody>
         <tr *ngFor="let letters of twoDimensionGrid">
@@ -40,9 +41,9 @@
         </tr>
       </tbody>
     </table>
-    <app-playermode></app-playermode>
+
     <button (click)="toogleCheatMode()" class="btn mt-3" [ngClass]="{'btn-outline-success': !cheatMode, 'btn-outline-danger': cheatMode}">
-      Cheat mode is {{ cheatMode? "Enabled" : "Disabled"}}
+     {{ (cheatMode? "Enabled" : "Disabled")| uppercase}}
     </button>
   </div>
 

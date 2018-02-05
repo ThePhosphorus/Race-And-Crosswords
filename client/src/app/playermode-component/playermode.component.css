@@ -13,30 +13,54 @@
 .container .col {
     font-size: 100%;
     font-weight:lighter;
+
 }
 .container {
     vertical-align:bottom;
-    border-bottom: solid 0.2vmin dimgray;
-    color: black;
     text-align:match-parent;
-}
 
-#info button {
-    border: none;
-    color:gray;
-    font-weight:lighter;
 }
-#info button:hover {
-  border: none;
-  background-color: transparent;
-  box-shadow: transparent;
-  cursor: pointer;
-}
-#info button:active{
-    border: none;
+.btn {
+    border: solid grey;
     background-color: transparent;
     box-shadow: transparent;
+    font-weight: lighter;
+}
+
+p {
+margin-bottom: 0%
+}
+
+.btn:hover {
+    background-color: transparent;
+    box-shadow: transparent;
+}
+
+.btn:active {
+    background-color: transparent;
+    box-shadow:transparent;
+}
+
+.btn:focus {
+    background-color: transparent;
+    box-shadow:unset;
+}
+
+ .card {
+    background-color:transparent;
+    margin-top: 1%;
+    text-align: right;
+    font-weight: lighter;
   }
+
+  #player{
+    text-align: left;
+  }
+  #result{
+    text-align: right;
+  }
+
+
 
 
 
