@@ -63,7 +63,7 @@ export class GridGenerator {
         let downWord: Word = new Word();
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
-                this.initialiseWord(acrossWord, (this.crossword.size * i) + j );
+                this.initialiseWord(acrossWord, (this.crossword.size * i) + j);
                 this.initialiseWord(downWord, (this.crossword.size * j) + i);
             }
             this.addWord(acrossWord, Orientation.Across);
@@ -102,7 +102,7 @@ export class GridGenerator {
 
     private async findWords(difficulty: Difficulty): Promise<void> {
 
-        while (this.notPlacedWords.length > 0) {
+         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_ROLLBACKS) {
                 this.nukeGrid();
                 this.rollbackCount = 0;
@@ -123,7 +123,6 @@ export class GridGenerator {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
             const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word, isEasyWord);
             if (receivedWord !== undefined && this.isUnique(receivedWord)) {
-                console.log("AAAAAAAAAAAAAAAAAAa");
                 this.setWord(receivedWord, word, difficulty);
                 this.crossword.words.push(word);
                 this.displayGrid();
@@ -178,7 +177,7 @@ export class GridGenerator {
     }
 
     private backjump(currentWord: Word): void {
-
+        this.notPlacedWords.push(currentWord);
         let isProblemWord: boolean = false;
         while (!isProblemWord && this.crossword.words.length > 0) {
             const backtrackWord: Word = this.crossword.words.pop();
