@@ -87,7 +87,7 @@ export class GridGenerator {
      }
 
     private addWord(word: Word, orientation: Orientation): void {
-        if (word.letters.length > 1) {
+        if (word.letters.length >= MIN_WORD_LENGTH) {
             word.orientation = orientation;
             this.crossword.words.push(word);
         }
