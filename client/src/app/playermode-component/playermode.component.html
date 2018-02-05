@@ -1,16 +1,14 @@
-<div class="container">
-  <div class="row mt-lg-3 justify-content-around" id="info">
-    <div class="col col-lg-3  " id="nbPlayers">
-      <p *ngIf="nbPlayers == 1">
-        SINGLE PLAYER
-      </p>
-      <p *ngIf="nbPlayers !== 1">
-        {{nbPlayers}} PLAYERS
-      </p>
-    </div>
+<div class="row mt-4 justify-content-around" id="info">
+  <div class="col col-lg-3  " id="nbPlayers">
+    <p *ngIf="nbPlayers == 1">
+      SINGLE PLAYER
+    </p>
+    <p *ngIf="nbPlayers !== 1">
+      {{nbPlayers}} PLAYERS
+    </p>
+  </div>
 
-    <div class="col col-lg-3 offset-md-1 " id="level">
-      <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
-    </div>
+  <div class="col col-lg-3 offset-md-1 " id="level">
+    <p *ngIf="lvl" [ngClass]="{'easy': lvl == 'Easy', 'medium': lvl == 'Medium', 'hard': lvl == 'Hard'}">{{lvl | uppercase}}</p>
   </div>
 </div>
