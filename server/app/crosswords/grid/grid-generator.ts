@@ -113,7 +113,7 @@ export class GridGenerator {
             }
             this.sortWords();
 
-            this.findWord(this.notPlacedWords.pop(), difficulty);
+            await this.findWord(this.notPlacedWords.pop(), difficulty);
             }
         }
 
