@@ -2,7 +2,7 @@ import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH }
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
-const BT_SWITCH_FACTOR: number = 2;
+const BT_SWITCH_FACTOR: number = 3;
 const ROLLBACK_AMOUNT: number = 2;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
@@ -106,7 +106,7 @@ export class GridGenerator {
             const word: Word = this.crossword.words[currentIndex];
             const constraint: string = this.getConstraints(word);
             if (constraint.indexOf("?") === -1) {
-               currentIndex = this.rollback(currentIndex);
+               currentIndex = this.backjump(currentIndex);
                rollbackCount++;
 
             } else {
@@ -116,7 +116,7 @@ export class GridGenerator {
                     currentIndex++;
                     this.displayGrid();
                 } else {
-                    currentIndex = this.rollback(currentIndex);
+                    currentIndex = this.backjump(currentIndex);
                     rollbackCount++;
 
                     }
@@ -153,6 +153,26 @@ export class GridGenerator {
         }
      }
 
+    private backjump(currentIndex: number): number {
+
+        let isProblemWord: boolean = false;
+        let newIndex: number = currentIndex;
+        while (!isProblemWord) {
+            newIndex--;
+            for (const newLetter  of this.crossword.words[newIndex].letters) {
+                for (const currentLetter  of this.crossword.words[currentIndex].letters) {
+                    if (newLetter === currentLetter) {
+                        isProblemWord = true;
+                    }
+                }
+            }
+            this.unsetWord(this.crossword.words[newIndex]);
+        }
+
+        return newIndex;
+    }
+
+     /*
     private rollback(currentIndex: number): number {
         let newIndex: number = Math.floor(currentIndex / ROLLBACK_AMOUNT);
         if (newIndex < 0) { newIndex = 0; }
@@ -164,7 +184,7 @@ export class GridGenerator {
 
         return newIndex ;
      }
-
+     */
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
