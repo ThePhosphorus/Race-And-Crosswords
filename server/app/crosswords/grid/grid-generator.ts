@@ -188,19 +188,6 @@ export class GridGenerator {
         }
     }
 
-     /*
-    private rollback(currentIndex: number): number {
-        let newIndex: number = Math.floor(currentIndex / ROLLBACK_AMOUNT);
-        if (newIndex < 0) { newIndex = 0; }
-
-        for (let index: number = currentIndex - 1; index >= newIndex ; index--) {
-            this.unsetWord(this.crossword.words[index]);
-
-        }
-
-        return newIndex ;
-     }
-     */
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
