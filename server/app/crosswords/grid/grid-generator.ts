@@ -1,7 +1,6 @@
 import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
-import { access } from "fs";
 
 const BT_SWITCH_FACTOR: number = 2;
 const MAX_ROLLBACKS: number = 30;
