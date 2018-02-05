@@ -50,14 +50,11 @@ p {
     background-color: transparent;
     box-shadow:unset;
 }
+    .card {
 
-.card{
-    background-color:transparent;
-    margin-top: 1%;
-    text-align: right;
-    font-weight: lighter;
-
-}
+        background-color: transparent;
+        border: solid grey;
+    }
 
   #player{
     text-align: left;

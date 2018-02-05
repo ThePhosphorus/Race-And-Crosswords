@@ -1,15 +1,15 @@
-<div class="container "  ng-controller="CollapseDemoCtrl">
+<div class="container " ng-controller="CollapseDemoCtrl">
   <div class="row mb-0 " id="info">
     <div class="col-lg-9 w-100 pr-0 pl-0" id="nbPlayers">
 
-        <button type="button" class="btn  w-100"  (click)="isCollapsed = !isCollapsed"   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseCard">
-          <p *ngIf="nbPlayers == 1">
-            SINGLE PLAYER ˅
-          </p>
-          <p *ngIf="nbPlayers !== 1">
-            {{nbPlayers}} PLAYERS ˅
-          </p>
-        </button>
+      <button type="button" class="btn w-100" (click)="isCollapsed =!isCollapsed" >
+        <p *ngIf="nbPlayers == 1">
+          SINGLE PLAYER ˅
+        </p>
+        <p *ngIf="nbPlayers !== 1">
+          {{nbPlayers}} PLAYERS ˅
+        </p>
+      </button>
 
     </div>
     <div class="col-lg-3 w-100 " id="level">
@@ -18,14 +18,12 @@
 
   </div>
 
-  <div class="row row-md-auto mt-0 mb-1" >
-    <div class="col" >
-      <div id="collapseCard" [hidden]="!isCollapsed">
-        <div class="card">
-          <div class="card-body" >
-           <p id="player">Player:</p>
-           <p id="result">Score</p>
-          </div>
+  <div class="row row-md-auto mt-0 mb-1">
+    <div class="col">
+      <div id="list"[hidden]="!isCollapsed">
+        <div class="card card-block">
+          <p id="player">Player:</p>
+          <p id="result">Score</p>
         </div>
       </div>
     </div>
