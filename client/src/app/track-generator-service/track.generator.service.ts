@@ -14,13 +14,11 @@ export class TrackGeneratorService {
      }
 
     public InputkeyDown(event: KeyboardEvent): void {
-        console.log("InputKeyDown : ");
-        console.log(event);
+        this._renderer.InputKeyDown(event);
     }
 
     public InputKeyUp(event: KeyboardEvent): void {
-        console.log("InputKeyUp : ");
-        console.log(event);
+        this._renderer.InputKeyUp(event);
     }
 
     public mouseEventclick(event: MouseEvent): void {

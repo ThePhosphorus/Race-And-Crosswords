@@ -121,6 +121,18 @@ export class CameraManagerService {
         this.zoom = zoom;
     }
 
+    public zoomIn(): void {
+        this.zoomFactor = 1;
+    }
+
+    public zoomOut(): void {
+        this.zoomFactor = -1;
+    }
+
+    public zoomRelease(): void {
+        this.zoomFactor = 0;
+    }
+
     public get position(): Vector3 {
         switch (this.type) {
             case CameraType.Ortho:
@@ -169,7 +181,6 @@ export class CameraManagerService {
             default:
                 break;
         }
-
     }
 
     private calcPosPerspCamera(): Vector3 {

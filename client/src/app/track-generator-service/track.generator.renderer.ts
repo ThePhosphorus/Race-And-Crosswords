@@ -1,8 +1,9 @@
 import Stats = require("stats.js");
 import { WebGLRenderer, Scene, Vector3, GridHelper, Color, AmbientLight } from "three";
-import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { CameraManagerService, CameraType } from "../camera-manager-service/camera-manager.service";
+import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
 
-const STARTING_CAMERA_HEIGHT: number = 20;
+const STARTING_CAMERA_HEIGHT: number = 60;
 const CAMERA_STARTING_POSITION: Vector3 = new Vector3(0, STARTING_CAMERA_HEIGHT, 0);
 const CAMERA_STARTING_DIRECTION: Vector3 = new Vector3(1, 0, 0);
 
@@ -57,13 +58,14 @@ export class TrackRenderer {
         this._lastDate = Date.now();
      }
 
-    private async createScene(): Promise<void> {
+    private createScene(): void {
         this._scene = new Scene();
 
         this.cameraManager.updatecarInfos(
             this._cameraPosition,
             this._cameraDirection
         );
+        this.cameraManager.cameraType = CameraType.Ortho;
         this._gridHelper = new GridHelper(
             GRID_DIMENSION,
             GRID_DIVISIONS,
@@ -98,5 +100,31 @@ export class TrackRenderer {
         this._renderer.render(this._scene, this.cameraManager.camera);
         this._stats.update();
      }
+
+    public InputKeyDown(event: KeyboardEvent): void {
+        switch (event.keyCode) {
+            case ZOOM_IN_KEYCODE:
+                this.cameraManager.zoomIn();
+                break;
+            case ZOOM_OUT_KEYCODE:
+                this.cameraManager.zoomOut();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public InputKeyUp(event: KeyboardEvent): void {
+        switch (event.keyCode) {
+            case ZOOM_IN_KEYCODE:
+                this.cameraManager.zoomRelease();
+                break;
+            case ZOOM_OUT_KEYCODE:
+                this.cameraManager.zoomRelease();
+                break;
+            default:
+                break;
+        }
+    }
 
 }
