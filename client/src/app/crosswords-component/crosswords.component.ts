@@ -72,7 +72,6 @@ export class CrosswordsComponent implements OnInit {
     }
     public toogleCheatMode(): void {
         this._cheatmode = !this._cheatmode;
-        console.log("cheat mode is now :" + this._cheatmode);
     }
 
     public get cheatMode(): boolean {
