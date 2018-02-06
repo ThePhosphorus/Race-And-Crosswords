@@ -146,6 +146,10 @@ export class CameraManagerService {
         this.cameraDistance = distance;
     }
 
+    public get listener(): AudioListener {
+        return this.audioListener;
+    }
+
     public get effectModeEnabled(): boolean {
         return this.effectModeisEnabled;
     }
