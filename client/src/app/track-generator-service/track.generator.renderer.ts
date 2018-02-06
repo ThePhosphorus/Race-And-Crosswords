@@ -13,10 +13,11 @@ import {
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
+import { Vector2 } from "three";
 
 const STARTING_CAMERA_HEIGHT: number = 60;
 const CAMERA_STARTING_POSITION: Vector3 = new Vector3(0, STARTING_CAMERA_HEIGHT, 0);
-const CAMERA_STARTING_DIRECTION: Vector3 = new Vector3(1, 0, 0);
+const CAMERA_STARTING_DIRECTION: Vector3 = new Vector3(0, -1, 0);
 
 const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
@@ -30,6 +31,9 @@ const MAX_ZOOM: number = 100;
 
 const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(5, 32, 32);
 const SPHERE_MESH_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: WHITE});
+
+const HALF: number = 0.5;
+const DOUBLE: number = 2;
 
 export class TrackRenderer {
     private _stats: Stats;
@@ -154,11 +158,21 @@ export class TrackRenderer {
 
     private getRelativePosition(pos: Vector2): Vector3 {
         const htmlElem: HTMLCanvasElement = this._renderer.domElement;
-        console.log(htmlElem.offsetTop);
+
+        const cameraClientRatio: Vector2 = new Vector2(
+            DOUBLE * this.cameraManager.cameraDistanceToCar * this.getAspectRatio() / htmlElem.clientWidth,
+            DOUBLE * this.cameraManager.cameraDistanceToCar / htmlElem.clientHeight
+        );
+
+        const clientClickPos: Vector2 = new Vector2(
+            pos.x - htmlElem.offsetLeft - HALF * htmlElem.clientWidth,
+            pos.y - htmlElem.offsetTop - HALF * htmlElem.clientHeight
+        );
+
         return new Vector3(
-            pos.x - htmlElem.offsetLeft - htmlElem.clientWidth / 2,
+            clientClickPos.x * cameraClientRatio.x,
             0,
-            pos.y - htmlElem.offsetTop - htmlElem.clientHeight / 2
+            clientClickPos.y * cameraClientRatio.y
         );
     }
 }
