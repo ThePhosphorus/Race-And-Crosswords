@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { CrosswordGrid, Difficulty, Letter, Orientation } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Difficulty, Letter, Orientation, Word } from "../../../../common/communication/crossword-grid";
 import { GridGenerator } from "./grid-generator";
 
 const gridGenerator: GridGenerator = new GridGenerator();
@@ -13,17 +13,6 @@ gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: Crosswo
             it("should give a grid with the right size", (done: MochaDone) => {
                 assert.strictEqual(grid.size, gridSize, "Attribute size of grid is not the expected size.");
                 assert.strictEqual(grid.grid.length, gridSize * gridSize, "Vertical length is not the right length");
-                done();
-            });
-
-            it("should give us a grid with the right amount of blackTiles", (done: MochaDone) => {
-                const nbOfBlackTilesExpected: number = btRatio * gridSize * gridSize;
-                let nbOfBlackTiles: number = 0;
-                grid.grid.forEach((letter: Letter) => {
-                    if (letter.isBlackTile) { nbOfBlackTiles++; }
-                });
-                assert.strictEqual(nbOfBlackTiles, nbOfBlackTilesExpected,
-                                   "got " + nbOfBlackTiles + "black tiles instead of " + nbOfBlackTilesExpected);
                 done();
             });
 
@@ -52,6 +41,45 @@ gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: Crosswo
                     assert.ok(hasAcrossWord[i], "There is no word on row : " + i);
                     assert.ok(hasDownWord[i], "There is no word on coloum : " + i);
                 }
+                done();
+            });
+
+            it("should give us words with definitions ", (done: MochaDone) => {
+                grid.words.forEach((word: Word) => {
+                    assert.ok(word.definitions.length > 0, " Word : " + word.id );
+                });
+                done();
+            });
+
+            it("should not have apostrophe or apostrophe", (done: MochaDone) => {
+                grid.grid.forEach((tile: Letter) => {
+                    if (!tile.isBlackTile) {
+                        assert.notEqual(tile.char, "-", "Has hypen");
+                        assert.notEqual(tile.char, "'", "Has apostrophe");
+                    }
+                });
+                done();
+            });
+
+            it("should not have special letters (accents, etc)", (done: MochaDone) => {
+                grid.grid.forEach((tile: Letter) => {
+                    if (!tile.isBlackTile) {
+                        assert.ok(tile.char.normalize("NFD").length === 1 , "Has character : " + tile.char);
+                    }
+                });
+                done();
+            });
+
+            it("should not have duplicate word", (done: MochaDone) => {
+                const words: string[] = new Array<string>();
+                grid.words.forEach((gridWord: Word) => {
+                    let wordString: string = "";
+                    gridWord.letters.forEach((letter: Letter) => {
+                        wordString += letter.char;
+                    });
+                    assert.equal(words.indexOf(wordString), -1, "Duplicate of : " + wordString);
+                    words.push(wordString);
+                });
                 done();
             });
         });
