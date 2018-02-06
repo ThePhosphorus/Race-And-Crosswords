@@ -13,7 +13,6 @@ import {
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
-import { Vector2 } from "three";
 
 const STARTING_CAMERA_HEIGHT: number = 60;
 const CAMERA_STARTING_POSITION: Vector3 = new Vector3(0, STARTING_CAMERA_HEIGHT, 0);
@@ -29,7 +28,7 @@ const AMBIENT_LIGHT_OPACITY: number = 0.85;
 const MIN_ZOOM: number = 10;
 const MAX_ZOOM: number = 100;
 
-const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(5, 32, 32);
+const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(2, 32, 32);
 const SPHERE_MESH_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: WHITE});
 
 const HALF: number = 0.5;
