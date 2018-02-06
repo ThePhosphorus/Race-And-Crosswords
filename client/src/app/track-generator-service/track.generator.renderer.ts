@@ -1,6 +1,6 @@
 import Stats = require("stats.js");
 import { WebGLRenderer, Scene, Vector3, GridHelper, Color, AmbientLight } from "three";
-import { CameraManagerService, CameraType } from "../camera-manager-service/camera-manager.service";
+import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
 
 const STARTING_CAMERA_HEIGHT: number = 60;
@@ -13,6 +13,9 @@ const GRID_PRIMARY_COLOR: number = 0xFF0000;
 const GRID_SECONDARY_COLOR: number = 0x001188;
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.85;
+
+const MIN_ZOOM: number = 10;
+const MAX_ZOOM: number = 100;
 
 export class TrackRenderer {
     private _stats: Stats;
@@ -76,6 +79,7 @@ export class TrackRenderer {
         this._scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
         this.cameraManager.onResize(this.getAspectRatio());
         this.cameraManager.cameraDistanceToCar = STARTING_CAMERA_HEIGHT;
+        this.cameraManager.zoomLimits = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
      }
 
     private getAspectRatio(): number {
