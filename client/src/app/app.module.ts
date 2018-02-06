@@ -11,6 +11,7 @@ import { CrosswordsComponent } from "./crosswords-component/crosswords.component
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { AdminComponent } from './admin/admin.component';
+import { TrackListComponent } from './track-list/track-list.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { AdminComponent } from './admin/admin.component';
         CrosswordsComponent,
         PlayermodeComponent,
         HomePageComponent,
-        AdminComponent
+        AdminComponent,
+        TrackListComponent
     ],
     imports: [
         BrowserModule,
