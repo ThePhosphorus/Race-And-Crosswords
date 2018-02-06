@@ -14,22 +14,31 @@ export class TrackGeneratorService {
      }
 
     public InputkeyDown(event: KeyboardEvent): void {
-
+        console.log("InputKeyDown : ");
+        console.log(event);
     }
 
     public InputKeyUp(event: KeyboardEvent): void {
-
+        console.log("InputKeyUp : ");
+        console.log(event);
     }
 
     public mouseEventHover(event: MouseEvent): void {
-
+        console.log("mouseEventHover : ");
+        console.log(event);
     }
 
     public mouseEventclick(event: MouseEvent): void {
+        console.log("mouseEventClick : ");
+        console.log(event);
+    }
 
+    public mouseEventReleaseClick(event: MouseEvent): void {
+        console.log("mouseEventReleaseClick : ");
+        console.log(event);
     }
 
     public onResize(): void {
-
+        console.log("onResize : ");
     }
 }

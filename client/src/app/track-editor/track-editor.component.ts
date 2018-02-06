@@ -1,6 +1,4 @@
-import { Component, ElementRef, HostListener } from "@angular/core";
-import { AfterViewInit } from "@angular/core/src/metadata/lifecycle_hooks";
-import { ViewChild } from "@angular/core/src/metadata/di";
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
 import { TrackGeneratorService } from "../track-generator-service/track.generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
@@ -33,6 +31,18 @@ export class TrackEditorComponent implements AfterViewInit {
     @HostListener("window:keyup", ["$event"])
     public onKeyUp(event: KeyboardEvent): void {
     this.trackGen.InputKeyUp(event);
+    }
+
+    public onClick(event: MouseEvent): void {
+        this.trackGen.mouseEventclick(event);
+    }
+
+    public onClickRelease(event: MouseEvent): void {
+        this.trackGen.mouseEventReleaseClick(event);
+    }
+
+    public onHover(event: MouseEvent): void {
+        this.trackGen.mouseEventHover(event);
     }
 
 }
