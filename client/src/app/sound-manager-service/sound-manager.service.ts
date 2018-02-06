@@ -9,16 +9,15 @@ import { CameraManagerService } from "./../camera-manager-service/camera-manager
 @Injectable()
 export class SoundManagerService {
 
-    private cameraManager: CameraManagerService;
     private engineLoop: Audio;
 
-    public constructor() {
+    public constructor(private cameraManager: CameraManagerService) {
     this.init();
 }
     private init(): void {
         const tmpLoop: Audio = this.engineLoop = new Audio(this.cameraManager.listener);
         const idleLoader: AudioLoader = new AudioLoader();
-        idleLoader.load("../../assets/sounds/idle.ogg",
+        idleLoader.load("../../assets/sounds/engine.ogg",
                         (buffer: AudioBuffer) => {
                             tmpLoop.setBuffer(buffer);
                             tmpLoop.setLoop(true);
@@ -31,8 +30,8 @@ export class SoundManagerService {
     public calculatePlaybackSpeed(rpm: number): number{
         return 1;
     }
-    public playSounds(): void{
-        //this.engineLoop.play();
+    public playSounds(): void {
+        this.engineLoop.play();
     }
 
 }
