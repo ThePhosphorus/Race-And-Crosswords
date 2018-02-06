@@ -36,9 +36,13 @@ export class GridGenerator {
         let generatedBlackTiles: number = 0; // this.generateBasicBlackTiles();
         while (generatedBlackTiles < maxBlackTile) {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (this.isCorrectBlackTile(id) && this.isValidBlackTile(id)) {
+            if (this.isCorrectBlackTile(id) ) {
                 this.crossword.grid[id].isBlackTile = true;
-                generatedBlackTiles++;
+                if (this.isValidBlackTile(id)) {
+                    generatedBlackTiles++;
+                } else {
+                    this.crossword.grid[id].isBlackTile = false;
+                }
 
             }
         }
