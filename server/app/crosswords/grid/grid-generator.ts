@@ -36,16 +36,16 @@ export class GridGenerator {
         let generatedBlackTiles: number = 0; // this.generateBasicBlackTiles();
         while (generatedBlackTiles < maxBlackTile) {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (this.isCorrectBlackTile(id) ) {
+            if (!this.crossword.grid[id].isBlackTile) {
                 this.crossword.grid[id].isBlackTile = true;
                 if (this.isValidBlackTile(id)) {
                     generatedBlackTiles++;
                 } else {
                     this.crossword.grid[id].isBlackTile = false;
                 }
-
             }
         }
+        this.displayGrid();
     }
 
     private isValidBlackTile(id: number): boolean {
@@ -62,18 +62,6 @@ export class GridGenerator {
                 id % this.crossword.size !== 0 &&
                 this.getNumberOfWordsInLine(acrossLetter) > 0 &&
                 this.getNumberOfWordsInLine(downLetters) > 0;
-    }
-
-    private isCorrectBlackTile(id: number): boolean {
-
-        if (this.crossword.grid[id].isBlackTile) {
-            return false;
-        }
-        if (id <= this.crossword.size || id % this.crossword.size === 0) {
-            return false;
-        }
-
-        return true;
     }
 
     private getNumberOfWordsInLine(letters: Letter[]): number {
