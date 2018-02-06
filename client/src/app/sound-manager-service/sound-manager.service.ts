@@ -17,7 +17,7 @@ export class SoundManagerService {
     private init(): void {
         const tmpLoop: Audio = this.engineLoop = new Audio(this.cameraManager.listener);
         const idleLoader: AudioLoader = new AudioLoader();
-        idleLoader.load("../../assets/sounds/engine.ogg",
+        idleLoader.load("../../assets/sounds/idle.ogg",
             (buffer: AudioBuffer) => {
                 tmpLoop.setBuffer(buffer);
                 tmpLoop.setLoop(true);
@@ -32,7 +32,7 @@ export class SoundManagerService {
         if(rpm > 800)
         {
             this.engineLoop.stop();
-            this.engineLoop.playbackRate = rpm/800;
+            this.engineLoop.playbackRate = rpm/1600;
             this.engineLoop.play();
         }
     }
