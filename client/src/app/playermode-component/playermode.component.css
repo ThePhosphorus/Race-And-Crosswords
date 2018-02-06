@@ -22,13 +22,15 @@
 
 }
 .btn {
-    border: solid grey;
+    border: solid darkgrey;
     background-color: transparent;
     box-shadow: transparent;
     font-weight: lighter;
     padding-top:unset;
+}
+.btn:hover{
 
-
+color:steelblue;
 }
 
 p {
@@ -66,9 +68,9 @@ p {
     text-align: center;
 }
 #info{
-    border:grey solid;
+    border:darkgrey solid;
     border-radius: 0.5vmax;
-    background-color: grey;
+    background-color: darkgrey;
 
 }
 

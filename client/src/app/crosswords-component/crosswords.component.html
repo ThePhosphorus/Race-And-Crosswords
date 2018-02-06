@@ -28,22 +28,34 @@
     </div>
   </div>
 
-  <div class="col-5 mt-3 " id="grid">
+  <div class="col-5 mt-3 " >
     <app-playermode></app-playermode>
-    <table align="center">
+
+
+    <table id="grid"align="center">
+      <thead>
+      <th *ngFor="let letters of twoDimensionGrid;let j = index">
+        {{j+1}}
+      </th>
+      <th>#</th>
+      </thead>
       <tbody>
-        <tr *ngFor="let letters of twoDimensionGrid">
+        <tr *ngFor="let letters of twoDimensionGrid;let i = index">
+
           <td *ngFor="let letter of letters" [ngClass]="{'black': letter.isBlackTile}">
             <span *ngIf="letter.char">
               {{letter.char | uppercase}}
             </span>
           </td>
+          <th scope="row">{{i+1}}</th>
         </tr>
+
       </tbody>
+
     </table>
     <button (click)="toogleCheatMode()" class="btn mt-3 w-100" [ngClass]="{'btn-outline-success': !cheatMode, 'btn-outline-danger': cheatMode}">
-        {{ (cheatMode? "Enabled" : "Disabled")| uppercase}}
-       </button>
+      {{ (cheatMode? "Enabled" : "Disabled")| uppercase}}
+    </button>
 
   </div>
 

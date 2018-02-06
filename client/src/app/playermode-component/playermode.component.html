@@ -4,10 +4,10 @@
 
       <button type="button" class="btn w-100" (click)="isCollapsed =!isCollapsed" >
         <p *ngIf="nbPlayers == 1">
-          SINGLE PLAYER ˅
+            ˅ SINGLE PLAYER ˅
         </p>
         <p *ngIf="nbPlayers !== 1">
-          {{nbPlayers}} PLAYERS ˅
+            ˅ {{nbPlayers}}  PLAYERS ˅
         </p>
       </button>
 
@@ -18,7 +18,7 @@
 
   </div>
 
-  <div class="row row-md-auto mt-0 mb-1">
+  <div class="row row-md-auto mt-0 mb-2">
     <div class="col">
       <div id="list"[hidden]="!isCollapsed">
         <div class="card card-block">
