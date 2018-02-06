@@ -33,6 +33,7 @@ export class Word {
     public letters: Letter[];
     public definitions: string[];
     public orientation: Orientation;
+    public rollbackCount: number = 0 ;
 
     constructor() {
         this.id = -1;

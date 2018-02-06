@@ -3,7 +3,8 @@ import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const BT_SWITCH_FACTOR: number = 2;
-const MAX_ROLLBACKS: number = 10 ;
+const MAX_TOTAL_ROLLBACKS: number = 12 ;
+const MAX_WORD_ROLLBACKS: number = 2;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -112,7 +113,7 @@ export class GridGenerator {
         await this.findWord(this.notPlacedWords.pop(), difficulty);
 
         while (this.notPlacedWords.length > 0) {
-            if (this.rollbackCount > MAX_ROLLBACKS) {
+            if (this.rollbackCount > MAX_TOTAL_ROLLBACKS) {
                 // for (let index: number = 0; index < 100; index++) {
                   //  console.error("NUKENUKENUKENUKE");
 
@@ -139,7 +140,7 @@ export class GridGenerator {
             if (receivedWord !== undefined && this.isUnique(receivedWord)) {
                 this.setWord(receivedWord, word, difficulty);
                 this.crossword.words.push(word);
-                // this.displayGrid();
+                this.displayGrid();
             } else {
                 this.backjump(word);
                 this.rollbackCount++;
@@ -190,9 +191,9 @@ export class GridGenerator {
         }
     }
     private backjump(currentWord: Word): void {
-        this.notPlacedWords.push(currentWord);
-        let isProblemWord: boolean = false;
-        while (!isProblemWord && this.crossword.words.length > 0) {
+       this.notPlacedWords.push(currentWord);
+       let isProblemWord: boolean = false;
+       while (!isProblemWord && this.crossword.words.length > 0) {
             const backtrackWord: Word = this.crossword.words.pop();
             this.notPlacedWords.push(backtrackWord);
             for (const newLetter of backtrackWord.letters) {
@@ -204,6 +205,10 @@ export class GridGenerator {
             }
             this.unsetWord(backtrackWord);
         }
+       if ( ++currentWord.rollbackCount > MAX_WORD_ROLLBACKS) {
+            currentWord.rollbackCount = 0;
+            this.backjump(currentWord);
+       }
     }
 
     private getConstraints(word: Word): string {
