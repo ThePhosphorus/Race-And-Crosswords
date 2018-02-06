@@ -4,13 +4,15 @@ import {
     ObjectLoader,
     Audio,
     AudioLoader,
-    AudioBuffer
+    AudioBuffer,
+    AudioListener
 } from "three";
 
 @Injectable()
 export class SoundManagerService {
 
   constructor() { }
+  private _listener: AudioListener;
 
   private loadSounds(): void {
     const tmpIdle: Audio = this.idleSound = new Audio(this.cameraManager.listener);
@@ -25,14 +27,5 @@ export class SoundManagerService {
                     },
                     () => { },
                     () => { });
-    const accelLoader: AudioLoader = new AudioLoader();
-    accelLoader.load("../../assets/sounds/accel.ogg",
-                     (buffer: AudioBuffer) => {
-                        tmpAccel.setBuffer(buffer);
-                        tmpAccel.setLoop(false);
-                        tmpAccel.setVolume(0.5);
-                     },
-                     () => { },
-                     () => { });
-}
+    }
 }
