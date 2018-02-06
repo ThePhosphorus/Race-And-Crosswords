@@ -1,6 +1,7 @@
 import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 
 const MAX_TOTAL_ROLLBACKS: number = 10 ;
 const MAX_WORD_ROLLBACKS: number = 3;
@@ -8,92 +9,19 @@ const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/qu
 
 export class GridGenerator {
 
+    private emptyGridFactory: EmptyGridFactory;
     private crossword: CrosswordGrid;
     private notPlacedWords: Word[];
     private rollbackCount: number = 0;
 
     public async getNewGrid(difficulty: Difficulty, size: number, blackTileRatio: number): Promise<CrosswordGrid> {
-        this.crossword = new CrosswordGrid();
-        this.initializeGrid(size);
-        this.generateBlackTiles(blackTileRatio);
+        this.emptyGridFactory = new EmptyGridFactory(size, blackTileRatio);
+        this.crossword = this.emptyGridFactory.getNewGrid();
         this.initializeWords();
         await this.findWords(difficulty);
         this.cleanGrid();
 
         return this.crossword;
-    }
-
-    private initializeGrid(size: number): void {
-        this.crossword.size = size;
-        this.crossword.grid = new Array<Letter>(size * size);
-        for (let i: number = 0; i < size * size; i++) {
-            this.crossword.grid[i] = new Letter("", i);
-        }
-    }
-
-    private generateBlackTiles(blackTileRatio: number): void {
-        const maxBlackTile: number = this.crossword.size * this.crossword.size * blackTileRatio;
-        let generatedBlackTiles: number = 0; // this.generateBasicBlackTiles();
-        while (generatedBlackTiles < maxBlackTile) {
-            const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (this.isCorrectBlackTile(id) ) {
-                this.crossword.grid[id].isBlackTile = true;
-                if (this.isValidBlackTile(id)) {
-                    generatedBlackTiles++;
-                } else {
-                    this.crossword.grid[id].isBlackTile = false;
-                }
-
-            }
-        }
-    }
-
-    private isValidBlackTile(id: number): boolean {
-        const acrossLetter: Letter[] = [];
-        for (let i: number = id - (id % this.crossword.size); i < id + this.crossword.size - (id % this.crossword.size); i++) {
-            acrossLetter.push(this.crossword.grid[i]);
-        }
-        const downLetters: Letter[] = [];
-        for (let i: number = id % this.crossword.size; i < this.crossword.grid.length; i += this.crossword.size) {
-            downLetters.push(this.crossword.grid[i]);
-        }
-
-        return id >= this.crossword.size &&
-                id % this.crossword.size !== 0 &&
-                this.getNumberOfWordsInLine(acrossLetter) > 0 &&
-                this.getNumberOfWordsInLine(downLetters) > 0;
-    }
-
-    private isCorrectBlackTile(id: number): boolean {
-
-        if (this.crossword.grid[id].isBlackTile) {
-            return false;
-        }
-        if (id <= this.crossword.size || id % this.crossword.size === 0) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private getNumberOfWordsInLine(letters: Letter[]): number {
-        let numberOfWords: number = 0;
-        let numberOfLettersInCurrentWord: number = 0;
-        for (const letter of letters) {
-            if (letter.isBlackTile) {
-                if (numberOfLettersInCurrentWord >= MIN_WORD_LENGTH) {
-                    numberOfWords++;
-                }
-                numberOfLettersInCurrentWord = 0;
-            } else {
-                numberOfLettersInCurrentWord++;
-            }
-        }
-        if (numberOfLettersInCurrentWord >= MIN_WORD_LENGTH) {
-            numberOfWords++;
-        }
-
-        return numberOfWords;
     }
 
     private initializeWords(): void {
@@ -269,16 +197,8 @@ export class GridGenerator {
     }
 
     private nukeGrid(): void {
-        let blackTileCount: number = 0;
-        this.crossword.grid.forEach((letter: Letter) => {
-            letter.char = "";
-            letter.count = 0;
-            if (letter.isBlackTile) {
-                blackTileCount++;
-                letter.isBlackTile = false;
-            }
-        });
-        this.generateBlackTiles(blackTileCount / (this.crossword.size * this.crossword.size));
+
+        this.crossword = this.emptyGridFactory.getNewGrid();
         this.crossword.words = new Array<Word>();
         this.initializeWords();
         this.sortWords();
