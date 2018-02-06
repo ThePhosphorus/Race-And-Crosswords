@@ -5,6 +5,9 @@
 #hints td:hover {
     background-color: #e7e7e7;
 }
+#hints td{
+    text-align: left;
+}
 
 #grid  {
     border-collapse: collapse;
