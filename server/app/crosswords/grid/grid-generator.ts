@@ -3,7 +3,7 @@ import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const BT_SWITCH_FACTOR: number = 2;
-const MAX_ROLLBACKS: number = 30;
+const MAX_ROLLBACKS: number = 10 ;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -71,6 +71,7 @@ export class GridGenerator {
             acrossWord = new Word();
             downWord = new Word();
         }
+        this.notPlacedWords = this.notPlacedWords.reverse();
     }
 
     private initializeLetter(word: Word, tilePosition: number): Word {
@@ -108,7 +109,6 @@ export class GridGenerator {
 
     private async findWords(difficulty: Difficulty): Promise<void> {
 
-       // this.notPlacedWords = this.notPlacedWords.reverse();
         await this.findWord(this.notPlacedWords.pop(), difficulty);
 
         while (this.notPlacedWords.length > 0) {
