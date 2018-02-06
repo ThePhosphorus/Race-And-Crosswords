@@ -1,13 +1,19 @@
 import { Injectable } from "@angular/core";
 import { TrackRenderer } from "./track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { Vector2 } from "three";
+import { Vector2, Mesh } from "three";
+import * as C from "./track.constantes";
+
+const FIND_POINT_ERROR: number = -1;
 
 @Injectable()
 export class TrackGeneratorService {
     private _renderer: TrackRenderer;
+    private _points: Array<Mesh>;
+    private _selectedPoint: Mesh;
 
     public constructor(private cameraService: CameraManagerService) {
+        this._points = new Array<Mesh>();
      }
 
     public init(div: HTMLDivElement): void {
@@ -23,7 +29,25 @@ export class TrackGeneratorService {
     }
 
     public mouseEventclick(event: MouseEvent): void {
-        this._renderer.createDot(new Vector2(event.clientX, event.clientY));
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if ( possiblePointId !== FIND_POINT_ERROR) {
+            this.selectPoint(possiblePointId);
+            console.log("reselect : " + possiblePointId);
+        } else {
+            this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY)));
+        }
+
+    }
+
+    private findPointId(pos: Vector2): number {
+        for (let i: number = 0; i < this._points.length ; i++ ) {
+            const diff: number = this._renderer.getClientPosition(this._points[i].position).sub(pos).length();
+            if ( diff <= C.POINT_SELECT_DISTANCE ) {
+                return i;
+            }
+        }
+
+        return FIND_POINT_ERROR;
     }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
@@ -33,5 +57,18 @@ export class TrackGeneratorService {
 
     public onResize(): void {
         this._renderer.onResize();
+    }
+
+    public get points(): Mesh[] {
+        return this._points;
+    }
+
+    public selectPoint( pointId: number): void {
+        if (this._selectedPoint != null) {
+            this._selectedPoint.material = C.WHITE_MATERIAL;
+        }
+
+        this._selectedPoint = this._points[pointId];
+        this._selectedPoint.material = C.SELECTION_MATERIAL;
     }
 }
