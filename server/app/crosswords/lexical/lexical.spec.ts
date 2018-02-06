@@ -72,7 +72,7 @@ describe("Service Lexical", () => {
                         const defWords: string[] = definition.split(" ");
                         defWords.forEach( (defWord: string) => {
                             assert.notStrictEqual(defWord, wordStruct.word,
-                                                  "Definition \"" + definition + "\" contains the word \"" + wordStruct.word);
+                                                  "Definition \"" + definition + "\" contains the word \"" + wordStruct.word + "\"");
                         });
                     });
                     assert.notEqual(wordStruct.defs.length, 0, "Recieved no definition for the word : "  + wordStruct.word);
