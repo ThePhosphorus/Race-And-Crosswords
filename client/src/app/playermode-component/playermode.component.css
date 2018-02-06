@@ -55,7 +55,7 @@ p {
     .card {
 
         background-color: transparent;
-        border: solid grey;
+        border: solid  #212529;
     }
 
   #player{
@@ -67,10 +67,15 @@ p {
 #level{
     text-align: center;
 }
+
 #info{
-    border:darkgrey solid;
+    border:solid #212529;
     border-radius: 0.5vmax;
     background-color: darkgrey;
+    padding-right: 0.5vmax;
+}
+#nbPlayers{
+border-right:solid #212529 0.2vmax;
 
 }
 
