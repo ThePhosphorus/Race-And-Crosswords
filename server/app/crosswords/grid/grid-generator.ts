@@ -134,7 +134,6 @@ export class GridGenerator {
             if (receivedWord !== undefined && this.isUnique(receivedWord)) {
                 this.setWord(receivedWord, word, difficulty);
                 this.crossword.words.push(word);
-                this.displayGrid();
             } else {
                 this.backjump(word);
                 this.rollbackCount++;
@@ -238,20 +237,6 @@ export class GridGenerator {
                 tile.char = tile.char.normalize("NFD")[0];
             }
         }
-    }
-
-    private displayGrid(): void {
-        // Used for debugging puposes
-        /* let s: string = "";
-        for (let i: number = 0; i < this.crossword.size; i++) {
-            for (let j: number = 0; j < this.crossword.size; j++) {
-                const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
-                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
-            }
-            s += "\n";
-        }
-        console.log(s);
-        */
     }
 
 }
