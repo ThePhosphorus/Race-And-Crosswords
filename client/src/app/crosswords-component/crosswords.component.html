@@ -9,7 +9,7 @@
             </tr>
           </thead>
           <tr *ngFor="let item of acrossDefinitions; let i = index">
-            <td>{{i}}-{{item}}</td>
+            <td>{{Math.floor(i /grid.size)}}-{{item}}</td>
           </tr>
         </table>
       </div>
@@ -21,7 +21,8 @@
             </tr>
           </thead>
           <tr *ngFor="let item of downDefinitions;let j= index">
-            <td>{{i}}-{{item}}</td>
+            <td>{{j % grid.size}}--{{item}}
+            </td>
           </tr>
         </table>
       </div>
