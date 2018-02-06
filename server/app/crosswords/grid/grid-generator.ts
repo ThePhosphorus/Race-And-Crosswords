@@ -2,7 +2,6 @@ import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH }
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
-const BT_SWITCH_FACTOR: number = 2;
 const MAX_TOTAL_ROLLBACKS: number = 10 ;
 const MAX_WORD_ROLLBACKS: number = 3;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
@@ -34,28 +33,29 @@ export class GridGenerator {
 
     private generateBlackTiles(blackTileRatio: number): void {
         const maxBlackTile: number = this.crossword.size * this.crossword.size * blackTileRatio;
-        let generatedBlackTiles: number = this.generateBasicBlackTiles();
+        let generatedBlackTiles: number = 0; // this.generateBasicBlackTiles();
         while (generatedBlackTiles < maxBlackTile) {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (id > this.crossword.size && id % this.crossword.size !== 0 && !this.crossword.grid[id].isBlackTile) {
+            if (this.isCorrectBlackTile(id)) {
                 this.crossword.grid[id].isBlackTile = true;
                 generatedBlackTiles++;
             }
         }
 
     }
-    private generateBasicBlackTiles(): number {
-        let blackTileCount: number = 0;
-        for (let i: number = 1; i < this.crossword.size; i += BT_SWITCH_FACTOR) {
-            for (let j: number = 1; j < this.crossword.size; j += BT_SWITCH_FACTOR) {
-                    const id: number = j + (this.crossword.size * i);
-                    this.crossword.grid[id].isBlackTile = true;
-                    blackTileCount++;
-            }
+
+    private isCorrectBlackTile(id: number): boolean {
+
+        if (this.crossword.grid[id].isBlackTile) {
+            return false;
+        }
+        if (id <= this.crossword.size || id % this.crossword.size === 0) {
+            return false;
         }
 
-        return blackTileCount;
+        return true;
     }
+
     private initializeWords(): void {
         this.notPlacedWords = new Array<Word>();
         let acrossWord: Word = new Word();
@@ -134,12 +134,27 @@ export class GridGenerator {
             if (receivedWord !== undefined && this.isUnique(receivedWord)) {
                 this.setWord(receivedWord, word, difficulty);
                 this.crossword.words.push(word);
+                this.displayGrid();
             } else {
                 this.backjump(word);
                 this.rollbackCount++;
 
             }
         }
+    }
+
+    private displayGrid(): void {
+        // Used for debugging puposes
+        let s: string = "";
+        for (let i: number = 0; i < this.crossword.size; i++) {
+            for (let j: number = 0; j < this.crossword.size; j++) {
+                const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
+                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
+            }
+            s += "\n";
+        }
+        console.log(s);
+
     }
 
     private isUnique(word: DatamuseWord): boolean {
