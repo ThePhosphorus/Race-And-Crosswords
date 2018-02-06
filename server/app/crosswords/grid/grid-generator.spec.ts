@@ -16,12 +16,12 @@ gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: Crosswo
                 done();
             });
 
-            it("should give us a grid with no blackTiles in the first row and the first collumn ", (done: MochaDone) => {
+            it("should give us a grid with no blackTiles in the first row and the first column ", (done: MochaDone) => {
                 for (let i: number = 0; i < gridSize; i++) {
                     if (grid.grid[i].isBlackTile) {
                         assert.fail("Detected blackTile on the first row");
                     } else if (grid.grid[i * gridSize].isBlackTile) {
-                        assert.fail("Detected blackTile on the first collumn");
+                        assert.fail("Detected blackTile on the first column");
                     }
                 }
                 done();
@@ -39,7 +39,7 @@ gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: Crosswo
                 }
                 for (let i: number = 0; i < gridSize; i++) {
                     assert.ok(hasAcrossWord[i], "There is no word on row : " + i);
-                    assert.ok(hasDownWord[i], "There is no word on coloum : " + i);
+                    assert.ok(hasDownWord[i], "There is no word on column : " + i);
                 }
                 done();
             });
