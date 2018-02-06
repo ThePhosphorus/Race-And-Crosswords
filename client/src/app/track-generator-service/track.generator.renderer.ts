@@ -150,10 +150,12 @@ export class TrackRenderer {
         }
      }
 
-    public createDot(pos: Vector2): void {
+    public createDot(pos: Vector2): Mesh {
         const circle: Mesh =  new Mesh(SPHERE_GEOMETRY, SPHERE_MESH_MATERIAL);
         circle.position.copy(this.getRelativePosition(pos));
         this._scene.add(circle);
+
+        return circle;
      }
 
     private getRelativePosition(pos: Vector2): Vector3 {
