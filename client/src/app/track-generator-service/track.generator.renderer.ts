@@ -1,5 +1,16 @@
 import Stats = require("stats.js");
-import { WebGLRenderer, Scene, Vector3, GridHelper, Color, AmbientLight } from "three";
+import {
+    WebGLRenderer,
+    Scene,
+    Vector3,
+    GridHelper,
+    Color,
+    AmbientLight,
+    Vector2,
+    MeshBasicMaterial,
+    Mesh,
+    SphereGeometry
+} from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
 
@@ -16,6 +27,9 @@ const AMBIENT_LIGHT_OPACITY: number = 0.85;
 
 const MIN_ZOOM: number = 10;
 const MAX_ZOOM: number = 100;
+
+const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(5, 32, 32);
+const SPHERE_MESH_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: WHITE});
 
 export class TrackRenderer {
     private _stats: Stats;
@@ -132,4 +146,19 @@ export class TrackRenderer {
         }
      }
 
+    public createDot(pos: Vector2): void {
+        const circle: Mesh =  new Mesh(SPHERE_GEOMETRY, SPHERE_MESH_MATERIAL);
+        circle.position.copy(this.getRelativePosition(pos));
+        this._scene.add(circle);
+     }
+
+    private getRelativePosition(pos: Vector2): Vector3 {
+        const htmlElem: HTMLCanvasElement = this._renderer.domElement;
+        console.log(htmlElem.offsetTop);
+        return new Vector3(
+            pos.x - htmlElem.offsetLeft - htmlElem.clientWidth / 2,
+            0,
+            pos.y - htmlElem.offsetTop - htmlElem.clientHeight / 2
+        );
+    }
 }

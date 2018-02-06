@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TrackRenderer } from "./track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { Vector2 } from "three";
 
 @Injectable()
 export class TrackGeneratorService {
@@ -22,8 +23,7 @@ export class TrackGeneratorService {
     }
 
     public mouseEventclick(event: MouseEvent): void {
-        console.log("mouseEventClick : ");
-        console.log(event);
+        this._renderer.createDot(new Vector2(event.clientX, event.clientY));
     }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
@@ -32,6 +32,6 @@ export class TrackGeneratorService {
     }
 
     public onResize(): void {
-        console.log("onResize : ");
+        this._renderer.onResize();
     }
 }
