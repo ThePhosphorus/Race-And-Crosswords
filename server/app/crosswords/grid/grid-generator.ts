@@ -106,7 +106,7 @@ export class GridGenerator {
 
     private async findWords(difficulty: Difficulty): Promise<void> {
 
-         while (this.notPlacedWords.length > 0) {
+         for(let i: number =0; i< 2; i++){
             if (this.rollbackCount > MAX_ROLLBACKS) {
                 this.nukeGrid();
                 this.rollbackCount = 0;

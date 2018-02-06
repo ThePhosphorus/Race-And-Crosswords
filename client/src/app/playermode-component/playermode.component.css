@@ -52,11 +52,7 @@ p {
     background-color: transparent;
     box-shadow:unset;
 }
-.card {
 
-    background-color: transparent;
-    border: solid  #212529;
-}
 .card th{
     font-weight: lighter;
 }
@@ -82,6 +78,9 @@ p {
 border-right:solid #212529 0.2vmax;
 }
 
+.table{
+     border: solid  #212529 0.2vmax;
+    }
 
 
 
