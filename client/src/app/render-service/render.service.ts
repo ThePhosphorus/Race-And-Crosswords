@@ -3,7 +3,7 @@ import Stats = require("stats.js");
 import { WebGLRenderer, Scene, AmbientLight, GridHelper, Color } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { SoundManagerService } from "../sound-manager.service";
+import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 
 const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
