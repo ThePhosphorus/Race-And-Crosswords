@@ -1,15 +1,15 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject } from "@angular/core/testing";
 
-import { Track.GeneratorService } from './track.generator.service';
+import { TrackGeneratorService } from "./track.generator.service";
 
-describe('Track.GeneratorService', () => {
+describe("TrackGeneratorService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [Track.GeneratorService]
+      providers: [TrackGeneratorService]
     });
   });
 
-  it('should be created', inject([Track.GeneratorService], (service: Track.GeneratorService) => {
+  it("should be created", inject([TrackGeneratorService], (service: TrackGeneratorService) => {
     expect(service).toBeTruthy();
   }));
 });
