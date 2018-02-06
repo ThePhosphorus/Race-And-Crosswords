@@ -27,7 +27,7 @@ describe("Service Lexical", () => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
 
                 words.forEach((wordStruct: DatamuseWord) => {
-                    assert.strictEqual(wordStruct.word.length, testString.length, "Did not recieve the right length");
+                    assert.strictEqual(wordStruct.word.length, testString.length, "Did not receive the right length");
                 });
                 done();
             });
@@ -44,7 +44,7 @@ describe("Service Lexical", () => {
                             assert.strictEqual(wordStruct.word.charAt(i), testString.charAt(i), "Letter criteria is not respected.");
                         }
                     }
-                    assert.strictEqual(wordStruct.word.length, testString.length, "Did not recieve the right length");
+                    assert.strictEqual(wordStruct.word.length, testString.length, "Did not receive the right length");
                 });
                 done();
             });
@@ -56,7 +56,7 @@ describe("Service Lexical", () => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
 
                 words.forEach((wordStruct: DatamuseWord) => {
-                    assert.notEqual(wordStruct.defs.length, 0, "Recieved no definition for the word : "  + wordStruct.word);
+                    assert.notEqual(wordStruct.defs.length, 0, "received no definition for the word : "  + wordStruct.word);
                 });
                 done();
              });
@@ -75,7 +75,7 @@ describe("Service Lexical", () => {
                                                   "Definition \"" + definition + "\" contains the word \"" + wordStruct.word + "\"");
                         });
                     });
-                    assert.notEqual(wordStruct.defs.length, 0, "Recieved no definition for the word : "  + wordStruct.word);
+                    assert.notEqual(wordStruct.defs.length, 0, "Received no definition for the word : "  + wordStruct.word);
                 });
                 done();
             });
