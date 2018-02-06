@@ -2,11 +2,14 @@ import { TestBed, inject } from "@angular/core/testing";
 
 import { CrosswordService } from "./crossword.service";
 import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
+import { HttpClientModule } from "@angular/common/http/";
 
 describe("CrosswordService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CrosswordService]
+        imports: [HttpClientModule],
+        providers: [CrosswordService, CrosswordCommunicationService]
     });
   });
 
