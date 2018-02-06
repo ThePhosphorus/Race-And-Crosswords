@@ -241,7 +241,8 @@ export class GridGenerator {
     }
 
     private displayGrid(): void {
-        let s: string = "";
+        // Used for debugging puposes
+        /* let s: string = "";
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
                 const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
@@ -250,6 +251,7 @@ export class GridGenerator {
             s += "\n";
         }
         console.log(s);
+        */
     }
 
 }
