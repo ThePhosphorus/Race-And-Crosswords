@@ -48,11 +48,9 @@ export class GridGenerator {
         let blackTileCount: number = 0;
         for (let i: number = 1; i < this.crossword.size; i += BT_SWITCH_FACTOR) {
             for (let j: number = 1; j < this.crossword.size; j += BT_SWITCH_FACTOR) {
-               if (i !== j) {
                     const id: number = j + (this.crossword.size * i);
                     this.crossword.grid[id].isBlackTile = true;
                     blackTileCount++;
-               }
             }
         }
 
@@ -114,10 +112,6 @@ export class GridGenerator {
 
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_TOTAL_ROLLBACKS) {
-                // for (let index: number = 0; index < 100; index++) {
-                  //  console.error("NUKENUKENUKENUKE");
-
-                // }
                 this.nukeGrid();
                 this.rollbackCount = 0;
             }
