@@ -3,8 +3,8 @@ import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const BT_SWITCH_FACTOR: number = 2;
-const MAX_TOTAL_ROLLBACKS: number = 12 ;
-const MAX_WORD_ROLLBACKS: number = 2;
+const MAX_TOTAL_ROLLBACKS: number = 10 ;
+const MAX_WORD_ROLLBACKS: number = 3;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -48,11 +48,11 @@ export class GridGenerator {
         let blackTileCount: number = 0;
         for (let i: number = 1; i < this.crossword.size; i += BT_SWITCH_FACTOR) {
             for (let j: number = 1; j < this.crossword.size; j += BT_SWITCH_FACTOR) {
-                if (i !== j) {
+               if (i !== j) {
                     const id: number = j + (this.crossword.size * i);
                     this.crossword.grid[id].isBlackTile = true;
                     blackTileCount++;
-                }
+               }
             }
         }
 
