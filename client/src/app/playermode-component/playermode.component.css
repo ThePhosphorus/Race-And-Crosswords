@@ -1,0 +1,87 @@
+.easy {
+    color: green;
+}
+
+.medium {
+    color: rgb(160, 117, 0);
+}
+
+.hard {
+    color: rgb(126, 0, 0);
+}
+
+.container .col {
+    font-size: 100%;
+    font-weight:lighter;
+
+
+}
+.container {
+    vertical-align:bottom;
+    text-align:match-parent;
+
+}
+.btn {
+    border: solid darkgrey;
+    background-color: transparent;
+    box-shadow: transparent;
+    font-weight: lighter;
+    padding-top:unset;
+}
+.btn:hover{
+
+color:steelblue;
+}
+
+p {
+    margin-top: 0.2vmax;
+    margin-bottom: 0%
+}
+
+.btn:hover {
+    background-color: transparent;
+    box-shadow: transparent;
+}
+
+.btn:active {
+    background-color: transparent;
+    box-shadow:transparent;
+}
+
+.btn:focus {
+    background-color: transparent;
+    box-shadow:unset;
+}
+
+.card th{
+    font-weight: lighter;
+}
+
+  #player{
+    text-align: left;
+  }
+  #result{
+    text-align: right;
+  }
+#level{
+    text-align: center;
+}
+
+
+#info{
+    border:solid #212529;
+    border-radius: 0.5vmax;
+    background-color: darkgrey;
+    padding-right: 0.5vmax;
+}
+#nbPlayers{
+border-right:solid #212529 0.2vmax;
+}
+
+.table{
+     border: solid  #212529 0.2vmax;
+    }
+
+
+
+
