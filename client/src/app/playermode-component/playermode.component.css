@@ -57,6 +57,9 @@ p {
     background-color: transparent;
     border: solid  #212529;
 }
+.card th{
+    font-weight: lighter;
+}
 
   #player{
     text-align: left;

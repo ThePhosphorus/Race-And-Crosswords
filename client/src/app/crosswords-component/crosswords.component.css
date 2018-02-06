@@ -5,6 +5,11 @@
 #hints td:hover {
     background-color: #e7e7e7;
 }
+#hints th{
+    font-weight: lighter;
+
+}
+
 #hints td{
     text-align: left;
 }
