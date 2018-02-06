@@ -3,6 +3,7 @@ import Stats = require("stats.js");
 import { WebGLRenderer, Scene, AmbientLight, GridHelper, Color } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { SoundManagerService } from "../sound-manager.service";
 
 const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
@@ -23,7 +24,10 @@ export class RenderService {
     private gridHelper: GridHelper;
     private _carInfos: CarInfos;
 
-    public constructor(private cameraManager: CameraManagerService) {
+    public constructor(
+        private cameraManager: CameraManagerService,
+        private soundManager: SoundManagerService
+    ) {
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
      }
