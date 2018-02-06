@@ -3,8 +3,8 @@ import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 
-const MAX_TOTAL_ROLLBACKS: number = 10 ;
-const MAX_WORD_ROLLBACKS: number = 3;
+const MAX_TOTAL_ROLLBACKS: number = 15 ;
+const MAX_WORD_ROLLBACKS: number = 4;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
@@ -64,7 +64,14 @@ export class GridGenerator {
         return weight;
     }
     private sortWords(): void {
-        this.notPlacedWords = this.notPlacedWords.sort((w1: Word, w2: Word) => this.getWordWeight(w1) - this.getWordWeight(w2));
+        this.notPlacedWords = this.notPlacedWords.sort((w1: Word, w2: Word) => {
+            const difference: number = this.getWordWeight(w1) - this.getWordWeight(w2);
+            if (difference !== 0) {
+                return difference;
+            } else {
+                return w1.letters.length - w2.letters.length;
+            }
+        });
     }
 
     private addWord(word: Word, orientation: Orientation): void {
@@ -201,7 +208,6 @@ export class GridGenerator {
         this.crossword = this.emptyGridFactory.getNewGrid();
         this.crossword.words = new Array<Word>();
         this.initializeWords();
-        this.sortWords();
     }
 
     private cleanGrid(): void {
