@@ -19,7 +19,6 @@ export class GridGenerator {
         this.initializeWords();
         await this.findWords(difficulty);
         // this.cleanGrid();
-        this.displayGrid();
 
         return this.crossword;
     }
@@ -64,32 +63,28 @@ export class GridGenerator {
         let downWord: Word = new Word();
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
-                // ACROSS
-                if (!this.crossword.grid[(this.crossword.size * i) + j].isBlackTile) {
-                    if (acrossWord.letters.length === 0) {
-                        acrossWord.id = (this.crossword.size * i) + j;
-                    }
-                    acrossWord.letters.push(this.crossword.grid[(this.crossword.size * i) + j]);
-                } else { // IF BLACK TILE
-                    this.addWord(acrossWord, Orientation.Across);
-                    acrossWord = new Word();
-                }
-                // DOWN
-                if (!this.crossword.grid[(this.crossword.size * j) + i].isBlackTile) {
-                    if (downWord.letters.length === 0) {
-                        downWord.id = (this.crossword.size * j) + i;
-                    }
-                    downWord.letters.push(this.crossword.grid[(this.crossword.size * j) + i]);
-                } else {
-                    this.addWord(downWord, Orientation.Down);
-                    downWord = new Word();
-                }
+                acrossWord = this.initializeLetter(acrossWord, (this.crossword.size * i) + j);
+                downWord = this.initializeLetter(downWord, (this.crossword.size * j) + i);
             }
             this.addWord(acrossWord, Orientation.Across);
             this.addWord(downWord, Orientation.Down);
             acrossWord = new Word();
             downWord = new Word();
         }
+    }
+
+    private initializeLetter(word: Word, tilePosition: number): Word {
+        if (!this.crossword.grid[tilePosition].isBlackTile) {
+            if (word.letters.length === 0) {
+                word.id = tilePosition;
+            }
+            word.letters.push(this.crossword.grid[tilePosition]);
+        } else { // IF BLACK TILE
+            this.addWord(word, Orientation.Across);
+            word = new Word();
+        }
+
+        return word;
     }
 
     private getWordWeight(word: Word): number {
@@ -113,18 +108,23 @@ export class GridGenerator {
 
     private async findWords(difficulty: Difficulty): Promise<void> {
 
-        this.notPlacedWords = this.notPlacedWords.reverse();
+       // this.notPlacedWords = this.notPlacedWords.reverse();
         await this.findWord(this.notPlacedWords.pop(), difficulty);
-
+/*
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_ROLLBACKS) {
-               // this.nukeGrid();
+                //for (let index: number = 0; index < 100; index++) {
+                  //  console.error("NUKENUKENUKENUKE");
+
+                //}
+                this.nukeGrid();
                 this.rollbackCount = 0;
             }
 
             await this.findWord(this.notPlacedWords.pop(), difficulty);
             this.sortWords();
         }
+        */
     }
 
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
@@ -139,7 +139,7 @@ export class GridGenerator {
             if (receivedWord !== undefined && this.isUnique(receivedWord)) {
                 this.setWord(receivedWord, word, difficulty);
                 this.crossword.words.push(word);
-                this.displayGrid();
+                // this.displayGrid();
             } else {
                 this.backjump(word);
                 this.rollbackCount++;
@@ -189,13 +189,11 @@ export class GridGenerator {
             }
         }
     }
-
     private backjump(currentWord: Word): void {
         this.notPlacedWords.push(currentWord);
         let isProblemWord: boolean = false;
         while (!isProblemWord && this.crossword.words.length > 0) {
             const backtrackWord: Word = this.crossword.words.pop();
-            // console.log(backtrackWord);
             this.notPlacedWords.push(backtrackWord);
             for (const newLetter of backtrackWord.letters) {
                 for (const currentLetter of currentWord.letters) {
