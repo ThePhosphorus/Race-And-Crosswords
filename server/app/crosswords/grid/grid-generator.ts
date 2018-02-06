@@ -18,7 +18,7 @@ export class GridGenerator {
         this.generateBlackTiles(blackTileRatio);
         this.initializeWords();
         await this.findWords(difficulty);
-        // this.cleanGrid();
+        this.cleanGrid();
 
         return this.crossword;
     }
@@ -110,13 +110,13 @@ export class GridGenerator {
 
        // this.notPlacedWords = this.notPlacedWords.reverse();
         await this.findWord(this.notPlacedWords.pop(), difficulty);
-/*
+
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_ROLLBACKS) {
-                //for (let index: number = 0; index < 100; index++) {
+                // for (let index: number = 0; index < 100; index++) {
                   //  console.error("NUKENUKENUKENUKE");
 
-                //}
+                // }
                 this.nukeGrid();
                 this.rollbackCount = 0;
             }
@@ -124,7 +124,7 @@ export class GridGenerator {
             await this.findWord(this.notPlacedWords.pop(), difficulty);
             this.sortWords();
         }
-        */
+
     }
 
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
