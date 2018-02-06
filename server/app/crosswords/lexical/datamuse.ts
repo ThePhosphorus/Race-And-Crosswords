@@ -15,6 +15,17 @@ export class Datamuse {
         words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD)
                      .filter((w: DatamuseWord) => w.defs !== undefined);
 
+        let filteredDefinitions: string[];
+        words.forEach((wordStruct: DatamuseWord) => {
+            filteredDefinitions = [];
+            wordStruct.defs.forEach((definition: string) => {
+                if (definition.search(wordStruct.word) === -1) {
+                    filteredDefinitions.push(definition);
+                }
+            });
+            wordStruct.defs = filteredDefinitions;
+        });
+
         return JSON.stringify(words);
     }
 
