@@ -105,6 +105,8 @@ export class RenderService {
             this._car.direction
         );
         this.cameraManager.update(timeSinceLastFrame);
+        this.soundManager.calculatePlaybackSpeed(this._carInfos.rpm);
+        this.soundManager.playSounds();
         this.lastDate = Date.now();
         this.updateCarInfos();
      }

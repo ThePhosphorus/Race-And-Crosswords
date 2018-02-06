@@ -35,7 +35,7 @@ export class SoundManagerService {
         return 1;
     }
     public playSounds(): void{
-
+        this.engineLoop.play();
     }
 
 }
