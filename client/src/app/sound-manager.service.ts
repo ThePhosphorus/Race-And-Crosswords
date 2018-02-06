@@ -11,7 +11,10 @@ import {
 @Injectable()
 export class SoundManagerService {
 
-  constructor() { }
+  constructor() {
+      this._listener = new AudioListener();
+   }
+
   private _listener: AudioListener;
 
   private loadSounds(): void {
