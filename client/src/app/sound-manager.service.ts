@@ -12,14 +12,12 @@ import {
 export class SoundManagerService {
 
   constructor() {
-      this._listener = new AudioListener();
    }
 
-  private _listener: AudioListener;
+  private idleSound: Audio;
 
   private loadSounds(): void {
     const tmpIdle: Audio = this.idleSound = new Audio(this.cameraManager.listener);
-    const tmpAccel: Audio = this.accelSound = new Audio(this.cameraManager.listener);
 
     const idleLoader: AudioLoader = new AudioLoader();
     idleLoader.load("../../assets/sounds/idle.ogg",
