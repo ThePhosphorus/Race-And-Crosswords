@@ -1,11 +1,8 @@
 import { Injectable } from "@angular/core";
 import {
-    Object3D,
-    ObjectLoader,
     Audio,
     AudioLoader,
     AudioBuffer,
-    AudioListener
 } from "three";
 import { CameraManagerService } from "./../camera-manager-service/camera-manager.service";
 
@@ -35,7 +32,7 @@ export class SoundManagerService {
         return 1;
     }
     public playSounds(): void{
-        this.engineLoop.play();
+        //this.engineLoop.play();
     }
 
 }
