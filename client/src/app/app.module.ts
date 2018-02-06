@@ -10,6 +10,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,8 @@ import { HomePageComponent } from "./home-page/home-page.component";
         GameComponent,
         CrosswordsComponent,
         PlayermodeComponent,
-        HomePageComponent
+        HomePageComponent,
+        AdminComponent
     ],
     imports: [
         BrowserModule,
