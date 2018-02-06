@@ -41,8 +41,4 @@ export class TrackEditorComponent implements AfterViewInit {
         this.trackGen.mouseEventReleaseClick(event);
     }
 
-    public onHover(event: MouseEvent): void {
-        this.trackGen.mouseEventHover(event);
-    }
-
 }

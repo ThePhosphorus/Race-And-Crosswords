@@ -23,11 +23,6 @@ export class TrackGeneratorService {
         console.log(event);
     }
 
-    public mouseEventHover(event: MouseEvent): void {
-        console.log("mouseEventHover : ");
-        console.log(event);
-    }
-
     public mouseEventclick(event: MouseEvent): void {
         console.log("mouseEventClick : ");
         console.log(event);
