@@ -21,6 +21,16 @@ export enum CameraType {
     Persp
 }
 
+export class ZoomLimit {
+    public min: number;
+    public max: number;
+
+    public constructor(min?: number, max?: number) {
+        this.min = (min) ? min : MINIMAL_ZOOM;
+        this.max = (max) ? max : MAXIMAL_ZOOM;
+    }
+}
+
 @Injectable()
 export class CameraManagerService {
 
@@ -33,14 +43,24 @@ export class CameraManagerService {
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
     private zoom: number;
+    private _zoomLimits: ZoomLimit;
 
     public constructor() {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
         this.aspectRatio = STARTING_ASPECTRATIO;
+        this.zoomLimits = new ZoomLimit();
         this.init();
      }
+
+    public set zoomLimits(limits: ZoomLimit) {
+        this._zoomLimits = limits;
+    }
+
+    public get zoomLimits(): ZoomLimit {
+        return this._zoomLimits;
+    }
 
     public init(): void {
         this.zoom = 0;
@@ -121,6 +141,18 @@ export class CameraManagerService {
         this.zoom = zoom;
     }
 
+    public zoomIn(): void {
+        this.zoomFactor = 1;
+    }
+
+    public zoomOut(): void {
+        this.zoomFactor = -1;
+    }
+
+    public zoomRelease(): void {
+        this.zoomFactor = 0;
+    }
+
     public get position(): Vector3 {
         switch (this.type) {
             case CameraType.Ortho:
@@ -153,7 +185,8 @@ export class CameraManagerService {
     }
 
     private updateCameraPostion(deltaTime: number): void {
-        if ((this.zoom > 0 && this.cameraDistance > MINIMAL_ZOOM) || (this.zoom < 0 && this.cameraDistance < MAXIMAL_ZOOM)) {
+        if ((this.zoom > 0 && this.cameraDistance > this.zoomLimits.min) ||
+         (this.zoom < 0 && this.cameraDistance < this.zoomLimits.max)) {
             this.cameraDistance -= this.zoom * ZOOM_FACTOR;
         }
         switch (this.type) {
@@ -169,7 +202,6 @@ export class CameraManagerService {
             default:
                 break;
         }
-
     }
 
     private calcPosPerspCamera(): Vector3 {
