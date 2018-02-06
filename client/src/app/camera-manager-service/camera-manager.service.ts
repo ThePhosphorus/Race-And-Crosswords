@@ -21,6 +21,16 @@ export enum CameraType {
     Persp
 }
 
+export class ZoomLimit {
+    public min: number;
+    public max: number;
+
+    public constructor(min?: number, max?: number) {
+        this.min = (min) ? min : MINIMAL_ZOOM;
+        this.max = (max) ? max : MAXIMAL_ZOOM;
+    }
+}
+
 @Injectable()
 export class CameraManagerService {
 
@@ -33,16 +43,24 @@ export class CameraManagerService {
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
     private zoom: number;
-    private zoomLimits: {min: number, max: number};
+    private _zoomLimits: ZoomLimit;
 
-    public constructor(zoomLimits?: {min: number, max: number}) {
+    public constructor() {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
         this.aspectRatio = STARTING_ASPECTRATIO;
-        this.zoomLimits = (zoomLimits) ? zoomLimits : {min : MINIMAL_ZOOM, max : MAXIMAL_ZOOM};
+        this.zoomLimits = new ZoomLimit();
         this.init();
      }
+
+    public set zoomLimits(limits: ZoomLimit) {
+        this._zoomLimits = limits;
+    }
+
+    public get zoomLimits(): ZoomLimit {
+        return this._zoomLimits;
+    }
 
     public init(): void {
         this.zoom = 0;
