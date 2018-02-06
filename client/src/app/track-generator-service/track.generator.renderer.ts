@@ -51,7 +51,7 @@ export class TrackRenderer {
         this.createScene();
         this.startRenderingLoop();
 
-    }
+     }
 
     private initStats(): void {
         this._stats = new Stats();
@@ -176,5 +176,5 @@ export class TrackRenderer {
             0,
             clientClickPos.y * cameraClientRatio.y
         );
-    }
+     }
 }
