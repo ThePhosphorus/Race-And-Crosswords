@@ -75,6 +75,7 @@ export class TrackRenderer {
         this._scene.add(this._gridHelper);
         this._scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
         this.cameraManager.onResize(this.getAspectRatio());
+        this.cameraManager.cameraDistanceToCar = STARTING_CAMERA_HEIGHT;
      }
 
     private getAspectRatio(): number {
@@ -112,7 +113,7 @@ export class TrackRenderer {
             default:
                 break;
         }
-    }
+     }
 
     public InputKeyUp(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -125,6 +126,6 @@ export class TrackRenderer {
             default:
                 break;
         }
-    }
+     }
 
 }
