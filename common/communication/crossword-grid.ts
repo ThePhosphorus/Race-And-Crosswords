@@ -15,10 +15,14 @@ export class Letter {
     char: string;
     isBlackTile: boolean;
     count: number =0;
+    id: number;
 
-    constructor(char?:string) {
+    constructor(char?:string, id?:number) {
         if(char !== undefined) {
             this.char = char;
+        }
+        if(id !== undefined) {
+            this.id = id;
         }
         this.isBlackTile = false;
     }
@@ -29,6 +33,7 @@ export class Word {
     public letters: Letter[];
     public definitions: string[];
     public orientation: Orientation;
+    public rollbackCount: number = 0 ;
 
     constructor() {
         this.id = -1;

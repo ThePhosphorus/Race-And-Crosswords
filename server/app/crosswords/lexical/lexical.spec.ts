@@ -62,7 +62,7 @@ describe("Service Lexical", () => {
              });
          });
 
-        it("should have defenitions that don't containt the word itself", (done: MochaDone) => {
+        it("should have definitions that don't containt the word itself", (done: MochaDone) => {
             const testString: string = "????";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
@@ -72,7 +72,7 @@ describe("Service Lexical", () => {
                         const defWords: string[] = definition.split(" ");
                         defWords.forEach( (defWord: string) => {
                             assert.notStrictEqual(defWord, wordStruct.word,
-                                                  "Definition \"" + definition + "\" contains the word \"" + wordStruct.word);
+                                                  "Definition \"" + definition + "\" contains the word \"" + wordStruct.word + "\"");
                         });
                     });
                     assert.notEqual(wordStruct.defs.length, 0, "Recieved no definition for the word : "  + wordStruct.word);
