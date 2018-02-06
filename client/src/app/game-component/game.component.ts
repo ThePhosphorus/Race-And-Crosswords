@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild, HostListener } from "@
 import { RenderService, CarInfos } from "../render-service/render.service";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { SoundManagerService } from "../sound-manager.service";
 
 @Component({
     moduleId: module.id,
@@ -11,7 +12,8 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
     providers: [
         InputManagerService,
         RenderService,
-        CameraManagerService
+        CameraManagerService,
+        SoundManagerService
             ]
 })
 
