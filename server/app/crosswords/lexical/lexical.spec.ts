@@ -75,7 +75,7 @@ describe("Service Lexical", () => {
                                                   "Definition \"" + definition + "\" contains the word \"" + wordStruct.word + "\"");
                         });
                     });
-                    assert.notEqual(wordStruct.defs.length, 0, "Recieved no definition for the word : "  + wordStruct.word);
+                    assert.notEqual(wordStruct.defs.length, 0, "Received no definition for the word : "  + wordStruct.word);
                 });
                 done();
             });

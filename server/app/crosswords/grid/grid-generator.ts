@@ -62,8 +62,8 @@ export class GridGenerator {
         let downWord: Word = new Word();
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
-                acrossWord = this.initializeLetter(acrossWord, (this.crossword.size * i) + j);
-                downWord = this.initializeLetter(downWord, (this.crossword.size * j) + i);
+                acrossWord = this.initializeLetter(acrossWord, (this.crossword.size * i) + j, Orientation.Across);
+                downWord = this.initializeLetter(downWord, (this.crossword.size * j) + i, Orientation.Down);
             }
             this.addWord(acrossWord, Orientation.Across);
             this.addWord(downWord, Orientation.Down);
@@ -73,14 +73,14 @@ export class GridGenerator {
         this.notPlacedWords = this.notPlacedWords.reverse();
     }
 
-    private initializeLetter(word: Word, tilePosition: number): Word {
+    private initializeLetter(word: Word, tilePosition: number, orientation: Orientation): Word {
         if (!this.crossword.grid[tilePosition].isBlackTile) {
             if (word.letters.length === 0) {
                 word.id = tilePosition;
             }
             word.letters.push(this.crossword.grid[tilePosition]);
         } else { // IF BLACK TILE
-            this.addWord(word, Orientation.Across);
+            this.addWord(word, orientation);
             word = new Word();
         }
 
