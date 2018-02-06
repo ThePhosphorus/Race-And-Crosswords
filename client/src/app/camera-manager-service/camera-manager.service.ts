@@ -64,7 +64,6 @@ export class CameraManagerService {
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
-
         this.persp.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this.persp.lookAt(this.carInfos.position);
         this.ortho.position.set(
@@ -73,6 +72,8 @@ export class CameraManagerService {
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
+        this.ortho.add(this.audioListener);
+        this.persp.add(this.audioListener);
     }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
