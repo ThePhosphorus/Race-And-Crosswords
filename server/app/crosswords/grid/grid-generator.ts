@@ -1,4 +1,4 @@
-import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
+import { Word, CrosswordGrid, Letter, Difficulty} from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";

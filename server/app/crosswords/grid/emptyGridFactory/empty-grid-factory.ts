@@ -1,7 +1,7 @@
-import {Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
+import { Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
 import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
 
-const COMPLEXITY_THRESHOLD: number = 30;
+const COMPLEXITY_THRESHOLD: number = 20;
 
 export class EmptyGridFactory {
 
@@ -16,8 +16,7 @@ export class EmptyGridFactory {
             this.initializeGrid(this.size);
             this.generateBlackTiles(this.blackTileRatio);
             complexity = this.getComplexity();
-            console.log(complexity);
-        } while ( complexity > COMPLEXITY_THRESHOLD);
+        } while (complexity > COMPLEXITY_THRESHOLD);
 
         return this.crossword;
     }
@@ -31,20 +30,20 @@ export class EmptyGridFactory {
     }
 
     private generateBlackTiles(blackTileRatio: number): void {
-        const maxBlackTile: number = this.crossword.size * this.crossword.size * blackTileRatio;
-        let generatedBlackTiles: number = 0; // this.generateBasicBlackTiles();
-        while (generatedBlackTiles < maxBlackTile) {
+        let complexity: number;
+        let tileCount: number = 0;
+        do {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
             if (this.isCorrectBlackTile(id)) {
                 this.crossword.grid[id].isBlackTile = true;
-                if (this.isValidBlackTile(id)) {
-                    generatedBlackTiles++;
-                } else {
+                tileCount++;
+                if (!this.isValidBlackTile(id)) {
                     this.crossword.grid[id].isBlackTile = false;
                 }
-
             }
-        }
+            complexity = this.getComplexity();
+            console.log(complexity);
+        } while (complexity > COMPLEXITY_THRESHOLD && tileCount < this.crossword.grid.length);
     }
 
     private isValidBlackTile(id: number): boolean {
@@ -112,11 +111,18 @@ export class EmptyGridFactory {
     private isInAWord(tileId: number, orientation: Orientation): boolean {
         const increment: number = orientation === Orientation.Across ? 1 : this.crossword.size;
 
-        if (tileId + increment < this.crossword.grid.length && !this.crossword.grid[tileId + increment].isBlackTile) {
-            return true;
+        if (!(orientation === Orientation.Across &&
+            this.crossword.getColumn[tileId] === this.crossword.size - 1)) { // The first if is to prevent overflow to next row
+            if (tileId + increment < this.crossword.grid.length &&
+                !this.crossword.grid[tileId + increment].isBlackTile) {
+                return true;
+            }
         }
-        if (tileId - increment >= 0 && !this.crossword.grid[tileId - increment].isBlackTile) {
-            return true;
+        if (!(orientation === Orientation.Across &&
+            this.crossword.getColumn[tileId] === 0)) { // The first if is to prevent underflow to previous row
+            if (tileId - increment >= 0 && !this.crossword.grid[tileId - increment].isBlackTile) {
+                return true;
+            }
         }
 
         return false;
