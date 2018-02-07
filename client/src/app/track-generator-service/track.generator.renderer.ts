@@ -9,11 +9,14 @@ import {
     Vector2,
     Mesh,
     Geometry,
-    Line
+    Line,
+    Object3D
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
+
+const LINE_STR_PREFIX: string = "Line to ";
 
 const MIN_ZOOM: number = 10;
 const MAX_ZOOM: number = 100;
@@ -143,6 +146,7 @@ export class TrackRenderer {
             lineG.vertices.push(circle.position);
             lineG.vertices.push(topMesh);
             const line: Line = new Line(lineG);
+            line.name = LINE_STR_PREFIX + circle.id;
             this._scene.add(line);
         }
         this._scene.add(circle);
@@ -188,8 +192,10 @@ export class TrackRenderer {
         );
      }
 
-    public removeObject(obj: Mesh): void {
+    public removeObject(obj: Mesh, before?: Vector3, after?: Vector3): void {
         const id: number = obj.id;
         this._scene.remove(this._scene.getObjectById(id));
+        const line: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + id);
+        this._scene.remove(line);
      }
 }
