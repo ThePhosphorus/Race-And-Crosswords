@@ -7,7 +7,9 @@ import {
     Color,
     AmbientLight,
     Vector2,
-    Mesh
+    Mesh,
+    Geometry,
+    Line
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
@@ -34,7 +36,6 @@ export class TrackRenderer {
         this.initStats();
         this.createScene();
         this.startRenderingLoop();
-
      }
 
     private initStats(): void {
@@ -134,9 +135,16 @@ export class TrackRenderer {
         }
      }
 
-    public createDot(pos: Vector2): Mesh {
+    public createDot(pos: Vector2, topMesh: Vector3): Mesh {
         const circle: Mesh =  new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
         circle.position.copy(this.getRelativePosition(pos));
+        if (topMesh) {
+            const lineG: Geometry = new Geometry();
+            lineG.vertices.push(circle.position);
+            lineG.vertices.push(topMesh);
+            const line: Line = new Line(lineG);
+            this._scene.add(line);
+        }
         this._scene.add(circle);
 
         return circle;
