@@ -88,7 +88,7 @@ export class TrackGeneratorService {
      }
 
     public removePoint(index: number): void {
-        this._renderer.removeObject(this._points[index]);
+        this._renderer.removeObject(this._points[index], this._points[index - 1], this._points[index + 1 ]);
         this._points.splice(index, 1);
      }
 

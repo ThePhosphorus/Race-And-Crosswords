@@ -141,14 +141,7 @@ export class TrackRenderer {
     public createDot(pos: Vector2, topMesh: Vector3): Mesh {
         const circle: Mesh =  new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
         circle.position.copy(this.getRelativePosition(pos));
-        if (topMesh) {
-            const lineG: Geometry = new Geometry();
-            lineG.vertices.push(circle.position);
-            lineG.vertices.push(topMesh);
-            const line: Line = new Line(lineG);
-            line.name = LINE_STR_PREFIX + circle.id;
-            this._scene.add(line);
-        }
+        if (topMesh) { this.createLine(topMesh, circle.position, circle.id); }
         this._scene.add(circle);
 
         return circle;
@@ -192,10 +185,29 @@ export class TrackRenderer {
         );
      }
 
-    public removeObject(obj: Mesh, before?: Vector3, after?: Vector3): void {
+    public removeObject(obj: Mesh, before?: Mesh, after?: Mesh): void {
         const id: number = obj.id;
         this._scene.remove(this._scene.getObjectById(id));
         const line: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + id);
+        if (after) {
+            const nextLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + after.id);
+            this._scene.remove(nextLine);
+        }
+
         this._scene.remove(line);
+
+        if (before != null && after != null) {
+            this.createLine(before.position, after.position, after.id);
+        }
+
      }
+
+    private createLine(from: Vector3, to: Vector3, id: number): void {
+        const lineG: Geometry = new Geometry();
+        lineG.vertices.push(from);
+        lineG.vertices.push(to);
+        const line: Line = new Line(lineG);
+        line.name = LINE_STR_PREFIX + id;
+        this._scene.add(line);
+    }
 }
