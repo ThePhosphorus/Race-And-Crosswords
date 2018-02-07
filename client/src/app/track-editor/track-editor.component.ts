@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
 import { TrackGeneratorService } from "../track-generator-service/track.generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { Vector2 } from "three";
 
 @Component({
     selector: "app-track-editor",
@@ -11,11 +12,15 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
+    public points: Vector2[];
 
-    public constructor(private trackGen: TrackGeneratorService) { }
+    public constructor(private trackGen: TrackGeneratorService) {
+        this.points = [];
+    }
 
     public ngAfterViewInit(): void {
         this.trackGen.init(this.elem.nativeElement);
+        this.points = this.trackGen.points;
     }
 
     @HostListener("window:resize", ["$event"])
@@ -39,6 +44,7 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public onClickRelease(event: MouseEvent): void {
         this.trackGen.mouseEventReleaseClick(event);
+        this.points = this.trackGen.points;
     }
 
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TrackRenderer } from "./track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { Vector2, Mesh } from "three";
+import { Vector2, Mesh, Vector3 } from "three";
 import * as C from "./track.constantes";
 
 const FIND_POINT_ERROR: number = -1;
@@ -22,11 +22,11 @@ export class TrackGeneratorService {
 
     public InputkeyDown(event: KeyboardEvent): void {
         this._renderer.InputKeyDown(event);
-    }
+     }
 
     public InputKeyUp(event: KeyboardEvent): void {
         this._renderer.InputKeyUp(event);
-    }
+     }
 
     public mouseEventclick(event: MouseEvent): void {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
@@ -37,7 +37,7 @@ export class TrackGeneratorService {
             this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY)));
         }
 
-    }
+     }
 
     private findPointId(pos: Vector2): number {
         for (let i: number = 0; i < this._points.length ; i++ ) {
@@ -48,20 +48,27 @@ export class TrackGeneratorService {
         }
 
         return FIND_POINT_ERROR;
-    }
+     }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
         console.log("mouseEventReleaseClick : ");
         console.log(event);
-    }
+     }
 
     public onResize(): void {
         this._renderer.onResize();
-    }
+     }
 
-    public get points(): Mesh[] {
-        return this._points;
-    }
+    public get points(): Vector2[] {
+        const result: Vector2[] = [];
+        this._points.forEach((point: Mesh) => result.push(this.toVector2(point.position)));
+
+        return result;
+     }
+
+    private toVector2(v: Vector3): Vector2 {
+        return new Vector2(v.x, v.z);
+     }
 
     public selectPoint( pointId: number): void {
         if (this._selectedPoint != null) {
@@ -70,5 +77,5 @@ export class TrackGeneratorService {
 
         this._selectedPoint = this._points[pointId];
         this._selectedPoint.material = C.SELECTION_MATERIAL;
-    }
+     }
 }
