@@ -51,6 +51,11 @@ export class TrackEditorComponent implements AfterViewInit {
         this.update();
      }
 
+    public selectPoint(index: number): void {
+        this.trackGen.selectPoint(index);
+        this.update();
+    }
+
     private update(): void {
         this.points = this.trackGen.points;
      }

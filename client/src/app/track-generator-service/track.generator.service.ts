@@ -39,9 +39,12 @@ export class TrackGeneratorService {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if ( possiblePointId !== FIND_POINT_ERROR) {
             this.selectPoint(possiblePointId);
-            console.log("reselect : " + possiblePointId);
         } else {
+            if (this._points.length > 2 && this.topPointPosition.clone().sub(this._points[0].position).length() < 1 ) {
+                this.removePoint(this._points.length - 1);
+            }
             this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition));
+            this.updateStartingPosition();
         }
 
      }
@@ -83,6 +86,13 @@ export class TrackGeneratorService {
             this._selectedPoint.material = C.WHITE_MATERIAL;
         }
 
+        if (pointId === 0) {
+            this._points.push(this._renderer.createDot(
+                this._renderer.getClientPosition(this._points[0].position), this.topPointPosition));
+
+            return;
+        }
+
         this._selectedPoint = this._points[pointId];
         this._selectedPoint.material = C.SELECTION_MATERIAL;
      }
@@ -94,5 +104,9 @@ export class TrackGeneratorService {
 
     public get topPointPosition(): Vector3 {
         return (this._points.length) ? this._points[this._points.length - 1].position : null;
+     }
+
+    public updateStartingPosition(): void {
+        this._points[0].material = C.START_POINT_MATERIAL;
     }
 }
