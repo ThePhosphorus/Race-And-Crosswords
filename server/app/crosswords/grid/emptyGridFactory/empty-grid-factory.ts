@@ -1,17 +1,18 @@
-import { CrosswordGrid, Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
+import {Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
+import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
 
 const COMPLEXITY_THRESHOLD: number = 30;
 
 export class EmptyGridFactory {
 
-    private crossword: CrosswordGrid;
+    private crossword: ExtendedCrosswordGrid;
 
     public constructor(private size: number, private blackTileRatio: number) { }
 
-    public getNewGrid(): CrosswordGrid {
+    public getNewGrid(): ExtendedCrosswordGrid {
         let complexity: number;
         do {
-            this.crossword = new CrosswordGrid();
+            this.crossword = new ExtendedCrosswordGrid();
             this.initializeGrid(this.size);
             this.generateBlackTiles(this.blackTileRatio);
             complexity = this.getComplexity();
