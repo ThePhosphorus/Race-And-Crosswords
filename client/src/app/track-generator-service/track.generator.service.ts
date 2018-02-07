@@ -6,6 +6,13 @@ import * as C from "./track.constantes";
 
 const FIND_POINT_ERROR: number = -1;
 
+export class PosSelect {
+    public constructor(
+        public pos: Vector2,
+        public selected: boolean
+    ) {}
+}
+
 @Injectable()
 export class TrackGeneratorService {
     private _renderer: TrackRenderer;
@@ -59,10 +66,10 @@ export class TrackGeneratorService {
         this._renderer.onResize();
      }
 
-    public get points(): {pos: Vector2, selected: boolean}[] {
-        const result: {pos: Vector2, selected: boolean}[] = [];
+    public get points(): PosSelect[] {
+        const result: PosSelect[] = [];
         this._points.forEach((point: Mesh) =>
-        result.push({pos: this.toVector2(point.position), selected: point === this._selectedPoint}));
+        result.push(new PosSelect(this.toVector2(point.position), point === this._selectedPoint)));
 
         return result;
      }
