@@ -193,8 +193,16 @@ export class TrackRenderer {
         if (before != null && after != null) {
             this.createLine(before.position, after.position, after.id);
         }
-
      }
+
+    public updateLine(point: Mesh, before: Mesh, after: Mesh): void {
+        const beforeLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + point.id);
+        const nextLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + after.id);
+        this._scene.remove(nextLine);
+        this._scene.remove(beforeLine);
+        this.createLine(before.position, point.position, point.id);
+        this.createLine(point.position, after.position, after.id);
+    }
 
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
@@ -202,5 +210,5 @@ export class TrackRenderer {
         const line: Line = new Line(lineG, C.LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this._scene.add(line);
-    }
+     }
 }

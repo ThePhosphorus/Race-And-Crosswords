@@ -108,5 +108,5 @@ export class TrackGeneratorService {
 
     public updateStartingPosition(): void {
         this._points[0].material = C.START_POINT_MATERIAL;
-    }
+     }
 }
