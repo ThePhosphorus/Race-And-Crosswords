@@ -155,7 +155,7 @@ export class TrackRenderer {
 
         return new Vector3(
             clientClickPos.x * cameraClientRatio.x,
-            0,
+            C.LINE_Y_POSITION,
             clientClickPos.y * cameraClientRatio.y
         );
      }
@@ -198,9 +198,8 @@ export class TrackRenderer {
 
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
-        lineG.vertices.push(from);
-        lineG.vertices.push(to);
-        const line: Line = new Line(lineG);
+        lineG.vertices.push(from, to);
+        const line: Line = new Line(lineG, C.LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this._scene.add(line);
     }
