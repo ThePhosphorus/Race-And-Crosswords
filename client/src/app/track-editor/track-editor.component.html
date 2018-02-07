@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="col-2 text-center">
-      <div class="card">
+      <div class="card" id="points">
         <ul class="list-group list-group-flush">
           <li *ngFor="let point of points | reverse; let i = index" class="list-group-item" [ngClass]="{'selected': point.selected}">
             <span>[{{point.pos.x | number : '1.1-1'}}, {{point.pos.y | number : '1.1-1'}}]</span>
