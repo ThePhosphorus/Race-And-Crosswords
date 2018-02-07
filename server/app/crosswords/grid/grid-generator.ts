@@ -1,118 +1,27 @@
-import { Word, CrosswordGrid, Letter, Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../common/communication/crossword-grid";
+import { Word, CrosswordGrid, Letter, Difficulty} from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
+import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 
-const MAX_TOTAL_ROLLBACKS: number = 10 ;
-const MAX_WORD_ROLLBACKS: number = 3;
+const MAX_TOTAL_ROLLBACKS: number = 15 ;
+const MAX_WORD_ROLLBACKS: number = 4;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
 
-    private crossword: CrosswordGrid;
+    private emptyGridFactory: EmptyGridFactory;
+    private crossword: ExtendedCrosswordGrid;
     private notPlacedWords: Word[];
     private rollbackCount: number = 0;
 
     public async getNewGrid(difficulty: Difficulty, size: number, blackTileRatio: number): Promise<CrosswordGrid> {
-        this.crossword = new CrosswordGrid();
-        this.initializeGrid(size);
-        this.generateBlackTiles(blackTileRatio);
-        this.initializeWords();
+        this.emptyGridFactory = new EmptyGridFactory(size, blackTileRatio);
+        this.initialiseEmptyGrid();
         await this.findWords(difficulty);
         this.cleanGrid();
 
         return this.crossword;
-    }
-
-    private initializeGrid(size: number): void {
-        this.crossword.size = size;
-        this.crossword.grid = new Array<Letter>(size * size);
-        for (let i: number = 0; i < size * size; i++) {
-            this.crossword.grid[i] = new Letter("", i);
-        }
-    }
-
-    private generateBlackTiles(blackTileRatio: number): void {
-        const maxBlackTile: number = this.crossword.size * this.crossword.size * blackTileRatio;
-        let generatedBlackTiles: number = 0; // this.generateBasicBlackTiles();
-        while (generatedBlackTiles < maxBlackTile) {
-            const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (!this.crossword.grid[id].isBlackTile) {
-                this.crossword.grid[id].isBlackTile = true;
-                if (this.isValidBlackTile(id)) {
-                    generatedBlackTiles++;
-                } else {
-                    this.crossword.grid[id].isBlackTile = false;
-                }
-            }
-        }
-        this.displayGrid();
-    }
-
-    private isValidBlackTile(id: number): boolean {
-        const acrossLetter: Letter[] = [];
-        for (let i: number = id - (id % this.crossword.size); i < id + this.crossword.size - (id % this.crossword.size); i++) {
-            acrossLetter.push(this.crossword.grid[i]);
-        }
-        const downLetters: Letter[] = [];
-        for (let i: number = id % this.crossword.size; i < this.crossword.grid.length; i += this.crossword.size) {
-            downLetters.push(this.crossword.grid[i]);
-        }
-
-        return id >= this.crossword.size &&
-                id % this.crossword.size !== 0 &&
-                this.getNumberOfWordsInLine(acrossLetter) > 0 &&
-                this.getNumberOfWordsInLine(downLetters) > 0;
-    }
-
-    private getNumberOfWordsInLine(letters: Letter[]): number {
-        let numberOfWords: number = 0;
-        let numberOfLettersInCurrentWord: number = 0;
-        for (const letter of letters) {
-            if (letter.isBlackTile) {
-                if (numberOfLettersInCurrentWord >= MIN_WORD_LENGTH) {
-                    numberOfWords++;
-                }
-                numberOfLettersInCurrentWord = 0;
-            } else {
-                numberOfLettersInCurrentWord++;
-            }
-        }
-        if (numberOfLettersInCurrentWord >= MIN_WORD_LENGTH) {
-            numberOfWords++;
-        }
-
-        return numberOfWords;
-    }
-
-    private initializeWords(): void {
-        this.notPlacedWords = new Array<Word>();
-        let acrossWord: Word = new Word();
-        let downWord: Word = new Word();
-        for (let i: number = 0; i < this.crossword.size; i++) {
-            for (let j: number = 0; j < this.crossword.size; j++) {
-                acrossWord = this.initializeLetter(acrossWord, (this.crossword.size * i) + j, Orientation.Across);
-                downWord = this.initializeLetter(downWord, (this.crossword.size * j) + i, Orientation.Down);
-            }
-            this.addWord(acrossWord, Orientation.Across);
-            this.addWord(downWord, Orientation.Down);
-            acrossWord = new Word();
-            downWord = new Word();
-        }
-        this.notPlacedWords = this.notPlacedWords.reverse();
-    }
-
-    private initializeLetter(word: Word, tilePosition: number, orientation: Orientation): Word {
-        if (!this.crossword.grid[tilePosition].isBlackTile) {
-            if (word.letters.length === 0) {
-                word.id = tilePosition;
-            }
-            word.letters.push(this.crossword.grid[tilePosition]);
-        } else { // IF BLACK TILE
-            this.addWord(word, orientation);
-            word = new Word();
-        }
-
-        return word;
     }
 
     private getWordWeight(word: Word): number {
@@ -124,14 +33,14 @@ export class GridGenerator {
         return weight;
     }
     private sortWords(): void {
-        this.notPlacedWords = this.notPlacedWords.sort((w1: Word, w2: Word) => this.getWordWeight(w1) - this.getWordWeight(w2));
-    }
-
-    private addWord(word: Word, orientation: Orientation): void {
-        if (word.letters.length >= MIN_WORD_LENGTH) {
-            word.orientation = orientation;
-            this.notPlacedWords.push(word);
-        }
+        this.notPlacedWords = this.notPlacedWords.sort((w1: Word, w2: Word) => {
+            const difference: number = this.getWordWeight(w1) - this.getWordWeight(w2);
+            if (difference !== 0) {
+                return difference;
+            } else {
+                return w1.letters.length - w2.letters.length;
+            }
+        });
     }
 
     private async findWords(difficulty: Difficulty): Promise<void> {
@@ -140,7 +49,7 @@ export class GridGenerator {
 
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_TOTAL_ROLLBACKS) {
-                this.nukeGrid();
+                this.initialiseEmptyGrid();
                 this.rollbackCount = 0;
             }
 
@@ -256,20 +165,11 @@ export class GridGenerator {
         return constraint;
     }
 
-    private nukeGrid(): void {
-        let blackTileCount: number = 0;
-        this.crossword.grid.forEach((letter: Letter) => {
-            letter.char = "";
-            letter.count = 0;
-            if (letter.isBlackTile) {
-                blackTileCount++;
-                letter.isBlackTile = false;
-            }
-        });
-        this.generateBlackTiles(blackTileCount / (this.crossword.size * this.crossword.size));
+    private initialiseEmptyGrid(): void {
+
+        this.crossword = this.emptyGridFactory.getNewGrid();
         this.crossword.words = new Array<Word>();
-        this.initializeWords();
-        this.sortWords();
+        this.notPlacedWords = this.crossword.findWords();
     }
 
     private cleanGrid(): void {
