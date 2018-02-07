@@ -1,7 +1,7 @@
 import { Vector3 } from "three";
 
 const MINIMUM_ANGLE: number = 2.35619;
-const MINIMUM_LENGTH: number = 5;
+const TWICE_TRACK_WIDTH: number = 5;
 
 export class ConstraintValidator {
     public static validateLine(index1: number, index2: number, points: Array<Vector3>): boolean {
@@ -16,7 +16,7 @@ export class ConstraintValidator {
     }
 
     private static validateLength(v: Vector3): boolean {
-        return v != null && v.length() > MINIMUM_LENGTH;
+        return v != null && v.length() > TWICE_TRACK_WIDTH;
     }
 
     private static validateAngle(v1: Vector3, v2: Vector3): boolean {
