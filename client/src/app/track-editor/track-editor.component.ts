@@ -44,6 +44,15 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public onClickRelease(event: MouseEvent): void {
         this.trackGen.mouseEventReleaseClick(event);
+        this.update();
+    }
+
+    public removePoint(index: number): void {
+        this.trackGen.removePoint(index);
+        this.update();
+    }
+
+    private update(): void {
         this.points = this.trackGen.points;
     }
 

@@ -79,4 +79,9 @@ export class TrackGeneratorService {
         this._selectedPoint = this._points[pointId];
         this._selectedPoint.material = C.SELECTION_MATERIAL;
      }
+
+    public removePoint(index: number): void {
+        this._renderer.removeObject(this._points[index]);
+        this._points.splice(index, 1);
+     }
 }

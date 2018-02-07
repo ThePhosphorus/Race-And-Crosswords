@@ -179,4 +179,9 @@ export class TrackRenderer {
             clientClickPos.y  + HALF * htmlElem.clientHeight
         );
      }
+
+    public removeObject(obj: Mesh): void {
+        const id: number = obj.id;
+        this._scene.remove(this._scene.getObjectById(id));
+     }
 }

@@ -12,9 +12,9 @@
     <div class="col-2 text-left">
       <div class="card">
         <ul class="list-group list-group-flush">
-          <li *ngFor="let point of points" class="list-group-item" [ngClass]="{'selected': point.selected}">
+          <li *ngFor="let point of points | reverse; let i = index" class="list-group-item" [ngClass]="{'selected': point.selected}">
             <span>[{{point.pos.x | number : '1.2-2'}}, {{point.pos.y | number : '1.2-2'}}]</span>
-            <button type="button" class="ml-3 close">
+            <button type="button" class="ml-3 close" (click)="removePoint(points.length - i - 1)">
               <span aria-hidden="true">&times;</span>
             </button>
           </li>
