@@ -17,4 +17,4 @@ export const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(2, 32, 32);
 export const WHITE_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: WHITE});
 export const SELECTION_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: SELECTION_COLOR});
 
-export const POINT_SELECT_DISTANCE: number  = 10;
+export const POINT_SELECT_DISTANCE: number  = 15;
