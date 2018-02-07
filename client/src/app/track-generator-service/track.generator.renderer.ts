@@ -7,10 +7,13 @@ import {
     Color,
     AmbientLight,
     Vector2,
-    Mesh
+    Mesh,
+    Line,
+    LineBasicMaterial,
+    Geometry
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
-import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
+import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
 
 const MIN_ZOOM: number = 10;
@@ -35,7 +38,7 @@ export class TrackRenderer {
         this.createScene();
         this.startRenderingLoop();
 
-     }
+    }
 
     private initStats(): void {
         this._stats = new Stats();
@@ -43,7 +46,7 @@ export class TrackRenderer {
         this._container.appendChild(this._stats.dom);
         this._cameraDirection = C.CAMERA_STARTING_DIRECTION;
         this._cameraPosition = C.CAMERA_STARTING_POSITION;
-     }
+    }
 
     public onResize(): void {
         this.cameraManager.onResize(this.getAspectRatio());
@@ -51,7 +54,7 @@ export class TrackRenderer {
             this._container.clientWidth,
             this._container.clientHeight
         );
-     }
+    }
 
     private update(): void {
         const timeSinceLastFrame: number = Date.now() - this._lastDate;
@@ -61,7 +64,7 @@ export class TrackRenderer {
         );
         this.cameraManager.update(timeSinceLastFrame);
         this._lastDate = Date.now();
-     }
+    }
 
     private createScene(): void {
         this._scene = new Scene();
@@ -82,11 +85,11 @@ export class TrackRenderer {
         this.cameraManager.onResize(this.getAspectRatio());
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimits = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
-     }
+    }
 
     private getAspectRatio(): number {
         return this._container.clientWidth / this._container.clientHeight;
-     }
+    }
 
     private startRenderingLoop(): void {
         this._renderer = new WebGLRenderer();
@@ -99,14 +102,14 @@ export class TrackRenderer {
         this._lastDate = Date.now();
         this._container.appendChild(this._renderer.domElement);
         this.render();
-     }
+    }
 
     private render(): void {
         requestAnimationFrame(() => this.render());
         this.update();
         this._renderer.render(this._scene, this.cameraManager.camera);
         this._stats.update();
-     }
+    }
 
     public InputKeyDown(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -119,7 +122,7 @@ export class TrackRenderer {
             default:
                 break;
         }
-     }
+    }
 
     public InputKeyUp(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -132,15 +135,27 @@ export class TrackRenderer {
             default:
                 break;
         }
-     }
+    }
 
     public createDot(pos: Vector2): Mesh {
-        const circle: Mesh =  new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
+        const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
         circle.position.copy(this.getRelativePosition(pos));
         this._scene.add(circle);
 
         return circle;
-     }
+    }
+
+    public generatePath(points: Array<Vector3>): Line {
+        const material: LineBasicMaterial = new LineBasicMaterial({
+            color: 0x0000FF
+        });
+        const geometry: Geometry = new Geometry();
+        points.forEach((p) => geometry.vertices.push(p));
+        const line: Line = new Line( geometry, material );
+        this._scene.add(line);
+
+        return line;
+    }
 
     public getRelativePosition(pos: Vector2): Vector3 {
         const htmlElem: HTMLCanvasElement = this._renderer.domElement;
@@ -159,7 +174,7 @@ export class TrackRenderer {
             0,
             clientClickPos.y * cameraClientRatio.y
         );
-     }
+    }
 
     public getClientPosition(pos: Vector3): Vector2 {
         const htmlElem: HTMLCanvasElement = this._renderer.domElement;
@@ -176,12 +191,17 @@ export class TrackRenderer {
 
         return new Vector2(
             clientClickPos.x + HALF * htmlElem.clientWidth,
-            clientClickPos.y  + HALF * htmlElem.clientHeight
+            clientClickPos.y + HALF * htmlElem.clientHeight
         );
-     }
+    }
 
     public removeObject(obj: Mesh): void {
         const id: number = obj.id;
         this._scene.remove(this._scene.getObjectById(id));
-     }
+    }
+
+    public replaceLine(oldLine: Line, newLine: Line): void {
+        this._scene.remove(oldLine);
+        this._scene.add(newLine);
+    }
 }
