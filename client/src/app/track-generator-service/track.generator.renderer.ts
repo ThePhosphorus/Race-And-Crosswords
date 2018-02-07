@@ -1,4 +1,3 @@
-import Stats = require("stats.js");
 import {
     WebGLRenderer,
     Scene,
@@ -25,7 +24,6 @@ const HALF: number = 0.5;
 const DOUBLE: number = 2;
 
 export class TrackRenderer {
-    private _stats: Stats;
     private _container: HTMLDivElement;
     private _renderer: WebGLRenderer;
     private _scene: Scene;
@@ -36,15 +34,12 @@ export class TrackRenderer {
 
     public constructor(container: HTMLDivElement, private cameraManager: CameraManagerService) {
         this._container = container;
-        this.initStats();
+        this.init();
         this.createScene();
         this.startRenderingLoop();
      }
 
-    private initStats(): void {
-        this._stats = new Stats();
-        this._stats.dom.style.position = "absolute";
-        this._container.appendChild(this._stats.dom);
+    private init(): void {
         this._cameraDirection = C.CAMERA_STARTING_DIRECTION;
         this._cameraPosition = C.CAMERA_STARTING_POSITION;
      }
@@ -109,7 +104,6 @@ export class TrackRenderer {
         requestAnimationFrame(() => this.render());
         this.update();
         this._renderer.render(this._scene, this.cameraManager.camera);
-        this._stats.update();
      }
 
     public InputKeyDown(event: KeyboardEvent): void {
