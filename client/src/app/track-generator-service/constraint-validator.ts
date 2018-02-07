@@ -1,13 +1,13 @@
 import { Vector3 } from "three";
 
-const MINIMUM_ANGLE: number = 0.785398;
+const MINIMUM_ANGLE: number = 2.35619;
 const MINIMUM_LENGTH: number = 5;
 
 export class ConstraintValidator {
     public static validateLine(index1: number, index2: number, points: Array<Vector3>): boolean {
-        const line: Vector3 = points[index2].sub(points[index1]);
-        const previousLine: Vector3 = points[index1 - 1] ? points[index1].sub(points[index1 - 1]) : null;
-        const nextLine: Vector3 = points[index2 + 1] ? points[index2 + 1].sub(points[index2]) : null;
+        const line: Vector3 = new Vector3().subVectors(points[index2], points[index1]);
+        const previousLine: Vector3 = points[index1 - 1] ? new Vector3().subVectors(points[index1], points[index1 - 1]) : null;
+        const nextLine: Vector3 = points[index2 + 1] ? new Vector3().subVectors(points[index2 + 1], points[index2]) : null;
 
         return this.validateLength(line)
             && this.validateAngle(previousLine, line)
@@ -20,14 +20,14 @@ export class ConstraintValidator {
     }
 
     private static validateAngle(v1: Vector3, v2: Vector3): boolean {
-        return (v1 == null && v2 == null) || v1.angleTo(v2) > MINIMUM_ANGLE;
+        return (v1 == null || v2 == null) || v1.angleTo(v2) < MINIMUM_ANGLE;
     }
 
-    public static validateIntersection(index1: number, index2: number, points: Array<Vector3>): boolean {
-        const line: Vector3 = points[index2].sub(points[index1]);
+    private static validateIntersection(index1: number, index2: number, points: Array<Vector3>): boolean {
+        const line: Vector3 = new Vector3().subVectors(points[index2], points[index1]);
         for (let i: number = 0; i < points.length - 1; i++) {
             if (points[i + 1] != null && i !== index1 && i + 1 !== index2) {
-                const compare: Vector3 = points[i + 1].sub(points[i]);
+                const compare: Vector3 = new Vector3().subVectors(points[i + 1], points[i]);
                 const denominator: number = (compare.z * line.x) - (compare.x * line.z);
                 if (denominator === 0) {
                     return false;

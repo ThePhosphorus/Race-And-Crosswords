@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { TrackRenderer } from "./track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { Vector2, Mesh, Vector3 } from "three";
+import { Vector2, Mesh, Vector3, PointCloud } from "three";
 import * as C from "./track.constantes";
+import { ConstraintValidator } from "./constraint-validator";
 
 const FIND_POINT_ERROR: number = -1;
 
@@ -44,6 +45,9 @@ export class TrackGeneratorService {
                 this.removePoint(this._points.length - 1);
             }
             this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition));
+            if (this._points.length > 1) {
+                console.log(ConstraintValidator.validateLine(this.points.length - 2, this.points.length - 1, this._points.map((p) => p.position)));
+            }
             this.updateStartingPosition();
         }
 
@@ -61,8 +65,8 @@ export class TrackGeneratorService {
      }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
-        console.log("mouseEventReleaseClick : ");
-        console.log(event);
+        // console.log("mouseEventReleaseClick : ");
+        // console.log(event);
      }
 
     public onResize(): void {
