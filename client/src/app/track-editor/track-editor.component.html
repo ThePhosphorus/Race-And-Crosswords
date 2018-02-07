@@ -12,8 +12,8 @@
     <div class="col-2 text-left">
       <div class="card">
         <ul class="list-group list-group-flush">
-          <li *ngFor="let point of points" class="list-group-item">
-            <span>[{{point.x | number : '1.2-2'}}, {{point.y | number : '1.2-2'}}]</span>
+          <li *ngFor="let point of points" class="list-group-item" [ngClass]="{'selected': point.selected}">
+            <span>[{{point.pos.x | number : '1.2-2'}}, {{point.pos.y | number : '1.2-2'}}]</span>
             <button type="button" class="ml-3 close">
               <span aria-hidden="true">&times;</span>
             </button>

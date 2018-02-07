@@ -59,9 +59,10 @@ export class TrackGeneratorService {
         this._renderer.onResize();
      }
 
-    public get points(): Vector2[] {
-        const result: Vector2[] = [];
-        this._points.forEach((point: Mesh) => result.push(this.toVector2(point.position)));
+    public get points(): {pos: Vector2, selected: boolean}[] {
+        const result: {pos: Vector2, selected: boolean}[] = [];
+        this._points.forEach((point: Mesh) =>
+        result.push({pos: this.toVector2(point.position), selected: point === this._selectedPoint}));
 
         return result;
      }

@@ -12,7 +12,7 @@ import { Vector2 } from "three";
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
-    public points: Vector2[];
+    public points: {pos: Vector2, selected: boolean }[];
 
     public constructor(private trackGen: TrackGeneratorService) {
         this.points = [];
