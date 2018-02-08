@@ -22,13 +22,13 @@ export class TrackGeneratorService {
     private _points: Array<Mesh>;
     private _selectedPoint: Mesh;
 
-    public constructor(private cameraService: CameraManagerService, private constraintService: ConstraintValidatorService) {
+    public constructor(private cameraService: CameraManagerService, private constraintValidator: ConstraintValidatorService) {
         this._points = new Array<Mesh>();
-        this.constraintService.setPoints(this._points);
+        this.constraintValidator.setPoints(this._points);
     }
 
     public init(div: HTMLDivElement): void {
-        this._renderer = new TrackRenderer(div, this.cameraService);
+        this._renderer = new TrackRenderer(div, this.cameraService, this.constraintValidator);
     }
 
     public InputkeyDown(event: KeyboardEvent): void {

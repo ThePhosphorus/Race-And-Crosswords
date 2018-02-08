@@ -13,6 +13,7 @@ import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-s
 import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
+import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -38,7 +39,9 @@ export class TrackRenderer extends Renderer {
     private _dragPoints: PointsSpan;
     private onMouseMoveListner: EventListenerObject;
 
-    public constructor(container: HTMLDivElement, private cameraManager: CameraManagerService) {
+    public constructor(container: HTMLDivElement,
+                       private cameraManager: CameraManagerService,
+                       private constraintValidator: ConstraintValidatorService) {
         super(cameraManager, false);
         this.init(container);
         this.startRenderingLoop();
