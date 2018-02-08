@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import Stats = require("stats.js");
-import { WebGLRenderer, Scene, AmbientLight, GridHelper, Color } from "three";
+import { WebGLRenderer, Scene, AmbientLight, GridHelper, Color, CubeTextureLoader } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
@@ -8,6 +8,7 @@ const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
 const GRID_PRIMARY_COLOR: number = 0xFF0000;
 const GRID_SECONDARY_COLOR: number = 0x001188;
+const BACKGROUND_PATH: string = "../../assets/skybox/mp_habitual/";
 
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.85;
@@ -26,11 +27,11 @@ export class RenderService {
     public constructor(private cameraManager: CameraManagerService) {
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
-     }
+    }
 
     public get carInfos(): CarInfos {
         return this._carInfos;
-     }
+    }
 
     public onResize(): void {
         this.cameraManager.onResize(this.getAspectRatio());
@@ -38,7 +39,7 @@ export class RenderService {
             this.container.clientWidth,
             this.container.clientHeight
         );
-     }
+    }
 
     public handleCarInputsDown(carControls: CarControls): void {
         switch (carControls) {
@@ -57,7 +58,7 @@ export class RenderService {
             default:
                 break;
         }
-     }
+    }
 
     public handleCarInputsUp(carControls: CarControls): void {
         switch (carControls) {
@@ -76,7 +77,7 @@ export class RenderService {
             default:
                 break;
         }
-     }
+    }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.container = container;
@@ -85,13 +86,13 @@ export class RenderService {
 
         this.initStats();
         this.startRenderingLoop();
-     }
+    }
 
     private initStats(): void {
         this.stats = new Stats();
         this.stats.dom.style.position = "absolute";
         this.container.appendChild(this.stats.dom);
-     }
+    }
 
     private update(): void {
         const timeSinceLastFrame: number = Date.now() - this.lastDate;
@@ -103,14 +104,18 @@ export class RenderService {
         this.cameraManager.update(timeSinceLastFrame);
         this.lastDate = Date.now();
         this.updateCarInfos();
-     }
+    }
+
     private updateCarInfos(): void {
         this._carInfos.speed = this._car.speed.length();
         this._carInfos.gear = this._car.currentGear;
         this._carInfos.rpm = this._car.rpm;
-     }
+    }
+
     private async createScene(): Promise<void> {
         this.scene = new Scene();
+
+        this.loadBackground();
 
         await this._car.init();
         this.cameraManager.updatecarInfos(
@@ -127,11 +132,24 @@ export class RenderService {
         this.scene.add(this.gridHelper);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
         this.cameraManager.onResize(this.getAspectRatio());
-     }
+    }
+
+    private loadBackground(): void {
+        this.scene.background = new CubeTextureLoader()
+            .setPath(BACKGROUND_PATH)
+            .load([
+                "posx.png",
+                "negx.png",
+                "posy.png",
+                "negy.png",
+                "posz.png",
+                "negz.png"
+            ]);
+    }
 
     private getAspectRatio(): number {
         return this.container.clientWidth / this.container.clientHeight;
-     }
+    }
 
     private startRenderingLoop(): void {
         this.renderer = new WebGLRenderer();
@@ -144,14 +162,14 @@ export class RenderService {
         this.lastDate = Date.now();
         this.container.appendChild(this.renderer.domElement);
         this.render();
-     }
+    }
 
     private render(): void {
         requestAnimationFrame(() => this.render());
         this.update();
         this.renderer.render(this.scene, this.cameraManager.camera);
         this.stats.update();
-     }
+    }
 }
 
 export class CarInfos {
@@ -159,7 +177,7 @@ export class CarInfos {
         public speed: number,
         public gear: number,
         public rpm: number
-    ) {}
+    ) { }
 }
 
 export enum CarControls {
