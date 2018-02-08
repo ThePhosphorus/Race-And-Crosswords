@@ -68,7 +68,7 @@ export class TrackGeneratorService {
     }
 
     public selectPoint(pointId: number): void {
-        if (this._selectedPoint != null) {
+        if (this._selectedPoint != null && this._selectedPoint !== this._points[0]) {
             this._selectedPoint.material = C.WHITE_MATERIAL;
         }
 
