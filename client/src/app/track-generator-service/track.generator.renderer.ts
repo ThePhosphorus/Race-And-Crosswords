@@ -207,7 +207,7 @@ export class TrackRenderer extends Renderer {
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
-        const line: Line = new Line(lineG, C.LINE_MATERIAL);
+        const line: Line = new Line(lineG, this.constraintValidator.validateLine(from, to) ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID);
         line.name = LINE_STR_PREFIX + id;
         this.scene.add(line);
     }
