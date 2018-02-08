@@ -40,6 +40,10 @@ export class TrackGeneratorService {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if ( possiblePointId !== FIND_POINT_ERROR) {
             this.selectPoint(possiblePointId);
+            this._renderer.enableDragMode(
+                this._points[possiblePointId],
+                this._points[possiblePointId - 1],
+                this._points[possiblePointId + 1]);
         } else {
             if (this._points.length > 2 && this.topPointPosition.clone().sub(this._points[0].position).length() < 1 ) {
                 this.removePoint(this._points.length - 1);
@@ -65,8 +69,7 @@ export class TrackGeneratorService {
      }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
-        // console.log("mouseEventReleaseClick : ");
-        // console.log(event);
+        this._renderer.disableDragMode();
      }
 
     public onResize(): void {

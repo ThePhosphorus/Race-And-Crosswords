@@ -22,22 +22,31 @@ const MAX_ZOOM: number = 100;
 const HALF: number = 0.5;
 const DOUBLE: number = 2;
 
+class DragPoints {
+    public constructor (
+        public point: Mesh,
+        public before: Mesh,
+        public after: Mesh
+    ) {}
+}
+
 export class TrackRenderer extends Renderer {
     private _cameraPosition: Vector3;
     private _cameraDirection: Vector3;
     private _gridHelper: GridHelper;
-    private _dragModeEnabled: boolean;
+    private _dragPoints: DragPoints;
+    private onMouseMoveListner: EventListenerObject;
 
     public constructor(container: HTMLDivElement, private cameraManager: CameraManagerService) {
         super(cameraManager, false);
         this.init(container);
         this.startRenderingLoop();
+        this.onMouseMoveListner = this.onMouseMove.bind(this);
      }
 
     protected onInit(): void {
         this._cameraDirection = C.CAMERA_STARTING_DIRECTION;
         this._cameraPosition = C.CAMERA_STARTING_POSITION;
-        this._dragModeEnabled = false;
 
         this.cameraManager.updatecarInfos(
             this._cameraPosition,
@@ -169,11 +178,18 @@ export class TrackRenderer extends Renderer {
      }
 
     public enableDragMode(point: Mesh, before?: Mesh, after?: Mesh): void {
-        this._dragModeEnabled = true;
+        this._dragPoints = new DragPoints(point, before, after);
+        this.container.addEventListener("mousemove", this.onMouseMoveListner , false);
+     }
+
+    private onMouseMove(event: MouseEvent): void {
+        this._dragPoints.point.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
+
+        this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
      }
 
     public disableDragMode(): void {
-        this._dragModeEnabled = false;
+        this.container.removeEventListener("mousemove", this.onMouseMoveListner, false );
      }
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
