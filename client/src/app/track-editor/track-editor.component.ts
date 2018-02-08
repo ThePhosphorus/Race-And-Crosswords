@@ -1,12 +1,13 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
 import { TrackGeneratorService, PosSelect } from "../track-generator-service/track.generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 
 @Component({
     selector: "app-track-editor",
     templateUrl: "./track-editor.component.html",
     styleUrls: ["./track-editor.component.css"],
-    providers: [TrackGeneratorService, CameraManagerService]
+    providers: [TrackGeneratorService, CameraManagerService, ConstraintValidatorService]
 })
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")

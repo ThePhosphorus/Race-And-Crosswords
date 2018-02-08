@@ -3,7 +3,7 @@ import { TrackRenderer } from "./track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Vector2, Mesh, Vector3 } from "three";
 import * as C from "./track.constantes";
-import { ConstraintValidator } from "./constraint-validator";
+import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 
 const LEFT_CLICK_CODE: number = 0;
 const RIGHT_CLICK_CODE: number = 2;
@@ -22,8 +22,9 @@ export class TrackGeneratorService {
     private _points: Array<Mesh>;
     private _selectedPoint: Mesh;
 
-    public constructor(private cameraService: CameraManagerService) {
+    public constructor(private cameraService: CameraManagerService, private constraintService: ConstraintValidatorService) {
         this._points = new Array<Mesh>();
+        this.constraintService.setPoints(this._points);
     }
 
     public init(div: HTMLDivElement): void {
@@ -140,7 +141,7 @@ export class TrackGeneratorService {
     private enableClosingDragMode(): void {
         this._renderer.enableDragMode(
             this._points[0],
-            this._points[this._points.length - 2],
+            this._points[this._points.length - LINK_MINIMUM_POINTS],
             this._points[1],
             this._points[this._points.length - 1]);
     }
