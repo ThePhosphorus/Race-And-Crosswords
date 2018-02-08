@@ -74,19 +74,23 @@ export class TrackGeneratorService {
 
         this._selectedPoint = this._points[pointId];
         this._selectedPoint.material = C.SELECTION_MATERIAL;
-        this.enableDragMode(pointId);
 
         if (pointId === 0) {
-            this.closeLoop();
+            if (this.topPointPosition.equals(this._points[0].position)) {
+                this.enableDragMode(pointId);
+            } else {
+                this.closeLoop();
+            }
+        } else {
+            this.enableDragMode(pointId);
         }
     }
 
     private closeLoop(): void {
-        if (!this.topPointPosition.equals(this._points[0].position)) {
-            this._points.push(this._renderer.createDot(
-                this._renderer.getClientPosition(this._points[0].position),
-                this.topPointPosition));
-        }
+        this._points.push(this._renderer.createDot(
+            this._renderer.getClientPosition(this._points[0].position),
+            this.topPointPosition));
+
     }
 
     public removePoint(index: number): void {
@@ -134,7 +138,7 @@ export class TrackGeneratorService {
     }
 
     private findPointId(pos: Vector2): number {
-        for (let i: number = 0; i < this._points.length; i++) {
+        for (let i: number = this._points.length - 1; i >= 0; i--) {
             const diff: number = this._renderer.getClientPosition(this._points[i].position).sub(pos).length();
             if (diff <= C.POINT_SELECT_DISTANCE) {
                 return i;
