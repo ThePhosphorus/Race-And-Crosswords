@@ -6,6 +6,8 @@ import * as C from "./track.constantes";
 import { ConstraintValidator } from "./constraint-validator";
 
 const FIND_POINT_ERROR: number = -1;
+const LEFT_CLICK_CODE: number = 0;
+const RIGHT_CLICK_CODE: number = 2;
 
 export class PosSelect {
     public constructor(
@@ -37,6 +39,18 @@ export class TrackGeneratorService {
      }
 
     public mouseEventclick(event: MouseEvent): void {
+        if (event.button === LEFT_CLICK_CODE) { // LEFT CLICK
+            this.mouseEventLeftClick(event);
+        } else if ( event.button === RIGHT_CLICK_CODE ) { // RIGHT CLICK
+            this.mouseEventRightClick(event);
+        }
+    }
+
+    private mouseEventRightClick(event: MouseEvent): void {
+        // Does nothing for now
+    }
+
+    private mouseEventLeftClick(event: MouseEvent): void {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if ( possiblePointId !== FIND_POINT_ERROR) {
             this.selectPoint(possiblePointId);
