@@ -4,10 +4,10 @@ import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 
-const MAX_TOTAL_ROLLBACKS: number = 50;
+const MAX_TOTAL_ROLLBACKS: number = 200;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical";
 const LEXICAL_REQUEST_WORDS: string = "/query-word";
-const LEXICAL_TEST_WORD: string = "/test-word";
+const LEXICAL_TEST_WORD: string = "/query-definitions";
 
 export class GridGenerator {
 
@@ -76,7 +76,7 @@ export class GridGenerator {
     private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
         if (receivedWord !== undefined && this.isUnique(receivedWord)) {
             this.setWord(receivedWord, word, difficulty);
-            this.displayGrid();
+            // this.displayGrid();
         } else {
             await this.backjump(word);
             this.rollbackCount++;
@@ -170,7 +170,7 @@ export class GridGenerator {
                     currentWord.letters.forEach((currentWordLetter: Letter) => {
                         if (currentWordLetter.char !== "" && currentWordLetter.id === letter.id) {
                             isProblemword = true;
-                            console.log(currentWordLetter.id + " : " + currentWordLetter.char); // TODO: Remove
+
                             return;
                         }
                     });

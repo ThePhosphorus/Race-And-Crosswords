@@ -34,7 +34,7 @@ export class Lexical extends WebService {
                 res.send(word);
             });
         });
-        this._router.post("/test-word", (req: Request, res: Response, next: NextFunction) => {
+        this._router.post("/query-definitions", (req: Request, res: Response, next: NextFunction) => {
             const word: string = req.body["word"];
 
             this.datamuse.getDefinitions(word).then((words: string) => {
