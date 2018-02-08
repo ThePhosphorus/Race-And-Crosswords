@@ -204,6 +204,16 @@ export class TrackRenderer extends Renderer {
         this.container.removeEventListener("mousemove", this.onMouseMoveListner, false);
     }
 
+    public resetValidation(points: Array<Mesh>): void {
+        for (let i: number = 0; i < points.length - 1; i++) {
+            if (points[i + 1] !== null) {
+                (this.scene.getObjectByName(LINE_STR_PREFIX + points[i + 1].id) as Line).material =
+                    this.constraintValidator.validateLine(points[i].position, points[i + 1].position)
+                        ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
+            }
+        }
+    }
+
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);

@@ -50,6 +50,7 @@ export class TrackGeneratorService {
     public mouseEventReleaseClick(event: MouseEvent): void {
         this._renderer.disableDragMode();
         this.updateStartingPosition();
+        this._renderer.resetValidation(this._points);
     }
 
     public onResize(): void {
