@@ -38,4 +38,15 @@ export class Datamuse {
 
         return JSON.stringify(word);
     }
+
+    public async isWord(word: string): Promise<boolean> {
+        const datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
+        for (const datamuseWord of datamuseWords) {
+            if (datamuseWord.word === word) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
