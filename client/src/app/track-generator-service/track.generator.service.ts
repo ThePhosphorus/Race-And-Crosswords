@@ -75,12 +75,12 @@ export class TrackGeneratorService {
         this._selectedPoint = this._points[pointId];
         this._selectedPoint.material = C.SELECTION_MATERIAL;
 
-        if (pointId === 0) {
-            if (this.topPointPosition.equals(this._points[0].position)) {
-                this.enableDragMode(pointId);
-            } else {
-                this.closeLoop();
-            }
+        if (pointId === 0 && !this.topPointPosition.equals(this._points[0].position)) {
+            this.closeLoop();
+        }
+
+        if ((pointId === this._points.length - 1 || pointId === 0) && this.topPointPosition.equals(this._points[0].position)) {
+            this.enableClosingDragMode();
         } else {
             this.enableDragMode(pointId);
         }
@@ -135,6 +135,14 @@ export class TrackGeneratorService {
             this._points[pointId],
             this._points[pointId - 1],
             this._points[pointId + 1]);
+    }
+
+    private enableClosingDragMode(): void {
+        this._renderer.enableDragMode(
+            this._points[0],
+            this._points[this._points.length - 2],
+            this._points[1],
+            this._points[this._points.length - 1]);
     }
 
     private findPointId(pos: Vector2): number {

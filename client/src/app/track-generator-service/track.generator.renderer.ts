@@ -10,7 +10,7 @@ import {
     Object3D
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
-import {ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE} from "../input-manager-service/input-manager.service";
+import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 
@@ -23,11 +23,12 @@ const HALF: number = 0.5;
 const DOUBLE: number = 2;
 
 export class PointsSpan {
-    public constructor (
+    public constructor(
         public point: Mesh,
         public before: Mesh,
-        public after: Mesh
-    ) {}
+        public after: Mesh,
+        public closingPoint: Mesh
+    ) { }
 }
 
 export class TrackRenderer extends Renderer {
@@ -42,7 +43,7 @@ export class TrackRenderer extends Renderer {
         this.init(container);
         this.startRenderingLoop();
         this.onMouseMoveListner = this.onMouseMove.bind(this);
-     }
+    }
 
     protected onInit(): void {
         this._cameraDirection = C.CAMERA_STARTING_DIRECTION;
@@ -63,7 +64,7 @@ export class TrackRenderer extends Renderer {
         this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimits = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
-     }
+    }
 
     protected update(timeSinceLastFrame: number): void {
         this.cameraManager.updatecarInfos(
@@ -71,7 +72,7 @@ export class TrackRenderer extends Renderer {
             this._cameraDirection
         );
         this.cameraManager.update(timeSinceLastFrame);
-     }
+    }
 
     public InputKeyDown(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -84,7 +85,7 @@ export class TrackRenderer extends Renderer {
             default:
                 break;
         }
-     }
+    }
 
     public InputKeyUp(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -97,16 +98,16 @@ export class TrackRenderer extends Renderer {
             default:
                 break;
         }
-     }
+    }
 
     public createDot(pos: Vector2, topMesh: Vector3): Mesh {
-        const circle: Mesh =  new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
+        const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
         circle.position.copy(this.getRelativePosition(pos));
         if (topMesh) { this.createLine(topMesh, circle.position, circle.id); }
         this.scene.add(circle);
 
         return circle;
-     }
+    }
 
     public getRelativePosition(pos: Vector2): Vector3 {
         const htmlElem: HTMLCanvasElement = this.renderer.domElement;
@@ -125,7 +126,7 @@ export class TrackRenderer extends Renderer {
             C.LINE_Y_POSITION,
             clientClickPos.y * cameraClientRatio.y
         );
-     }
+    }
 
     public getClientPosition(pos: Vector3): Vector2 {
         const htmlElem: HTMLCanvasElement = this.renderer.domElement;
@@ -142,9 +143,9 @@ export class TrackRenderer extends Renderer {
 
         return new Vector2(
             clientClickPos.x + HALF * htmlElem.clientWidth,
-            clientClickPos.y  + HALF * htmlElem.clientHeight
+            clientClickPos.y + HALF * htmlElem.clientHeight
         );
-     }
+    }
 
     public removeObject(obj: Mesh, before?: Mesh, after?: Mesh): void {
         const id: number = obj.id;
@@ -160,7 +161,7 @@ export class TrackRenderer extends Renderer {
         if (before != null && after != null) {
             this.createLine(before.position, after.position, after.id);
         }
-     }
+    }
 
     public updateLine(point: Mesh, before?: Mesh, after?: Mesh): void {
         if (before) {
@@ -174,27 +175,34 @@ export class TrackRenderer extends Renderer {
             this.scene.remove(nextLine);
             this.createLine(point.position, after.position, after.id);
         }
-     }
+    }
 
-    public enableDragMode(point: Mesh, before?: Mesh, after?: Mesh): void {
-        this._dragPoints = new PointsSpan(point, before, after);
-        this.container.addEventListener("mousemove", this.onMouseMoveListner , false);
-     }
+    public enableDragMode(point: Mesh, before?: Mesh, after?: Mesh, closingPoint?: Mesh): void {
+        this._dragPoints = new PointsSpan(point, before, after, closingPoint);
+        this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
+    }
 
     private onMouseMove(event: MouseEvent): void {
         this._dragPoints.point.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
+        if (this._dragPoints.closingPoint) {
+            this._dragPoints.closingPoint.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
+            this.updateLine(this._dragPoints.closingPoint, this._dragPoints.before, null);
+            this.updateLine(this._dragPoints.point, null, this._dragPoints.after);
+        } else {
+            this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
+        }
 
-        this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
-     }
+    }
 
     public disableDragMode(): void {
-        this.container.removeEventListener("mousemove", this.onMouseMoveListner, false );
-     }
+        this.container.removeEventListener("mousemove", this.onMouseMoveListner, false);
+    }
+
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
         const line: Line = new Line(lineG, C.LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this.scene.add(line);
-     }
+    }
 }
