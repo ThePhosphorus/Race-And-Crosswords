@@ -4,8 +4,8 @@ import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 
-const MAX_TOTAL_ROLLBACKS: number = 15 ;
-const MAX_WORD_ROLLBACKS: number = 4;
+const MAX_TOTAL_ROLLBACKS: number = 30 ;
+const MAX_WORD_ROLLBACKS: number = 2;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
 
 export class GridGenerator {
