@@ -13,7 +13,9 @@ export const WHITE: number = 0xFFFFFF;
 export const SELECTION_COLOR: number = 0xFF5555;
 export const AMBIENT_LIGHT_OPACITY: number = 0.85;
 
-export const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(2, 32, 32);
+const SPHERE_RADIUS: number = 2;
+const SPHERE_SEGMENTS: number = 32;
+export const SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(SPHERE_RADIUS, SPHERE_SEGMENTS, SPHERE_SEGMENTS);
 export const WHITE_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: WHITE});
 export const LINE_MATERIAL: LineBasicMaterial = new LineBasicMaterial ({color: 0x00FF00});
 export const SELECTION_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: SELECTION_COLOR});
@@ -21,5 +23,5 @@ export const SELECTION_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({col
 export const POINT_SELECT_DISTANCE: number  = 15;
 export const LINE_Y_POSITION: number = 1;
 
-export const START_POINT_COLOR: number = 0x22ff22;
+export const START_POINT_COLOR: number = 0x22FF22;
 export const START_POINT_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial({color: START_POINT_COLOR});
