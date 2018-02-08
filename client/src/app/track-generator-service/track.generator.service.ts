@@ -71,7 +71,7 @@ export class TrackGeneratorService {
             this._selectedPoint.material = C.WHITE_MATERIAL;
         }
 
-        if (pointId === 0) {
+        if (pointId === 0 && this.topPointPosition !== this._points[0].position) {
             this._points.push(this._renderer.createDot(
                 this._renderer.getClientPosition(this._points[0].position),
                 this.topPointPosition));
@@ -86,6 +86,7 @@ export class TrackGeneratorService {
     public removePoint(index: number): void {
         this._renderer.removeObject(this._points[index], this._points[index - 1], this._points[index + 1]);
         this._points.splice(index, 1);
+        this.updateStartingPosition();
     }
 
     public get topPointPosition(): Vector3 {
@@ -117,8 +118,10 @@ export class TrackGeneratorService {
                 this.removePoint(this._points.length - 1);
             }
 
-            this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition));
+            const newPoint: Mesh = this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition);
+            this._points.push(newPoint);
             this.updateStartingPosition();
+            // this.selectPoint(this._points.length - 1);
         }
     }
 
