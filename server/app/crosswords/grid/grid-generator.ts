@@ -4,7 +4,7 @@ import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 
-const MAX_TOTAL_ROLLBACKS: number = 10;
+const MAX_TOTAL_ROLLBACKS: number = 50;
 const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical";
 const LEXICAL_REQUEST_WORDS: string = "/query-word";
 const LEXICAL_TEST_WORD: string = "/test-word";
@@ -63,27 +63,24 @@ export class GridGenerator {
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
         const constraint: string = this.getConstraints(word);
         if (constraint.indexOf("?") === -1) {
-            if (! await this.testWordFromServer(this.getStringFromWord(word))) {
-                await this.backjump(word);
-                this.rollbackCount++;
+            const receivedWord: DatamuseWord = await this.getDefinitionsFromServer(this.getStringFromWord(word));
+            this.addWord(receivedWord, word, difficulty);
 
-                return ;
-            }
-
+        } else {
+            const isEasyWord: boolean = difficulty !== Difficulty.Hard;
+            const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word, isEasyWord);
+            this.addWord(receivedWord, word, difficulty);
         }
-        const isEasyWord: boolean = difficulty !== Difficulty.Hard;
-        const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word, isEasyWord);
+    }
+
+    private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
         if (receivedWord !== undefined && this.isUnique(receivedWord)) {
             this.setWord(receivedWord, word, difficulty);
-            this.crossword.words.push(word);
-            console.log(" Constraints : " + constraint); // TODO  : Remove
             this.displayGrid();
         } else {
             await this.backjump(word);
             this.rollbackCount++;
-
         }
-
     }
 
     private displayGrid(): void {
@@ -131,7 +128,7 @@ export class GridGenerator {
         return await Request(LEXICAL_SERVICE_URL + LEXICAL_REQUEST_WORDS, options) as DatamuseWord;
     }
 
-    private async testWordFromServer(word: string): Promise<boolean> {
+    private async getDefinitionsFromServer(word: string): Promise<DatamuseWord> {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
@@ -140,15 +137,12 @@ export class GridGenerator {
             json: true
         };
 
-        return await Request(LEXICAL_SERVICE_URL + LEXICAL_TEST_WORD, options) as boolean;
+        return await Request(LEXICAL_SERVICE_URL + LEXICAL_TEST_WORD, options) as DatamuseWord;
     }
 
     private setWord(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
         for (let i: number = 0; i < gridWord.letters.length; i++) {
             gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord.word[i] : gridWord.letters[i].char;
-            if (gridWord.letters[i].char !== receivedWord.word[i]) {
-                throw new Error("Expected : " + gridWord.letters[i].char + "  Got : " + receivedWord.word[i]);
-            }
             gridWord.letters[i].count++;
         }
         if (receivedWord.defs.length === 1 || difficulty === Difficulty.Easy) {
@@ -156,6 +150,7 @@ export class GridGenerator {
         } else {
             gridWord.definitions.push(receivedWord.defs[1]);
         }
+        this.crossword.words.push(gridWord);
     }
 
     private unsetWord(word: Word): void {
