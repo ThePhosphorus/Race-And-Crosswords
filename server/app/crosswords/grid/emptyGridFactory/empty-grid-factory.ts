@@ -1,7 +1,7 @@
 import { Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
 import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
 
-const COMPLEXITY_THRESHOLD: number = 20;
+const COMPLEXITY_THRESHOLD: number = 80;
 
 export class EmptyGridFactory {
 
@@ -96,11 +96,29 @@ export class EmptyGridFactory {
 
     private getComplexity(): number {
         let complexity: number = 0;
+        let horizontalComplexity: number = 0;
+        let verticalComplexity: number = 0;
+        for (let i: number = 0; i < this.crossword.size; i++) {
+            for (let j: number = 0; j < this.crossword.size; j++) {
+                if (!this.crossword.grid[(this.size * i) + j].isBlackTile) {
+                    if (this.isInAWord((this.size * i) + j, Orientation.Across) &&
+                        this.isInAWord((this.size * i) + j, Orientation.Down)) {
+                        complexity += ++horizontalComplexity;
+                    }
+                } else {
+                    horizontalComplexity = 0;
+                    verticalComplexity = 0;
+                }
 
-        for (let i: number = 0; i < this.crossword.grid.length; i++) {
-            if (!this.crossword.grid[i].isBlackTile) {
-                if (this.isInAWord(i, Orientation.Across) && this.isInAWord(i, Orientation.Down)) {
-                    complexity++;
+                if (!this.crossword.grid[(this.size * i) + j].isBlackTile) {
+                    if (this.isInAWord((this.size * j) + i, Orientation.Across) &&
+                        this.isInAWord((this.size * j) + i, Orientation.Down)) {
+                        complexity += ++verticalComplexity;
+                    }
+
+                } else {
+                    horizontalComplexity = 0;
+                    verticalComplexity = 0;
                 }
             }
         }
