@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TrackRenderer } from "./track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { Vector2, Mesh, Vector3, PointCloud } from "three";
+import { Vector2, Mesh, Vector3 } from "three";
 import * as C from "./track.constantes";
 import { ConstraintValidator } from "./constraint-validator";
 
