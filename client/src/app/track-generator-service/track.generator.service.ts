@@ -112,16 +112,18 @@ export class TrackGeneratorService {
                 this._points[possiblePointId - 1],
                 this._points[possiblePointId + 1]);
         } else {
+             // remove connection to spawn point
             if (this._points.length > 2 && this.topPointPosition.clone().sub(this._points[0].position).length() < 1 ) {
                 this.removePoint(this._points.length - 1);
             }
+
             this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition));
+
             if (this._points.length > 1) {
                 console.log(ConstraintValidator.validateLine(this.points.length - 2, this.points.length - 1, this._points.map((p) => p.position)));
             }
             this.updateStartingPosition();
         }
-
      }
 
     private findPointId(pos: Vector2): number {

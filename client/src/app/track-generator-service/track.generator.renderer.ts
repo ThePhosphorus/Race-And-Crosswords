@@ -63,7 +63,6 @@ export class TrackRenderer extends Renderer {
         this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimits = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
-
      }
 
     protected update(timeSinceLastFrame: number): void {
