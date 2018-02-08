@@ -105,6 +105,7 @@ export class TrackRenderer extends Renderer {
         circle.position.copy(this.getRelativePosition(pos));
         if (topMesh) { this.createLine(topMesh, circle.position, circle.id); }
         this.scene.add(circle);
+        this.disableDragMode();
 
         return circle;
     }
@@ -161,6 +162,8 @@ export class TrackRenderer extends Renderer {
         if (before != null && after != null) {
             this.createLine(before.position, after.position, after.id);
         }
+
+        this.disableDragMode();
     }
 
     public updateLine(point: Mesh, before?: Mesh, after?: Mesh): void {
