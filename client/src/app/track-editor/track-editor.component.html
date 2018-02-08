@@ -6,7 +6,11 @@
   </div>
   <div class="row">
     <div class="col-10 text-center">
-      <div #editor id="editor" (mousedown)="onClick($event)" (mouseup)="onClickRelease($event)">
+      <div #editor
+      id="editor"
+      (mousedown)="onClick($event)"
+      (mouseup)="onClickRelease($event)"
+      oncontextmenu="return false;">
       </div>
     </div>
     <div class="col-2 text-center">

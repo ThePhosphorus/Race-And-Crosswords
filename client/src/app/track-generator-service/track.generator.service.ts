@@ -47,7 +47,10 @@ export class TrackGeneratorService {
     }
 
     private mouseEventRightClick(event: MouseEvent): void {
-        // Does nothing for now
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if ( possiblePointId !== FIND_POINT_ERROR) {
+                this.removePoint(possiblePointId);
+        }
     }
 
     private mouseEventLeftClick(event: MouseEvent): void {
