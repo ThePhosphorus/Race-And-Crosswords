@@ -74,6 +74,11 @@ export class TrackGeneratorService {
 
         this._selectedPoint = this._points[pointId];
         this._selectedPoint.material = C.SELECTION_MATERIAL;
+        this.enableDragMode(pointId);
+
+        if (pointId === 0) {
+            this.closeLoop();
+        }
     }
 
     private closeLoop(): void {
@@ -108,7 +113,6 @@ export class TrackGeneratorService {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.selectPoint(possiblePointId);
-            this.enableDragMode(possiblePointId);
         } else {
             // Remove connection to spawn point
             if (this._points.length > LINK_MINIMUM_POINTS && this.topPointPosition.clone().sub(this._points[0].position).length() < 1) {
@@ -119,7 +123,6 @@ export class TrackGeneratorService {
             this._points.push(newPoint);
             this.updateStartingPosition();
             this.selectPoint(this._points.length - 1);
-            this.enableDragMode(this._points.length - 1);
         }
     }
 
