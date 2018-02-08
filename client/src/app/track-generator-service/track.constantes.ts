@@ -10,7 +10,7 @@ export const GRID_PRIMARY_COLOR: number = 0xFF0000;
 export const GRID_SECONDARY_COLOR: number = 0x001188;
 
 export const WHITE: number = 0xFFFFFF;
-export const SELECTION_COLOR: number = 0xFF5555;
+export const SELECTION_COLOR: number = 0x44D3FF;
 export const AMBIENT_LIGHT_OPACITY: number = 0.85;
 
 const SPHERE_RADIUS: number = 2;

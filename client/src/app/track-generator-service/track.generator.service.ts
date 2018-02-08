@@ -48,6 +48,7 @@ export class TrackGeneratorService {
 
     public mouseEventReleaseClick(event: MouseEvent): void {
         this._renderer.disableDragMode();
+        this.updateStartingPosition();
     }
 
     public onResize(): void {
@@ -71,22 +72,21 @@ export class TrackGeneratorService {
             this._selectedPoint.material = C.WHITE_MATERIAL;
         }
 
-        if (pointId === 0 && this.topPointPosition !== this._points[0].position) {
+        this._selectedPoint = this._points[pointId];
+        this._selectedPoint.material = C.SELECTION_MATERIAL;
+    }
+
+    private closeLoop(): void {
+        if (!this.topPointPosition.equals(this._points[0].position)) {
             this._points.push(this._renderer.createDot(
                 this._renderer.getClientPosition(this._points[0].position),
                 this.topPointPosition));
-
-            return;
         }
-
-        this._selectedPoint = this._points[pointId];
-        this._selectedPoint.material = C.SELECTION_MATERIAL;
     }
 
     public removePoint(index: number): void {
         this._renderer.removeObject(this._points[index], this._points[index - 1], this._points[index + 1]);
         this._points.splice(index, 1);
-        this.updateStartingPosition();
     }
 
     public get topPointPosition(): Vector3 {
@@ -108,10 +108,7 @@ export class TrackGeneratorService {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.selectPoint(possiblePointId);
-            this._renderer.enableDragMode(
-                this._points[possiblePointId],
-                this._points[possiblePointId - 1],
-                this._points[possiblePointId + 1]);
+            this.enableDragMode(possiblePointId);
         } else {
             // Remove connection to spawn point
             if (this._points.length > LINK_MINIMUM_POINTS && this.topPointPosition.clone().sub(this._points[0].position).length() < 1) {
@@ -121,8 +118,16 @@ export class TrackGeneratorService {
             const newPoint: Mesh = this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition);
             this._points.push(newPoint);
             this.updateStartingPosition();
-            // this.selectPoint(this._points.length - 1);
+            this.selectPoint(this._points.length - 1);
+            this.enableDragMode(this._points.length - 1);
         }
+    }
+
+    private enableDragMode(pointId: number): void {
+        this._renderer.enableDragMode(
+            this._points[pointId],
+            this._points[pointId - 1],
+            this._points[pointId + 1]);
     }
 
     private findPointId(pos: Vector2): number {
