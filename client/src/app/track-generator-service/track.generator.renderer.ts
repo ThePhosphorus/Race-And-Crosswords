@@ -31,6 +31,7 @@ export class TrackRenderer {
     private _cameraPosition: Vector3;
     private _cameraDirection: Vector3;
     private _gridHelper: GridHelper;
+    private _dragModeEnabled: boolean;
 
     public constructor(container: HTMLDivElement, private cameraManager: CameraManagerService) {
         this._container = container;
@@ -42,6 +43,7 @@ export class TrackRenderer {
     private init(): void {
         this._cameraDirection = C.CAMERA_STARTING_DIRECTION;
         this._cameraPosition = C.CAMERA_STARTING_POSITION;
+        this._dragModeEnabled = false;
      }
 
     public onResize(): void {
@@ -195,15 +197,27 @@ export class TrackRenderer {
         }
      }
 
-    public updateLine(point: Mesh, before: Mesh, after: Mesh): void {
-        const beforeLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + point.id);
-        const nextLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + after.id);
-        this._scene.remove(nextLine);
-        this._scene.remove(beforeLine);
-        this.createLine(before.position, point.position, point.id);
-        this.createLine(point.position, after.position, after.id);
-    }
+    public updateLine(point: Mesh, before?: Mesh, after?: Mesh): void {
+        if (before) {
+            const beforeLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + point.id);
+            this._scene.remove(beforeLine);
+            this.createLine(before.position, point.position, point.id);
+        }
 
+        if (after) {
+            const nextLine: Object3D = this._scene.getObjectByName(LINE_STR_PREFIX + after.id);
+            this._scene.remove(nextLine);
+            this.createLine(point.position, after.position, after.id);
+        }
+     }
+
+    public enableDragMode(point: Mesh, before?: Mesh, after?: Mesh): void {
+        this._dragModeEnabled = true;
+     }
+
+    public disableDragMode(): void {
+        this._dragModeEnabled = false;
+     }
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
