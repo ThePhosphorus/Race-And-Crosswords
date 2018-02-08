@@ -44,45 +44,6 @@ export class TrackGeneratorService {
         } else if ( event.button === RIGHT_CLICK_CODE ) { // RIGHT CLICK
             this.mouseEventRightClick(event);
         }
-    }
-
-    private mouseEventRightClick(event: MouseEvent): void {
-        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
-        if ( possiblePointId !== FIND_POINT_ERROR) {
-                this.removePoint(possiblePointId);
-        }
-    }
-
-    private mouseEventLeftClick(event: MouseEvent): void {
-        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
-        if ( possiblePointId !== FIND_POINT_ERROR) {
-            this.selectPoint(possiblePointId);
-            this._renderer.enableDragMode(
-                this._points[possiblePointId],
-                this._points[possiblePointId - 1],
-                this._points[possiblePointId + 1]);
-        } else {
-            if (this._points.length > 2 && this.topPointPosition.clone().sub(this._points[0].position).length() < 1 ) {
-                this.removePoint(this._points.length - 1);
-            }
-            this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition));
-            if (this._points.length > 1) {
-                console.log(ConstraintValidator.validateLine(this.points.length - 2, this.points.length - 1, this._points.map((p) => p.position)));
-            }
-            this.updateStartingPosition();
-        }
-
-     }
-
-    private findPointId(pos: Vector2): number {
-        for (let i: number = 0; i < this._points.length ; i++ ) {
-            const diff: number = this._renderer.getClientPosition(this._points[i].position).sub(pos).length();
-            if ( diff <= C.POINT_SELECT_DISTANCE ) {
-                return i;
-            }
-        }
-
-        return FIND_POINT_ERROR;
      }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
@@ -112,7 +73,8 @@ export class TrackGeneratorService {
 
         if (pointId === 0) {
             this._points.push(this._renderer.createDot(
-                this._renderer.getClientPosition(this._points[0].position), this.topPointPosition));
+                this._renderer.getClientPosition(this._points[0].position),
+                this.topPointPosition));
 
             return;
         }
@@ -132,5 +94,44 @@ export class TrackGeneratorService {
 
     public updateStartingPosition(): void {
         this._points[0].material = C.START_POINT_MATERIAL;
+     }
+
+    private mouseEventRightClick(event: MouseEvent): void {
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if ( possiblePointId !== FIND_POINT_ERROR) {
+                this.removePoint(possiblePointId);
+        }
+     }
+
+    private mouseEventLeftClick(event: MouseEvent): void {
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if ( possiblePointId !== FIND_POINT_ERROR) {
+            this.selectPoint(possiblePointId);
+            this._renderer.enableDragMode(
+                this._points[possiblePointId],
+                this._points[possiblePointId - 1],
+                this._points[possiblePointId + 1]);
+        } else {
+            if (this._points.length > 2 && this.topPointPosition.clone().sub(this._points[0].position).length() < 1 ) {
+                this.removePoint(this._points.length - 1);
+            }
+            this._points.push(this._renderer.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition));
+            if (this._points.length > 1) {
+                console.log(ConstraintValidator.validateLine(this.points.length - 2, this.points.length - 1, this._points.map((p) => p.position)));
+            }
+            this.updateStartingPosition();
+        }
+
+     }
+
+    private findPointId(pos: Vector2): number {
+        for (let i: number = 0; i < this._points.length ; i++ ) {
+            const diff: number = this._renderer.getClientPosition(this._points[i].position).sub(pos).length();
+            if ( diff <= C.POINT_SELECT_DISTANCE ) {
+                return i;
+             }
+         }
+
+        return FIND_POINT_ERROR;
      }
 }

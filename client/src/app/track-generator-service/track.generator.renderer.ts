@@ -22,7 +22,7 @@ const MAX_ZOOM: number = 100;
 const HALF: number = 0.5;
 const DOUBLE: number = 2;
 
-class DragPoints {
+export class PointsSpan {
     public constructor (
         public point: Mesh,
         public before: Mesh,
@@ -34,7 +34,7 @@ export class TrackRenderer extends Renderer {
     private _cameraPosition: Vector3;
     private _cameraDirection: Vector3;
     private _gridHelper: GridHelper;
-    private _dragPoints: DragPoints;
+    private _dragPoints: PointsSpan;
     private onMouseMoveListner: EventListenerObject;
 
     public constructor(container: HTMLDivElement, private cameraManager: CameraManagerService) {
@@ -178,7 +178,7 @@ export class TrackRenderer extends Renderer {
      }
 
     public enableDragMode(point: Mesh, before?: Mesh, after?: Mesh): void {
-        this._dragPoints = new DragPoints(point, before, after);
+        this._dragPoints = new PointsSpan(point, before, after);
         this.container.addEventListener("mousemove", this.onMouseMoveListner , false);
      }
 
