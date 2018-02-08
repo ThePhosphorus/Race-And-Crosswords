@@ -1,12 +1,13 @@
-import { Word, CrosswordGrid, Letter, Difficulty} from "../../../../common/communication/crossword-grid";
+import { Word, CrosswordGrid, Letter, Difficulty } from "../../../../common/communication/crossword-grid";
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 
-const MAX_TOTAL_ROLLBACKS: number = 30 ;
-const MAX_WORD_ROLLBACKS: number = 2;
-const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical/query-word";
+const MAX_TOTAL_ROLLBACKS: number = 50;
+const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical";
+const LEXICAL_REQUEST_WORDS: string = "/query-word";
+const LEXICAL_TEST_WORD: string = "/test-word";
 
 export class GridGenerator {
 
@@ -62,21 +63,23 @@ export class GridGenerator {
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
         const constraint: string = this.getConstraints(word);
         if (constraint.indexOf("?") === -1) {
-            this.backjump(word);
-            this.rollbackCount++;
+            const receivedWord: DatamuseWord = await this.getDefinitionsFromServer(this.getStringFromWord(word));
+            this.addWord(receivedWord, word, difficulty);
 
         } else {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
             const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word, isEasyWord);
-            if (receivedWord !== undefined && this.isUnique(receivedWord)) {
-                this.setWord(receivedWord, word, difficulty);
-                this.crossword.words.push(word);
-                this.displayGrid();
-            } else {
-                this.backjump(word);
-                this.rollbackCount++;
+            this.addWord(receivedWord, word, difficulty);
+        }
+    }
 
-            }
+    private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
+        if (receivedWord !== undefined && this.isUnique(receivedWord)) {
+            this.setWord(receivedWord, word, difficulty);
+            this.displayGrid();
+        } else {
+            await this.backjump(word);
+            this.rollbackCount++;
         }
     }
 
@@ -92,6 +95,15 @@ export class GridGenerator {
         }
         console.log(s);
 
+    }
+
+    private getStringFromWord(word: Word): string {
+        let wordString: string = "";
+        word.letters.forEach((letter: Letter) => {
+            wordString += letter.char;
+        });
+
+        return wordString;
     }
 
     private isUnique(word: DatamuseWord): boolean {
@@ -113,7 +125,19 @@ export class GridGenerator {
             json: true
         };
 
-        return await Request(LEXICAL_SERVICE_URL, options) as DatamuseWord;
+        return await Request(LEXICAL_SERVICE_URL + LEXICAL_REQUEST_WORDS, options) as DatamuseWord;
+    }
+
+    private async getDefinitionsFromServer(word: string): Promise<DatamuseWord> {
+        const options: Request.RequestPromiseOptions = {
+            method: "POST",
+            body: {
+                word: word
+            },
+            json: true
+        };
+
+        return await Request(LEXICAL_SERVICE_URL + LEXICAL_TEST_WORD, options) as DatamuseWord;
     }
 
     private setWord(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
@@ -126,40 +150,48 @@ export class GridGenerator {
         } else {
             gridWord.definitions.push(receivedWord.defs[1]);
         }
+        this.crossword.words.push(gridWord);
     }
 
     private unsetWord(word: Word): void {
+        this.notPlacedWords.push(word);
         for (const letter of word.letters) {
             if ((--letter.count) <= 0) {
                 letter.char = "";
             }
         }
     }
-    private backjump(currentWord: Word): void {
-       this.notPlacedWords.push(currentWord);
-       let isProblemWord: boolean = false;
-       while (!isProblemWord && this.crossword.words.length > 0) {
-            const backtrackWord: Word = this.crossword.words.pop();
-            this.notPlacedWords.push(backtrackWord);
-            for (const newLetter of backtrackWord.letters) {
-                for (const currentLetter of currentWord.letters) {
-                    if (currentLetter.char !== "" && newLetter.id === currentLetter.id) {
-                        isProblemWord = true;
+    private async backjump(currentWord: Word): Promise<void> {
+        this.rollbackCount++;
+        let isProblemword: boolean = false;
+        for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
+            if (this.crossword.words[i].orientation !== currentWord.orientation) {
+                this.crossword.words[i].letters.forEach((letter: Letter) => {
+                    currentWord.letters.forEach((currentWordLetter: Letter) => {
+                        if (currentWordLetter.char !== "" && currentWordLetter.id === letter.id) {
+                            isProblemword = true;
+                            console.log(currentWordLetter.id + " : " + currentWordLetter.char); // TODO: Remove
+                            return;
+                        }
+                    });
+                    if (isProblemword) {
+                        return;
                     }
+                });
+                if (isProblemword) {
+                    this.unsetWord(this.crossword.words[i]);
+                    this.crossword.words.splice(i, 1); // TODO: Add it to unset Word
+                    await this.findWord(currentWord, Difficulty.Easy);
+                    break;
                 }
             }
-            this.unsetWord(backtrackWord);
         }
-       if ( ++currentWord.rollbackCount > MAX_WORD_ROLLBACKS) {
-            currentWord.rollbackCount = 0;
-            this.backjump(currentWord);
-       }
     }
 
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
-            constraint += letter.char === "" ? "?" : letter.char;
+            constraint += (letter.char === "") ? "?" : letter.char;
         });
 
         return constraint;

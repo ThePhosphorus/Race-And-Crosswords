@@ -1,7 +1,7 @@
 import { Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
 import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
 
-const COMPLEXITY_THRESHOLD: number = 80;
+const COMPLEXITY_THRESHOLD: number = 250;
 
 export class EmptyGridFactory {
 
