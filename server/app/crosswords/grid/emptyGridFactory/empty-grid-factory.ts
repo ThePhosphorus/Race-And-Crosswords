@@ -42,7 +42,6 @@ export class EmptyGridFactory {
                 }
             }
             complexity = this.getComplexity();
-            console.log(complexity);
         } while (complexity > COMPLEXITY_THRESHOLD && tileCount < this.crossword.grid.length);
     }
 
