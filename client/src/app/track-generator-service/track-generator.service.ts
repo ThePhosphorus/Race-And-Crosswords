@@ -27,7 +27,7 @@ const RIGHT_CLICK_CODE: number = 2;
 const LINK_MINIMUM_POINTS: number = 2;
 
 @Injectable()
-export class TrackRenderer extends Renderer {
+export class TrackGenerator extends Renderer {
     private _cameraPosition: Vector3;
     private _cameraDirection: Vector3;
     private _gridHelper: GridHelper;

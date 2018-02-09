@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
-import { TrackRenderer } from "../track-generator-service/track.generator.renderer";
+import { TrackGenerator } from "../track-generator-service/track-generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 import { PosSelect } from "../track-generator-service/track.constantes";
@@ -8,14 +8,14 @@ import { PosSelect } from "../track-generator-service/track.constantes";
     selector: "app-track-editor",
     templateUrl: "./track-editor.component.html",
     styleUrls: ["./track-editor.component.css"],
-    providers: [TrackRenderer, CameraManagerService, ConstraintValidatorService]
+    providers: [TrackGenerator, CameraManagerService, ConstraintValidatorService]
 })
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
     public points: PosSelect[];
 
-    public constructor(private trackRenderer: TrackRenderer) {
+    public constructor(private trackRenderer: TrackGenerator) {
         this.points = [];
      }
 
