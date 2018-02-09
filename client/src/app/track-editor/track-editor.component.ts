@@ -1,64 +1,65 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
-import { TrackGeneratorService, PosSelect } from "../track-generator-service/track.generator.service";
+import { TrackRenderer } from "../track-generator-service/track.generator.renderer";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
+import { PosSelect } from "../track-generator-service/track.constantes";
 
 @Component({
     selector: "app-track-editor",
     templateUrl: "./track-editor.component.html",
     styleUrls: ["./track-editor.component.css"],
-    providers: [TrackGeneratorService, CameraManagerService, ConstraintValidatorService]
+    providers: [TrackRenderer, CameraManagerService, ConstraintValidatorService]
 })
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
     public points: PosSelect[];
 
-    public constructor(private trackGen: TrackGeneratorService) {
+    public constructor(private trackRenderer: TrackRenderer) {
         this.points = [];
      }
 
     public ngAfterViewInit(): void {
-        this.trackGen.init(this.elem.nativeElement);
-        this.points = this.trackGen.points;
+        this.trackRenderer.setContainer(this.elem.nativeElement);
+        this.points = this.trackRenderer.points;
      }
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {
-        this.trackGen.onResize();
+        this.trackRenderer.onResize();
      }
 
     @HostListener("window:keydown", ["$event"])
     public onKeyDown(event: KeyboardEvent): void {
-        this.trackGen.InputkeyDown(event);
+        this.trackRenderer.InputKeyDown(event);
      }
 
     @HostListener("window:keyup", ["$event"])
     public onKeyUp(event: KeyboardEvent): void {
-        this.trackGen.InputKeyUp(event);
+        this.trackRenderer.InputKeyUp(event);
      }
 
     public onClick(event: MouseEvent): void {
-        this.trackGen.mouseEventclick(event);
+        this.trackRenderer.mouseEventclick(event);
      }
 
     public onClickRelease(event: MouseEvent): void {
-        this.trackGen.mouseEventReleaseClick(event);
+        this.trackRenderer.mouseEventReleaseClick(event);
         this.update();
      }
 
     public removePoint(index: number): void {
-        this.trackGen.removePoint(index);
+        this.trackRenderer.removePoint(index);
         this.update();
      }
 
     public selectPoint(index: number): void {
-        this.trackGen.selectPoint(index);
+        this.trackRenderer.selectPoint(index);
         this.update();
      }
 
     private update(): void {
-        this.points = this.trackGen.points;
+        this.points = this.trackRenderer.points;
      }
 
 }
