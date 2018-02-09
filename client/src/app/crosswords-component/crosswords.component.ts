@@ -18,6 +18,7 @@ export class CrosswordsComponent implements OnInit {
     public grid: CrosswordGrid;
     public enableInput: boolean[];
     private _cheatmode: boolean;
+    private _currOrientation: Orientation;
 
 
     public constructor(private crosswordService: CrosswordService) {
@@ -53,11 +54,12 @@ export class CrosswordsComponent implements OnInit {
 
     private get acrossDefinitions(): string[] {
         return this.grid.words.filter((w: Word) => w.orientation === Orientation.Across)
-            .map((w: Word) => this.toWord(w.letters));
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
     }
 
     private get downDefinitions(): string[] {
-        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down).map((w: Word) => this.toWord(w.letters));
+        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down)
+            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
     }
 
     private toWord(letters: Letter[]): string {
@@ -83,9 +85,23 @@ export class CrosswordsComponent implements OnInit {
     public get cheatMode(): boolean {
         return this._cheatmode;
     }
-    private onClick(w: Word): void {
-        w.letters.forEach((letter: Letter) => {
-            this.enableInput[this.grid.grid.indexOf(letter)] = true;
+    public onClick(i: number, isAcross: boolean): void {
+        let clickedWord: Word ;
+        this.grid.words.forEach((w: Word) => {
+            if ((w.orientation === Orientation.Across) === isAcross) {
+                if (i === 0) {
+                    clickedWord = w;
+                } else {
+                i--;
+                }
+
+            }
         });
+        this.enableInputLetter(clickedWord);
+    }
+    private enableInputLetter(clickedWord: Word): void {
+        if(clickedWord.orientation === Orientation.Across){
+
+        }
     }
 }

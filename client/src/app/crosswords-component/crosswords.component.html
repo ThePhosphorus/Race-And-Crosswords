@@ -8,8 +8,8 @@
               <th>ACROSS</th>
             </tr>
           </thead>
-          <tr *ngFor="let item of acrossDefinitions; let i = index">
-            <td (click)="onClick(item)" >{{item}}</td>
+          <tr *ngFor="let item of acrossDefinitions; let row = index">
+            <td (click)="onClick(row, true)" >{{item}}</td>
           </tr>
         </table>
       </div>
@@ -20,8 +20,8 @@
               <th>DOWN</th>
             </tr>
           </thead>
-          <tr *ngFor="let item of downDefinitions;let j= index">
-            <td (click)="onClick(item)">{{item}}</td>
+          <tr *ngFor="let item of downDefinitions;let col= index">
+            <td >{{item}}</td>
           </tr>
         </table>
       </div>
@@ -34,20 +34,20 @@
 
     <table id="grid"align="center">
       <thead>
-      <th *ngFor="let letters of twoDimensionGrid;let k = index">
-        {{k+1}}
+      <th *ngFor="let letters of twoDimensionGrid;let it = index">
+        {{it+1}}
       </th>
       <th>#</th>
       </thead>
       <tbody>
-        <tr *ngFor="let letters of twoDimensionGrid;let l = index">
+        <tr *ngFor="let letters of twoDimensionGrid;let row = index">
             <input type="text" class="form-control" id="word" placeholder="..." [hidden]="!enableInput[l]">
-          <td *ngFor="let letter of letters; let m = index" [ngClass]="{'black': letter.isBlackTile}">
+          <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
             <span *ngIf="letter.char">
-                <input type="text" class="form-control" id="letter + {{m}}" placeholder="{{letter.char | uppercase}}" hidden>
+                <input type="text" maxlength="1" class="form-control"  placeholder="{{letter.char | uppercase}}" >
             </span>
           </td>
-          <th scope="row">{{l+1}}</th>
+          <th scope="row">{{row+1}}</th>
         </tr>
 
       </tbody>
