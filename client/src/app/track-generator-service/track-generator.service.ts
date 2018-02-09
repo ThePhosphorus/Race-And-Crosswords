@@ -23,6 +23,7 @@ const MAX_ZOOM: number = 100;
 const HALF: number = 0.5;
 const DOUBLE: number = 2;
 const LEFT_CLICK_CODE: number = 0;
+const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
 const LINK_MINIMUM_POINTS: number = 2;
 
@@ -105,10 +106,12 @@ export class TrackGenerator extends Renderer {
     }
 
     public mouseEventclick(event: MouseEvent): void {
-        if (event.button === LEFT_CLICK_CODE) { // LEFT CLICK
+        if (event.button === LEFT_CLICK_CODE) {
             this.mouseEventLeftClick(event);
-        } else if (event.button === RIGHT_CLICK_CODE) { // RIGHT CLICK
+        } else if (event.button === MIDDLE_CLICK_CODE) {
             this.mouseEventRightClick(event);
+        } else if (event.button === RIGHT_CLICK_CODE) {
+            this.removePoint(this._points.length - 1);
         }
     }
 
