@@ -1,0 +1,21 @@
+<table id="grid" align="center">
+  <thead>
+    <th *ngFor="let letters of twoDimensionGrid;let it = index">
+      {{it+1}}
+    </th>
+    <th>#</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let letters of twoDimensionGrid;let row = index">
+      <input type="text" class="form-control" id="word" placeholder="..." >
+      <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
+        <span *ngIf="letter.char">
+          <input type="text" maxlength="1" class="form-control" placeholder="{{letter.char | uppercase}}" >
+        </span>
+      </td>
+      <th scope="row">{{row+1}}</th>
+    </tr>
+
+  </tbody>
+
+</table>

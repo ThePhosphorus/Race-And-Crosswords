@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { Difficulty, CrosswordGrid, Word } from "../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/of";
+import { of } from "rxjs/observable/of";
 
 const STARTING_GRID_SIZE: number = 4;
 const STARTING_BLACK_TILE_RATIO: number = 0.3;
@@ -19,7 +19,7 @@ export class CrosswordService {
         this._diff = Difficulty.Easy;
         this._gridSize = STARTING_GRID_SIZE;
         this._blackTilesRatio = STARTING_BLACK_TILE_RATIO;
-        this._currentGrid = null;
+        this._currentGrid = new CrosswordGrid;
     }
 
     public get difficulty(): Difficulty { return this._diff; }
@@ -28,6 +28,9 @@ export class CrosswordService {
 
     public get currentGrid(): CrosswordGrid {
         return this._currentGrid;
+    }
+    public get words(): Observable<Word[]> {
+        return of (this._currentGrid.words);
     }
 
     public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
