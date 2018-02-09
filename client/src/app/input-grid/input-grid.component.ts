@@ -16,9 +16,9 @@ export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
 
     public constructor(private crosswordService: CrosswordService) {
-        this._grid = new CrosswordGrid();
-        this._grid.size = INITIAL_GRID_SIZE;
-        this.initializeGrids();
+         this._grid = new CrosswordGrid();
+         this._grid.size = INITIAL_GRID_SIZE;
+         this.initializeGrids();
 
     }
 

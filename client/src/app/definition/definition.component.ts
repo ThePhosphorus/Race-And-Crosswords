@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import { Letter, Word, Orientation } from "../../../../common/communication/crossword-grid";
+import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 
 @Component({
     selector: "app-definition",
@@ -15,12 +15,13 @@ export class DefinitionComponent implements OnInit {
 
     public constructor(private _crosswordService: CrosswordService) {
         this._cheatmode = false;
+        this._wordGrid = null;
     }
 
     public ngOnInit(): void {
         this._crosswordService.words
-            .subscribe((word: Word[]) => {
-                this._wordGrid = word;
+            .subscribe((grid: CrosswordGrid) => {
+                this._wordGrid = grid.words;
             });
     }
 
