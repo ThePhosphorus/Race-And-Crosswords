@@ -225,10 +225,10 @@ export class Car extends Object3D {
             1 / tirePressure *
                 (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
-        if (this.isGoingForward()) {
+       // if (this.isGoingForward()) {
             return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
-        }
-        return this.direction.multiplyScalar(-1 * rollingCoefficient * this.mass * GRAVITY);
+       // }
+        //return this.direction.multiplyScalar(-20 * rollingCoefficient * this.mass * GRAVITY);
     }
 
     private getDragForce(): Vector3 {

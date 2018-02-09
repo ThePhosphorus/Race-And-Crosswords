@@ -17,23 +17,21 @@ export class SoundManagerService {
     private init(): void {
         const tmpLoop: Audio = this.engineLoop = new Audio(this.cameraManager.listener);
         const idleLoader: AudioLoader = new AudioLoader();
-        idleLoader.load("../../assets/sounds/engine.ogg",
-            (buffer: AudioBuffer) => {
+        idleLoader.load("../../assets/sounds/engine.ogg", (buffer: AudioBuffer) => {
                 tmpLoop.setBuffer(buffer);
                 tmpLoop.setLoop(true);
                 tmpLoop.setVolume(0.5);
-            },
-            () => { },
-            () => { });
+            },() => { } ,() => { });
 
     }
 
     public modifyPlayBackSpeed(rpm: number): void {
-        if(rpm > 800)
-        {
+        if (rpm > 800) {
             this.engineLoop.stop();
-            this.engineLoop.playbackRate = rpm/1600 - 0.3;
+            this.engineLoop.playbackRate = (rpm - 800) / 4700 + 1;
             this.engineLoop.play();
+        } else {
+            this.engineLoop.playbackRate = 1;
         }
     }
     public startSounds(): void {
