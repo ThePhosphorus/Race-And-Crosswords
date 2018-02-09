@@ -26,6 +26,7 @@ const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
 const LINK_MINIMUM_POINTS: number = 2;
+const DELETE_KEY: number = 46;
 
 @Injectable()
 export class TrackGenerator extends Renderer {
@@ -39,7 +40,7 @@ export class TrackGenerator extends Renderer {
 
     public constructor(private cameraManager: CameraManagerService,
                        private constraintValidator: ConstraintValidatorService) {
-        super(cameraManager, false);
+        super(cameraManager, true);
         this._points = new Array<Mesh>();
         this.constraintValidator.setPoints(this._points);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
@@ -86,6 +87,11 @@ export class TrackGenerator extends Renderer {
                 break;
             case ZOOM_OUT_KEYCODE:
                 this.cameraManager.zoomOut();
+                break;
+            case DELETE_KEY:
+                if (this._selectedPoint) {
+                    this.removePoint(this._points.findIndex((p: Mesh) => p === this._selectedPoint));
+                }
                 break;
             default:
                 break;
