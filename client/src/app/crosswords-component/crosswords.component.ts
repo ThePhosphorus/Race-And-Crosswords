@@ -3,31 +3,38 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
+
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
-  selector: "app-crosswords",
-  templateUrl: "./crosswords.component.html",
-  styleUrls: ["./crosswords.component.css"],
-  providers: [ CrosswordCommunicationService, CrosswordService ]
+    selector: "app-crosswords",
+    templateUrl: "./crosswords.component.html",
+    styleUrls: ["./crosswords.component.css"],
+    providers: [CrosswordCommunicationService, CrosswordService]
 })
 export class CrosswordsComponent implements OnInit {
 
     public grid: CrosswordGrid;
-
+    public enableInput: boolean[];
     private _cheatmode: boolean;
+
 
     public constructor(private crosswordService: CrosswordService) {
         this.grid = new CrosswordGrid();
         this.grid.size = INITIAL_GRID_SIZE;
-        this.initializeGrid();
+        this.enableInput = new Array <boolean>();
+        this.initializeGrids();
         this._cheatmode = false;
     }
 
-    private initializeGrid(): void {
+    private initializeGrids(): void {
+        let temp: boolean = false;
         for (let i: number = 0; i < (this.grid.size * this.grid.size); i++) {
             this.grid.grid.push(new Letter(""));
+        }
+        for (let j: number = 0; j < (this.grid.size); j++) {
+            this.enableInput.push(temp);
         }
     }
 
@@ -46,12 +53,11 @@ export class CrosswordsComponent implements OnInit {
 
     private get acrossDefinitions(): string[] {
         return this.grid.words.filter((w: Word) => w.orientation === Orientation.Across)
-            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+            .map((w: Word) => this.toWord(w.letters));
     }
 
     private get downDefinitions(): string[] {
-        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down)
-            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+        return this.grid.words.filter((w: Word) => w.orientation === Orientation.Down).map((w: Word) => this.toWord(w.letters));
     }
 
     private toWord(letters: Letter[]): string {
@@ -76,5 +82,10 @@ export class CrosswordsComponent implements OnInit {
 
     public get cheatMode(): boolean {
         return this._cheatmode;
+    }
+    private onClick(w: Word): void {
+        w.letters.forEach((letter: Letter) => {
+            this.enableInput[this.grid.grid.indexOf(letter)] = true;
+        });
     }
 }
