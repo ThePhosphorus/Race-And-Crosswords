@@ -115,7 +115,7 @@ export class TrackGenerator extends Renderer {
         if (event.button === LEFT_CLICK_CODE) {
             this.mouseEventLeftClick(event);
         } else if (event.button === MIDDLE_CLICK_CODE) {
-            this.mouseEventRightClick(event);
+            this.mouseEventMiddleClick(event);
         } else if (event.button === RIGHT_CLICK_CODE) {
             this.removePoint(this._points.length - 1);
         }
@@ -149,12 +149,6 @@ export class TrackGenerator extends Renderer {
 
         if (pointId === 0 && !this.topPointPosition.equals(this._points[0].position)) {
             this.closeLoop();
-        }
-
-        if ((pointId === this._points.length - 1 || pointId === 0) && this.topPointPosition.equals(this._points[0].position)) {
-            this.enableClosingDragMode();
-        } else {
-            this.enableDragMode(pointId);
         }
     }
 
@@ -291,7 +285,7 @@ export class TrackGenerator extends Renderer {
         this._points[0].material = C.START_POINT_MATERIAL;
     }
 
-    private mouseEventRightClick(event: MouseEvent): void {
+    private mouseEventMiddleClick(event: MouseEvent): void {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.removePoint(possiblePointId);
@@ -302,6 +296,7 @@ export class TrackGenerator extends Renderer {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.selectPoint(possiblePointId);
+            this.enableDragMode(possiblePointId);
         } else {
             // Remove connection to spawn point
             if (this._points.length > LINK_MINIMUM_POINTS && this.topPointPosition.clone().sub(this._points[0].position).length() < 1) {
@@ -316,11 +311,15 @@ export class TrackGenerator extends Renderer {
     }
 
     private enableDragMode(pointId: number): void {
-        this._dragPoints = new C.PointsSpan(
-            this._points[pointId],
-            this._points[pointId - 1],
-            this._points[pointId + 1],
-            null);
+        if ((pointId === this._points.length - 1 || pointId === 0) && this.topPointPosition.equals(this._points[0].position)) {
+            this.enableClosingDragMode();
+        } else {
+            this._dragPoints = new C.PointsSpan(
+                this._points[pointId],
+                this._points[pointId - 1],
+                this._points[pointId + 1],
+                null);
+        }
         this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
     }
 
@@ -330,7 +329,6 @@ export class TrackGenerator extends Renderer {
             this._points[this._points.length - LINK_MINIMUM_POINTS],
             this._points[1],
             this._points[this._points.length - 1]);
-        this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
     }
 
     private findPointId(pos: Vector2): number {
