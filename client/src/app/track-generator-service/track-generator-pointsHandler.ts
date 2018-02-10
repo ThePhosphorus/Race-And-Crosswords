@@ -46,7 +46,7 @@ export class TrackGeneratorPointsHandler {
         }
 
         this._selectedPoint = pointId;
-        this.point(this._selectedPoint).material = C.SELECTION_MATERIAL;
+        this.point(pointId).material = C.SELECTION_MATERIAL;
 
         if (pointId === 0 && !this.top.position.equals(this._points[0].position)) {
             this.closeLoop();
@@ -64,6 +64,8 @@ export class TrackGeneratorPointsHandler {
         this._points.splice(index, 1);
         if (index === this._selectedPoint) {
             this._selectedPoint = -1;
+        } else if (index < this._selectedPoint) {
+            this._selectedPoint--;
         }
     }
 
