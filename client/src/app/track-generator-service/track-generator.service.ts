@@ -15,6 +15,7 @@ import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 import { Injectable } from "@angular/core";
+import { Vector2 } from "three";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -129,6 +130,13 @@ export class TrackGenerator extends Renderer {
         this.disableTranslateMode();
         this.updateStartingPosition();
         this.resetValidation(this._points);
+    }
+
+    public mouseWheelEvent(event: MouseWheelEvent): void {
+        if (event.offsetX > 0 && event.offsetX < this.container.offsetWidth &&
+            event.offsetY > 0 && event.offsetY < this.container.offsetHeight ) {
+                this.cameraManager.cameraDistanceToCar = this.cameraManager.cameraDistanceToCar + event.deltaY / 50; // HACK: Find better way
+            }
     }
 
     public get points(): C.PosSelect[] {
@@ -286,7 +294,9 @@ export class TrackGenerator extends Renderer {
     }
 
     public updateStartingPosition(): void {
-        this._points[0].material = C.START_POINT_MATERIAL;
+        if (this._points[0]) {
+            this._points[0].material = C.START_POINT_MATERIAL;
+        }
     }
 
     private mouseEventMiddleClick(event: MouseEvent): void {
