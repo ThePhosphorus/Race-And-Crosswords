@@ -21,7 +21,7 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public ngAfterViewInit(): void {
         this.trackRenderer.setContainer(this.elem.nativeElement);
-        this.points = this.trackRenderer.points;
+        this.points = this.trackRenderer.points.PositionSelectPoints;
      }
 
     @HostListener("window:resize", ["$event"])
@@ -54,17 +54,17 @@ export class TrackEditorComponent implements AfterViewInit {
      }
 
     public removePoint(index: number): void {
-        this.trackRenderer.removePoint(index);
+        this.trackRenderer.points.removePoint(index);
         this.update();
      }
 
     public selectPoint(index: number): void {
-        this.trackRenderer.selectPoint(index);
+        this.trackRenderer.points.selectPoint(index);
         this.update();
      }
 
     private update(): void {
-        this.points = this.trackRenderer.points;
+        this.points = this.trackRenderer.points.PositionSelectPoints;
      }
 
 }
