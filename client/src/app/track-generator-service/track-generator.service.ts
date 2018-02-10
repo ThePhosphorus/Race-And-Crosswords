@@ -35,8 +35,10 @@ export class TrackGenerator extends Renderer {
     private _gridHelper: GridHelper;
     private _dragPoints: C.PointsSpan;
     private onMouseMoveListner: EventListenerObject;
+    private onMouseTranslateListner: EventListenerObject;
     private _points: Array<Mesh>;
     private _selectedPoint: Mesh;
+    private _lastTranslatePosition: Vector3;
 
     public constructor(private cameraManager: CameraManagerService,
                        private constraintValidator: ConstraintValidatorService) {
@@ -44,6 +46,7 @@ export class TrackGenerator extends Renderer {
         this._points = new Array<Mesh>();
         this.constraintValidator.setPoints(this._points);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
+        this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
     }
 
     public setContainer(container: HTMLDivElement): void {
@@ -123,6 +126,7 @@ export class TrackGenerator extends Renderer {
 
     public mouseEventReleaseClick(event: MouseEvent): void {
         this.disableDragMode();
+        this.disableTranslateMode();
         this.updateStartingPosition();
         this.resetValidation(this._points);
     }
@@ -181,9 +185,9 @@ export class TrackGenerator extends Renderer {
         );
 
         return new Vector3(
-            clientClickPos.x * cameraClientRatio.x,
+            clientClickPos.x * cameraClientRatio.x + this._cameraPosition.x,
             C.LINE_Y_POSITION,
-            clientClickPos.y * cameraClientRatio.y
+            clientClickPos.y * cameraClientRatio.y + this._cameraPosition.z
         );
     }
 
@@ -196,8 +200,8 @@ export class TrackGenerator extends Renderer {
         );
 
         const clientClickPos: Vector2 = new Vector2(
-            pos.x / cameraClientRatio.x,
-            pos.z / cameraClientRatio.y
+            (pos.x - this._cameraPosition.x ) /  cameraClientRatio.x,
+            (pos.z - this._cameraPosition.z ) / cameraClientRatio.y
         );
 
         return new Vector2(
@@ -289,6 +293,8 @@ export class TrackGenerator extends Renderer {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.removePoint(possiblePointId);
+        } else {
+            this.enableTranslateMode();
         }
     }
 
@@ -340,5 +346,23 @@ export class TrackGenerator extends Renderer {
         }
 
         return null;
+    }
+
+    private enableTranslateMode(): void {
+        this.container.addEventListener("mousemove", this.onMouseTranslateListner, false);
+    }
+
+    private disableTranslateMode(): void {
+        this.container.removeEventListener("mousemove", this.onMouseTranslateListner, false);
+        this._lastTranslatePosition = undefined;
+    }
+
+    private onTranslateCamera(event: MouseEvent): void {
+        const point: Vector3 = this.getRelativePosition(new Vector2(event.offsetX, event.offsetY));
+        if (!this._lastTranslatePosition) {
+            this._lastTranslatePosition = point;
+        }
+        this._cameraPosition.add(this._lastTranslatePosition.clone().sub(point));
+        this._lastTranslatePosition = point;
     }
 }
