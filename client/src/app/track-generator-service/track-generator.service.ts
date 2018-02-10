@@ -15,7 +15,6 @@ import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 import { Injectable } from "@angular/core";
-import { Vector2 } from "three";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -41,6 +40,8 @@ export class TrackGenerator extends Renderer {
     private _selectedPoint: Mesh;
     private _lastTranslatePosition: Vector3;
 
+//////////////////////// Constructor
+
     public constructor(private cameraManager: CameraManagerService,
                        private constraintValidator: ConstraintValidatorService) {
         super(cameraManager, true);
@@ -50,6 +51,7 @@ export class TrackGenerator extends Renderer {
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
     }
 
+//////////////////////// Rendering
     public setContainer(container: HTMLDivElement): void {
         this.init(container);
         this.startRenderingLoop();
@@ -81,8 +83,9 @@ export class TrackGenerator extends Renderer {
             this._cameraPosition,
             this._cameraDirection
         );
-        this.cameraManager.update(timeSinceLastFrame);
     }
+
+//////////////////////// Input
 
     public InputKeyDown(event: KeyboardEvent): void {
         switch (event.keyCode) {
@@ -139,6 +142,56 @@ export class TrackGenerator extends Renderer {
             }
     }
 
+    private mouseEventMiddleClick(event: MouseEvent): void {
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if (possiblePointId !== null) {
+            this.removePoint(possiblePointId);
+        } else {
+            this.enableTranslateMode();
+        }
+    }
+
+    private mouseEventLeftClick(event: MouseEvent): void {
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if (possiblePointId !== null) {
+            this.selectPoint(possiblePointId);
+            this.enableDragMode(possiblePointId);
+        } else {
+            // Remove connection to spawn point
+            if (this._points.length > LINK_MINIMUM_POINTS && this.topPointPosition.clone().sub(this._points[0].position).length() < 1) {
+                this.removePoint(this._points.length - 1);
+            }
+
+            const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition);
+            this._points.push(newPoint);
+            this.updateStartingPosition();
+            this.selectPoint(this._points.length - 1);
+        }
+    }
+
+    private onMouseMove(event: MouseEvent): void {
+        this._dragPoints.point.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
+        if (this._dragPoints.closingPoint) {
+            this._dragPoints.closingPoint.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
+            this.updateLine(this._dragPoints.closingPoint, this._dragPoints.before, null);
+            this.updateLine(this._dragPoints.point, null, this._dragPoints.after);
+        } else {
+            this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
+        }
+
+    }
+
+    private onTranslateCamera(event: MouseEvent): void {
+        const point: Vector3 = this.getRelativePosition(new Vector2(event.offsetX, event.offsetY));
+        if (!this._lastTranslatePosition) {
+            this._lastTranslatePosition = point;
+        }
+        this._cameraPosition.add(this._lastTranslatePosition.clone().sub(point));
+        this._lastTranslatePosition = point;
+    }
+
+//////////////////////// Point Handeling
+
     public get points(): C.PosSelect[] {
         const result: C.PosSelect[] = [];
         this._points.forEach((point: Mesh) =>
@@ -147,8 +200,8 @@ export class TrackGenerator extends Renderer {
         return result;
     }
 
-    private toVector2(v: Vector3): Vector2 {
-        return new Vector2(v.x, v.z);
+    public get topPointPosition(): Vector3 {
+        return (this._points.length) ? this._points[this._points.length - 1].position : null;
     }
 
     public selectPoint(pointId: number): void {
@@ -164,11 +217,12 @@ export class TrackGenerator extends Renderer {
         }
     }
 
-    private closeLoop(): void {
-        this._points.push(this.createDot(
-            this.getClientPosition(this._points[0].position),
-            this.topPointPosition));
+    public removePoint(index: number): void {
+        this.removeObject(this._points[index], this._points[index - 1], this._points[index + 1]);
+        this._points.splice(index, 1);
     }
+
+//////////////////////// ThreeJs object handeling
 
     public createDot(pos: Vector2, topMesh: Vector3): Mesh {
         const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
@@ -178,6 +232,64 @@ export class TrackGenerator extends Renderer {
         this.disableDragMode();
 
         return circle;
+    }
+
+    public removeObject(obj: Mesh, before?: Mesh, after?: Mesh): void {
+        const id: number = obj.id;
+        this.scene.remove(this.scene.getObjectById(id));
+        const line: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + id);
+        if (after) {
+            const nextLine: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + after.id);
+            this.scene.remove(nextLine);
+        }
+
+        this.scene.remove(line);
+
+        if (before != null && after != null) {
+            this.createLine(before.position, after.position, after.id);
+        }
+
+        this.disableDragMode();
+    }
+
+    private closeLoop(): void {
+        this._points.push(this.createDot(
+            this.getClientPosition(this._points[0].position),
+            this.topPointPosition));
+    }
+
+    public updateLine(point: Mesh, before?: Mesh, after?: Mesh): void {
+        if (before) {
+            const beforeLine: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + point.id);
+            this.scene.remove(beforeLine);
+            this.createLine(before.position, point.position, point.id);
+        }
+
+        if (after) {
+            const nextLine: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + after.id);
+            this.scene.remove(nextLine);
+            this.createLine(point.position, after.position, after.id);
+        }
+    }
+
+    private createLine(from: Vector3, to: Vector3, id: number): void {
+        const lineG: Geometry = new Geometry();
+        lineG.vertices.push(from, to);
+        const line: Line = new Line(lineG, this.constraintValidator.validateLine(from, to) ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID);
+        line.name = LINE_STR_PREFIX + id;
+        this.scene.add(line);
+    }
+
+    public updateStartingPosition(): void {
+        if (this._points[0]) {
+            this._points[0].material = C.START_POINT_MATERIAL;
+        }
+    }
+
+//////////////////////// Converters and tools
+
+    private toVector2(v: Vector3): Vector2 {
+        return new Vector2(v.x, v.z);
     }
 
     public getRelativePosition(pos: Vector2): Vector3 {
@@ -218,112 +330,20 @@ export class TrackGenerator extends Renderer {
         );
     }
 
-    public removeObject(obj: Mesh, before?: Mesh, after?: Mesh): void {
-        const id: number = obj.id;
-        this.scene.remove(this.scene.getObjectById(id));
-        const line: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + id);
-        if (after) {
-            const nextLine: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + after.id);
-            this.scene.remove(nextLine);
+    private findPointId(pos: Vector2): number {
+        for (let i: number = this._points.length - 1; i >= 0; i--) {
+            const diff: number = this.getClientPosition(this._points[i].position).sub(pos).length();
+            if (diff <= C.POINT_SELECT_DISTANCE) {
+                return i;
+            }
         }
 
-        this.scene.remove(line);
-
-        if (before != null && after != null) {
-            this.createLine(before.position, after.position, after.id);
-        }
-
-        this.disableDragMode();
+        return null;
     }
 
-    public updateLine(point: Mesh, before?: Mesh, after?: Mesh): void {
-        if (before) {
-            const beforeLine: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + point.id);
-            this.scene.remove(beforeLine);
-            this.createLine(before.position, point.position, point.id);
-        }
-
-        if (after) {
-            const nextLine: Object3D = this.scene.getObjectByName(LINE_STR_PREFIX + after.id);
-            this.scene.remove(nextLine);
-            this.createLine(point.position, after.position, after.id);
-        }
-    }
-
-    private onMouseMove(event: MouseEvent): void {
-        this._dragPoints.point.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
-        if (this._dragPoints.closingPoint) {
-            this._dragPoints.closingPoint.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
-            this.updateLine(this._dragPoints.closingPoint, this._dragPoints.before, null);
-            this.updateLine(this._dragPoints.point, null, this._dragPoints.after);
-        } else {
-            this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
-        }
-
-    }
-
+//////////////////////// event functions
     public disableDragMode(): void {
         this.container.removeEventListener("mousemove", this.onMouseMoveListner, false);
-    }
-
-    public resetValidation(points: Array<Mesh>): void {
-        for (let i: number = 0; i < points.length - 1; i++) {
-            if (points[i + 1] !== null) {
-                (this.scene.getObjectByName(LINE_STR_PREFIX + points[i + 1].id) as Line).material =
-                    this.constraintValidator.validateLine(points[i].position, points[i + 1].position)
-                        ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
-            }
-        }
-    }
-
-    private createLine(from: Vector3, to: Vector3, id: number): void {
-        const lineG: Geometry = new Geometry();
-        lineG.vertices.push(from, to);
-        const line: Line = new Line(lineG, this.constraintValidator.validateLine(from, to) ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID);
-        line.name = LINE_STR_PREFIX + id;
-        this.scene.add(line);
-    }
-
-    public removePoint(index: number): void {
-        this.removeObject(this._points[index], this._points[index - 1], this._points[index + 1]);
-        this._points.splice(index, 1);
-    }
-
-    public get topPointPosition(): Vector3 {
-        return (this._points.length) ? this._points[this._points.length - 1].position : null;
-    }
-
-    public updateStartingPosition(): void {
-        if (this._points[0]) {
-            this._points[0].material = C.START_POINT_MATERIAL;
-        }
-    }
-
-    private mouseEventMiddleClick(event: MouseEvent): void {
-        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
-        if (possiblePointId !== null) {
-            this.removePoint(possiblePointId);
-        } else {
-            this.enableTranslateMode();
-        }
-    }
-
-    private mouseEventLeftClick(event: MouseEvent): void {
-        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
-        if (possiblePointId !== null) {
-            this.selectPoint(possiblePointId);
-            this.enableDragMode(possiblePointId);
-        } else {
-            // Remove connection to spawn point
-            if (this._points.length > LINK_MINIMUM_POINTS && this.topPointPosition.clone().sub(this._points[0].position).length() < 1) {
-                this.removePoint(this._points.length - 1);
-            }
-
-            const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY), this.topPointPosition);
-            this._points.push(newPoint);
-            this.updateStartingPosition();
-            this.selectPoint(this._points.length - 1);
-        }
     }
 
     private enableDragMode(pointId: number): void {
@@ -347,17 +367,6 @@ export class TrackGenerator extends Renderer {
             this._points[this._points.length - 1]);
     }
 
-    private findPointId(pos: Vector2): number {
-        for (let i: number = this._points.length - 1; i >= 0; i--) {
-            const diff: number = this.getClientPosition(this._points[i].position).sub(pos).length();
-            if (diff <= C.POINT_SELECT_DISTANCE) {
-                return i;
-            }
-        }
-
-        return null;
-    }
-
     private enableTranslateMode(): void {
         this.container.addEventListener("mousemove", this.onMouseTranslateListner, false);
     }
@@ -367,12 +376,14 @@ export class TrackGenerator extends Renderer {
         this._lastTranslatePosition = undefined;
     }
 
-    private onTranslateCamera(event: MouseEvent): void {
-        const point: Vector3 = this.getRelativePosition(new Vector2(event.offsetX, event.offsetY));
-        if (!this._lastTranslatePosition) {
-            this._lastTranslatePosition = point;
+//////////////////////// Validation
+    public resetValidation(points: Array<Mesh>): void {
+        for (let i: number = 0; i < points.length - 1; i++) {
+            if (points[i + 1] !== null) {
+                (this.scene.getObjectByName(LINE_STR_PREFIX + points[i + 1].id) as Line).material =
+                    this.constraintValidator.validateLine(points[i].position, points[i + 1].position)
+                        ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
+            }
         }
-        this._cameraPosition.add(this._lastTranslatePosition.clone().sub(point));
-        this._lastTranslatePosition = point;
     }
 }
