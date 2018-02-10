@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { TrackEditorComponent } from "./track-editor.component";
+import { ReversePipe } from "../reverse-pipe/reverse.pipe";
 
 describe("TrackEditorComponent", () => {
   let component: TrackEditorComponent;
@@ -7,7 +8,7 @@ describe("TrackEditorComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TrackEditorComponent ]
+      declarations: [ TrackEditorComponent, ReversePipe ]
     })
     .compileComponents();
   }));

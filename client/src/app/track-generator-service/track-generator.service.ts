@@ -15,7 +15,7 @@ import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
 import { Injectable } from "@angular/core";
-import { TrackGeneratorPointsHandler } from './track-generator-pointsHandler';
+import { TrackGeneratorPointsHandler } from "./track-generator-pointsHandler";
 
 const LINE_STR_PREFIX: string = "Line to ";
 

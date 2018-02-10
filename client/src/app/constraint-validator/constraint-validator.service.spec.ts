@@ -1,4 +1,4 @@
-import { TestBed, inject, ComponentFixture } from "@angular/core/testing";
+import { TestBed, inject } from "@angular/core/testing";
 
 import { ConstraintValidatorService } from "./constraint-validator.service";
 
