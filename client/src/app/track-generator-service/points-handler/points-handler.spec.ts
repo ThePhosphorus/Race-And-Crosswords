@@ -10,8 +10,7 @@ import { OUT_OF_RANGE_EXCEPTION_MSG } from "../../exceptions/OutOfRangeException
 
 describe("PointsHandler for TrackGeneratorService", () => {
     const cameraManager: CameraManagerService = new CameraManagerService();
-    const constraints: ConstraintValidatorService = new ConstraintValidatorService();
-    const trackGen: TrackGenerator = new TrackGenerator(cameraManager, constraints);
+    const trackGen: TrackGenerator = new TrackGenerator(cameraManager);
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -19,7 +18,6 @@ describe("PointsHandler for TrackGeneratorService", () => {
         });
         const div: HTMLDivElement = document.createElement("div");
         trackGen.setContainer(div);
-        constraints.setPoints(trackGen.points.points);
     });
 
     it("should be created",  () => {

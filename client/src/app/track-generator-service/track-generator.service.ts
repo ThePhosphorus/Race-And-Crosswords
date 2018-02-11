@@ -16,6 +16,8 @@ import { Renderer } from "../renderer/renderer";
 import { ConstraintValidatorService } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
+import { EmptyArrayException, EMPTY_ARRAY_EXCEPTION_MSG } from "../exceptions/EmptyArrayException";
+import { OutOfRangeException } from "../exceptions/OutOfRangeException";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -39,16 +41,16 @@ export class TrackGenerator extends Renderer {
     private onMouseTranslateListner: EventListenerObject;
     private _lastTranslatePosition: Vector3;
     public points: PointsHandler;
+    private constraintValidator: ConstraintValidatorService;
 
 //////////////////////// Constructor
 
-    public constructor(private cameraManager: CameraManagerService,
-                       private constraintValidator: ConstraintValidatorService) {
+    public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, true);
         this.points = new PointsHandler(this);
-        this.constraintValidator.setPoints(this.points.points);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
+        this.constraintValidator = new ConstraintValidatorService(this.points.points);
     }
 
 //////////////////////// Rendering
@@ -164,10 +166,20 @@ export class TrackGenerator extends Renderer {
                 this.points.removePoint(this.points.length - 1);
             }
 
-            const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY), (this.points.top) ? this.points.top.position : null);
+            let newPoint: Mesh;
+            try {
+                newPoint = this.createDot(new Vector2(event.offsetX, event.offsetY), this.points.top.position);
+            } catch (e) {
+                const err: Error = e;
+                if (err.message === new EmptyArrayException().message) {
+                    newPoint = this.createDot(new Vector2(event.offsetX, event.offsetY), null);
+                } else {throw e; }
+            }
+
             this.points.push(newPoint);
             this.points.updateStartingPosition();
             this.points.selectPoint(this.points.length - 1);
+
         }
     }
 
@@ -307,11 +319,22 @@ export class TrackGenerator extends Renderer {
         if ((pointId === this.points.length - 1 || pointId === 0) && this.points.top.position.equals(this.points.point(0).position)) {
             this.enableClosingDragMode();
         } else {
-            this._dragPoints = new C.PointsSpan(
-                this.points.point(pointId),
-                this.points.point(pointId - 1),
-                this.points.point(pointId + 1),
-                null);
+            try {
+                this._dragPoints = new C.PointsSpan(
+                    this.points.point(pointId),
+                    this.points.point(pointId - 1),
+                    this.points.point(pointId + 1),
+                    null);
+            } catch (e) {
+                const err: Error = e;
+                if (err.message === new OutOfRangeException().message) {
+                    this._dragPoints = new C.PointsSpan(
+                        this.points.point(pointId),
+                        this.points.point(pointId - 1),
+                        null,
+                        null);
+                } else {throw e ; }
+            }
         }
         this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
     }

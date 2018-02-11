@@ -1,24 +1,15 @@
-import { Injectable } from "@angular/core";
 import { Vector3, Mesh } from "three";
 
 const MINIMUM_ANGLE: number = 2.35619;
 const TWICE_TRACK_WIDTH: number = 5;
 
-@Injectable()
 export class ConstraintValidatorService {
 
-  private _points: Array<Mesh>;
-
-  public constructor() {
-    this._points = new Array<Mesh>();
+  public constructor(private _points: Array<Mesh>) {
   }
 
   private get points(): Array<Vector3> {
     return this._points.map((p) => p.position);
-  }
-
-  public setPoints(points: Array<Mesh>): void {
-    this._points = points;
   }
 
   public validateLine(p1: Vector3, p2: Vector3): boolean {
