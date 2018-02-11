@@ -1,10 +1,10 @@
-import * as C from "./track.constantes";
+import * as C from "../track.constantes";
 import { Mesh, Vector3, Vector2 } from "three";
-import { TrackGenerator } from "./track-generator.service";
-import { EmptyArrayException } from "../exceptions/EmptyArrayException";
-import { OutOfRangeException } from "../exceptions/OutOfRangeException";
+import { TrackGenerator } from "../track-generator.service";
+import { EmptyArrayException } from "../../exceptions/EmptyArrayException";
+import { OutOfRangeException } from "../../exceptions/OutOfRangeException";
 
-export class TrackGeneratorPointsHandler {
+export class PointsHandler {
     private _points: Array<Mesh>;
     private _selectedPoint: number;
 

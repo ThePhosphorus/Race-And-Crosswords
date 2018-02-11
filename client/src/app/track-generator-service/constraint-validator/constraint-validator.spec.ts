@@ -1,6 +1,6 @@
 import { TestBed, inject } from "@angular/core/testing";
 
-import { ConstraintValidatorService } from "./constraint-validator.service";
+import { ConstraintValidatorService } from "./constraint-validator";
 
 describe("ConstraintValidatorService", () => {
   beforeEach(() => {

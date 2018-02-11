@@ -13,9 +13,9 @@ import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-s
 import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
-import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
+import { ConstraintValidatorService } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
-import { TrackGeneratorPointsHandler } from "./track-generator-pointsHandler";
+import { PointsHandler } from "./points-handler/points-handler";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -38,14 +38,14 @@ export class TrackGenerator extends Renderer {
     private onMouseMoveListner: EventListenerObject;
     private onMouseTranslateListner: EventListenerObject;
     private _lastTranslatePosition: Vector3;
-    public points: TrackGeneratorPointsHandler;
+    public points: PointsHandler;
 
 //////////////////////// Constructor
 
     public constructor(private cameraManager: CameraManagerService,
                        private constraintValidator: ConstraintValidatorService) {
         super(cameraManager, true);
-        this.points = new TrackGeneratorPointsHandler(this);
+        this.points = new PointsHandler(this);
         this.constraintValidator.setPoints(this.points.points);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);

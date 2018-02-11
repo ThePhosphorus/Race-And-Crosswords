@@ -1,12 +1,12 @@
 import { TestBed } from "@angular/core/testing";
 
-import { TrackGeneratorPointsHandler } from "./track-generator-pointsHandler";
-import { TrackGenerator } from "./track-generator.service";
-import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { ConstraintValidatorService } from "../constraint-validator/constraint-validator.service";
-import { EMPTY_ARRAY_EXCEPTION_MSG } from "../exceptions/EmptyArrayException";
+import { PointsHandler } from "./points-handler";
+import { TrackGenerator } from "../track-generator.service";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { ConstraintValidatorService } from "../constraint-validator/constraint-validator";
+import { EMPTY_ARRAY_EXCEPTION_MSG } from "../../exceptions/EmptyArrayException";
 import { Mesh } from "three";
-import { OUT_OF_RANGE_EXCEPTION_MSG } from "../exceptions/OutOfRangeException";
+import { OUT_OF_RANGE_EXCEPTION_MSG } from "../../exceptions/OutOfRangeException";
 
 describe("PointsHandler for TrackGeneratorService", () => {
     const cameraManager: CameraManagerService = new CameraManagerService();
@@ -23,22 +23,22 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should be created",  () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         expect(points).toBeTruthy();
     });
 
     it("should be empty when created",  () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         expect(points.length).toBe(0);
     });
 
     it("should be able to get filled", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         expect(() => points.push(new Mesh())).not.toThrow();
     });
 
     it("should have the number of elements pushed in", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
@@ -47,12 +47,12 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should throw EmptyArrayException when empty and trying to access top",  () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         expect(() => points.top).toThrowError(EMPTY_ARRAY_EXCEPTION_MSG);
     });
 
     it("should throw OutOfRangeException when trying to access negative index",  () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
@@ -61,7 +61,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should throw OutOfRangeException when trying to access index bigger than the number of elements", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
@@ -70,7 +70,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should select the right point", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         const selectedPoint: number = 3;
         for ( let i: number = 0; i < fillNumber ; i++) {
@@ -83,7 +83,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should throw OutOfRangeException when trying to select index bigger than the number of elements", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
@@ -92,7 +92,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should throw OutOfRangeException when trying to select a negative index", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
@@ -101,7 +101,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should delete the right point", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         const selectedPoint: number = 3;
         for ( let i: number = 0; i < fillNumber ; i++) {
@@ -114,7 +114,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should throw OutOfRangeException when trying to delete index bigger than the number of elements", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
@@ -123,7 +123,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
     });
 
     it("should throw OutOfRangeException when trying to delete a negative index", () => {
-        const points: TrackGeneratorPointsHandler = new TrackGeneratorPointsHandler(trackGen);
+        const points: PointsHandler = new PointsHandler(trackGen);
         const fillNumber: number = 5;
         for ( let i: number = 0; i < fillNumber ; i++) {
             points.push(new Mesh());
