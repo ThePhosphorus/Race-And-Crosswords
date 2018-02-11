@@ -2,6 +2,7 @@ import * as C from "./track.constantes";
 import { Mesh, Vector3, Vector2 } from "three";
 import { TrackGenerator } from "./track-generator.service";
 import { EmptyArrayException } from "../exceptions/EmptyArrayException";
+import { OutOfRangeException } from "../exceptions/OutOfRangeException";
 
 export class TrackGeneratorPointsHandler {
     private _points: Array<Mesh>;
@@ -21,7 +22,7 @@ export class TrackGeneratorPointsHandler {
             throw new EmptyArrayException();
         }
 
-        return this._points[this.length - 1];
+        return this.point(this.length - 1);
     }
 
     public get points(): Array<Mesh> { // TODO remove this function after refactoring the rest of the code
@@ -46,10 +47,18 @@ export class TrackGeneratorPointsHandler {
     }
 
     public point(index: number): Mesh {
+        if (index < 0 || index > this.length - 1) {
+            throw new OutOfRangeException();
+        }
+
         return this._points[index];
     }
 
     public selectPoint(pointId: number): void {
+        if (pointId < 0 || pointId > this.length - 1) {
+            throw new OutOfRangeException();
+        }
+
         if ( this._selectedPoint > 0) {
             this.point(this._selectedPoint).material = C.WHITE_MATERIAL;
         }
@@ -63,6 +72,10 @@ export class TrackGeneratorPointsHandler {
     }
 
     public removePoint(index: number): void {
+        if (index < 0 || index > this.length - 1) {
+            throw new OutOfRangeException();
+        }
+
         if (index === this._selectedPoint) {
             this._selectedPoint = -1;
         } else if (index < this._selectedPoint) {
