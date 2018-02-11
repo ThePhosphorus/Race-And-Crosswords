@@ -215,7 +215,7 @@ export class TrackGenerator extends Renderer {
 
         this.scene.remove(line);
 
-        if (before != null && after != null) {
+        if (before && after) {
             this.createLine(before.position, after.position, after.id);
         }
 
