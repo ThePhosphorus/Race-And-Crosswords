@@ -340,7 +340,7 @@ export class TrackGenerator extends Renderer {
 
 //////////////////////// Validation
     public resetValidation(points: Array<Mesh>): void {
-        for (let i: number = 0; i < points.length - 1; i++ {  } ) {
+        for (let i: number = 0; i < points.length - 1; i++ ) {
             if (points[i + 1] !== null) {
                 (this.scene.getObjectByName(LINE_STR_PREFIX + points[i + 1].id) as Line).material =
                     this.constraintValidator.validateLine(points[i].position, points[i + 1].position)
