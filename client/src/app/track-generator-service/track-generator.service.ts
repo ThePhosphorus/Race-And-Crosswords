@@ -312,7 +312,7 @@ export class TrackGenerator extends Renderer {
         } else {
                 this._dragPoints = new C.PointsSpan(
                     this.points.point(pointId),
-                    this.points.point(pointId - 1),
+                    (pointId === 0) ? null : this.points.point(pointId - 1),
                     (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
                     null);
         }
