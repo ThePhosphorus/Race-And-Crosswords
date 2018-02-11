@@ -265,8 +265,8 @@ export class TrackGenerator extends Renderer {
     private enableClosingDragMode(): void {
         this._dragPoints = new C.PointsSpan(
             this.points.point(0),
-            this.points.point(this.points.length - LINK_MINIMUM_POINTS),
-            this.points.point(1),
+            (this.points.length >= LINK_MINIMUM_POINTS) ? this.points.point(this.points.length - LINK_MINIMUM_POINTS) : null,
+            (this.points.length > 1) ? this.points.point(1) : null,
             this.points.point(this.points.length - 1));
     }
 
