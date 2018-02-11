@@ -21,8 +21,6 @@ const LINE_STR_PREFIX: string = "Line to ";
 
 const MIN_ZOOM: number = 10;
 const MAX_ZOOM: number = 100;
-const HALF: number = 0.5;
-const DOUBLE: number = 2;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
@@ -31,8 +29,6 @@ const DELETE_KEY: number = 46;
 
 @Injectable()
 export class TrackGenerator extends Renderer {
-    private _cameraPosition: Vector3;
-    private _cameraDirection: Vector3;
     private _gridHelper: GridHelper;
     private _dragPoints: C.PointsSpan;
     private onMouseMoveListner: EventListenerObject;
@@ -58,13 +54,6 @@ export class TrackGenerator extends Renderer {
     }
 
     protected onInit(): void {
-        this._cameraDirection = C.CAMERA_STARTING_DIRECTION;
-        this._cameraPosition = C.CAMERA_STARTING_POSITION;
-
-        this.cameraManager.updatecarInfos(
-            this._cameraPosition,
-            this._cameraDirection
-        );
         this.cameraManager.cameraType = CameraType.Ortho;
         this._gridHelper = new GridHelper(
             C.GRID_DIMENSION,
@@ -77,14 +66,6 @@ export class TrackGenerator extends Renderer {
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimits = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
-
-    protected update(timeSinceLastFrame: number): void {
-        this.cameraManager.updatecarInfos(
-            this._cameraPosition,
-            this._cameraDirection
-        );
-    }
-
 //////////////////////// Input
 
     public InputKeyDown(event: KeyboardEvent): void {
@@ -191,7 +172,7 @@ export class TrackGenerator extends Renderer {
         if (!this._lastTranslatePosition) {
             this._lastTranslatePosition = point;
         }
-        this._cameraPosition.add(this._lastTranslatePosition.clone().sub(point));
+        this.cameraTargetPosition.add(this._lastTranslatePosition.clone().sub(point));
         this._lastTranslatePosition = point;
     }
 
@@ -248,44 +229,6 @@ export class TrackGenerator extends Renderer {
     }
 
 //////////////////////// Converters and tools
-
-    public getRelativePosition(pos: Vector2): Vector3 {
-        const htmlElem: HTMLCanvasElement = this.renderer.domElement;
-        const cameraClientRatio: Vector2 = new Vector2(
-            DOUBLE * this.cameraManager.cameraDistanceToCar * this.getAspectRatio() / htmlElem.clientWidth,
-            DOUBLE * this.cameraManager.cameraDistanceToCar / htmlElem.clientHeight
-        );
-
-        const clientClickPos: Vector2 = new Vector2(
-            pos.x - HALF * htmlElem.clientWidth,
-            pos.y - HALF * htmlElem.clientHeight
-        );
-
-        return new Vector3(
-            clientClickPos.x * cameraClientRatio.x + this._cameraPosition.x,
-            C.LINE_Y_POSITION,
-            clientClickPos.y * cameraClientRatio.y + this._cameraPosition.z
-        );
-    }
-
-    public getClientPosition(pos: Vector3): Vector2 {
-        const htmlElem: HTMLCanvasElement = this.renderer.domElement;
-
-        const cameraClientRatio: Vector2 = new Vector2(
-            DOUBLE * this.cameraManager.cameraDistanceToCar * this.getAspectRatio() / htmlElem.clientWidth,
-            DOUBLE * this.cameraManager.cameraDistanceToCar / htmlElem.clientHeight
-        );
-
-        const clientClickPos: Vector2 = new Vector2(
-            (pos.x - this._cameraPosition.x ) /  cameraClientRatio.x,
-            (pos.z - this._cameraPosition.z ) / cameraClientRatio.y
-        );
-
-        return new Vector2(
-            clientClickPos.x + HALF * htmlElem.clientWidth,
-            clientClickPos.y + HALF * htmlElem.clientHeight
-        );
-    }
 
     private findPointId(pos: Vector2): number {
         for (let i: number = this.points.length - 1; i >= 0; i--) {

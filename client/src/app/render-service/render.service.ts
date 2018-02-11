@@ -88,10 +88,8 @@ export class RenderService extends Renderer {
 
     protected update(timeSinceLastFrame: number): void {
         this._car.update(timeSinceLastFrame);
-        this.cameraManager.updatecarInfos(
-            this._car.getPosition(),
-            this._car.direction
-        );
+        this.cameraTargetDirection = this._car.direction;
+        this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
      }
 
