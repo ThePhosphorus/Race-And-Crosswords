@@ -1,6 +1,7 @@
 import * as C from "./track.constantes";
 import { Mesh, Vector3, Vector2 } from "three";
 import { TrackGenerator } from "./track-generator.service";
+import { EmptyArrayException } from "../exceptions/EmptyArrayException";
 
 export class TrackGeneratorPointsHandler {
     private _points: Array<Mesh>;
@@ -16,6 +17,10 @@ export class TrackGeneratorPointsHandler {
     }
 
     public get top(): Mesh {
+        if (this.length === 0) {
+            throw new EmptyArrayException();
+        }
+
         return this._points[this.length - 1];
     }
 
