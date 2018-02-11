@@ -16,8 +16,6 @@ import { Renderer } from "../renderer/renderer";
 import { ConstraintValidatorService } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
-import { EmptyArrayException, EMPTY_ARRAY_EXCEPTION_MSG } from "../exceptions/EmptyArrayException";
-import { OutOfRangeException } from "../exceptions/OutOfRangeException";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -339,11 +337,12 @@ export class TrackGenerator extends Renderer {
     }
 
 //////////////////////// Validation
-    public resetValidation(points: Array<Mesh>): void {
+    public resetValidation(points: Array<Vector3>): void {
+        this.constraintValidator.points = this.points.points;
         for (let i: number = 0; i < points.length - 1; i++ ) {
             if (points[i + 1] !== null) {
-                (this.scene.getObjectByName(LINE_STR_PREFIX + points[i + 1].id) as Line).material =
-                    this.constraintValidator.validateLine(points[i].position, points[i + 1].position)
+                (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material =
+                    this.constraintValidator.validateLine(points[i], points[i + 1])
                         ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
             }
         }

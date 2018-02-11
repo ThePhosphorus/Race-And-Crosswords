@@ -25,10 +25,6 @@ export class PointsHandler {
         return this.point(this.length - 1);
     }
 
-    public get points(): Array<Mesh> { // TODO remove this function after refactoring the rest of the code
-        return this._points;
-    }
-
     public get PositionSelectPoints(): C.PosSelect[] {
         const result: C.PosSelect[] = [];
         for (let i: number = 0 ; i < this.length; i++) {
@@ -104,6 +100,10 @@ export class PointsHandler {
         this.push(this.trackGen.createDot(
             this.trackGen.getClientPosition(this._points[0].position),
             this.top.position));
+    }
+
+    public get points(): Array<Vector3> {
+        return this._points.map((p) => p.position);
     }
 
 }
