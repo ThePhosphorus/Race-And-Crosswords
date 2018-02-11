@@ -166,15 +166,8 @@ export class TrackGenerator extends Renderer {
                 this.points.removePoint(this.points.length - 1);
             }
 
-            let newPoint: Mesh;
-            try {
-                newPoint = this.createDot(new Vector2(event.offsetX, event.offsetY), this.points.top.position);
-            } catch (e) {
-                const err: Error = e;
-                if (err.message === new EmptyArrayException().message) {
-                    newPoint = this.createDot(new Vector2(event.offsetX, event.offsetY), null);
-                } else {throw e; }
-            }
+            const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY),
+                                                  (this.points.length > 0) ? this.points.top.position : null);
 
             this.points.push(newPoint);
             this.points.updateStartingPosition();
@@ -319,22 +312,11 @@ export class TrackGenerator extends Renderer {
         if ((pointId === this.points.length - 1 || pointId === 0) && this.points.top.position.equals(this.points.point(0).position)) {
             this.enableClosingDragMode();
         } else {
-            try {
                 this._dragPoints = new C.PointsSpan(
                     this.points.point(pointId),
                     this.points.point(pointId - 1),
-                    this.points.point(pointId + 1),
+                    (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
                     null);
-            } catch (e) {
-                const err: Error = e;
-                if (err.message === new OutOfRangeException().message) {
-                    this._dragPoints = new C.PointsSpan(
-                        this.points.point(pointId),
-                        this.points.point(pointId - 1),
-                        null,
-                        null);
-                } else {throw e ; }
-            }
         }
         this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
     }
@@ -358,7 +340,7 @@ export class TrackGenerator extends Renderer {
 
 //////////////////////// Validation
     public resetValidation(points: Array<Mesh>): void {
-        for (let i: number = 0; i < points.length - 1; i++) {
+        for (let i: number = 0; i < points.length - 1; i++ {  } ) {
             if (points[i + 1] !== null) {
                 (this.scene.getObjectByName(LINE_STR_PREFIX + points[i + 1].id) as Line).material =
                     this.constraintValidator.validateLine(points[i].position, points[i + 1].position)
