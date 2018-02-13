@@ -7,12 +7,13 @@
   </thead>
   <tbody>
     <tr *ngFor="let letters of twoDimensionGrid;let row = index">
+      <th scope="row">{{row+1}}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <input type="text" maxlength="1" class="form-control" placeholder="{{letter.char | uppercase}}" >
+          <app-input-letter [letter]= "letter"></app-input-letter>
         </span>
       </td>
-      <th scope="row">{{row+1}}</th>
+
     </tr>
 
   </tbody>

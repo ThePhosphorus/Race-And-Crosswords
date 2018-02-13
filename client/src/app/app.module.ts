@@ -12,6 +12,7 @@ import { PlayermodeComponent } from "./playermode-component/playermode.component
 import { HomePageComponent } from "./home-page/home-page.component";
 import { InputGridComponent } from "./input-grid/input-grid.component";
 import { DefinitionComponent } from "./definition/definition.component";
+import { InputLetterComponent } from "./input-letter/input-letter.component";
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { DefinitionComponent } from "./definition/definition.component";
         PlayermodeComponent,
         HomePageComponent,
         InputGridComponent,
-        DefinitionComponent
+        DefinitionComponent,
+        InputLetterComponent
     ],
     imports: [
         BrowserModule,
