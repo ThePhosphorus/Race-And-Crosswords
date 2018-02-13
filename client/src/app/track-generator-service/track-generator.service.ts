@@ -145,6 +145,7 @@ export class TrackGenerator extends Renderer {
             this.points.push(newPoint);
             this.points.updateStartingPosition();
             this.points.selectPoint(this.points.length - 1);
+            this.enableDragMode(this.points.selectedPointId);
 
         }
     }
