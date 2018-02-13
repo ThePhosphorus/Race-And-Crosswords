@@ -5,7 +5,7 @@ const LAST_POINT_INDEX: number = 2;
 
 const TWICE_TRACK_WIDTH: number = 5; // Temporary constant while we don't know the track width
 
-export class ConstraintValidatorService {
+export class ConstraintValidator {
 
   public constructor(private _points: Array<Vector3>) {
   }
