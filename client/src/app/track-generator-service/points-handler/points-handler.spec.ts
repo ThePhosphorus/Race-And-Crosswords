@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { PointsHandler } from "./points-handler";
 import { TrackGenerator } from "../track-generator.service";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
-import { ConstraintValidatorService } from "../constraint-validator/constraint-validator";
+import { ConstraintValidator } from "../constraint-validator/constraint-validator";
 import { EMPTY_ARRAY_EXCEPTION_MSG } from "../../exceptions/EmptyArrayException";
 import { Mesh } from "three";
 import { OUT_OF_RANGE_EXCEPTION_MSG } from "../../exceptions/OutOfRangeException";
@@ -14,7 +14,7 @@ describe("PointsHandler for TrackGeneratorService", () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
-        providers: [TrackGenerator, CameraManagerService, ConstraintValidatorService]
+        providers: [TrackGenerator, CameraManagerService, ConstraintValidator]
         });
         const div: HTMLDivElement = document.createElement("div");
         trackGen.setContainer(div);

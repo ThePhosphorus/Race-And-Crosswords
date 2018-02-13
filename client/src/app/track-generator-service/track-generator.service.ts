@@ -42,7 +42,7 @@ export class TrackGenerator extends Renderer {
         this.points = new PointsHandler(this);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
-        this.constraintValidator = new ConstraintValidator(this.points.points);
+        this.constraintValidator = new ConstraintValidator();
     }
 
     // Rendering
