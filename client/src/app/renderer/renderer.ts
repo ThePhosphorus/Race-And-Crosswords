@@ -16,8 +16,8 @@ export abstract class Renderer {
     private _lastDate: number;
     private stats: Stats;
     private _cameraManager: CameraManagerService;
-    private _cameraTargetPosition: Vector3;
-    private _cameraTargetDirection: Vector3;
+    protected cameraTargetPosition: Vector3;
+    protected cameraTargetDirection: Vector3;
 
     public constructor( cameraManager: CameraManagerService, private statsEnabled: boolean) {
         this._cameraManager = cameraManager;
@@ -73,22 +73,6 @@ export abstract class Renderer {
     protected get container(): HTMLDivElement {
         return this._container;
      }
-
-    protected get cameraTargetPosition(): Vector3 {
-        return this._cameraTargetPosition;
-    }
-
-    protected set cameraTargetPosition(pos: Vector3) {
-        this._cameraTargetPosition = pos;
-    }
-
-    protected get cameraTargetDirection(): Vector3 {
-        return this._cameraTargetDirection;
-    }
-
-    protected set cameraTargetDirection(direction: Vector3) {
-        this._cameraTargetDirection = direction;
-    }
 
     protected getAspectRatio(): number {
         return this.container.clientWidth / this.container.clientHeight;
