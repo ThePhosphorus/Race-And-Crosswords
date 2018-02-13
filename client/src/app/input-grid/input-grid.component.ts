@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
@@ -10,7 +9,6 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
     selector: "app-input-grid",
     templateUrl: "./input-grid.component.html",
     styleUrls: ["./input-grid.component.css"],
-    providers: [CrosswordCommunicationService, CrosswordService]
 })
 export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
@@ -46,7 +44,6 @@ export class InputGridComponent implements OnInit {
             .subscribe((_grid: CrosswordGrid) => {
                 this._grid = _grid;
             });
-
     }
 
     public onClick(i: number, isAcross: boolean): void {

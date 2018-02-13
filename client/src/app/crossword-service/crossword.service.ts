@@ -29,8 +29,8 @@ export class CrosswordService {
     public get currentGrid(): CrosswordGrid {
         return this._currentGrid;
     }
-    public get words(): Observable<Word[]> {
-        return of (this._currentGrid.words);
+    public get words(): Word[] {
+        return  (this._currentGrid.words);
     }
 
     public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
