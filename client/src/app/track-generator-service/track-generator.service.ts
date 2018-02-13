@@ -38,7 +38,7 @@ export class TrackGenerator extends Renderer {
     private constraintValidator: ConstraintValidatorService;
 
     public constructor(private cameraManager: CameraManagerService) {
-        super(cameraManager, true);
+        super(cameraManager, false);
         this.points = new PointsHandler(this);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
