@@ -111,7 +111,6 @@ export class TrackGenerator extends Renderer {
         this.disableDragMode();
         this.disableTranslateMode();
         this.points.updateStartingPosition();
-        this.resetValidation(this.points.points);
     }
 
     public mouseWheelEvent(event: MouseWheelEvent): void {
@@ -146,7 +145,7 @@ export class TrackGenerator extends Renderer {
             this.points.updateStartingPosition();
             this.points.selectPoint(this.points.length - 1);
             this.enableDragMode(this.points.selectedPointId);
-
+            this.resetValidation(this.points.points);
         }
     }
 
@@ -159,7 +158,7 @@ export class TrackGenerator extends Renderer {
         } else {
             this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
         }
-
+        this.resetValidation(this.points.points);
     }
 
     private onTranslateCamera(event: MouseEvent): void {
@@ -214,7 +213,7 @@ export class TrackGenerator extends Renderer {
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
-        const line: Line = new Line(lineG, this.constraintValidator.validateLine(from, to) ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID);
+        const line: Line = new Line(lineG,  C.LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this.scene.add(line);
     }
