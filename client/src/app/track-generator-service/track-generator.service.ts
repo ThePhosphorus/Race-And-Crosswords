@@ -136,7 +136,7 @@ export class TrackGenerator extends Renderer {
         } else {
             // Remove connection to spawn point
             if (this.points.length > LINK_MINIMUM_POINTS &&
-                this.points.top.position.clone().sub(this.points.point(0).position).length() < C.POINT_SELECTION_PRECISION) {
+                this.points.top.position.clone().sub(this.points.point(0).position).length() < 1) {
                 this.points.removePoint(this.points.length - 1);
             }
 

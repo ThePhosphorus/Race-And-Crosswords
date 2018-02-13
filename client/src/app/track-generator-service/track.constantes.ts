@@ -21,7 +21,7 @@ export const LINE_MATERIAL: LineBasicMaterial = new LineBasicMaterial ({color: 0
 export const LINE_MATERIAL_INVALID: LineBasicMaterial = new LineBasicMaterial ({color: 0xFF0000});
 export const SELECTION_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial ({color: SELECTION_COLOR});
 
-export const POINT_SELECTION_PRECISION: number  = 2.5;
+export const POINT_SELECTION_PRECISION: number  = 20;
 export const LINE_Y_POSITION: number = 1;
 
 export const START_POINT_COLOR: number = 0x22FF22;
