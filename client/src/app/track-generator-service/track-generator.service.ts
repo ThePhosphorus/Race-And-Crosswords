@@ -104,7 +104,7 @@ export class TrackGenerator extends Renderer {
             this.mouseEventMiddleClick(event);
         } else if (event.button === RIGHT_CLICK_CODE) {
             this.points.removePoint(this.points.length - 1);
-            this.resetValidation(this.points.points);
+            this.resetValidation();
         }
     }
 
@@ -122,7 +122,7 @@ export class TrackGenerator extends Renderer {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.points.removePoint(possiblePointId);
-            this.resetValidation(this.points.points);
+            this.resetValidation();
         } else {
             this.enableTranslateMode(event);
         }
@@ -147,7 +147,7 @@ export class TrackGenerator extends Renderer {
             this.points.updateStartingPosition();
             this.points.selectPoint(this.points.length - 1);
             this.enableDragMode(this.points.selectedPointId);
-            this.resetValidation(this.points.points);
+            this.resetValidation();
         }
     }
 
@@ -160,7 +160,7 @@ export class TrackGenerator extends Renderer {
         } else {
             this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
         }
-        this.resetValidation(this.points.points);
+        this.resetValidation();
     }
 
     private onTranslateCamera(event: MouseEvent): void {
@@ -273,12 +273,12 @@ export class TrackGenerator extends Renderer {
     }
 
     // Validation
-    public resetValidation(points: Array<Vector3>): void {
+    public resetValidation(): void {
         this.constraintValidator.points = this.points.points;
-        for (let i: number = 0; i < points.length - 1; i++ ) {
-            if (points[i + 1] !== null) {
+        for (let i: number = 0; i < this.points.points.length - 1; i++ ) {
+            if (this.points.points[i + 1] !== null) {
                 (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material =
-                    this.constraintValidator.validateLine(points[i], points[i + 1])
+                    this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])
                         ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
             }
         }
