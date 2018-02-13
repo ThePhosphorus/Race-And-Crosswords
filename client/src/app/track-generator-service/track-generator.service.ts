@@ -33,7 +33,7 @@ export class TrackGenerator extends Renderer {
     private _dragPoints: C.PointsSpan;
     private onMouseMoveListner: EventListenerObject;
     private onMouseTranslateListner: EventListenerObject;
-    private _lastTranslatePosition: Vector3;
+    private _translateStartingPosition: Vector3;
     public points: PointsHandler;
     private constraintValidator: ConstraintValidatorService;
 
@@ -123,7 +123,7 @@ export class TrackGenerator extends Renderer {
         if (possiblePointId !== null) {
             this.points.removePoint(possiblePointId);
         } else {
-            this.enableTranslateMode();
+            this.enableTranslateMode(event);
         }
     }
 
@@ -162,12 +162,9 @@ export class TrackGenerator extends Renderer {
     }
 
     private onTranslateCamera(event: MouseEvent): void {
-        const point: Vector3 = this.getRelativePosition(new Vector2(event.offsetX, event.offsetY));
-        if (!this._lastTranslatePosition) {
-            this._lastTranslatePosition = point;
-        }
-        this.cameraTargetPosition.add(this._lastTranslatePosition.clone().sub(point));
-        this._lastTranslatePosition = point;
+        const newPoint: Vector2 = new Vector2(event.offsetX, event.offsetY);
+        const relativePoint: Vector3 = this.getDistanceCenterScreen(newPoint);
+        this.cameraTargetPosition.copy(this._translateStartingPosition.clone().sub(relativePoint));
     }
 
     // ThreeJs object handeling
@@ -263,13 +260,14 @@ export class TrackGenerator extends Renderer {
             this.points.point(this.points.length - 1));
     }
 
-    private enableTranslateMode(): void {
+    private enableTranslateMode(event: MouseEvent): void {
+        this._translateStartingPosition = this.getRelativePosition(new Vector2(event.offsetX, event.offsetY));
         this.container.addEventListener("mousemove", this.onMouseTranslateListner, false);
+
     }
 
     private disableTranslateMode(): void {
         this.container.removeEventListener("mousemove", this.onMouseTranslateListner, false);
-        this._lastTranslatePosition = undefined;
     }
 
     // Validation

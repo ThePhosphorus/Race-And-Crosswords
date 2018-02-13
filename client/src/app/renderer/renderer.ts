@@ -130,6 +130,14 @@ export abstract class Renderer {
      }
 
     public getRelativePosition(pos: Vector2): Vector3 {
+        const distanceToCenter: Vector3 = this.getDistanceCenterScreen(pos);
+        distanceToCenter.setX(distanceToCenter.x + this.cameraTargetPosition.x);
+        distanceToCenter.setZ(distanceToCenter.z + this.cameraTargetPosition.z);
+
+        return distanceToCenter;
+     }
+
+    public getDistanceCenterScreen(pos: Vector2): Vector3 {
         const htmlElem: HTMLCanvasElement = this.renderer.domElement;
         const cameraClientRatio: Vector2 = new Vector2(
             DOUBLE * this._cameraManager.cameraDistanceToCar * this.getAspectRatio() / htmlElem.clientWidth,
@@ -142,9 +150,9 @@ export abstract class Renderer {
         );
 
         return new Vector3(
-            clientClickPos.x * cameraClientRatio.x + this.cameraTargetPosition.x,
+            clientClickPos.x * cameraClientRatio.x,
             C.LINE_Y_POSITION,
-            clientClickPos.y * cameraClientRatio.y + this.cameraTargetPosition.z
+            clientClickPos.y * cameraClientRatio.y
         );
      }
 
