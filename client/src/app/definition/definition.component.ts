@@ -21,26 +21,25 @@ export class DefinitionComponent implements OnInit {
     }
 
     private get acrossDefinitions(): string[] {
+        if (this._crosswordService.currentGrid != null) {
+            this._wordGrid = this._crosswordService.words;
 
-        this._wordGrid = this._crosswordService.words;
-        if(this._wordGrid  != null) {
-        return this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
-            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+            return this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
+                .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
         }
 
         return new Array<string>();
     }
 
     private get downDefinitions(): string[] {
-        if (this._crosswordService.words != null) {
-        this._wordGrid = this._crosswordService.words;
+        if (this._crosswordService.currentGrid != null) {
+            this._wordGrid = this._crosswordService.words;
 
-        return this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
-            .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
-    }
+            return this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
+                .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
+        }
 
         return new Array<string>();
-
     }
 
     private toWord(letters: Letter[]): string {
