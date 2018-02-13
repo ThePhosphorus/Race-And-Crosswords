@@ -11,7 +11,7 @@ const DOUBLE: number = 2;
 
 export abstract class Renderer {
     private _container: HTMLDivElement;
-    private _renderer: WebGLRenderer;
+    private _webGlRenderer: WebGLRenderer;
     private _scene: Scene;
     private _lastDate: number;
     private stats: Stats;
@@ -25,14 +25,14 @@ export abstract class Renderer {
 
     public init(container: HTMLDivElement): void {
         this._container = container;
-        this._cameraTargetDirection = C.CAMERA_STARTING_DIRECTION;
-        this._cameraTargetPosition = C.CAMERA_STARTING_POSITION;
+        this.cameraTargetDirection = C.CAMERA_STARTING_DIRECTION;
+        this.cameraTargetPosition = C.CAMERA_STARTING_POSITION;
 
         this.initStats();
         this.createScene();
         this._cameraManager.updatecarInfos(
-            this._cameraTargetPosition,
-            this._cameraTargetDirection
+            this.cameraTargetPosition,
+            this.cameraTargetDirection
         );
         this.onInit();
      }
@@ -46,7 +46,7 @@ export abstract class Renderer {
      }
 
     public startRenderingLoop(): void {
-        this._renderer = new WebGLRenderer();
+        this._webGlRenderer = new WebGLRenderer();
         this.renderer.setPixelRatio(devicePixelRatio);
         this.renderer.setSize(
             this.container.clientWidth,
@@ -63,7 +63,7 @@ export abstract class Renderer {
     // for child classes to use : this function is called before the rendering loop but after the scene creation
     protected onInit(): void {}
     protected get renderer(): WebGLRenderer {
-        return this._renderer;
+        return this._webGlRenderer;
      }
 
     protected get scene(): Scene {
@@ -106,8 +106,8 @@ export abstract class Renderer {
         const timeSinceLastFrame: number = Date.now() - this._lastDate;
         this.update(timeSinceLastFrame);
         this._cameraManager.updatecarInfos(
-            this._cameraTargetPosition,
-            this._cameraTargetDirection
+            this.cameraTargetPosition,
+            this.cameraTargetDirection
         );
         this._cameraManager.update(timeSinceLastFrame);
         this._lastDate = Date.now();
