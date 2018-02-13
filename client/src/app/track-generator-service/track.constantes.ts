@@ -27,6 +27,8 @@ export const LINE_Y_POSITION: number = 1;
 export const START_POINT_COLOR: number = 0x22FF22;
 export const START_POINT_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial({color: START_POINT_COLOR});
 
+export const ZOOM_FACTOR: number = 50;
+
 export class PosSelect {
     public constructor(
         public pos: Vector2,

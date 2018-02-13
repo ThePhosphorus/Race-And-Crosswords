@@ -10,7 +10,9 @@ const PERS_CAMERA_ANGLE: number = 30;
 const INITIAL_CAMERA_POSITION_Y: number = 25;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
-const STARTING_ASPECTRATIO: number = 16 / 9;
+const STARTING_ASPECTRATIO_WIDTH: number = 16;
+const STARTING_ASPECTRATIO_HEIGHT: number = 9;
+const STARTING_ASPECTRATIO: number = STARTING_ASPECTRATIO_WIDTH / STARTING_ASPECTRATIO_HEIGHT;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
 const MINIMAL_ZOOM: number = 4;
 const MAXIMAL_ZOOM: number = 25;
@@ -151,6 +153,13 @@ export class CameraManagerService {
 
     public zoomRelease(): void {
         this.zoomFactor = 0;
+    }
+
+    public scrollZoom(deltaZoom: number): void {
+        if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimits.min) ||
+         (deltaZoom > 0 && this.cameraDistance < this.zoomLimits.max)) {
+            this.cameraDistance += deltaZoom;
+        }
     }
 
     public get position(): Vector3 {

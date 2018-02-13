@@ -37,8 +37,6 @@ export class TrackGenerator extends Renderer {
     public points: PointsHandler;
     private constraintValidator: ConstraintValidatorService;
 
-//////////////////////// Constructor
-
     public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, true);
         this.points = new PointsHandler(this);
@@ -47,7 +45,7 @@ export class TrackGenerator extends Renderer {
         this.constraintValidator = new ConstraintValidatorService(this.points.points);
     }
 
-//////////////////////// Rendering
+    // Rendering
     public setContainer(container: HTMLDivElement): void {
         this.init(container);
         this.startRenderingLoop();
@@ -66,8 +64,8 @@ export class TrackGenerator extends Renderer {
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimits = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
-//////////////////////// Input
 
+    // Input
     public InputKeyDown(event: KeyboardEvent): void {
         switch (event.keyCode) {
             case ZOOM_IN_KEYCODE:
@@ -117,11 +115,7 @@ export class TrackGenerator extends Renderer {
     }
 
     public mouseWheelEvent(event: MouseWheelEvent): void {
-        if (event.offsetX > 0 && event.offsetX < this.container.offsetWidth &&
-            event.offsetY > 0 && event.offsetY < this.container.offsetHeight ) {
-                this.cameraManager.cameraDistanceToCar =
-                this.cameraManager.cameraDistanceToCar + event.deltaY / 50; // HACK: Find better way
-            }
+        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
     }
 
     private mouseEventMiddleClick(event: MouseEvent): void {
@@ -176,8 +170,7 @@ export class TrackGenerator extends Renderer {
         this._lastTranslatePosition = point;
     }
 
-//////////////////////// ThreeJs object handeling
-
+    // ThreeJs object handeling
     public createDot(pos: Vector2, topMesh: Vector3): Mesh {
         const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
         circle.position.copy(this.getRelativePosition(pos));
@@ -228,8 +221,7 @@ export class TrackGenerator extends Renderer {
         this.scene.add(line);
     }
 
-//////////////////////// Converters and tools
-
+    // Converters and tools
     private findPointId(pos: Vector2): number {
         for (let i: number = this.points.length - 1; i >= 0; i--) {
             const diff: number = this.getClientPosition(this.points.point(i).position).sub(pos).length();
@@ -244,7 +236,8 @@ export class TrackGenerator extends Renderer {
     public get PositionSelectPoints(): C.PosSelect[] {
         return this.points.PositionSelectPoints;
     }
-//////////////////////// event functions
+
+    // Event functions
     public disableDragMode(): void {
         this.container.removeEventListener("mousemove", this.onMouseMoveListner, false);
     }
@@ -279,7 +272,7 @@ export class TrackGenerator extends Renderer {
         this._lastTranslatePosition = undefined;
     }
 
-//////////////////////// Validation
+    // Validation
     public resetValidation(points: Array<Vector3>): void {
         this.constraintValidator.points = this.points.points;
         for (let i: number = 0; i < points.length - 1; i++ ) {
