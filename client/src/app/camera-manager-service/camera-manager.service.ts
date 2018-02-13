@@ -45,24 +45,16 @@ export class CameraManagerService {
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
     private zoom: number;
-    private _zoomLimits: ZoomLimit;
+    public zoomLimit: ZoomLimit;
 
     public constructor() {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
         this.aspectRatio = STARTING_ASPECTRATIO;
-        this.zoomLimits = new ZoomLimit();
+        this.zoomLimit = new ZoomLimit();
         this.init();
      }
-
-    public set zoomLimits(limits: ZoomLimit) {
-        this._zoomLimits = limits;
-    }
-
-    public get zoomLimits(): ZoomLimit {
-        return this._zoomLimits;
-    }
 
     public init(): void {
         this.zoom = 0;
@@ -156,8 +148,8 @@ export class CameraManagerService {
     }
 
     public scrollZoom(deltaZoom: number): void {
-        if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimits.min) ||
-         (deltaZoom > 0 && this.cameraDistance < this.zoomLimits.max)) {
+        if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
+         (deltaZoom > 0 && this.cameraDistance < this.zoomLimit.max)) {
             this.cameraDistance += deltaZoom;
         }
     }
@@ -194,8 +186,8 @@ export class CameraManagerService {
     }
 
     private updateCameraPostion(deltaTime: number): void {
-        if ((this.zoom > 0 && this.cameraDistance > this.zoomLimits.min) ||
-         (this.zoom < 0 && this.cameraDistance < this.zoomLimits.max)) {
+        if ((this.zoom > 0 && this.cameraDistance > this.zoomLimit.min) ||
+         (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max)) {
             this.cameraDistance -= this.zoom * ZOOM_FACTOR;
         }
         switch (this.type) {
