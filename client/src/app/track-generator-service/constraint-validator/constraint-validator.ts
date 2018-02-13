@@ -2,6 +2,7 @@ import { Vector3 } from "three";
 
 const MINIMUM_ANGLE: number = 2.35619;
 const TWICE_TRACK_WIDTH: number = 5;
+const LAST_POINT_INDEX: number = 2;
 
 export class ConstraintValidatorService {
 
@@ -38,7 +39,7 @@ export class ConstraintValidatorService {
   private findPreviousLine(point: Vector3): Vector3 {
     const index: number = this._points.findIndex((p) => p.equals(point));
     const previousIndex: number = (index !== 0) ? index - 1 :
-      (this._points[this._points.length - 1].equals(this._points[0])) ?  this._points.length - 1 : null;
+      (this._points[this._points.length - 1].equals(this._points[0])) ?  this._points.length - LAST_POINT_INDEX : null;
 
     return this._points[previousIndex] ? new Vector3().subVectors(point, this._points[previousIndex]) : null;
   }
