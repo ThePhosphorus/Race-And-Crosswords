@@ -7,7 +7,7 @@
         </tr>
       </thead>
       <tr *ngFor="let item of acrossDefinitions; let row = index">
-        <td (click)="onClick(row, true)">{{item}}</td>
+        <td (click)="select(row, 'Across')">{{item}}</td>
       </tr>
     </table>
   </div>
@@ -18,8 +18,8 @@
           <th>DOWN</th>
         </tr>
       </thead>
-      <tr *ngFor="let item of downDefinitions;let col= index">
-        <td>{{item}}</td>
+      <tr *ngFor="let item of downDefinitions;let row= index">
+        <td (click)="select(row, 'Down')">{{item}}</td>
       </tr>
     </table>
     <button (click)="toogleCheatMode()" class="btn mt-3 w-100" [ngClass]="{'btn-outline-success': !cheatMode, 'btn-outline-danger': cheatMode}">

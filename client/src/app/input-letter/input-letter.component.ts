@@ -11,7 +11,7 @@ export class InputLetterComponent implements OnInit {
     @Input() public id: number;
     @Input() public currentLetter: number;
     @Input() public highlightedLetters: number[];
-    @Output() public setSelected: EventEmitter<number> = new EventEmitter<number>();
+    @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
 
     public constructor() {
         this.letter = "";
@@ -22,6 +22,6 @@ export class InputLetterComponent implements OnInit {
     }
 
     public select(): void {
-        this.setSelected.emit(this.id);
+        this.setSelectedLetter.emit(this.id);
     }
 }

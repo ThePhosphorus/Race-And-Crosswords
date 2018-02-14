@@ -48,21 +48,7 @@ export class InputGridComponent implements OnInit {
             });
     }
 
-    public onClick(i: number, isAcross: boolean): void {
-        let clickedWord: Word;
-        this._grid.words.forEach((w: Word) => {
-            if ((w.orientation === Orientation.Across) === isAcross) {
-                if (i === 0) {
-                    clickedWord = w;
-                } else {
-                    i--;
-                }
-
-            }
-        });
-    }
-
-    public setSelected(index: number): void {
+    public setSelectedLetter(index: number): void {
         if (index === this.currentLetter) {
             this.currentOrientation = this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across;
         } else {
@@ -76,10 +62,7 @@ export class InputGridComponent implements OnInit {
                 }
             }
         }
-        this.highlightedLetters = [];
-        for (const letter of targetWord.letters) {
-                this.highlightedLetters.push(letter.id);
-        }
+        this.setSelectedWord(targetWord);
         this.currentLetter = index;
     }
 
@@ -95,5 +78,13 @@ export class InputGridComponent implements OnInit {
         }
 
         return null;
+    }
+
+    public setSelectedWord(word: Word): void {
+        this.highlightedLetters = [];
+        for (const letter of word.letters) {
+                this.highlightedLetters.push(letter.id);
+        }
+        this.currentLetter = word.letters[0].id;
     }
 }

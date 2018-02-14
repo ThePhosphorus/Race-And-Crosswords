@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter, Word, Orientation } from "../../../../common/communication/crossword-grid";
 
@@ -8,7 +8,7 @@ import { Letter, Word, Orientation } from "../../../../common/communication/cros
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-
+    @Output() public setSelectedWord: EventEmitter<Word> = new EventEmitter<Word>();
     private _cheatmode: boolean;
     private _wordGrid: Word[];
 
@@ -59,4 +59,18 @@ export class DefinitionComponent implements OnInit {
         return this._cheatmode;
     }
 
+    public select(index: number, orientation: string): void {
+        let targetWord: Word;
+        for (const word of this._wordGrid) {
+            if (word.orientation === orientation) {
+                if (index > 0) {
+                    index--;
+                } else {
+                    targetWord = word;
+                    break;
+                }
+            }
+        }
+        this.setSelectedWord.emit(targetWord);
+    }
 }
