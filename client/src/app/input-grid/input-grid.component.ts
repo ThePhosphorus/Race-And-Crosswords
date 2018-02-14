@@ -11,12 +11,14 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
+    public currentOrientation: Orientation;
     public currentLetter: number;
     public highlightedLetters: number[];
 
     public constructor(private crosswordService: CrosswordService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
+        this.currentOrientation = Orientation.Across;
         this._grid = new CrosswordGrid();
         this._grid.size = INITIAL_GRID_SIZE;
         this.initializeGrids();
@@ -61,22 +63,37 @@ export class InputGridComponent implements OnInit {
     }
 
     public setSelected(index: number): void {
-        this.currentLetter = index;
+        if (index === this.currentLetter) {
+            this.currentOrientation = this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across;
+        } else {
+            this.currentOrientation = Orientation.Across;
+        }
+        let targetWord: Word;
+        if ((targetWord = this.findWordFromLetter(index, this.currentOrientation)) === null) {
+            for (const ori in Orientation) {
+                if (ori !== this.currentOrientation) {
+                    targetWord = this.findWordFromLetter(index, ori);
+                }
+            }
+        }
         this.highlightedLetters = [];
-        for (const letter of this.findWordFromLetter(index, Orientation.Across).letters) {
+        for (const letter of targetWord.letters) {
                 this.highlightedLetters.push(letter.id);
         }
+        this.currentLetter = index;
     }
 
-    private findWordFromLetter(index: number, orientation: Orientation): Word {
+    private findWordFromLetter(index: number, orientation: string): Word {
         for (const word of this._grid.words) {
-            for (const letter of word.letters) {
-                if (index === letter.id) {
-                    return word;
+            if (word.orientation === orientation) {
+                for (const letter of word.letters) {
+                    if (index === letter.id) {
+                        return word;
+                    }
                 }
             }
         }
 
-        return this._grid.words[0];
+        return null;
     }
 }
