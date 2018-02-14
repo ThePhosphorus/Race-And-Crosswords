@@ -1,1 +1,1 @@
-<input type="text" maxlength="1" class="form-control" placeholder="{{letter | uppercase}}" (click)="select()" [ngClass]="{'btn-outline-success': selectedLetters != null && selectedLetters.indexOf(id) > -1}">
+<input type="text" maxlength="1" class="form-control" placeholder="{{letter | uppercase}}" (click)="select()" [ngClass]="{'btn-outline-danger': currentLetter === id, 'btn-outline-success': highlightedLetters.indexOf(id) > -1}">

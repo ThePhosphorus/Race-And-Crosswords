@@ -9,7 +9,8 @@ import { Letter } from "../../../../common/communication/crossword-grid";
 export class InputLetterComponent implements OnInit {
     @Input() public letter: string;
     @Input() public id: number;
-    @Input() public selectedLetters: number[];
+    @Input() public currentLetter: number;
+    @Input() public highlightedLetters: number[];
     @Output() public setSelected: EventEmitter<number> = new EventEmitter<number>();
 
     public constructor() {

@@ -11,12 +11,12 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
-    public selectedLetter: number;
-    public selectedLetters: number[];
+    public currentLetter: number;
+    public highlightedLetters: number[];
 
     public constructor(private crosswordService: CrosswordService) {
-        this.selectedLetter = null;
-        this.selectedLetters = null;
+        this.currentLetter = null;
+        this.highlightedLetters = [];
         this._grid = new CrosswordGrid();
         this._grid.size = INITIAL_GRID_SIZE;
         this.initializeGrids();
@@ -61,10 +61,10 @@ export class InputGridComponent implements OnInit {
     }
 
     public setSelected(index: number): void {
-        this.selectedLetter = index;
-        this.selectedLetters = [];
+        this.currentLetter = index;
+        this.highlightedLetters = [];
         for (const letter of this.findWordFromLetter(index, Orientation.Across).letters) {
-            this.selectedLetters.push(letter.id);
+                this.highlightedLetters.push(letter.id);
         }
     }
 
