@@ -11,16 +11,16 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
+    public selectedLetter: number;
 
     public constructor(private crosswordService: CrosswordService) {
-         this._grid = new CrosswordGrid();
-         this._grid.size = INITIAL_GRID_SIZE;
-         this.initializeGrids();
-
+        this.selectedLetter = null;
+        this._grid = new CrosswordGrid();
+        this._grid.size = INITIAL_GRID_SIZE;
+        this.initializeGrids();
     }
 
     private initializeGrids(): void {
-
         for (let i: number = 0; i < (this._grid.size * this._grid.size); i++) {
             this._grid.grid.push(new Letter(""));
         }
@@ -58,4 +58,8 @@ export class InputGridComponent implements OnInit {
         });
     }
 
+    public setSelected(index: number): void {
+        this.selectedLetter = index;
+        // this._grid = null;
+    }
 }

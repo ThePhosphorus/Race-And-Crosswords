@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Letter } from "../../../../common/communication/crossword-grid";
 
 @Component({
@@ -7,14 +7,20 @@ import { Letter } from "../../../../common/communication/crossword-grid";
     styleUrls: ["./input-letter.component.css"]
 })
 export class InputLetterComponent implements OnInit {
-    @Input() public letter: Letter;
+    @Input() public letter: string;
+    @Input() public id: number;
+    @Input() public selectedLetter: number;
+    @Output() public setSelected: EventEmitter<number> = new EventEmitter<number>();
 
     public constructor() {
-        this.letter = new Letter("");
+        this.letter = "";
     }
 
     public ngOnInit(): void {
 
     }
 
+    public select(): void {
+        this.setSelected.emit(this.id);
+    }
 }

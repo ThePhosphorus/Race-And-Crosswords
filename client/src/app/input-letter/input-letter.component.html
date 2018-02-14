@@ -1,1 +1,1 @@
-<input type="text" maxlength="1" class="form-control" placeholder="{{letter.char | uppercase}}" >
+<input type="text" maxlength="1" class="form-control" placeholder="{{letter | uppercase}}" (click)="select()" [ngClass]="{'btn-outline-success': id === selectedLetter}">

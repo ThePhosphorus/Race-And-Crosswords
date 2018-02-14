@@ -1,7 +1,7 @@
 <table id="grid" align="center">
   <thead>
-    <th *ngFor="let letters of twoDimensionGrid;let it = index">
-      {{it+1}}
+    <th *ngFor="let letters of twoDimensionGrid;let i = index">
+      {{i+1}}
     </th>
     <th>#</th>
   </thead>
@@ -10,7 +10,7 @@
       <th scope="row">{{row+1}}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <app-input-letter [letter]="letter"></app-input-letter>
+          <app-input-letter [letter]="letter.char" [id]="(twoDimensionGrid.length*row)+col" [selectedLetter]="selectedLetter" (setSelected)="setSelected($event)"></app-input-letter>
         </span>
       </td>
 
