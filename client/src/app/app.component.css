@@ -4,6 +4,12 @@
     font-family: "Home Font", Arial, Helvetica, sans-serif;
     font-size: 120%
 }
+#AdminBtn{
+    background-color:#a3293d;;
+    color: white;
+    font-family: "Home Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    border-bottom: null;
+}
 
 .tab-open {
     background-color:white;
