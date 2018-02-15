@@ -22,9 +22,16 @@
     padding-bottom: 0%;
 }
 
-.btn{
+.btn-group-vertical{
     margin-top: 0%;
     margin-bottom: 0%;
+    width: 100%;
+}
+.btn{
+    align-self: center;
+    width: 45%;
+    align-items: center;
+    text-align: center;
 }
 
 #raceBtn {
@@ -34,18 +41,14 @@
     background-color: steelblue;
     border-radius:3vmin;
     border: solid 0.7vmin darkgrey;
-    padding-top: 7%;
-    padding-bottom: 5%;
+    padding-top: 3%;
+    padding-bottom: 3%;
     margin-top: 0%;
     margin-bottom: 0%;
-    padding-right: 15%;
-    padding-left: 15%;
-
-
 }
 #wordBtn {
     font-family: "Word Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    font-size: 400%;
+    font-size: 430%;
     text-align: center;
     background-color: steelblue;
     border-radius: 3vmin;
@@ -61,8 +64,6 @@
     background-color:  #a3293d;
     border-radius: 1.5vmin;
     border: solid 0.7vmin white;
-    padding-top: 3%;
-    padding-bottom: 1%;
     margin-top: 2%;
 
 
