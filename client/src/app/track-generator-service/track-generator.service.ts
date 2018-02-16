@@ -103,9 +103,15 @@ export class TrackGenerator extends Renderer {
         } else if (event.button === MIDDLE_CLICK_CODE) {
             this.mouseEventMiddleClick(event);
         } else if (event.button === RIGHT_CLICK_CODE) {
-            this.points.removePoint(this.points.length - 1);
-            this.resetValidation();
+            this.mouseEventRightClick(event);
         }
+    }
+
+    public mouseEventRightClick(event: MouseEvent): void {
+        if (this.points.length > 0 ) {
+            this.points.removePoint(this.points.length - 1);
+        }
+        this.resetValidation();
     }
 
     public mouseEventReleaseClick(event: MouseEvent): void {
