@@ -36,7 +36,8 @@ export class DefinitionComponent implements OnInit {
     private toDictionary(word: Word): {[cheat: string]: string} {
         const temp: {[cheat: string]: string} = {};
         temp["true"] = this.toWord(word.letters);
-        temp["false"] = word.definitions[0];
+        const trimmedDefinition: string = word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1);
+        temp["false"] = trimmedDefinition.charAt(0).toUpperCase() + trimmedDefinition.slice(1);
 
         return temp;
     }
