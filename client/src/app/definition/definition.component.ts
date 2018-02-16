@@ -22,33 +22,23 @@ export class DefinitionComponent implements OnInit {
     public ngOnInit(): void {
         this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._wordGrid = grid.words;
-            this.updateDefinitions();
+            this.acrossDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
+                .map((w: Word) => this.wordToDictionary(w));
+            this.downDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
+                .map((w: Word) => this.wordToDictionary(w));
         });
     }
 
-    private updateDefinitions(): void {
-        this.acrossDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
-            .map((w: Word) => this.toDictionary(w));
-        this.downDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
-            .map((w: Word) => this.toDictionary(w));
+    private wordToDictionary(word: Word): {[cheat: string]: string} {
+        const tempDictionary: {[cheat: string]: string} = {};
+        tempDictionary["true"] = this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join());
+        tempDictionary["false"] = this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1));
+
+        return tempDictionary;
     }
 
-    private toDictionary(word: Word): {[cheat: string]: string} {
-        const temp: {[cheat: string]: string} = {};
-        temp["true"] = this.toWord(word.letters);
-        const trimmedDefinition: string = word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1);
-        temp["false"] = trimmedDefinition.charAt(0).toUpperCase() + trimmedDefinition.slice(1);
-
-        return temp;
-    }
-
-    private toWord(letters: Letter[]): string {
-        let str: string = "";
-        letters.forEach((letter: Letter) => {
-            str += letter.char;
-        });
-
-        return str;
+    private upperFirstLetter(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     public toogleCheatMode(): void {
