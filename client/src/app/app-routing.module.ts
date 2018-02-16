@@ -5,6 +5,7 @@ import { CrosswordsComponent } from "./crosswords-component/crosswords.component
 import { HomePageComponent } from "./home-page/home-page.component";
 import { AdminComponent } from "./admin/admin.component";
 import { TrackListComponent } from "./track-list/track-list.component";
+import { TrackEditorComponent } from "./track-editor/track-editor.component";
 
 const routes: Routes = [
   { path: "" , redirectTo: "/home-page", pathMatch: "full" },
@@ -15,7 +16,8 @@ const routes: Routes = [
     children: [
         { path: "" , redirectTo: "track-list", pathMatch: "full" },
         { path : "track-list", component: TrackListComponent}
-    ] }
+    ] },
+  { path: "track-editor", component: TrackEditorComponent}
 ];
 
 @NgModule({
