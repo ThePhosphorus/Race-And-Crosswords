@@ -14,7 +14,7 @@ export abstract class Renderer {
     private _webGlRenderer: WebGLRenderer;
     private _scene: Scene;
     private _lastDate: number;
-    private stats: Stats;
+    private _stats: Stats;
     private _cameraManager: CameraManagerService;
     protected cameraTargetPosition: Vector3;
     protected cameraTargetDirection: Vector3;
@@ -80,9 +80,9 @@ export abstract class Renderer {
 
     private initStats(): void {
         if (this.statsEnabled) {
-            this.stats = new Stats();
-            this.stats.dom.style.position = "absolute";
-            this.container.appendChild(this.stats.dom);
+            this._stats = new Stats();
+            this._stats.dom.style.position = "absolute";
+            this.container.appendChild(this._stats.dom);
         }
      }
 
@@ -98,7 +98,7 @@ export abstract class Renderer {
         this.rendererUpdate();
         this.renderer.render(this.scene, this._cameraManager.camera);
         if (this.statsEnabled) {
-            this.stats.update();
+            this._stats.update();
         }
      }
 
