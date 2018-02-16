@@ -71,6 +71,7 @@ p {
 }
 
 #info{
+    font-family: "Button Font", 'Times New Roman', Times, serif;
     border:solid #212529;
     border-radius: 0.5vmax;
     background-color: darkgrey;
@@ -85,5 +86,9 @@ border-right:solid #212529 0.2vmax;
     }
 
 
+    @font-face {
+        font-family: "Button Font";
+        src: url("/assets/fonts/atwriter.ttf") format("truetype")
+      }
 
 

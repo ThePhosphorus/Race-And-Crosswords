@@ -1,3 +1,4 @@
+
 <div class="row" id="hints">
   <div class="col-md pr-0">
     <table class="table text-center">
@@ -22,9 +23,20 @@
         <td (click)="select(row, 'Down')">{{ row + 1 }}. {{ item[cheatMode] }}</td>
       </tr>
     </table>
-    <button (click)="toogleCheatMode()" class="btn mt-3 w-100" [ngClass]="{'btn-outline-success': !cheatMode, 'btn-outline-danger': cheatMode}">
-      {{ (cheatMode? "ENABLED" : "DISABLED") }}
-    </button>
+
 
   </div>
+
 </div>
+
+
+<div class="pretty p-icon p-curve p-thick">
+  <input type="checkbox"  (click)="toogleCheatMode()" />
+  <div class="state p-danger-o">
+      <i class="icon mdi mdi-emoticon-devil"></i>
+      <label> I'M A CHEATER</label>
+  </div>
+</div>
+
+
+

@@ -9,6 +9,10 @@
 #hints td{
     text-align: left;
 }
+label{
+    font-family: "Hints Font",'Times New Roman', Times, serif;
+}
+
 
 
 #hints{
