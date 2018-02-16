@@ -3,7 +3,8 @@ import { Vector3 } from "three";
 const MINIMUM_ANGLE: number = 2.35619;
 const LAST_POINT_INDEX: number = 2;
 
-const TWICE_TRACK_WIDTH: number = 5; // Temporary constant while we don't know the track width
+const TWICE_TRACK_WIDTH: number = 6; // Temporary constant while we don't know the track width
+const TRACK_WIDTH: number = 3; // Temporary constant while we don't know the track width
 
 export class ConstraintValidator {
     private _points: Array<Vector3>;
@@ -23,7 +24,8 @@ export class ConstraintValidator {
         return this.validateLength(line)
             && this.validateAngle(previousLine, line)
             && this.validateAngle(line, nextLine)
-            && this.validateIntersection(p1, p2);
+            && this.validateIntersection(p1, p2)
+            && this.validatePointLineDistance(p1, p2);
     }
 
     private findNextLine(point: Vector3): Vector3 {
@@ -70,6 +72,36 @@ export class ConstraintValidator {
                 const doesIntersect: boolean = this.isCounterClockWise(p1, p3, p4) !== this.isCounterClockWise(p2, p3, p4)
                                             && this.isCounterClockWise(p1, p2, p3) !== this.isCounterClockWise(p1, p2, p4);
                 if (doesIntersect) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private pointLineDistance(l1: Vector3, l2: Vector3, p: Vector3): number {
+        const ap: Vector3 = new Vector3().subVectors(p, l1);
+        const ab: Vector3 = new Vector3().subVectors(l2, l1);
+        const abLength: number = ab.length();
+
+        const projected: number = (ap.clone().dot(ab) / ab.clone().dot(ab)) * abLength;
+        if (projected > 0 && projected < abLength) {
+            const a: number = Math.abs((l2.z - l1.z) * p.x - (l2.x - l1.x) * p.z + l2.x * l1.z - l2.z * l1.x);
+            const b: number = Math.sqrt((l2.z - l1.z) * (l2.z - l1.z) + (l2.x - l1.x) * (l2.x - l1.x));
+
+            return a / b;
+        } else {
+            return Math.min(p.distanceTo(l1), p.distanceTo(l2));
+        }
+
+    }
+
+    private validatePointLineDistance(l1: Vector3, l2: Vector3): boolean {
+        for (const p of this._points) {
+            if (!p.equals(l1) && !p.equals(l2)) {
+                const isTooClose: boolean = this.pointLineDistance(l1, l2, p) < TRACK_WIDTH;
+                if (isTooClose) {
                     return false;
                 }
             }
