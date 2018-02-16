@@ -1,39 +1,30 @@
 import { Injectable } from "@angular/core";
 import {
-    Audio,
-    AudioLoader,
-    AudioBuffer,
+    AudioListener
 } from "three";
-import { CameraManagerService } from "./../camera-manager-service/camera-manager.service";
+import {EngineSound} from "./sound-containers/engine-sound";
+import { Car } from "../car/car";
 
 @Injectable()
 export class SoundManagerService {
 
-    private engineLoop: Audio;
+    private cars: EngineSound[];
+    private listener: AudioListener;
 
-    public constructor(private cameraManager: CameraManagerService) {
-        this.init();
-    }
-    private init(): void {
-        this.engineLoop = new Audio(this.cameraManager.listener);
-        const idleLoader: AudioLoader = new AudioLoader();
-        idleLoader.load("../../assets/sounds/engine.ogg", (buffer: AudioBuffer) => {
-            this.engineLoop.setBuffer(buffer);
-            this.engineLoop.setLoop(true);
-            this.engineLoop.setVolume(0.5);
-            },          () => { } , () => { });
-
+    public constructor() {
+        this.cars = new Array<EngineSound>();
     }
 
-    public modifyPlayBackSpeed(rpm: number): void {
-        if (rpm > 800) {
-            // this.engineLoop.stop();
-            this.engineLoop.setPlaybackRate((rpm - 800) / 4700 + 1);
-           // this.engineLoop.play();
-        }
+    public addCarSound(car: Car): void {
+        this.cars.push(new EngineSound(car.carMesh, this.listener));
     }
-    public startSounds(): void {
-        this.engineLoop.play();
+
+    public updateCarRpm(rpm: number): void {
+        this.cars[0].updateRPM(rpm);
+    }
+
+    public init(listener: AudioListener): void {
+        this.listener = listener;
     }
 
 }

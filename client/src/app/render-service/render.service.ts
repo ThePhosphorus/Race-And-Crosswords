@@ -84,12 +84,12 @@ export class RenderService {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.container = container;
-
+        this.soundManager.init(this.cameraManager.listener);
         await this.createScene();
+        this.soundManager.addCarSound(this._car);
 
         this.initStats();
         this.startRenderingLoop();
-        this.soundManager.startSounds();
      }
 
     private initStats(): void {
@@ -106,8 +106,7 @@ export class RenderService {
             this._car.direction
         );
         this.cameraManager.update(timeSinceLastFrame);
-        this.soundManager.modifyPlayBackSpeed(this._car.rpm);
-        //this.soundManager.playSounds();
+        this.soundManager.updateCarRpm(this._car.rpm);
         this.lastDate = Date.now();
         this.updateCarInfos();
      }

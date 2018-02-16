@@ -39,6 +39,9 @@ export class Car extends Object3D {
     private weightRear: number;
     private steeringWheelState: number;
 
+    public get carMesh(): Object3D {
+        return this.mesh;
+    }
     public get speed(): Vector3 {
         return this._speed.clone();
     }
@@ -109,7 +112,7 @@ export class Car extends Object3D {
             const loader: ObjectLoader = new ObjectLoader();
             loader.load(
                 "../../assets/camero/camero-2010-low-poly.json",
-                object => {
+                (object) => {
                     resolve(object);
                 }
             );
@@ -226,9 +229,9 @@ export class Car extends Object3D {
                 (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
        // if (this.isGoingForward()) {
-            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
+        return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
        // }
-        //return this.direction.multiplyScalar(-20 * rollingCoefficient * this.mass * GRAVITY);
+        // return this.direction.multiplyScalar(-20 * rollingCoefficient * this.mass * GRAVITY);
     }
 
     private getDragForce(): Vector3 {
