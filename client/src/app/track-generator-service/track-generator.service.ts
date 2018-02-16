@@ -132,6 +132,7 @@ export class TrackGenerator extends Renderer {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.points.selectPoint(possiblePointId);
+            this.resetValidation();
             this.enableDragMode(possiblePointId);
         } else {
             // Remove connection to spawn point
