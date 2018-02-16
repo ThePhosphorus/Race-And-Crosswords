@@ -3,8 +3,8 @@ import { Vector3 } from "three";
 const MINIMUM_ANGLE: number = 2.35619;
 const LAST_POINT_INDEX: number = 2;
 
-const TWICE_TRACK_WIDTH: number = 6; // Temporary constant while we don't know the track width
-const TRACK_WIDTH: number = 3; // Temporary constant while we don't know the track width
+export const TWICE_TRACK_WIDTH: number = 6; // Temporary constant while we don't know the track width
+export const TRACK_WIDTH: number = 3; // Temporary constant while we don't know the track width
 
 export class ConstraintValidator {
     private _points: Array<Vector3>;
