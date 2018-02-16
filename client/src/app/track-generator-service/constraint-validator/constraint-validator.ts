@@ -25,7 +25,8 @@ export class ConstraintValidator {
             && this.validateAngle(previousLine, line)
             && this.validateAngle(line, nextLine)
             && this.validateIntersection(p1, p2)
-            && this.validatePointLineDistance(p1, p2);
+            && this.validatePointLineDistance(p1, p2)
+            && this.validateLinePointDistance(p1, p2);
     }
 
     private findNextLine(point: Vector3): Vector3 {
@@ -102,6 +103,22 @@ export class ConstraintValidator {
             if (!p.equals(l1) && !p.equals(l2)) {
                 const isTooClose: boolean = this.pointLineDistance(l1, l2, p) < TRACK_WIDTH;
                 if (isTooClose) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private validateLinePointDistance(p1: Vector3, p2: Vector3): boolean {
+        for (let i: number = 0; i < this._points.length - 1; i++) {
+            const p3: Vector3 = this._points[i];
+            const p4: Vector3 = this._points[i + 1];
+            if (this.areDifferentPoints(p1, p2, p3, p4)) {
+                const firstLineInvalid: boolean = this.pointLineDistance(p3, p4, p1) < TRACK_WIDTH;
+                const secondLineInvalid: boolean = this.pointLineDistance(p3, p4, p2) < TRACK_WIDTH;
+                if (firstLineInvalid || secondLineInvalid) {
                     return false;
                 }
             }
