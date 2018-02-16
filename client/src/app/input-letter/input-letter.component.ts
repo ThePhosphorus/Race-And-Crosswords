@@ -11,6 +11,7 @@ export class InputLetterComponent implements OnInit {
     @Input() public currentLetter: number;
     @Input() public highlightedLetters: number[];
     @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
+    @Output() public advertiseWrittenLetter: EventEmitter<string> = new EventEmitter<string>();
 
     public constructor() {
         this.letter = "";
