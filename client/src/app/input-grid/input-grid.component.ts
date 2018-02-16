@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 const INITIAL_GRID_SIZE: number = 10;
@@ -84,6 +84,23 @@ export class InputGridComponent implements OnInit {
         for (const letter of word.letters) {
                 this.highlightedLetters.push(letter.id);
         }
-        this.currentLetter = word.letters[0].id;
+        this.currentLetter = this.highlightedLetters[0];
+    }
+
+    @HostListener("window:keyup", ["$event"])
+    public writeChar(event: KeyboardEvent): void {
+        if (this.currentLetter != null) {
+            if (event.key.length === 1 && event.key.match(/^[a-z]+$/i) !== null) {
+                this._grid.grid[this.currentLetter].char = event.key;
+                if (this.highlightedLetters.indexOf(this.currentLetter) < this.highlightedLetters.length - 1) {
+                    this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) + 1];
+                }
+            } else if (event.key === "Backspace") {
+                this._grid.grid[this.currentLetter].char = " ";
+                if (this.highlightedLetters.indexOf(this.currentLetter) > 0) {
+                    this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) - 1];
+                }
+            }
+        }
     }
 }

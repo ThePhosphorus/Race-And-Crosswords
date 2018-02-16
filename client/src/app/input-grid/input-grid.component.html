@@ -2,16 +2,18 @@
   <thead>
       <th>#</th>
     <th *ngFor="let letters of twoDimensionGrid;let i = index">
-      {{i+1}}
+      {{ i+1 }}
     </th>
 
   </thead>
   <tbody>
     <tr *ngFor="let letters of twoDimensionGrid;let row = index">
-      <th scope="row">{{row+1}}</th>
+      <th scope="row">{{ row+1 }}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <app-input-letter [letter]="letter.char" [id]="(twoDimensionGrid.length*row)+col" [highlightedLetters]="highlightedLetters" [currentLetter]="currentLetter" (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
+          <app-input-letter [letter]="letter.char" [id]="(twoDimensionGrid.length*row)+col"
+          [highlightedLetters]="highlightedLetters" [currentLetter]="currentLetter"
+          (setSelectedLetter)="setSelectedLetter($event)" (advertiseWrittenLetter)="writeChar($event)"></app-input-letter>
         </span>
       </td>
 

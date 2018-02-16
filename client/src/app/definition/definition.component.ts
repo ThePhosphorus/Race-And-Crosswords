@@ -31,7 +31,7 @@ export class DefinitionComponent implements OnInit {
 
     private wordToDictionary(word: Word): {[cheat: string]: string} {
         const tempDictionary: {[cheat: string]: string} = {};
-        tempDictionary["true"] = this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join());
+        tempDictionary["true"] = this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join(""));
         tempDictionary["false"] = this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1));
 
         return tempDictionary;

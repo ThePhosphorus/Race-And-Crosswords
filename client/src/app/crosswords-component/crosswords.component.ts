@@ -12,7 +12,7 @@ export class CrosswordsComponent implements OnInit {
 
     public ngOnInit(): void {
     }
+
     public constructor() {
     }
-
 }
