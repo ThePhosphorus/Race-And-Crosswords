@@ -1,7 +1,7 @@
 import {AbstractSoundContainer, DEFAULT_VOLUME} from "./abstract-sound-container";
 import { AudioBuffer} from "three";
 
-const FILE_NAME: string = "engine.ogg";
+const FILE_NAME: string = "idle.ogg";
 const MAX_RPM: number = 5500;
 const MIN_RPM: number = 800;
 export class EngineSound extends AbstractSoundContainer {
@@ -10,6 +10,7 @@ export class EngineSound extends AbstractSoundContainer {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(true);
         this.sound.setVolume(DEFAULT_VOLUME);
+        this.sound.play();
     }
     protected getFileName(): string {
         return FILE_NAME;
