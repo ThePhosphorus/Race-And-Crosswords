@@ -38,7 +38,7 @@ describe("ConstraintValidatorService", () => {
         expect(service.validateLine(points[0], points[1])).toBeFalsy();
     });
 
-    it("should return false when track is too short", () => {
+    it("should return false when tracks are closer than the width", () => {
         const points: Array<Vector3> = new Array<Vector3>();
         points.push(new Vector3(0, 0, 0));
         points.push(new Vector3(minTrackLength * 2, 0, 0));
@@ -49,8 +49,6 @@ describe("ConstraintValidatorService", () => {
         expect(service.validateLine(points[0], points[1])).toBeFalsy();
         expect(service.validateLine(points[2], points[3])).toBeFalsy();
     });
-
-    it("should return false when tracks are closer than the width");
 
     it("should return true when no conditions are broken" , () => {
         const points: Array<Vector3> = new Array<Vector3>();
