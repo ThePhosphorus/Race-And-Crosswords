@@ -1,18 +1,14 @@
-th{
+th {
     font-weight: lighter;
-
 }
 
- tr {
-    text-align: center;
-    border-left:solid #32383e ;
-    border-right: solid#32383e ;
-
+table {
+    border:solid #32383e ;
 }
+
 td {
     width: 33%;
 }
-
 
 #btnAdd{
     height: 100%;
@@ -38,6 +34,7 @@ button{
     display:block;
     width: 100%;
 }
+
 #rowAdd {
     border: transparent;
     padding:0% 0% 0% 0%;
