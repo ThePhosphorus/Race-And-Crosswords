@@ -1,9 +1,10 @@
 <table id="grid" align="center">
   <thead>
+      <th>#</th>
     <th *ngFor="let letters of twoDimensionGrid;let i = index">
       {{i+1}}
     </th>
-    <th>#</th>
+
   </thead>
   <tbody>
     <tr *ngFor="let letters of twoDimensionGrid;let row = index">

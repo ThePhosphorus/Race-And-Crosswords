@@ -13,5 +13,9 @@
 
 #hints{
     font-size:100%;
+    font-family: "Hints Font",'Times New Roman', Times, serif;
 }
-
+@font-face {
+    font-family: "Hints Font";
+    src: url("/assets/fonts/atwriter.ttf") format("truetype")
+  }

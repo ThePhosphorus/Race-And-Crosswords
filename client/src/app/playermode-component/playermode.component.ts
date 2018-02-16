@@ -17,6 +17,7 @@ export class PlayermodeComponent implements OnInit {
     public nbPlayers: number;
     public lvl: DifficultyLevel;
     public isCollapsed: boolean = false;
+    public isCollapsed2: boolean = false;
 
     public constructor() { }
 
