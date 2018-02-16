@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InputGridComponent } from './input-grid.component';
+import { InputGridComponent } from "./input-grid.component";
 
-describe('InputGridComponent', () => {
+describe("InputGridComponent", () => {
   let component: InputGridComponent;
   let fixture: ComponentFixture<InputGridComponent>;
 
@@ -19,7 +19,7 @@ describe('InputGridComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

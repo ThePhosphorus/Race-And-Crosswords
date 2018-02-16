@@ -19,9 +19,7 @@ export class InputGridComponent implements OnInit {
         this.currentLetter = null;
         this.highlightedLetters = [];
         this.currentOrientation = Orientation.Across;
-        this._grid = new CrosswordGrid();
-        this._grid.size = INITIAL_GRID_SIZE;
-        this.initializeGrids();
+        this.initializeGrid();
     }
 
     public ngOnInit(): void {
@@ -31,13 +29,15 @@ export class InputGridComponent implements OnInit {
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 
-    private initializeGrids(): void {
+    private initializeGrid(): void {
+        this._grid = new CrosswordGrid();
+        this._grid.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._grid.size * this._grid.size); i++) {
             this._grid.grid.push(new Letter(""));
         }
     }
 
-    private get twoDimensionGrid(): Letter[][] {
+    public get twoDimensionGrid(): Letter[][] {
         const formattedGrid: Letter[][] = new Array<Array<Letter>>();
         for (let i: number = 0; i < this._grid.size; i++) {
             formattedGrid.push(new Array<Letter>());
@@ -50,11 +50,9 @@ export class InputGridComponent implements OnInit {
     }
 
     public setSelectedLetter(index: number): void {
-        if (index === this.currentLetter) {
-            this.currentOrientation = this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across;
-        } else {
-            this.currentOrientation = Orientation.Across;
-        }
+        this.currentOrientation = (index === this.currentLetter) ?
+                                (this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
+                                (this.currentOrientation = Orientation.Across);
         let targetWord: Word;
         if ((targetWord = this.findWordFromLetter(index, this.currentOrientation)) === null) {
             for (const ori in Orientation) {

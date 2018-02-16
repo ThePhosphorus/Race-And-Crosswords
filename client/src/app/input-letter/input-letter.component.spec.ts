@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InputLetterComponent } from './input-letter.component';
+import { InputLetterComponent } from "./input-letter.component";
 
-describe('InputLetterComponent', () => {
+describe("InputLetterComponent", () => {
     let component: InputLetterComponent;
     let fixture: ComponentFixture<InputLetterComponent>;
 
@@ -19,7 +19,7 @@ describe('InputLetterComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });
