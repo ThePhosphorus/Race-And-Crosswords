@@ -27,4 +27,10 @@ export class SoundManagerService {
         this.listener = listener;
     }
 
+    public stopAllSounds(): void {
+        this.cars.forEach((car: EngineSound) => {
+            car.stop();
+        });
+    }
+
 }

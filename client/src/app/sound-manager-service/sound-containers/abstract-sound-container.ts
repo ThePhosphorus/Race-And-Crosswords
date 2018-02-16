@@ -30,6 +30,10 @@ export abstract class AbstractSoundContainer {
 
     }
 
+    public stop(): void {
+        this.sound.stop();
+    }
+
     protected abstract setSoundSettings(buffer: AudioBuffer): void;
 
     protected abstract getFileName(): string;
