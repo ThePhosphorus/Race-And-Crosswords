@@ -24,6 +24,13 @@ export class InputGridComponent implements OnInit {
         this.initializeGrids();
     }
 
+    public ngOnInit(): void {
+        this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
+            this._grid = grid;
+        });
+        this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
+    }
+
     private initializeGrids(): void {
         for (let i: number = 0; i < (this._grid.size * this._grid.size); i++) {
             this._grid.grid.push(new Letter(""));
@@ -40,12 +47,6 @@ export class InputGridComponent implements OnInit {
         }
 
         return formattedGrid;
-    }
-    public ngOnInit(): void {
-        this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO)
-            .subscribe((_grid: CrosswordGrid) => {
-                this._grid = _grid;
-            });
     }
 
     public setSelectedLetter(index: number): void {

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Letter, Word, Orientation } from "../../../../common/communication/crossword-grid";
+import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 
 @Component({
     selector: "app-definition",
@@ -11,35 +11,34 @@ export class DefinitionComponent implements OnInit {
     @Output() public setSelectedWord: EventEmitter<Word> = new EventEmitter<Word>();
     private _cheatmode: boolean;
     private _wordGrid: Word[];
+    public acrossDefinitions: {[cheat: string]: string}[];
+    public downDefinitions: {[cheat: string]: string}[];
 
     public constructor(private _crosswordService: CrosswordService) {
         this._cheatmode = false;
+        this._wordGrid = null;
     }
 
     public ngOnInit(): void {
-        this._wordGrid = this._crosswordService.words;
+        this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
+            this._wordGrid = grid.words;
+            this.updateDefinitions();
+        });
     }
 
-    private get acrossDefinitions(): string[] {
-        if (this._crosswordService.currentGrid != null) {
-            this._wordGrid = this._crosswordService.words;
-
-            return this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
-                .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
-        }
-
-        return new Array<string>();
+    private updateDefinitions(): void {
+        this.acrossDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
+            .map((w: Word) => this.toDictionary(w));
+        this.downDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
+            .map((w: Word) => this.toDictionary(w));
     }
 
-    private get downDefinitions(): string[] {
-        if (this._crosswordService.currentGrid != null) {
-            this._wordGrid = this._crosswordService.words;
+    private toDictionary(word: Word): {[cheat: string]: string} {
+        const temp: {[cheat: string]: string} = {};
+        temp["true"] = this.toWord(word.letters);
+        temp["false"] = word.definitions[0];
 
-            return this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
-                .map((w: Word) => (this._cheatmode) ? this.toWord(w.letters) : w.definitions[0]);
-        }
-
-        return new Array<string>();
+        return temp;
     }
 
     private toWord(letters: Letter[]): string {

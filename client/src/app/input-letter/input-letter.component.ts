@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Letter } from "../../../../common/communication/crossword-grid";
 
 @Component({
     selector: "app-input-letter",
