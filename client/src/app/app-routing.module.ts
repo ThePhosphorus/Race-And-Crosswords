@@ -15,9 +15,9 @@ const routes: Routes = [
   { path: "admin", component: AdminComponent,
     children: [
         { path: "" , redirectTo: "track-list", pathMatch: "full" },
-        { path : "track-list", component: TrackListComponent}
-    ] },
-  { path: "track-editor", component: TrackEditorComponent}
+        { path : "track-list", component: TrackListComponent},
+        { path: "track-editor", component: TrackEditorComponent}
+    ] }
 ];
 
 @NgModule({
