@@ -10,6 +10,8 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
+import { TrackEditorComponent } from "./track-editor/track-editor.component";
+import { ReversePipe } from "./reverse-pipe/reverse.pipe";
 
 @NgModule({
     declarations: [
@@ -17,7 +19,9 @@ import { HomePageComponent } from "./home-page/home-page.component";
         GameComponent,
         CrosswordsComponent,
         PlayermodeComponent,
-        HomePageComponent
+        HomePageComponent,
+        TrackEditorComponent,
+        ReversePipe
     ],
     imports: [
         BrowserModule,
