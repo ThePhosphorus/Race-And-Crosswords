@@ -8,7 +8,7 @@ import {
 } from "three";
 
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
-export const DEFAULT_VOLUME: number = 2;
+export const DEFAULT_VOLUME: number = 5;
 
 export abstract class AbstractSoundContainer {
 

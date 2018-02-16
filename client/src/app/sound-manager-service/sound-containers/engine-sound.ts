@@ -1,7 +1,7 @@
 import {AbstractSoundContainer, DEFAULT_VOLUME} from "./abstract-sound-container";
 import { AudioBuffer} from "three";
 
-const FILE_NAME: string = "idle.ogg";
+const FILE_NAME: string = "put.ogg";
 const MAX_RPM: number = 5500;
 const MIN_RPM: number = 800;
 export class EngineSound extends AbstractSoundContainer {
@@ -21,6 +21,6 @@ export class EngineSound extends AbstractSoundContainer {
     }
 
     private getPlaybackRate(rpm: number): number {
-        return (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM) + 1; // Augmentation lineaire de la vitesse de lecture (entre 1 et 2)
+        return (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM) + 2; // Augmentation lineaire de la vitesse de lecture (entre 1 et 2)
     }
 }
