@@ -1,6 +1,6 @@
 export class Track {
     constructor (
-        public nom: string,
+        public name: string,
         public description: string,
         public points: Vector3Struct[]
     ){}

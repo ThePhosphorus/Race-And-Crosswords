@@ -14,9 +14,13 @@ export class TrackSaverService {
         );
 
         points.forEach((point: Vector3) => {
-            track.points.push(new Vector3Struct(point.x, point.y, point.z));
+            track.points.push(this.toVectorStruct(point));
         });
 
         return track;
+    }
+
+    public toVectorStruct(vector: Vector3): Vector3Struct {
+        return new Vector3Struct(vector.x, vector.y, vector.z);
     }
 }
