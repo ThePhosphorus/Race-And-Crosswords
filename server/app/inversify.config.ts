@@ -9,6 +9,7 @@ import { Lexical } from "./crosswords/lexical/lexical";
 import { Grid } from "./crosswords/grid/grid";
 import { GridGenerator } from "./crosswords/grid/grid-generator";
 import { TrackSaver } from "./race/trackSaver/trackSaver";
+import { DbClient } from "./mongo/DbClient";
 
 const container: Container = new Container();
 
@@ -21,5 +22,6 @@ container.bind(Types.Lexical).to(Lexical);
 container.bind(Types.Grid).to(Grid);
 container.bind(Types.GridGenerator).to(GridGenerator);
 container.bind(Types.TrackSaver).to(TrackSaver);
+container.bind(Types.TrackSaver).to(DbClient);
 
 export { container };
