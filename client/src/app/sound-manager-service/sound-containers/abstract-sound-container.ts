@@ -8,7 +8,7 @@ import {
 } from "three";
 
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
-export const DEFAULT_VOLUME: number = 5;
+export const DEFAULT_VOLUME: number = 0.5;
 
 export abstract class AbstractSoundContainer {
 
@@ -18,7 +18,7 @@ export abstract class AbstractSoundContainer {
         this.sound = new PositionalAudio(soundListener);
         let soundPath: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
         soundPath += this.getFileName();
-        this.loadSound(soundPath)  ;
+        this.loadSound(soundPath);
         soundEmittingObject.add(this.sound);
     }
 

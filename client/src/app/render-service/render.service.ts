@@ -71,9 +71,8 @@ export class RenderService extends Renderer {
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
         this.soundManager.init(this.cameraManager.listener);
-        this.soundManager.addCarSound(this._car);
-
         await this._car.init();
+        this.soundManager.addCarSound(this._car);
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
             this._car.direction
@@ -81,8 +80,6 @@ export class RenderService extends Renderer {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
-        this.soundManager.updateCarRpm(this._car.rpm);
-
         this.startRenderingLoop();
     }
 
@@ -129,6 +126,7 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
+        this.soundManager.updateCarRpm(this._car.rpm);
     }
 
     private updateCarInfos(): void {
