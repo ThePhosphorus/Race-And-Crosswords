@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, CameraHelper} from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
@@ -74,7 +74,7 @@ export class RenderService extends Renderer {
         this.init(container);
         this.light = new DirectionalLight( 0xffe382, 0.7 );
         this.light.position.set(-1, 1, -1);
-        this.light.position.multiplyScalar(10);
+        this.light.position.multiplyScalar(25);
         this.light.castShadow = true;
         this.light.shadow.camera.bottom = -sLight;
         this.light.shadow.camera.top = sLight;
@@ -84,8 +84,8 @@ export class RenderService extends Renderer {
         this.light.shadow.camera.far = dLight;
         this.light.shadow.mapSize.x = 1024 * 2;
         this.light.shadow.mapSize.y = 1024 * 2;
-        const helper: CameraHelper = new CameraHelper(this.light.shadow.camera);
-        this.scene.add(helper);
+        //const helper: CameraHelper = new CameraHelper(this.light.shadow.camera);
+        //this.scene.add(helper);
         this.scene.add(this.light);
 
         await this._car.init();
@@ -145,7 +145,11 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
-        //this.light.shadow.camera.position.x = this.light.shadow.camera.position.x+1;
+        const offSet: Vector3 = new Vector3(-10, 10, -10);
+        const newPosition: Vector3 = new Vector3(this.light.shadow.camera.position.x, this.light.shadow.camera.position.y, this.light.shadow.camera.position.z);
+        newPosition.add(offSet);
+        this.light.position.copy((this._car.getPosition().clone().add(offSet)));
+        this.light.target = this._car["mesh"];
     }
 
     private updateCarInfos(): void {
