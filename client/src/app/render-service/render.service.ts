@@ -8,7 +8,7 @@ const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
 const GRID_PRIMARY_COLOR: number = 0xFF0000;
 const GRID_SECONDARY_COLOR: number = 0x001188;
-const BACKGROUND_PATH: string = "../../assets/skybox/mp_habitual/";
+const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.85;
