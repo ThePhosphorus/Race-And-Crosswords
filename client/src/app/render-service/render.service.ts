@@ -12,7 +12,7 @@ const OFF_ROAD_PATH: string = "../../assets/textures/OutOfBounds.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
-const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
+const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 
 @Injectable()
 export class RenderService extends Renderer {
