@@ -18,7 +18,11 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
-const OUT_OF_BOUNDS_Z_TRANSLATION: number = 0.1;
+const OFF_ROAD_Z_TRANSLATION: number = 0.1;
+const OFF_ROAD_PATH: string = "../../assets/textures/OutOfBounds.jpg";
+const TRACK_PATH: string = "../../assets/textures/floor.jpg";
+const HALF: number = 0.5;
+const PI_OVER_2: number = Math.PI * HALF;
 
 const WHITE: number = 0xFFFFFF;
 const AMBIENT_LIGHT_OPACITY: number = 0.85;
@@ -122,26 +126,26 @@ export class RenderService {
     }
 
     private getFloor(): Mesh {
-        const texture: Texture = new TextureLoader().load("../../assets/textures/OutOfBounds.jpg");
+        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
         const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
-        plane.rotateX(Math.PI / 2);
-        plane.translateZ(OUT_OF_BOUNDS_Z_TRANSLATION);
+        plane.rotateX(PI_OVER_2);
+        plane.translateZ(OFF_ROAD_Z_TRANSLATION);
 
         return plane;
     }
 
     private getTrack(): Mesh {
-        const texture: Texture = new TextureLoader().load("../../assets/textures/floor.jpg");
+        const texture: Texture = new TextureLoader().load(TRACK_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
         const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
-        plane.rotateX(Math.PI / 2);
+        plane.rotateX(PI_OVER_2);
 
         return plane;
     }
