@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3} from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3, SpotLight} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
@@ -20,7 +20,8 @@ const sLight: number = dLight * 0.25;
 export class RenderService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
-    private light: DirectionalLight;
+    private sunlight: DirectionalLight;
+    private carlight: SpotLight;
 
     public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, false);
@@ -72,21 +73,8 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        this.light = new DirectionalLight( 0xffe382, 0.7 );
-        this.light.position.set(-1, 1, -1);
-        this.light.position.multiplyScalar(25);
-        this.light.castShadow = true;
-        this.light.shadow.camera.bottom = -sLight;
-        this.light.shadow.camera.top = sLight;
-        this.light.shadow.camera.left = -sLight;
-        this.light.shadow.camera.right = sLight;
-        this.light.shadow.camera.near = dLight/30;
-        this.light.shadow.camera.far = dLight;
-        this.light.shadow.mapSize.x = 1024 * 2;
-        this.light.shadow.mapSize.y = 1024 * 2;
-        //const helper: CameraHelper = new CameraHelper(this.light.shadow.camera);
-        //this.scene.add(helper);
-        this.scene.add(this.light);
+        this.loadSunlight();
+        this.loadCarLights();
 
         await this._car.init();
         this.cameraManager.updatecarInfos(
@@ -99,7 +87,27 @@ export class RenderService extends Renderer {
 
         this.startRenderingLoop();
     }
-
+    private loadCarLights(): void {
+        this.carlight = new SpotLight( 0xFFE6CC, 1, 15, 1 );
+        this.carlight.position.set(-3, 1, 0 );
+        this.carlight.penumbra = 0.4;
+        this.scene.add(this.carlight);
+    }
+    private loadSunlight(): void {
+        this.sunlight = new DirectionalLight( 0xffe382, 0.7 );
+        this.sunlight.position.set(-1, 1, -1);
+        this.sunlight.position.multiplyScalar(25);
+        this.sunlight.castShadow = true;
+        this.sunlight.shadow.camera.bottom = -sLight;
+        this.sunlight.shadow.camera.top = sLight;
+        this.sunlight.shadow.camera.left = -sLight;
+        this.sunlight.shadow.camera.right = sLight;
+        this.sunlight.shadow.camera.near = dLight/30;
+        this.sunlight.shadow.camera.far = dLight;
+        this.sunlight.shadow.mapSize.x = 1024 * 2;
+        this.sunlight.shadow.mapSize.y = 1024 * 2;
+        this.scene.add(this.sunlight);
+    }
     private getFloor(): Mesh {
         const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
         texture.wrapS = RepeatWrapping;
@@ -145,17 +153,27 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
-        const offSet: Vector3 = new Vector3(-10, 10, -10);
-        const newPosition: Vector3 = new Vector3(this.light.shadow.camera.position.x, this.light.shadow.camera.position.y, this.light.shadow.camera.position.z);
-        newPosition.add(offSet);
-        this.light.position.copy((this._car.getPosition().clone().add(offSet)));
-        this.light.target = this._car["mesh"];
+        this.updateCarlight();
+        this.updateSunlight();
     }
 
     private updateCarInfos(): void {
         this._carInfos.speed = this._car.speed.length();
         this._carInfos.gear = this._car.currentGear;
         this._carInfos.rpm = this._car.rpm;
+    }
+
+    private updateSunlight(): void {
+        const sunlightoffSet: Vector3 = new Vector3(-10, 10, -10);
+        this.sunlight.target = this._car["mesh"];
+        this.sunlight.position.copy((this._car.getPosition().clone().add(sunlightoffSet)));
+    }
+
+    private updateCarlight(): void {
+        const carlightoffSet: Vector3 = new Vector3(0, 1, 0);
+        this.carlight.position.copy((this._car.getPosition().clone().add(this._car.direction).add(carlightoffSet)));
+        this.carlight.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
+        this.carlight.target.updateMatrixWorld(true);
     }
 }
 
