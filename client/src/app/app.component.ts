@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { InputManagerService } from "./input-manager-service/input-manager.service";
 
 @Component({
@@ -8,7 +8,7 @@ import { InputManagerService } from "./input-manager-service/input-manager.servi
 })
 export class AppComponent implements OnInit {
 
-    public constructor(private inputManager: InputManagerService) { }
+    public constructor(public inputManager: InputManagerService) { }
 
     public title: string;
 
