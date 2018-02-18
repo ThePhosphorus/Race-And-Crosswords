@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { GridHelper, Color } from "three";
+import { GridHelper, Color, CubeTextureLoader } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
@@ -8,6 +8,7 @@ const GRID_DIMENSION: number = 10000;
 const GRID_DIVISIONS: number = 1000;
 const GRID_PRIMARY_COLOR: number = 0xFF0000;
 const GRID_SECONDARY_COLOR: number = 0x001188;
+const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 
 @Injectable()
 export class RenderService extends Renderer {
@@ -19,11 +20,11 @@ export class RenderService extends Renderer {
         super(cameraManager, false);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
-     }
+    }
 
     public get carInfos(): CarInfos {
         return this._carInfos;
-     }
+    }
 
     public handleCarInputsDown(carControls: CarControls): void {
         switch (carControls) {
@@ -42,7 +43,7 @@ export class RenderService extends Renderer {
             default:
                 break;
         }
-     }
+    }
 
     public handleCarInputsUp(carControls: CarControls): void {
         switch (carControls) {
@@ -61,7 +62,7 @@ export class RenderService extends Renderer {
             default:
                 break;
         }
-     }
+    }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
@@ -84,6 +85,17 @@ export class RenderService extends Renderer {
             new Color(GRID_SECONDARY_COLOR)
         );
         this.scene.add(this.gridHelper);
+
+        this.scene.background = new CubeTextureLoader()
+            .setPath(BACKGROUND_PATH)
+            .load([
+                "posx.png",
+                "negx.png",
+                "posy.png",
+                "negy.png",
+                "posz.png",
+                "negz.png"
+            ]);
     }
 
     protected update(timeSinceLastFrame: number): void {
@@ -105,7 +117,7 @@ export class CarInfos {
         public speed: number,
         public gear: number,
         public rpm: number
-    ) {}
+    ) { }
 }
 
 export enum CarControls {
