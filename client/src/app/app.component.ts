@@ -16,11 +16,11 @@ export class AppComponent implements OnInit {
         this.title = "LOG2990";
     }
 
-    private onKeyUp(event: KeyboardEvent): void {
+    public onKeyUp(event: KeyboardEvent): void {
         this.inputManager.handleKeyUp(event);
     }
 
-    private onKeyDown(event: KeyboardEvent): void {
+    public onKeyDown(event: KeyboardEvent): void {
         this.inputManager.handleKeyDown(event);
     }
 }

@@ -26,16 +26,6 @@ export class GameComponent implements AfterViewInit {
         this.renderService.onResize();
     }
 
-    @HostListener("window:keydown", ["$event"])
-    public onKeyDown(event: KeyboardEvent): void {
-        this.inputmanager.handleKeyDown(event);
-    }
-
-    @HostListener("window:keyup", ["$event"])
-    public onKeyUp(event: KeyboardEvent): void {
-        this.inputmanager.handleKeyUp(event);
-    }
-
     public ngAfterViewInit(): void {
         this.renderService
             .initialize(this.containerRef.nativeElement)
