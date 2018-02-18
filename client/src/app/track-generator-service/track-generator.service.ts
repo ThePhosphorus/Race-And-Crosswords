@@ -10,12 +10,12 @@ import {
     Object3D
 } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
-import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 import { ConstraintValidator } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
+import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 const LINE_STR_PREFIX: string = "Line to ";
 
@@ -25,6 +25,10 @@ const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
 const LINK_MINIMUM_POINTS: number = 2;
+
+// Keycodes
+const ZOOM_IN_KEYCODE: number = 187; // +
+const ZOOM_OUT_KEYCODE: number = 189; // -
 const DELETE_KEY: number = 46;
 
 @Injectable()
@@ -37,12 +41,23 @@ export class TrackGenerator extends Renderer {
     public points: PointsHandler;
     private constraintValidator: ConstraintValidator;
 
-    public constructor(private cameraManager: CameraManagerService) {
+    public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {
         super(cameraManager, false );
         this.points = new PointsHandler(this);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
         this.constraintValidator = new ConstraintValidator();
+        this.setupKeyBindings();
+    }
+
+    public setupKeyBindings(): void {
+        this.inputManager.resetBindings();
+        this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, this.cameraManager.zoomIn);
+        this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, this.cameraManager.zoomOut);
+
+        this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, this.cameraManager.zoomRelease);
+        this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, this.cameraManager.zoomRelease);
+        this.inputManager.registerKeyUp(DELETE_KEY, this.points.removeSelectedPoint);
     }
 
     // Rendering
@@ -63,38 +78,6 @@ export class TrackGenerator extends Renderer {
         this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
-    }
-
-    // Input
-    public InputKeyDown(event: KeyboardEvent): void {
-        switch (event.keyCode) {
-            case ZOOM_IN_KEYCODE:
-                this.cameraManager.zoomIn();
-                break;
-            case ZOOM_OUT_KEYCODE:
-                this.cameraManager.zoomOut();
-                break;
-            case DELETE_KEY:
-                if (this.points.pointSelected()) {
-                    this.points.removePoint(this.points.selectedPointId);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public InputKeyUp(event: KeyboardEvent): void {
-        switch (event.keyCode) {
-            case ZOOM_IN_KEYCODE:
-                this.cameraManager.zoomRelease();
-                break;
-            case ZOOM_OUT_KEYCODE:
-                this.cameraManager.zoomRelease();
-                break;
-            default:
-                break;
-        }
     }
 
     public mouseEventclick(event: MouseEvent): void {

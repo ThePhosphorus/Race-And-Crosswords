@@ -67,6 +67,12 @@ export class PointsHandler {
 
     }
 
+    public removeSelectedPoint = (): void => {
+        if (this.pointSelected()) {
+            this.removePoint(this.selectedPointId);
+        }
+    }
+
     public removePoint(index: number): void {
         if (index < 0 || index > this.length - 1) {
             throw new OutOfRangeException();
