@@ -10,36 +10,40 @@ export const LIGTHS: number = 76; // l
 @Injectable()
 export class InputManagerService {
 
-    private keyUpBindings: Map<number, Array<(event?: KeyboardEvent) => void>>;
-    private keyDownBindings: Map<number, Array<(event?: KeyboardEvent) => void>>;
+    private keyUpBindings: Map<number, Array<() => void>>;
+    private keyDownBindings: Map<number, Array<() => void>>;
 
     public constructor() {
         this.resetBindings();
     }
 
     public resetBindings(): void {
-        this.keyDownBindings = new Map<number, Array<(event?: KeyboardEvent) => void>>();
-        this.keyUpBindings = new Map<number, Array<(event?: KeyboardEvent) => void>>();
+        this.keyDownBindings = new Map<number, Array<() => void>>();
+        this.keyUpBindings = new Map<number, Array<() => void>>();
     }
 
     public handleKeyDown(event: KeyboardEvent): void {
-        this.keyDownBindings.get(event.keyCode).forEach((func) => func(event));
+        if (this.keyDownBindings.get(event.keyCode) != null) {
+            this.keyDownBindings.get(event.keyCode).forEach((func) => func());
+        }
     }
 
     public handleKeyUp(event: KeyboardEvent): void {
-        this.keyUpBindings.get(event.keyCode).forEach((func) => func(event));
+        if (this.keyUpBindings.get(event.keyCode) != null) {
+            this.keyUpBindings.get(event.keyCode).forEach((func) => func());
+        }
     }
 
-    public registerKeyDown(keycode: number, callback: (event?: KeyboardEvent) => void): void {
+    public registerKeyDown(keycode: number, callback: () => void): void {
         if (!this.keyDownBindings.has(keycode)) {
-            this.keyDownBindings.set(keycode, new Array<(event?: KeyboardEvent) => void>());
+            this.keyDownBindings.set(keycode, new Array<() => void>());
         }
         this.keyDownBindings.get(keycode).push(callback);
     }
 
-    public registerKeyUp(keycode: number, callback: (event?: KeyboardEvent) => void): void {
+    public registerKeyUp(keycode: number, callback: () => void): void {
         if (!this.keyUpBindings.has(keycode)) {
-            this.keyUpBindings.set(keycode, new Array<(event?: KeyboardEvent) => void>());
+            this.keyUpBindings.set(keycode, new Array<() => void>());
         }
         this.keyUpBindings.get(keycode).push(callback);
     }

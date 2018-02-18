@@ -127,31 +127,32 @@ export class Car extends Object3D {
         MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
-    public accelerate(): void {
+    // Input manager callback methods
+    public accelerate = (): void => {
         this.isAcceleratorPressed = true;
     }
 
-    public steerLeft(): void {
+    public steerLeft = (): void => {
         this.steeringWheelState = 1;
     }
 
-    public steerRight(): void {
+    public steerRight = (): void => {
         this.steeringWheelState = -1;
     }
 
-    public brake(): void {
+    public brake = (): void => {
         this.isBraking = true;
     }
 
-    public releaseSteering(): void {
+    public releaseSteering = (): void => {
         this.steeringWheelState = 0;
     }
 
-    public releaseBrakes(): void {
+    public releaseBrakes = (): void => {
         this.isBraking = false;
     }
 
-    public releaseAccelerator(): void {
+    public releaseAccelerator = (): void => {
         this.isAcceleratorPressed = false;
     }
 
@@ -221,6 +222,7 @@ export class Car extends Object3D {
             const brakeForce: Vector3 = this.getBrakeForce();
             resultingForce.add(brakeForce);
         }
+
         return resultingForce;
     }
 
@@ -236,6 +238,7 @@ export class Car extends Object3D {
         if (this.isGoingForward()) {
             return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
         }
+
         return this.direction.multiplyScalar(-1 * rollingCoefficient * this.mass * GRAVITY);
     }
 
