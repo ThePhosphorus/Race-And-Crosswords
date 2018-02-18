@@ -14,7 +14,7 @@ export const DEFAULT_WHEELBASE: number = 2.78;
 export const DEFAULT_MASS: number = 1515;
 export const DEFAULT_DRAG_COEFFICIENT: number = 0.35;
 
-const MAXIMUM_STEERING_ANGLE: number = 1;
+const MAXIMUM_STEERING_ANGLE: number = 0.35;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
 const MINIMUM_SPEED: number = 0.05;

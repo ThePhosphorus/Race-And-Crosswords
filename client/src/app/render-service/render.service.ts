@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3, SpotLight} from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3, SpotLight} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
@@ -113,7 +113,7 @@ export class RenderService extends Renderer {
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
         plane.rotateX(PI_OVER_2);
         plane.receiveShadow = true;
@@ -128,6 +128,7 @@ export class RenderService extends Renderer {
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
         const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
+        material.reflectivity = 0.2;
         const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
         plane.receiveShadow = true;
         plane.rotateX(PI_OVER_2);
