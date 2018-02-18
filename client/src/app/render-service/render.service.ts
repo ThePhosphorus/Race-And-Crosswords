@@ -60,44 +60,6 @@ export class RenderService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, this.cameraManager.zoomRelease);
     }
 
-    public handleCarInputsDown(carControls: CarControls): void {
-        switch (carControls) {
-            case CarControls.Accelerate:
-                this._car.isAcceleratorPressed = true;
-                break;
-            case CarControls.Brake:
-                this._car.brake();
-                break;
-            case CarControls.Left:
-                this._car.steerLeft();
-                break;
-            case CarControls.Right:
-                this._car.steerRight();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public handleCarInputsUp(carControls: CarControls): void {
-        switch (carControls) {
-            case CarControls.Accelerate:
-                this._car.isAcceleratorPressed = false;
-                break;
-            case CarControls.Brake:
-                this._car.releaseBrakes();
-                break;
-            case (CarControls.Left):
-                this._car.releaseSteering();
-                break;
-            case (CarControls.Right):
-                this._car.releaseSteering();
-                break;
-            default:
-                break;
-        }
-    }
-
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
 
