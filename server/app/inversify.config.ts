@@ -22,6 +22,6 @@ container.bind(Types.Lexical).to(Lexical);
 container.bind(Types.Grid).to(Grid);
 container.bind(Types.GridGenerator).to(GridGenerator);
 container.bind(Types.TrackSaver).to(TrackSaver);
-container.bind(Types.TrackSaver).to(DbClient);
+container.bind(Types.DbClient).to(DbClient);
 
 export { container };

@@ -6,7 +6,7 @@ const DB_PASSWORD: string = "webApi";
 const DB_DB: string = "log2990-team21";
 const DB_URL: string = "mongodb://" + DB_USER + ":" + DB_PASSWORD + "@ds239638.mlab.com:39638/" + DB_DB;
 
-@injectable()
+@injectable() // TODO: Find a way to make it Injectable without the tests crahsing
 export class DbClient {
     public db: Db;
 

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { injectable, inject } from 'inversify';
+import { injectable, inject } from "inversify";
 import { WebService } from "../webServices";
 import { TrackSaver } from "./trackSaver/trackSaver";
 import Types from "../types";
@@ -7,7 +7,7 @@ import Types from "../types";
 @injectable()
 export class Race extends WebService {
 
-    public constructor(@inject(Types.Lexical) private trackSaver: TrackSaver) {
+    public constructor(@inject(Types.TrackSaver) private trackSaver: TrackSaver) {
         super();
         this.routeName = "/race";
     }

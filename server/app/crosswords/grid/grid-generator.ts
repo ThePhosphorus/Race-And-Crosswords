@@ -83,19 +83,19 @@ export class GridGenerator {
         }
     }
 
-    private displayGrid(): void {
-        // Used for debugging puposes
-        let s: string = "";
-        for (let i: number = 0; i < this.crossword.size; i++) {
-            for (let j: number = 0; j < this.crossword.size; j++) {
-                const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
-                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
-            }
-            s += "\n";
-        }
-        console.log(s);
+    // private displayGrid(): void {
+    //     // Used for debugging puposes
+    //     let s: string = "";
+    //     for (let i: number = 0; i < this.crossword.size; i++) {
+    //         for (let j: number = 0; j < this.crossword.size; j++) {
+    //             const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
+    //             s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
+    //         }
+    //         s += "\n";
+    //     }
+    //     console.log(s);
 
-    }
+    // }
 
     private getStringFromWord(word: Word): string {
         let wordString: string = "";
