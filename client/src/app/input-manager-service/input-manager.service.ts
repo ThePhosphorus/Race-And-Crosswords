@@ -14,14 +14,42 @@ export const LIGTHS: number = 76; // l
 @Injectable()
 export class InputManagerService {
 
-    public constructor() {}
+    private keyUpBindings: Map<number, Array<(event?: KeyboardEvent) => {}>>;
+    private keyDownBindings: Map<number, Array<(event?: KeyboardEvent) => {}>>;
+
+    public constructor() {
+        this.resetBindings();
+    }
+
+    public resetBindings(): void {
+        this.keyDownBindings = new Map<number, Array<(event?: KeyboardEvent) => {}>>();
+        this.keyUpBindings = new Map<number, Array<(event?: KeyboardEvent) => {}>>();
+    }
 
     public handleKeyDown(event: KeyboardEvent): void {
-        console.log("DOWN");
+        this.keyDownBindings.forEach((codeBindings) => {
+            codeBindings.forEach((func) => func(event));
+        });
     }
 
     public handleKeyUp(event: KeyboardEvent): void {
-        console.log("UP");
+        this.keyUpBindings.forEach((codeBindings) => {
+            codeBindings.forEach((func) => func(event));
+        });
+    }
+
+    public registerKeyUp(keycode: number, callback: (event?: KeyboardEvent) => {}): void {
+        if (!this.keyUpBindings.has(keycode)) {
+            this.keyUpBindings.set(keycode, new Array<(event?: KeyboardEvent) => {}>());
+        }
+        this.keyUpBindings.get(keycode).push(callback);
+    }
+
+    public resgisterKeyDown(keycode: number, callback: (event?: KeyboardEvent) => {}): void {
+        if (!this.keyDownBindings.has(keycode)) {
+            this.keyDownBindings.set(keycode, new Array<(event?: KeyboardEvent) => {}>());
+        }
+        this.keyDownBindings.get(keycode).push(callback);
     }
 
 }
