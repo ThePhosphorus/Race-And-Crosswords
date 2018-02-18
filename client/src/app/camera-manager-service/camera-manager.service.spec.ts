@@ -48,7 +48,7 @@ describe("CameraManagerService", () => {
      inject([CameraManagerService], (manager: CameraManagerService) => {
         manager.init();
         const cameraDistance: number = manager.cameraDistanceToCar;
-        manager.zoomFactor = 1;
+        manager.zoomIn();
         manager.update(5);
         expect(manager.cameraDistanceToCar).toBeLessThan(cameraDistance, 0);
   }) );
@@ -57,7 +57,7 @@ describe("CameraManagerService", () => {
      inject([CameraManagerService], (manager: CameraManagerService) => {
         manager.init();
         const cameraDistance: number = manager.cameraDistanceToCar;
-        manager.zoomFactor = -1;
+        manager.zoomOut();
         manager.update(5);
         expect(manager.cameraDistanceToCar).toBeGreaterThan(cameraDistance, 0);
   }) );

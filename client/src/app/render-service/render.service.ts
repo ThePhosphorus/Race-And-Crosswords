@@ -15,10 +15,15 @@ const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 
+// Keycodes
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
 const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
+const CHANGE_CAMERA_KEYCODE: number = 67; // c
+const TOOGLE_CAMERA_EFFECT_MODE: number = 88; // ,
+const ZOOM_IN_KEYCODE: number = 187; // +
+const ZOOM_OUT_KEYCODE: number = 189; // -
 
 @Injectable()
 export class RenderService extends Renderer {
@@ -37,14 +42,22 @@ export class RenderService extends Renderer {
     }
 
     private setupKeyBindings(): void {
+        this.inputManager.resetBindings();
         this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, this._car.accelerate);
         this.inputManager.registerKeyDown(BRAKE_KEYCODE, this._car.brake);
         this.inputManager.registerKeyDown(LEFT_KEYCODE, this._car.steerLeft);
         this.inputManager.registerKeyDown(RIGHT_KEYCODE, this._car.steerRight);
+        this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, this.cameraManager.switchCamera);
+        this.inputManager.registerKeyDown(TOOGLE_CAMERA_EFFECT_MODE, this.cameraManager.toggleEffect);
+        this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, this.cameraManager.zoomIn);
+        this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, this.cameraManager.zoomOut);
+
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, this._car.releaseAccelerator);
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, this._car.releaseBrakes);
         this.inputManager.registerKeyUp(LEFT_KEYCODE, this._car.releaseSteering);
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, this._car.releaseSteering);
+        this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, this.cameraManager.zoomRelease);
+        this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, this.cameraManager.zoomRelease);
     }
 
     public handleCarInputsDown(carControls: CarControls): void {
