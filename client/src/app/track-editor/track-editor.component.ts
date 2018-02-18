@@ -12,15 +12,11 @@ import { PosSelect } from "../track-generator-service/track.constantes";
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
-    public points: PosSelect[];
 
-    public constructor(private trackRenderer: TrackGenerator) {
-        this.points = [];
-    }
+    public constructor(private trackRenderer: TrackGenerator) {}
 
     public ngAfterViewInit(): void {
         this.trackRenderer.setContainer(this.elem.nativeElement);
-        this.points = this.trackRenderer.points.PositionSelectPoints;
     }
 
     @HostListener("window:resize", ["$event"])
@@ -35,16 +31,9 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public removePoint(index: number): void {
         this.trackRenderer.points.removePoint(index);
-        this.update();
     }
 
     public selectPoint(index: number): void {
         this.trackRenderer.points.selectPoint(index);
-        this.update();
     }
-
-    private update(): void {
-        this.points = this.trackRenderer.points.PositionSelectPoints;
-    }
-
 }

@@ -223,10 +223,6 @@ export class TrackGenerator extends Renderer {
         return null;
     }
 
-    public get PositionSelectPoints(): C.PosSelect[] {
-        return this.points.PositionSelectPoints;
-    }
-
     // Event functions
     public disableDragMode(): void {
         this.container.removeEventListener("mousemove", this.onMouseMoveListner, false);

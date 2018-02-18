@@ -25,15 +25,6 @@ export class PointsHandler {
         return this.point(this.length - 1);
     }
 
-    public get PositionSelectPoints(): C.PosSelect[] {
-        const result: C.PosSelect[] = [];
-        for (let i: number = 0 ; i < this.length; i++) {
-            result.push(new C.PosSelect(this.toVector2(this._points[i].position), i === this._selectedPoint));
-        }
-
-        return result;
-    }
-
     public get selectedPointId(): number {
         return this._selectedPoint;
     }

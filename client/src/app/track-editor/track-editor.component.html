@@ -7,10 +7,10 @@
     <div class="col-2 text-center">
       <div class="card" id="points">
         <ul class="list-group list-group-flush">
-          <li *ngFor="let point of points | reverse; let i = index" class="list-group-item" [ngClass]="{'selected': point.selected}"
+          <li *ngFor="let point of trackRenderer.points.points; let i = index" class="list-group-item" [ngClass]="{'selected': i === trackRenderer.points.selectedPointId}"
             (click)="selectPoint(points.length - i - 1)">
-            <span>[{{point.pos.x | number : '1.1-1'}}, {{point.pos.y | number : '1.1-1'}}]</span>
-            <button type="button" class="ml-3 close" (click)="removePoint(points.length - i - 1)">
+            <span>[{{point.x | number : '1.1-1'}}, {{point.z | number : '1.1-1'}}]</span>
+            <button type="button" class="ml-3 close" (click)="removePoint(i)">
               <span aria-hidden="true">&times;</span>
             </button>
           </li>
