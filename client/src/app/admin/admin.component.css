@@ -1,0 +1,13 @@
+h1{
+    text-align: center;
+    font-family: "Admin Font", 'Times New Roman', Times, serif;
+    font-size: 400%;
+}
+
+button{
+    background-color: #29a347;
+}
+@font-face {
+    font-family: "Admin Font";
+    src: url("/assets/fonts/imagine_font.otf") format("opentype")
+  }
