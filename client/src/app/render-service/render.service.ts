@@ -1,19 +1,8 @@
 import { Injectable } from "@angular/core";
-import Stats = require("stats.js");
-import {
-    WebGLRenderer,
-    Scene,
-    AmbientLight,
-    Texture,
-    Mesh,
-    TextureLoader,
-    RepeatWrapping,
-    MeshLambertMaterial,
-    DoubleSide,
-    PlaneGeometry
-} from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { Renderer } from "../renderer/renderer";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -23,35 +12,21 @@ const OFF_ROAD_PATH: string = "../../assets/textures/OutOfBounds.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
-
-const WHITE: number = 0xFFFFFF;
-const AMBIENT_LIGHT_OPACITY: number = 0.85;
+const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 
 @Injectable()
-export class RenderService {
-    private container: HTMLDivElement;
+export class RenderService extends Renderer {
     private _car: Car;
-    private renderer: WebGLRenderer;
-    private scene: THREE.Scene;
-    private stats: Stats;
-    private lastDate: number;
     private _carInfos: CarInfos;
 
     public constructor(private cameraManager: CameraManagerService) {
+        super(cameraManager, false);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
     }
 
     public get carInfos(): CarInfos {
         return this._carInfos;
-    }
-
-    public onResize(): void {
-        this.cameraManager.onResize(this.getAspectRatio());
-        this.renderer.setSize(
-            this.container.clientWidth,
-            this.container.clientHeight
-        );
     }
 
     public handleCarInputsDown(carControls: CarControls): void {
@@ -93,36 +68,18 @@ export class RenderService {
     }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
-        this.container = container;
+        this.init(container);
 
-        await this.createScene();
-
-        this.initStats();
-        this.startRenderingLoop();
-    }
-
-    private initStats(): void {
-        this.stats = new Stats();
-        this.stats.dom.style.position = "absolute";
-        this.container.appendChild(this.stats.dom);
-    }
-
-    private update(): void {
-        const timeSinceLastFrame: number = Date.now() - this.lastDate;
-        this._car.update(timeSinceLastFrame);
+        await this._car.init();
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
             this._car.direction
         );
-        this.cameraManager.update(timeSinceLastFrame);
-        this.lastDate = Date.now();
-        this.updateCarInfos();
-    }
+        this.scene.add(this._car);
+        this.scene.add(this.getFloor());
+        this.scene.add(this.getTrack());
 
-    private updateCarInfos(): void {
-        this._carInfos.speed = this._car.speed.length();
-        this._carInfos.gear = this._car.currentGear;
-        this._carInfos.rpm = this._car.rpm;
+        this.startRenderingLoop();
     }
 
     private getFloor(): Mesh {
@@ -150,43 +107,30 @@ export class RenderService {
         return plane;
     }
 
-    private async createScene(): Promise<void> {
-        this.scene = new Scene();
-
-        await this._car.init();
-        this.cameraManager.updatecarInfos(
-            this._car.getPosition(),
-            this._car.direction
-        );
-        this.scene.add(this._car);
-        this.scene.add(this.getFloor());
-        this.scene.add(this.getTrack());
-        this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
-        this.cameraManager.onResize(this.getAspectRatio());
+    protected onInit(): void {
+        this.scene.background = new CubeTextureLoader()
+            .setPath(BACKGROUND_PATH)
+            .load([
+                "posx.png",
+                "negx.png",
+                "posy.png",
+                "negy.png",
+                "posz.png",
+                "negz.png"
+            ]);
     }
 
-    private getAspectRatio(): number {
-        return this.container.clientWidth / this.container.clientHeight;
+    protected update(timeSinceLastFrame: number): void {
+        this._car.update(timeSinceLastFrame);
+        this.cameraTargetDirection = this._car.direction;
+        this.cameraTargetPosition = this._car.getPosition();
+        this.updateCarInfos();
     }
 
-    private startRenderingLoop(): void {
-        this.renderer = new WebGLRenderer();
-        this.renderer.setPixelRatio(devicePixelRatio);
-        this.renderer.setSize(
-            this.container.clientWidth,
-            this.container.clientHeight
-        );
-
-        this.lastDate = Date.now();
-        this.container.appendChild(this.renderer.domElement);
-        this.render();
-    }
-
-    private render(): void {
-        requestAnimationFrame(() => this.render());
-        this.update();
-        this.renderer.render(this.scene, this.cameraManager.camera);
-        this.stats.update();
+    private updateCarInfos(): void {
+        this._carInfos.speed = this._car.speed.length();
+        this._carInfos.gear = this._car.currentGear;
+        this._carInfos.rpm = this._car.rpm;
     }
 }
 
