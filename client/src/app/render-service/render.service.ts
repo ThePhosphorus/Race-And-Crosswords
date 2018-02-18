@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
@@ -69,6 +69,10 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
+        const light: DirectionalLight =  new DirectionalLight( 0xffe382, 0.7 );
+        light.position.set(-12, 12, -12);
+        light.castShadow = true;
+        this.scene.add(light);
 
         await this._car.init();
         this.cameraManager.updatecarInfos(
@@ -100,9 +104,11 @@ export class RenderService extends Renderer {
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
+        plane.receiveShadow = true;
         plane.rotateX(PI_OVER_2);
+
 
         return plane;
     }
