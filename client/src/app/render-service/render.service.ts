@@ -128,7 +128,7 @@ export class RenderService extends Renderer {
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
         const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
-        material.reflectivity = 0.2;
+        material.reflectivity = 0.1;
         const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
         plane.receiveShadow = true;
         plane.rotateX(PI_OVER_2);
