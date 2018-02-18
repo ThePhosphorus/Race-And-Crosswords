@@ -3,6 +3,7 @@ import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLa
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
+import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -14,19 +15,36 @@ const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 
+const ACCELERATE_KEYCODE: number = 87; // w
+const LEFT_KEYCODE: number = 65; // a
+const BRAKE_KEYCODE: number = 83; // s
+const RIGHT_KEYCODE: number = 68; // d
+
 @Injectable()
 export class RenderService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
 
-    public constructor(private cameraManager: CameraManagerService) {
+    public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {
         super(cameraManager, false);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
+        this.setupKeyBindings();
     }
 
     public get carInfos(): CarInfos {
         return this._carInfos;
+    }
+
+    private setupKeyBindings(): void {
+        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, this._car.accelerate);
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, this._car.brake);
+        this.inputManager.registerKeyDown(LEFT_KEYCODE, this._car.steerLeft);
+        this.inputManager.registerKeyDown(RIGHT_KEYCODE, this._car.steerRight);
+        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, this._car.releaseAccelerator);
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, this._car.releaseBrakes);
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, this._car.releaseSteering);
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, this._car.releaseSteering);
     }
 
     public handleCarInputsDown(carControls: CarControls): void {

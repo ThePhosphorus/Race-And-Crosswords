@@ -122,6 +122,15 @@ export class Car extends Object3D {
         this.add(this.mesh);
     }
 
+    private updateSteering(): void {
+        this.steeringWheelDirection = this.steeringWheelState *
+        MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
+    }
+
+    public accelerate(): void {
+        this.isAcceleratorPressed = true;
+    }
+
     public steerLeft(): void {
         this.steeringWheelState = 1;
     }
@@ -130,9 +139,8 @@ export class Car extends Object3D {
         this.steeringWheelState = -1;
     }
 
-    private updateSteering(): void {
-        this.steeringWheelDirection = this.steeringWheelState *
-        MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
+    public brake(): void {
+        this.isBraking = true;
     }
 
     public releaseSteering(): void {
@@ -143,8 +151,8 @@ export class Car extends Object3D {
         this.isBraking = false;
     }
 
-    public brake(): void {
-        this.isBraking = true;
+    public releaseAccelerator(): void {
+        this.isAcceleratorPressed = false;
     }
 
     public update(deltaTime: number): void {
