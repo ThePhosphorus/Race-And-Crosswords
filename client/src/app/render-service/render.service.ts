@@ -18,6 +18,7 @@ const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 export class RenderService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
+    private light: DirectionalLight;
 
     public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, false);
@@ -69,10 +70,10 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        const light: DirectionalLight =  new DirectionalLight( 0xffe382, 0.7 );
-        light.position.set(-12, 12, -12);
-        light.castShadow = true;
-        this.scene.add(light);
+        this.light = new DirectionalLight( 0xffe382, 0.7 );
+        this.light.position.set(-12, 10, -12);
+        this.light.castShadow = true;
+        this.scene.add(this.light);
 
         await this._car.init();
         this.cameraManager.updatecarInfos(
@@ -108,7 +109,6 @@ export class RenderService extends Renderer {
         const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
         plane.receiveShadow = true;
         plane.rotateX(PI_OVER_2);
-
 
         return plane;
     }
