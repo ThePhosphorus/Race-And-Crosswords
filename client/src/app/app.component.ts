@@ -25,4 +25,19 @@ export class AppComponent implements OnInit {
     public onKeyDown(event: KeyboardEvent): void {
         this.inputManager.handleKeyDown(event);
     }
+
+    @HostListener("window.mousedown", ["$event"])
+    public onMouseDown(event: MouseEvent): void {
+        //
+    }
+
+    @HostListener("window.mouseup", ["$event"])
+    public onMouseUp(event: MouseEvent): void {
+        //
+    }
+
+    @HostListener("window.mousemove", ["$event"])
+    public onMouseMove(event: MouseEvent): void {
+        //
+    }
 }
