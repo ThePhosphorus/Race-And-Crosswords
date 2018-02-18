@@ -15,29 +15,4 @@ export class AppComponent implements OnInit {
     public ngOnInit(): void {
         this.title = "LOG2990";
     }
-
-    @HostListener("window:keyup", ["$event"])
-    public onKeyUp(event: KeyboardEvent): void {
-        this.inputManager.handleKeyUp(event);
-    }
-
-    @HostListener("window:keydown", ["$event"])
-    public onKeyDown(event: KeyboardEvent): void {
-        this.inputManager.handleKeyDown(event);
-    }
-
-    @HostListener("window.mousedown", ["$event"])
-    public onMouseDown(event: MouseEvent): void {
-        this.inputManager.handleMouseDown(event);
-    }
-
-    @HostListener("window.mouseup", ["$event"])
-    public onMouseUp(event: MouseEvent): void {
-        this.inputManager.handleMouseUp(event);
-    }
-
-    @HostListener("window.mousemove", ["$event"])
-    public onMouseMove(event: MouseEvent): void {
-        this.inputManager.handleMouseMove(event);
-    }
 }

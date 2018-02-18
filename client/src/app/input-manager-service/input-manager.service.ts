@@ -35,7 +35,6 @@ export class InputManagerService {
     }
 
     public handleMouseDown(event: MouseEvent): void {
-        console.log("MOUSE");
         if (this.mouseDownBindings.get(event.button) != null) {
             this.mouseDownBindings.get(event.button).forEach((func) => func(event));
         }
