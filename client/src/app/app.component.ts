@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { InputManagerService } from "./input-manager-service/input-manager.service";
 
 @Component({
     selector: "app-root",
@@ -7,11 +8,19 @@ import { Component, OnInit } from "@angular/core";
 })
 export class AppComponent implements OnInit {
 
-    public constructor() { }
+    public constructor(private inputManager: InputManagerService) { }
 
-    public title: string ;
+    public title: string;
 
     public ngOnInit(): void {
         this.title = "LOG2990";
+    }
+
+    private onKeyUp(event: KeyboardEvent): void {
+        this.inputManager.handleKeyUp(event);
+    }
+
+    private onKeyDown(event: KeyboardEvent): void {
+        this.inputManager.handleKeyDown(event);
     }
 }

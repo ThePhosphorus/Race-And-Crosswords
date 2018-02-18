@@ -14,6 +14,7 @@ import { AdminComponent } from "./admin/admin.component";
 import { TrackListComponent } from "./track-list/track-list.component";
 import { TrackEditorComponent } from "./track-editor/track-editor.component";
 import { ReversePipe } from "./reverse-pipe/reverse.pipe";
+import { InputManagerService } from "./input-manager-service/input-manager.service";
 
 @NgModule({
     declarations: [
@@ -33,7 +34,7 @@ import { ReversePipe } from "./reverse-pipe/reverse.pipe";
         AppRoutingModule,
         FormsModule
     ],
-    providers: [],
+    providers: [InputManagerService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
