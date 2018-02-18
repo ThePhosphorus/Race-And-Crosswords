@@ -1,19 +1,22 @@
 import { Injectable } from "@angular/core";
-import { GridHelper, Color, CubeTextureLoader } from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
 
-const GRID_DIMENSION: number = 10000;
-const GRID_DIVISIONS: number = 1000;
-const GRID_PRIMARY_COLOR: number = 0xFF0000;
-const GRID_SECONDARY_COLOR: number = 0x001188;
+const FLOOR_DIMENSION: number = 10000;
+const SPAWN_DIMENSION: number = 100;
+const FLOOR_TEXTURE_RATIO: number = 0.1;
+const OFF_ROAD_Z_TRANSLATION: number = 0.1;
+const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
+const TRACK_PATH: string = "../../assets/textures/floor.jpg";
+const HALF: number = 0.5;
+const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
 
 @Injectable()
 export class RenderService extends Renderer {
     private _car: Car;
-    private gridHelper: GridHelper;
     private _carInfos: CarInfos;
 
     public constructor(private cameraManager: CameraManagerService) {
@@ -73,19 +76,38 @@ export class RenderService extends Renderer {
             this._car.direction
         );
         this.scene.add(this._car);
+        this.scene.add(this.getFloor());
+        this.scene.add(this.getTrack());
 
         this.startRenderingLoop();
-     }
+    }
+
+    private getFloor(): Mesh {
+        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
+        texture.wrapS = RepeatWrapping;
+        texture.wrapT = RepeatWrapping;
+        texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
+        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
+        plane.rotateX(PI_OVER_2);
+        plane.translateZ(OFF_ROAD_Z_TRANSLATION);
+
+        return plane;
+    }
+
+    private getTrack(): Mesh {
+        const texture: Texture = new TextureLoader().load(TRACK_PATH);
+        texture.wrapS = RepeatWrapping;
+        texture.wrapT = RepeatWrapping;
+        texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
+        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
+        plane.rotateX(PI_OVER_2);
+
+        return plane;
+    }
 
     protected onInit(): void {
-        this.gridHelper = new GridHelper(
-            GRID_DIMENSION,
-            GRID_DIVISIONS,
-            new Color(GRID_PRIMARY_COLOR),
-            new Color(GRID_SECONDARY_COLOR)
-        );
-        this.scene.add(this.gridHelper);
-
         this.scene.background = new CubeTextureLoader()
             .setPath(BACKGROUND_PATH)
             .load([
@@ -103,13 +125,13 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
-     }
+    }
 
     private updateCarInfos(): void {
         this._carInfos.speed = this._car.speed.length();
         this._carInfos.gear = this._car.currentGear;
         this._carInfos.rpm = this._car.rpm;
-     }
+    }
 }
 
 export class CarInfos {
