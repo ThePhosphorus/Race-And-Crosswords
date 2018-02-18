@@ -10,6 +10,8 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
+import { AdminComponent } from "./admin/admin.component";
+import { TrackListComponent } from "./track-list/track-list.component";
 import { TrackEditorComponent } from "./track-editor/track-editor.component";
 import { ReversePipe } from "./reverse-pipe/reverse.pipe";
 
@@ -20,6 +22,8 @@ import { ReversePipe } from "./reverse-pipe/reverse.pipe";
         CrosswordsComponent,
         PlayermodeComponent,
         HomePageComponent,
+        AdminComponent,
+        TrackListComponent,
         TrackEditorComponent,
         ReversePipe
     ],

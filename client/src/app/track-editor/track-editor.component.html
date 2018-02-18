@@ -1,27 +1,14 @@
-<div class="mt-5">
-  <div class="row">
-    <div class="col mt-2">
-      <h2>Track Editor</h2>
-    </div>
-  </div>
+<div>
   <div class="row">
     <div class="col-10 text-center">
-      <div #editor
-      id="editor"
-      (mousedown)="onClick($event)"
-      (mouseup)="onClickRelease($event)"
-      oncontextmenu="return false;">
+      <div #editor id="editor" (mousedown)="onClick($event)" (mouseup)="onClickRelease($event)" oncontextmenu="return false;">
       </div>
     </div>
     <div class="col-2 text-center">
       <div class="card" id="points">
         <ul class="list-group list-group-flush">
-          <li
-          *ngFor="let point of points | reverse; let i = index"
-          class="list-group-item"
-          [ngClass]="{'selected': point.selected}"
-          (click)="selectPoint(points.length - i - 1)"
-          >
+          <li *ngFor="let point of points | reverse; let i = index" class="list-group-item" [ngClass]="{'selected': point.selected}"
+            (click)="selectPoint(points.length - i - 1)">
             <span>[{{point.pos.x | number : '1.1-1'}}, {{point.pos.y | number : '1.1-1'}}]</span>
             <button type="button" class="ml-3 close" (click)="removePoint(points.length - i - 1)">
               <span aria-hidden="true">&times;</span>
