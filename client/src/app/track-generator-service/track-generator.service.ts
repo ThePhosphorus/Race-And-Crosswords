@@ -47,11 +47,12 @@ export class TrackGenerator extends Renderer {
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
         this.constraintValidator = new ConstraintValidator();
+        this.inputManager.resetBindings();
         this.setupKeyBindings();
+        this.setupMouseBindings();
     }
 
     public setupKeyBindings(): void {
-        this.inputManager.resetBindings();
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, this.cameraManager.zoomIn);
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, this.cameraManager.zoomOut);
 
@@ -60,64 +61,30 @@ export class TrackGenerator extends Renderer {
         this.inputManager.registerKeyUp(DELETE_KEY, this.points.removeSelectedPoint);
     }
 
-    // Rendering
-    public setContainer(container: HTMLDivElement): void {
-        this.init(container);
-        this.startRenderingLoop();
+    public setupMouseBindings(): void {
+        this.inputManager.registerMouseDown(LEFT_CLICK_CODE, this.mouseEventLeftClick);
+        this.inputManager.registerMouseDown(MIDDLE_CLICK_CODE, this.mouseEventMiddleClick);
+        this.inputManager.registerMouseDown(RIGHT_CLICK_CODE, this.mouseEventRightClick);
+
+        this.inputManager.registerMouseUp(LEFT_CLICK_CODE, this.mouseEventReleaseClick);
+        this.inputManager.registerMouseUp(MIDDLE_CLICK_CODE, this.mouseEventReleaseClick);
+        this.inputManager.registerMouseUp(RIGHT_CLICK_CODE, this.mouseEventReleaseClick);
     }
 
-    protected onInit(): void {
-        this.cameraManager.cameraType = CameraType.Ortho;
-        this._gridHelper = new GridHelper(
-            C.GRID_DIMENSION,
-            C.GRID_DIVISIONS,
-            new Color(C.GRID_PRIMARY_COLOR),
-            new Color(C.GRID_SECONDARY_COLOR)
-        );
-        this.scene.add(this._gridHelper);
-        this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
-        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
-        this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
+    public mouseEventReleaseClick = (event: MouseEvent): void => {
+        this.disableDragMode();
+        this.disableTranslateMode();
+        this.points.updateStartingPosition();
     }
 
-    public mouseEventclick(event: MouseEvent): void {
-        if (event.button === LEFT_CLICK_CODE) {
-            this.mouseEventLeftClick(event);
-        } else if (event.button === MIDDLE_CLICK_CODE) {
-            this.mouseEventMiddleClick(event);
-        } else if (event.button === RIGHT_CLICK_CODE) {
-            this.mouseEventRightClick(event);
-        }
-    }
-
-    public mouseEventRightClick(event: MouseEvent): void {
+    public mouseEventRightClick = (event: MouseEvent): void => {
         if (this.points.length > 0 ) {
             this.points.removePoint(this.points.length - 1);
         }
         this.resetValidation();
     }
 
-    public mouseEventReleaseClick(event: MouseEvent): void {
-        this.disableDragMode();
-        this.disableTranslateMode();
-        this.points.updateStartingPosition();
-    }
-
-    public mouseWheelEvent(event: MouseWheelEvent): void {
-        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
-    }
-
-    private mouseEventMiddleClick(event: MouseEvent): void {
-        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
-        if (possiblePointId !== null) {
-            this.points.removePoint(possiblePointId);
-            this.resetValidation();
-        } else {
-            this.enableTranslateMode(event);
-        }
-    }
-
-    private mouseEventLeftClick(event: MouseEvent): void {
+    private mouseEventLeftClick = (event: MouseEvent): void => {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.points.selectPoint(possiblePointId);
@@ -141,6 +108,16 @@ export class TrackGenerator extends Renderer {
         }
     }
 
+    private mouseEventMiddleClick = (event: MouseEvent): void => {
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if (possiblePointId !== null) {
+            this.points.removePoint(possiblePointId);
+            this.resetValidation();
+        } else {
+            this.enableTranslateMode(event);
+        }
+    }
+
     private onMouseMove(event: MouseEvent): void {
         this._dragPoints.point.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
         if (this._dragPoints.closingPoint) {
@@ -151,6 +128,30 @@ export class TrackGenerator extends Renderer {
             this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
         }
         this.resetValidation();
+    }
+
+    public mouseWheelEvent(event: MouseWheelEvent): void {
+        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
+    }
+
+    // Rendering
+    public setContainer(container: HTMLDivElement): void {
+        this.init(container);
+        this.startRenderingLoop();
+    }
+
+    protected onInit(): void {
+        this.cameraManager.cameraType = CameraType.Ortho;
+        this._gridHelper = new GridHelper(
+            C.GRID_DIMENSION,
+            C.GRID_DIVISIONS,
+            new Color(C.GRID_PRIMARY_COLOR),
+            new Color(C.GRID_SECONDARY_COLOR)
+        );
+        this.scene.add(this._gridHelper);
+        this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
+        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
+        this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
 
     private onTranslateCamera(event: MouseEvent): void {

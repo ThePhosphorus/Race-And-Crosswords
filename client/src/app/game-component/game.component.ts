@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, HostListener } from "@angular/core";
 import { RenderService, CarInfos } from "../render-service/render.service";
-import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 @Component({

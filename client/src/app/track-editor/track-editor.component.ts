@@ -33,15 +33,6 @@ export class TrackEditorComponent implements AfterViewInit {
         this.trackRenderer.mouseWheelEvent(event);
     }
 
-    public onClick(event: MouseEvent): void {
-        this.trackRenderer.mouseEventclick(event);
-    }
-
-    public onClickRelease(event: MouseEvent): void {
-        this.trackRenderer.mouseEventReleaseClick(event);
-        this.update();
-    }
-
     public removePoint(index: number): void {
         this.trackRenderer.points.removePoint(index);
         this.update();

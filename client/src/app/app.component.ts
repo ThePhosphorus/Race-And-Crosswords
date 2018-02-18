@@ -28,16 +28,16 @@ export class AppComponent implements OnInit {
 
     @HostListener("window.mousedown", ["$event"])
     public onMouseDown(event: MouseEvent): void {
-        //
+        this.inputManager.handleMouseDown(event);
     }
 
     @HostListener("window.mouseup", ["$event"])
     public onMouseUp(event: MouseEvent): void {
-        //
+        this.inputManager.handleMouseUp(event);
     }
 
     @HostListener("window.mousemove", ["$event"])
     public onMouseMove(event: MouseEvent): void {
-        //
+        this.inputManager.handleMouseMove(event);
     }
 }
