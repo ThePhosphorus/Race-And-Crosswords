@@ -1,5 +1,5 @@
 import * as C from "../track.constantes";
-import { Mesh, Vector3, Vector2 } from "three";
+import { Mesh, Vector3 } from "three";
 import { TrackGenerator } from "../track-generator.service";
 import { EmptyArrayException } from "../../exceptions/EmptyArrayException";
 import { OutOfRangeException } from "../../exceptions/OutOfRangeException";
@@ -87,10 +87,6 @@ export class PointsHandler {
         if (this._points[0]) {
             this._points[0].material = C.START_POINT_MATERIAL;
         }
-    }
-
-    private toVector2(v: Vector3): Vector2 {
-        return new Vector2(v.x, v.z);
     }
 
     private closeLoop(): void {
