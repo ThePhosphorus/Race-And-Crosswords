@@ -1,8 +1,5 @@
 import { Injectable } from "@angular/core";
 
-export const NIGHT_MODE: number = 78; // n
-export const LIGTHS: number = 76; // l
-
 @Injectable()
 export class InputManagerService {
 
