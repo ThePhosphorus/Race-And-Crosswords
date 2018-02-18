@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { InputManagerService } from "./input-manager-service/input-manager.service";
 
 @Component({
@@ -14,5 +14,15 @@ export class AppComponent implements OnInit {
 
     public ngOnInit(): void {
         this.title = "LOG2990";
+    }
+
+    @HostListener("window:keyup", ["$event"])
+    public onKeyUp(event: KeyboardEvent): void {
+        this.inputManager.handleKeyUp(event);
+    }
+
+    @HostListener("window:keydown", ["$event"])
+    public onKeyDown(event: KeyboardEvent): void {
+        this.inputManager.handleKeyDown(event);
     }
 }
