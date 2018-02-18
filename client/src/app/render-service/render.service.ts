@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial} from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, CameraHelper} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
@@ -7,12 +7,14 @@ import { Renderer } from "../renderer/renderer";
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
-const OFF_ROAD_Z_TRANSLATION: number = 0.1;
+const OFF_ROAD_Z_TRANSLATION: number = 0.01;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
-const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
+const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
+const dLight: number = 200;
+const sLight: number = dLight * 0.25;
 
 @Injectable()
 export class RenderService extends Renderer {
@@ -71,8 +73,19 @@ export class RenderService extends Renderer {
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
         this.light = new DirectionalLight( 0xffe382, 0.7 );
-        this.light.position.set(-12, 10, -12);
+        this.light.position.set(-1, 1, -1);
+        this.light.position.multiplyScalar(10);
         this.light.castShadow = true;
+        this.light.shadow.camera.bottom = -sLight;
+        this.light.shadow.camera.top = sLight;
+        this.light.shadow.camera.left = -sLight;
+        this.light.shadow.camera.right = sLight;
+        this.light.shadow.camera.near = dLight/30;
+        this.light.shadow.camera.far = dLight;
+        this.light.shadow.mapSize.x = 1024 * 2;
+        this.light.shadow.mapSize.y = 1024 * 2;
+        const helper: CameraHelper = new CameraHelper(this.light.shadow.camera);
+        this.scene.add(helper);
         this.scene.add(this.light);
 
         await this._car.init();
@@ -95,6 +108,7 @@ export class RenderService extends Renderer {
         const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
         plane.rotateX(PI_OVER_2);
+        plane.receiveShadow = true;
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
 
         return plane;
@@ -131,6 +145,7 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
+        //this.light.shadow.camera.position.x = this.light.shadow.camera.position.x+1;
     }
 
     private updateCarInfos(): void {
