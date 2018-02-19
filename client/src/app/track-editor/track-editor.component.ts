@@ -100,11 +100,12 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public saveTrack(): void {
         const points: Vector3[] = this.trackRenderer.saveTrack();
-        if (points != null && this.name !== "") {
+        if (points != null && this.name !== "" &&
+            this.points.length > 2 && this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
             this.trackSaver.save(this.id, this.name, this.description, points)
                 .subscribe((bool: boolean) => this.router.navigate(["/admin/track-list"]));
         } else {
-            console.log("points not good");
+            console.error("points not good");
         }
     }
 }
