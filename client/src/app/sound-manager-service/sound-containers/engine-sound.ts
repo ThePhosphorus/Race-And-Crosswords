@@ -1,11 +1,12 @@
-import {AbstractSoundContainer, DEFAULT_VOLUME} from "./abstract-sound-container";
+import {DEFAULT_VOLUME} from "./abstract-sound-container";
 import { AudioBuffer} from "three";
+import { AbstractPositionalSoundContainer } from "./abstract-positional-sound-container";
 
 const FILE_NAME: string = "idle.ogg";
 const MAX_RPM: number = 5500;
 const MIN_RPM: number = 800;
 const PLAYBACK_SPEED_FACTOR: number = 2;
-export class EngineSound extends AbstractSoundContainer {
+export class EngineSound extends AbstractPositionalSoundContainer {
 
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);

@@ -1,8 +1,9 @@
-import { AbstractSoundContainer, DEFAULT_VOLUME } from "./abstract-sound-container";
-import { AudioBuffer, Object3D, AudioListener } from "three";
+import { DEFAULT_VOLUME } from "./abstract-sound-container";
+import { AudioBuffer, Object3D, AudioListener} from "three";
+import { AbstractPositionalSoundContainer } from "./abstract-positional-sound-container";
 
 const FILE_NAME: string = "collision.ogg";
-export class CollisionSound extends AbstractSoundContainer {
+export class CollisionSound extends AbstractPositionalSoundContainer {
 
     public constructor(
         soundEmittingObject: Object3D,

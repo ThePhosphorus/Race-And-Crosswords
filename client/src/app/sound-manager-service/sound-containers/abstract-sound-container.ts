@@ -1,9 +1,7 @@
 
 import {
-    PositionalAudio,
     AudioLoader,
     AudioBuffer,
-    Object3D,
     AudioListener
 } from "three";
 
@@ -12,15 +10,14 @@ export const DEFAULT_VOLUME: number = 0.5;
 
 export abstract class AbstractSoundContainer {
 
-    protected sound: PositionalAudio;
-
-    public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
-        this.sound = new PositionalAudio(soundListener);
+    public constructor(soundListener: AudioListener, sourcePath?: string) {
+        this.instanciateSound(soundListener);
         let soundPath: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
         soundPath += this.getFileName();
         this.loadSound(soundPath);
-        soundEmittingObject.add(this.sound);
     }
+
+    protected abstract instanciateSound(soundListener: AudioListener): void;
 
     protected loadSound(path: string): void {
         new AudioLoader().load(
@@ -32,9 +29,7 @@ export abstract class AbstractSoundContainer {
             () => { });
     }
 
-    public stop(): void {
-        this.sound.stop();
-    }
+    public abstract stop(): void;
 
     protected abstract setSoundSettings(buffer: AudioBuffer): void;
 
