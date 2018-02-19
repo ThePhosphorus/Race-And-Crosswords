@@ -3,7 +3,7 @@ import { injectable, inject } from "inversify";
 import { WebService } from "../../webServices";
 import { Track } from "../../../../common/communication/track";
 import { DbClient } from "../../mongo/DbClient";
-import { Collection, InsertOneWriteOpResult, ReplaceWriteOpResult, ObjectId } from "mongodb";
+import { Collection, InsertOneWriteOpResult, ReplaceWriteOpResult, ObjectId, DeleteWriteOpResultObject } from "mongodb";
 import Types from "../../types";
 
 const TRACK_COLLECTION: string = "tracks";
@@ -29,6 +29,10 @@ export class TrackSaver extends WebService {
             res.send("TrackSaver End Point");
         });
 
+        this._router.get("/all", (req: Request, res: Response, next: NextFunction) => {
+            this.getAllTracks().then((tracks: Track[]) => res.send(tracks));
+        });
+
         this._router.post("/", (req: Request, res: Response, next: NextFunction) => {
             const track: Track = req.body["track"];
             this.postTrack(track).then( (result: InsertOneWriteOpResult) => res.send(result));
@@ -40,8 +44,9 @@ export class TrackSaver extends WebService {
             this.putTrack(id, track).then((result: ReplaceWriteOpResult) => res.send(result));
         });
 
-        this._router.get("/all", (req: Request, res: Response, next: NextFunction) => {
-            this.getAllTracks().then((tracks: Track[]) => res.send(tracks));
+        this._router.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
+            const id: string = req.params.id;
+            this.deleteTrack(id).then((result: DeleteWriteOpResultObject) => res.send(result));
         });
     }
 
@@ -62,5 +67,11 @@ export class TrackSaver extends WebService {
         this.connect();
 
         return this.collection.find({}).toArray();
+    }
+
+    private deleteTrack(id: string): Promise< DeleteWriteOpResultObject> {
+        this.connect();
+
+        return this.collection.deleteOne({_id: new ObjectId(id)});
     }
 }
