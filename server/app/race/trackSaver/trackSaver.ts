@@ -6,7 +6,7 @@ import { DbClient } from "../../mongo/DbClient";
 import { Collection, InsertOneWriteOpResult } from "mongodb";
 import Types from "../../types";
 
-const TRACK_COLLECTION: string = "track";
+const TRACK_COLLECTION: string = "tracks";
 
 @injectable()
 export class TrackSaver extends WebService {
@@ -16,10 +16,11 @@ export class TrackSaver extends WebService {
     public constructor(@inject(Types.DbClient) private dbClient: DbClient) {
         super();
         this.routeName = "/save";
-        if (this.dbClient.db) {
+    }
+
+    private connect(): void {
+        if (this.dbClient.db != null) {
             this.collection = this.dbClient.db.collection(TRACK_COLLECTION);
-        } else {
-            console.log("db is not initialised");
         }
     }
 
@@ -35,6 +36,8 @@ export class TrackSaver extends WebService {
     }
 
     private postTrack(track: Track): Promise<InsertOneWriteOpResult> {
-        return this.collection.insert(track);
+        this.connect();
+
+        return this.collection.insertOne(track);
     }
 }
