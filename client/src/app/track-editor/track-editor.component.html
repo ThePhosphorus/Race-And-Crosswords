@@ -28,5 +28,11 @@
       <input [(ngModel)]="description" type="text" maxlength="255"/>
     </div>
   </div>
-  <button class="btn btn-success center" type="submit" (click)="saveTrack()" >Save</button>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <button class="btn btn-success col-md-1 " type="submit" (click)="saveTrack()" >Save</button>
+    <div class="col-md-4"></div>
+    <button class="btn btn-danger col-md-1 " type="submit" (click)="deleteTrack()" >delete</button>
+    <div class="col-md-3"></div>
+  </div>
 </div>

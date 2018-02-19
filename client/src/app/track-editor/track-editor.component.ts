@@ -103,9 +103,13 @@ export class TrackEditorComponent implements AfterViewInit {
         if (points != null && this.name !== "" &&
             this.points.length > 2 && this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
             this.trackSaver.save(this.id, this.name, this.description, points)
-                .subscribe((bool: boolean) => this.router.navigate(["/admin/track-list"]));
+                .subscribe((bool: boolean) => {if (bool) { this.router.navigate(["/admin/track-list"]); } });
         } else {
             window.alert("Not all constraints are respected");
         }
+    }
+
+    public deleteTrack(): void {
+        this.trackSaver.delete(this.id).subscribe((bool: boolean) => {if (bool) { this.router.navigate(["/admin/track-list"]); } });
     }
 }

@@ -20,7 +20,7 @@ import { PointsHandler } from "./points-handler/points-handler";
 const LINE_STR_PREFIX: string = "Line to ";
 
 const MIN_ZOOM: number = 10;
-const MAX_ZOOM: number = 100;
+const MAX_ZOOM: number = 200;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;

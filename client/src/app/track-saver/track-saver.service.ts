@@ -17,11 +17,15 @@ export class TrackSaverService {
         const requestHeader: HttpHeaders = new HttpHeaders({"Content-Type": "application/json"});
 
         if (track._id) {
-            return this.http.put<Track>(TRACK_SAVER_URL + id, { track : track}, { headers : requestHeader}).map((obj) => true);
+            return this.http.put<Track>(TRACK_SAVER_URL + id, { track : track}, { headers : requestHeader}).map((obj) => obj.n);
         } else {
-            return this.http.post<Track>(TRACK_SAVER_URL, {track : track}, { headers : requestHeader}).map((obj) => true);
+            return this.http.post<Track>(TRACK_SAVER_URL, {track : track}, { headers : requestHeader}).map((obj) => obj.n);
         }
 
+    }
+
+    public delete(id: string): Observable<boolean> {
+        return this.http.delete(TRACK_SAVER_URL + id).map((obj) => obj.n);
     }
 
     public getTrack(id: string, name: string, description: string, points: Vector3[]): Track {
