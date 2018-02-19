@@ -34,6 +34,11 @@ export class TrackSaver extends WebService {
             this.getAllTracks().then((tracks: Track[]) => res.send(tracks));
         });
 
+        this._router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
+            const id: string = req.params.id;
+            this.getTrack(id).then((track: Track) => res.send(track));
+        });
+
         this._router.post("/", (req: Request, res: Response, next: NextFunction) => {
             const track: Track = req.body["track"];
             this.postTrack(track).then( (result: InsertOneWriteOpResult) => res.send(result));
@@ -74,5 +79,11 @@ export class TrackSaver extends WebService {
         this.connect();
 
         return this.collection.deleteOne({_id: new ObjectId(id)});
+    }
+
+    private getTrack(id: string): Promise<Track> {
+        this.connect();
+
+        return this.collection.findOne({_id : new ObjectId(id)});
     }
 }
