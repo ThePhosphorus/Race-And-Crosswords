@@ -11,10 +11,12 @@ const TRACK_COLLECTION: string = "tracks";
 @injectable()
 export class TrackSaver extends WebService {
 
+    private dbClient: DbClient;
     private collection: Collection;
 
-    public constructor(@inject(Types.DbClient) private dbClient: DbClient) {
+    public constructor() {
         super();
+        this.dbClient = new DbClient();
         this.routeName = "/save";
     }
 
@@ -69,7 +71,7 @@ export class TrackSaver extends WebService {
         return this.collection.find({}).toArray();
     }
 
-    private deleteTrack(id: string): Promise< DeleteWriteOpResultObject> {
+    private deleteTrack(id: string): Promise<DeleteWriteOpResultObject> {
         this.connect();
 
         return this.collection.deleteOne({_id: new ObjectId(id)});

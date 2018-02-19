@@ -1,5 +1,4 @@
 import { MongoClient, Db } from "mongodb";
-import { injectable } from "inversify";
 
 const DB_USER: string = "web";
 const DB_PASSWORD: string = "webApi";
@@ -8,7 +7,6 @@ const DB_HOST: string = "ds239638.mlab.com";
 const DB_PORT: number = 39638;
 const DB_URL: string = "mongodb://" + DB_USER + ":" + DB_PASSWORD + "@" + DB_HOST + ":" + DB_PORT + "/" + DB_DB;
 
-@injectable() // TODO: Find a way to make it Injectable without the tests crahsing
 export class DbClient {
     public db: Db;
 
