@@ -16,7 +16,8 @@ const routes: Routes = [
     children: [
         { path: "" , redirectTo: "track-list", pathMatch: "full" },
         { path : "track-list", component: TrackListComponent},
-        { path: "track-editor", component: TrackEditorComponent}
+        { path: "track-editor", component: TrackEditorComponent},
+        { path: "track-editor/:id", component: TrackEditorComponent}
     ] }
 ];
 
