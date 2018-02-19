@@ -23,11 +23,13 @@ export abstract class AbstractSoundContainer {
     }
 
     protected loadSound(path: string): void {
-        const idleLoader: AudioLoader = new AudioLoader();
-        idleLoader.load(path, (buffer: AudioBuffer) => {
-            this.setSoundSettings(buffer);
-            },          () => { } , () => { });
-
+        new AudioLoader().load(
+            path,
+            (buffer: AudioBuffer) => {
+                this.setSoundSettings(buffer);
+            },
+            () => { },
+            () => { });
     }
 
     public stop(): void {
