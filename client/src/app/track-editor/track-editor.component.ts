@@ -61,13 +61,16 @@ export class TrackEditorComponent implements AfterViewInit {
         this.trackRenderer.InputKeyUp(event);
      }
 
-    @HostListener("window:wheel", ["$event"])
-    public onScroll(event: MouseWheelEvent): void {
+    public onScroll(event: MouseWheelEvent): boolean {
         this.trackRenderer.mouseWheelEvent(event);
+
+        return false;
     }
 
-    public onClick(event: MouseEvent): void {
+    public onClick(event: MouseEvent): boolean {
         this.trackRenderer.mouseEventclick(event);
+
+        return false;
      }
 
     public onClickRelease(event: MouseEvent): void {
