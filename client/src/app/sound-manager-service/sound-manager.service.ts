@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import {
     AudioListener
 } from "three";
-import {EngineSound} from "./sound-containers/engine-sound";
+import {CarSounds} from "./sound-containers/car-sounds";
 import {StartSound} from "./sound-containers/start-sound";
 import { Car } from "../car/car";
 
