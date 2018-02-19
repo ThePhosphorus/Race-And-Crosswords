@@ -4,7 +4,7 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
 import { PosSelect } from "../track-generator-service/track.constantes";
 import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
-import { Track } from "../../../../common/communication/track";
+import { Track, Vector3Struct } from "../../../../common/communication/track";
 
 @Component({
     selector: "app-track-editor",
@@ -89,6 +89,8 @@ export class TrackEditorComponent implements AfterViewInit {
         this.trackLoader.loadOne(id).subscribe((track: Track) => {
             this.name = track.name;
             this.description = track.description;
+            this.trackRenderer.loadTrack(track.points.map((value: Vector3Struct) => this.trackLoader.toVector(value)));
+            this.update();
         });
     }
 

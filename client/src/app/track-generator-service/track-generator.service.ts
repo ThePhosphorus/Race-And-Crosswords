@@ -45,7 +45,6 @@ export class TrackGenerator extends Renderer {
         this.constraintValidator = new ConstraintValidator();
     }
 
-    // Rendering
     public setContainer(container: HTMLDivElement): void {
         this.init(container);
         this.startRenderingLoop();
@@ -177,9 +176,9 @@ export class TrackGenerator extends Renderer {
     }
 
     // ThreeJs object handeling
-    public createDot(pos: Vector2, topMesh: Vector3): Mesh {
+    public createDot(pos: Vector2, topMesh: Vector3, pos3?: Vector3): Mesh {
         const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
-        circle.position.copy(this.getRelativePosition(pos));
+        circle.position.copy((pos3) ? pos3 : this.getRelativePosition(pos));
         if (topMesh) { this.createLine(topMesh, circle.position, circle.id); }
         this.scene.add(circle);
         this.disableDragMode();
@@ -289,5 +288,14 @@ export class TrackGenerator extends Renderer {
                         ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
             }
         }
+    }
+
+    public loadTrack(points: Vector3[]): void {
+        points.forEach((point: Vector3) => {
+            const topPosition: Vector3 = (this.points.length > 0) ? this.points.top.position : null;
+            this.points.push(this.createDot(null, topPosition, point));
+            this.points.updateStartingPosition();
+            this.resetValidation();
+        });
     }
 }
