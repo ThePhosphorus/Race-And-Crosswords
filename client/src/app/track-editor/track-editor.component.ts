@@ -103,12 +103,17 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public saveTrack(): void {
         const points: Vector3[] = this.trackRenderer.saveTrack();
-        if (points != null && this.name !== "" &&
-            this.points.length > 2 && this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
+        if (points == null) {
+            window.alert("Constrains are not valid");
+        } else if (this.name === "") {
+            window.alert("Name is not set");
+        } else if (this.points.length < 2) {
+            window.alert("There must be at least " + 2 + " points.");
+        } else if (!this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
+            window.alert("Track must be closed");
+        } else {
             this.trackSaver.save(this.id, this.name, this.description, points)
                 .subscribe((bool: boolean) => {if (bool) { this.router.navigate(["/admin/track-list"]); } });
-        } else {
-            window.alert("Not all constraints are respected");
         }
     }
 
