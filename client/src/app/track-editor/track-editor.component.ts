@@ -105,7 +105,7 @@ export class TrackEditorComponent implements AfterViewInit {
             this.trackSaver.save(this.id, this.name, this.description, points)
                 .subscribe((bool: boolean) => this.router.navigate(["/admin/track-list"]));
         } else {
-            console.error("points not good");
+            window.alert("Not all constraints are respected");
         }
     }
 }
