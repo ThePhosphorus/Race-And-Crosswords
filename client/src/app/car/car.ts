@@ -26,6 +26,7 @@ const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
 
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
+    public id: number = -1;
 
     private readonly engine: Engine;
     private readonly mass: number;

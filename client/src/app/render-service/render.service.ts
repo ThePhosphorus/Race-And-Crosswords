@@ -23,6 +23,7 @@ export class RenderService extends Renderer {
     public constructor(private cameraManager: CameraManagerService,  private soundManager: SoundManagerService) {
         super(cameraManager, false);
         this._car = new Car();
+        this._car.id = 0;
         this._carInfos = new CarInfos(0, 0, 0);
     }
 
