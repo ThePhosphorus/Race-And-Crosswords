@@ -5,6 +5,7 @@ import { Difficulty, CrosswordGrid } from "../../../../common/communication/cros
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http/";
 
+// tslint:disable:no-magic-numbers
 describe("CrosswordService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,8 +19,8 @@ describe("CrosswordService", () => {
   }));
 
   it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
-      service.newGame(Difficulty.Easy, 4, 0.3).subscribe( (grid: CrosswordGrid) => {
+      service.newGame(Difficulty.Hard, 0.3, 2).toPromise().then( (grid: CrosswordGrid) => {
         expect(grid).toBeDefined();
-      });
+      }).catch( (e) => console.error(e) );
   }));
 });

@@ -2,13 +2,15 @@ import { TestBed, inject } from "@angular/core/testing";
 import { TrackSaverService } from "./track-saver.service";
 import { Track, Vector3Struct } from "../../../../common/communication/track";
 import { Vector3 } from "three";
+import { HttpClientModule } from "@angular/common/http/";
 
 /* tslint:disable:no-magic-numbers */
 describe("Track Saver", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-        providers: [TrackSaverService]
+        providers: [TrackSaverService],
+        imports: [HttpClientModule]
         });
     });
 
@@ -29,7 +31,7 @@ describe("Track Saver", () => {
         const description: string = "Description";
         const points: Array<Vector3> = new Array<Vector3>();
 
-        const track: Track = service.getTrack(name, description, points);
+        const track: Track = service.getTrack(undefined, name, description, points);
         expect(track.name).toBe(name);
         expect(track.description).toBe(description);
         for (let i: number = 0; i < points.length; i++) {
