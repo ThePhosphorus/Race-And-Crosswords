@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { injectable, inject } from "inversify";
+import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import { Track } from "../../../../common/communication/track";
 import { DbClient } from "../../mongo/DbClient";
 import { Collection, InsertOneWriteOpResult, ReplaceWriteOpResult, ObjectId, DeleteWriteOpResultObject } from "mongodb";
-import Types from "../../types";
 
 const TRACK_COLLECTION: string = "tracks";
 

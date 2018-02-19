@@ -4,7 +4,7 @@ import { Track, Vector3Struct } from "../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
 
 const BACKEND_URL: string = "http://localhost:3000/";
-const TRACK_SAVER_URL: string = BACKEND_URL + "saver/";
+const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
 class MongoResponse {
     public constructor (

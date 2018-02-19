@@ -1,22 +1,20 @@
 import { Component } from "@angular/core";
-import { Track } from "./track";
-
-const FAKE_TRACKS_NUMBER: number = 4;
+import { Track } from "../../../../common/communication/track";
+import { TrackLoaderService } from "../track-loader/track-loader.service";
+import { TrackSaverService } from "../track-saver/track-saver.service";
 
 @Component({
     selector: "app-track-list",
     templateUrl: "./track-list.component.html",
-    styleUrls: ["./track-list.component.css"]
+    styleUrls: ["./track-list.component.css"],
+    providers: [TrackLoaderService, TrackSaverService]
 })
 export class TrackListComponent {
     public tracks: Array<Track>;
 
-    public constructor() {
+    public constructor(private trackloader: TrackLoaderService) {
         this.tracks = new Array<Track>();
 
-        for (let i: number = 0; i < FAKE_TRACKS_NUMBER; i++) {
-            this.tracks.push(new Track(i, "Test track that is super important"));
-        }
+        this.trackloader.loadAll().subscribe((tracks: Track[]) => this.tracks = tracks);
     }
-
 }
