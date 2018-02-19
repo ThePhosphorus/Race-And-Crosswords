@@ -13,7 +13,7 @@ const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
-const BACKGROUND_PATH: string = "../../assets/skybox/sky4/";
+const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 
 @Injectable()
 export class RenderService extends Renderer {
@@ -72,6 +72,7 @@ export class RenderService extends Renderer {
         this.init(container);
         this.soundManager.init(this.cameraManager.listener);
         await this._car.init();
+        this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
