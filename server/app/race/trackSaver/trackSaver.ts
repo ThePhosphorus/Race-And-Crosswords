@@ -40,4 +40,6 @@ export class TrackSaver extends WebService {
 
         return this.collection.insertOne(track);
     }
+
+    private
 }
