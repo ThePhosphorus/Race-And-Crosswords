@@ -2,6 +2,9 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@
 import { TrackGenerator } from "../track-generator-service/track-generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { PosSelect } from "../track-generator-service/track.constantes";
+import { ActivatedRoute } from "@angular/router";
+import { TrackLoaderService } from "../track-loader/track-loader.service";
+import { Track } from "../../../../common/communication/track";
 
 @Component({
     selector: "app-track-editor",
@@ -13,9 +16,25 @@ export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
     public points: PosSelect[];
+    public id: string;
+    public description: string;
+    public name: string;
 
-    public constructor(private trackRenderer: TrackGenerator) {
+    public constructor(
+        private trackRenderer: TrackGenerator,
+        private trackLoader: TrackLoaderService,
+        private route: ActivatedRoute
+    ) {
         this.points = [];
+        this.route.params.map((p) => p.id).subscribe((id: string) => {
+            if (id) {
+                this.id = id;
+                this.getTrack(id);
+            } else {
+                this.createNew();
+            }
+
+        });
      }
 
     public ngAfterViewInit(): void {
@@ -66,4 +85,14 @@ export class TrackEditorComponent implements AfterViewInit {
         this.points = this.trackRenderer.points.PositionSelectPoints;
      }
 
+    private getTrack(id: string): void {
+        this.trackLoader.loadOne(id).subscribe((track: Track) => {
+            this.name = track.name;
+            this.description = track.description;
+        });
+    }
+
+    private createNew(): void {
+        console.log("new");
+    }
 }

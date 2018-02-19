@@ -16,6 +16,10 @@ export class TrackLoaderService {
         return this.http.get(TRACK_SAVER_URL + "all").map((value: Track[]) => value);
     }
 
+    public loadOne(id: string): Observable<Track> {
+        return this.http.get(TRACK_SAVER_URL + id).map((value: Track) => value);
+    }
+
     public toVector(vector: Vector3Struct): Vector3 {
         return new Vector3(vector.x, vector.y, vector.z);
     }

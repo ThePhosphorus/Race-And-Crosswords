@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Vector3 } from "three";
 import { Track, Vector3Struct } from "../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs/Observable";
 
 const BACKEND_URL: string = "http://localhost:3000/";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
@@ -20,10 +21,10 @@ class MongoResponse {
 export class TrackSaverService {
     public constructor(private http: HttpClient) {}
 
-    public async save(id: string, name: string, description: string, points: Vector3[]): Promise<boolean> {
+    public save(id: string, name: string, description: string, points: Vector3[]): Observable<boolean> {
         const track: Track = this.getTrack(id, name, description, points);
 
-        return this.http.post(TRACK_SAVER_URL, track).toPromise().then((obj: MongoResponse) => {
+        return this.http.post(TRACK_SAVER_URL, track).map((obj: MongoResponse) => {
             return (obj.n > 0);
         });
 
