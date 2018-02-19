@@ -104,7 +104,7 @@ export class CameraManagerService {
             case CameraType.Persp:
                 return this.persp;
             default:
-                return this.persp;
+                return this.ortho;
         }
     }
 

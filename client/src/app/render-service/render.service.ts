@@ -13,8 +13,8 @@ const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
-const dLight: number = 200;
-const sLight: number = dLight * 0.25;
+const D_LIGHT: number = 200;
+const S_LIGHT: number = D_LIGHT * 0.25;
 
 @Injectable()
 export class RenderService extends Renderer {
@@ -22,6 +22,8 @@ export class RenderService extends Renderer {
     private _carInfos: CarInfos;
     private sunlight: DirectionalLight;
     private carlight: SpotLight;
+    private brakeLight: SpotLight;
+   // private brakelightRight: PointLight;
 
     public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, false);
@@ -75,6 +77,7 @@ export class RenderService extends Renderer {
         this.init(container);
         this.loadSunlight();
         this.loadCarLights();
+        this.loadBrakeLights();
 
         await this._car.init();
         this.cameraManager.updatecarInfos(
@@ -93,20 +96,26 @@ export class RenderService extends Renderer {
         this.carlight.penumbra = 0.4;
         this.scene.add(this.carlight);
     }
+    private loadBrakeLights(): void {
+        this.brakeLight = new SpotLight(0xFF0000, 1);
+        this.brakeLight.angle = 0.6;
+        this.brakeLight.penumbra = 1;
+        this.scene.add(this.brakeLight);
+    }
     private loadSunlight(): void {
         this.sunlight = new DirectionalLight( 0xffe382, 0.7 );
         this.sunlight.position.set(-1, 1, -1);
         this.sunlight.position.multiplyScalar(25);
         this.sunlight.castShadow = true;
-        this.sunlight.shadow.camera.bottom = -sLight;
-        this.sunlight.shadow.camera.top = sLight;
-        this.sunlight.shadow.camera.left = -sLight;
-        this.sunlight.shadow.camera.right = sLight;
-        this.sunlight.shadow.camera.near = dLight/30;
-        this.sunlight.shadow.camera.far = dLight;
+        this.sunlight.shadow.camera.bottom = -S_LIGHT;
+        this.sunlight.shadow.camera.top = S_LIGHT;
+        this.sunlight.shadow.camera.left = -S_LIGHT;
+        this.sunlight.shadow.camera.right = S_LIGHT;
+        this.sunlight.shadow.camera.near = D_LIGHT/30;
+        this.sunlight.shadow.camera.far = D_LIGHT;
         this.sunlight.shadow.mapSize.x = 1024 * 2;
         this.sunlight.shadow.mapSize.y = 1024 * 2;
-        this.scene.add(this.sunlight);
+        //this.scene.add(this.sunlight);
     }
     private getFloor(): Mesh {
         const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
@@ -155,6 +164,7 @@ export class RenderService extends Renderer {
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
         this.updateCarlight();
+        this.updateBrakelights();
         this.updateSunlight();
     }
 
@@ -175,6 +185,13 @@ export class RenderService extends Renderer {
         this.carlight.position.copy((this._car.getPosition().clone().add(this._car.direction).add(carlightoffSet)));
         this.carlight.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
         this.carlight.target.updateMatrixWorld(true);
+    }
+
+    private updateBrakelights(): void {
+        const brakeLightOffset: Vector3 = new Vector3(0, 1, 0);
+        this.brakeLight.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(0.7)).add(brakeLightOffset)));
+        this.brakeLight.target.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(4))));
+        this.brakeLight.target.updateMatrixWorld(true);
     }
 }
 
