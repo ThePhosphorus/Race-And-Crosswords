@@ -1,14 +1,4 @@
-import {
-    Vector3,
-    GridHelper,
-    Color,
-    AmbientLight,
-    Vector2,
-    Mesh,
-    Geometry,
-    Line,
-    Object3D
-} from "three";
+import { Vector3, GridHelper, Color, AmbientLight, Vector2, Mesh, Geometry, Line, Object3D } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
@@ -18,13 +8,12 @@ import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 
 const LINE_STR_PREFIX: string = "Line to ";
-
 const MIN_ZOOM: number = 10;
 const MAX_ZOOM: number = 200;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
-const LINK_MINIMUM_POINTS: number = 2;
+export const LINK_MINIMUM_POINTS: number = 2;
 const DELETE_KEY: number = 46;
 
 @Injectable()
@@ -226,7 +215,6 @@ export class TrackGenerator extends Renderer {
         this.scene.add(line);
     }
 
-    // Converters and tools
     private findPointId(pos: Vector2): number {
         for (let i: number = this.points.length - 1; i >= 0; i--) {
             const diff: number = this.getClientPosition(this.points.point(i).position).sub(pos).length();

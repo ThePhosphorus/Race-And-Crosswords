@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
-import { TrackGenerator } from "../track-generator-service/track-generator.service";
+import { TrackGenerator, LINK_MINIMUM_POINTS } from "../track-generator-service/track-generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { PosSelect } from "../track-generator-service/track.constantes";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -107,8 +107,8 @@ export class TrackEditorComponent implements AfterViewInit {
             window.alert("Constrains are not valid");
         } else if (this.name === "") {
             window.alert("Name is not set");
-        } else if (this.points.length < 2) {
-            window.alert("There must be at least " + 2 + " points.");
+        } else if (this.points.length < LINK_MINIMUM_POINTS) {
+            window.alert("There must be at least " + LINK_MINIMUM_POINTS + " points.");
         } else if (!this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
             window.alert("Track must be closed");
         } else {

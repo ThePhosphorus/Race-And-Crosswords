@@ -7,6 +7,12 @@ import { Observable } from "rxjs/Observable";
 const BACKEND_URL: string = "http://localhost:3000/";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
+class MongoObj {
+    public constructor (
+        public n: number
+    ) {}
+}
+
 @Injectable()
 export class TrackSaverService {
 
@@ -17,15 +23,15 @@ export class TrackSaverService {
         const requestHeader: HttpHeaders = new HttpHeaders({"Content-Type": "application/json"});
 
         if (track._id) {
-            return this.http.put<Track>(TRACK_SAVER_URL + id, { track : track}, { headers : requestHeader}).map((obj) => obj.n);
+            return this.http.put(TRACK_SAVER_URL + id, { track : track}, { headers : requestHeader}).map((obj: MongoObj) => obj.n > 0);
         } else {
-            return this.http.post<Track>(TRACK_SAVER_URL, {track : track}, { headers : requestHeader}).map((obj) => obj.n);
+            return this.http.post(TRACK_SAVER_URL, {track : track}, { headers : requestHeader}).map((obj: MongoObj) => obj.n > 0);
         }
 
     }
 
     public delete(id: string): Observable<boolean> {
-        return this.http.delete(TRACK_SAVER_URL + id).map((obj) => obj.n);
+        return this.http.delete(TRACK_SAVER_URL + id).map((obj: MongoObj) => obj.n > 0);
     }
 
     public getTrack(id: string, name: string, description: string, points: Vector3[]): Track {
