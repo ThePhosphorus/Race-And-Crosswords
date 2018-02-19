@@ -1,0 +1,13 @@
+#editor {
+    width: 100%;
+    height: 85vmin;
+}
+
+#points {
+    height: 85vmin;
+    overflow-y: auto;
+}
+
+.selected {
+    background-color: #44D3FF;
+}

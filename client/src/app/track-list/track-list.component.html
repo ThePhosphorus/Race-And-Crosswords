@@ -1,0 +1,50 @@
+<div class="row text-center mt-3">
+  <div class="col text-center">
+    <table class="table justify-content-center table-stripped" id="trackTable">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>TITLE</th>
+          <th>
+            <!-- EDIT -->
+          </th>
+        </tr>
+      </thead>
+      <tbody id="trackBody">
+        <tr *ngFor="let track of tracks">
+            <td>{{track.id}}</td>
+            <td>{{track.name}}</td>
+            <td>
+              <button class="btn btn-light">Edit</button>
+            </td>
+        </tr>
+        <!-- <tr>
+          <td>1</td>
+          <td>Piste 1</td>
+          <td>
+            <button class="btn btn-light">Edit</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Piste 2</td>
+          <td>
+            <button class="btn btn-light">Edit</button>
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Piste 3</td>
+          <td>
+            <button class="btn btn-light">Edit</button>
+          </td>
+        </tr> -->
+      </tbody>
+    </table>
+    <div>
+      <button class="btn mt-1 btn-block-no-wrap pt-0 align-text-top" id="btnAdd">
+        +
+      </button>
+    </div>
+  </div>
+</div>
