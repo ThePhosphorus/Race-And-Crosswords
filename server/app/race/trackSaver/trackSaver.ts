@@ -17,7 +17,7 @@ export class TrackSaver extends WebService {
     public constructor() {
         super();
         this.dbClient = new DbClient();
-        this.routeName = "/save";
+        this.routeName = "/saver";
     }
 
     private connect(): void {
