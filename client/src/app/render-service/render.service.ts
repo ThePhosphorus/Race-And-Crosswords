@@ -204,7 +204,7 @@ export class RenderService extends Renderer {
         this.brakeLight.target.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(4))));
         this.brakeLight.target.updateMatrixWorld(true);
 
-        const brakeReflectionOffset: Vector3 = new Vector3(0, 0.7, 0);
+        const brakeReflectionOffset: Vector3 = new Vector3(0, 0.69, 0);
         const upVector: Vector3 = new Vector3(0,1,0);
         const downVector: Vector3 = new Vector3(0,-1,0);
         this.brakeReflectionLeft.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(3)).add(brakeReflectionOffset)));
