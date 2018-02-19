@@ -18,4 +18,15 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-3">
+      <span>Name</span>
+      <input [(ngModel)]="name" type="text" maxlength="20" required />
+    </div>
+    <div class="col-md-9">
+      <span>Description</span>
+      <input [(ngModel)]="description" type="text" maxlength="255"/>
+    </div>
+  </div>
+  <button class="btn btn-success center" type="submit" (click)="saveTrack()" >Save</button>
 </div>

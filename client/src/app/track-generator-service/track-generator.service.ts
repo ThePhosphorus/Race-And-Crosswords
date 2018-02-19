@@ -279,15 +279,21 @@ export class TrackGenerator extends Renderer {
     }
 
     // Validation
-    public resetValidation(): void {
+    public resetValidation(): boolean {
+        let valid: boolean = true;
         this.constraintValidator.points = this.points.points;
         for (let i: number = 0; i < this.points.points.length - 1; i++ ) {
             if (this.points.points[i + 1] !== null) {
-                (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material =
-                    this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])
-                        ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
+                if (this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])) {
+                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL;
+                } else {
+                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL_INVALID;
+                    valid = false;
+                }
             }
         }
+
+        return valid;
     }
 
     public loadTrack(points: Vector3[]): void {
@@ -297,5 +303,9 @@ export class TrackGenerator extends Renderer {
             this.points.updateStartingPosition();
             this.resetValidation();
         });
+    }
+
+    public saveTrack(): Vector3[] {
+        return (this.resetValidation()) ? this.points.points : null;
     }
 }

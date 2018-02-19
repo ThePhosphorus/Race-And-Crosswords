@@ -2,9 +2,11 @@ import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@
 import { TrackGenerator } from "../track-generator-service/track-generator.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { PosSelect } from "../track-generator-service/track.constantes";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track, Vector3Struct } from "../../../../common/communication/track";
+import { TrackSaverService } from "../track-saver/track-saver.service";
+import { Vector3 } from "three";
 
 @Component({
     selector: "app-track-editor",
@@ -23,7 +25,9 @@ export class TrackEditorComponent implements AfterViewInit {
     public constructor(
         private trackRenderer: TrackGenerator,
         private trackLoader: TrackLoaderService,
-        private route: ActivatedRoute
+        private trackSaver: TrackSaverService,
+        private route: ActivatedRoute,
+        private router: Router
     ) {
         this.points = [];
         this.route.params.map((p) => p.id).subscribe((id: string) => {
@@ -31,9 +35,9 @@ export class TrackEditorComponent implements AfterViewInit {
                 this.id = id;
                 this.getTrack(id);
             } else {
-                this.createNew();
+                this.name = "";
+                this.description = "";
             }
-
         });
      }
 
@@ -94,7 +98,13 @@ export class TrackEditorComponent implements AfterViewInit {
         });
     }
 
-    private createNew(): void {
-        console.log("new");
+    public saveTrack(): void {
+        const points: Vector3[] = this.trackRenderer.saveTrack();
+        if (points != null && this.name !== "") {
+            this.trackSaver.save(this.id, this.name, this.description, points)
+                .subscribe((bool: boolean) => this.router.navigate(["/admin/track-list"]));
+        } else {
+            console.log("points not good");
+        }
     }
 }

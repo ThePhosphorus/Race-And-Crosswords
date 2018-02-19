@@ -65,6 +65,7 @@ export class TrackSaver extends WebService {
 
     private putTrack(id: string, track: Track): Promise<ReplaceWriteOpResult> {
         this.connect();
+        delete track._id; // Because mongo db don't accept _id as a string
 
         return this.collection.replaceOne({_id : new ObjectId(id)}, track);
     }

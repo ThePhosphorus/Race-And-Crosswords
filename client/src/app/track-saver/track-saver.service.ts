@@ -1,32 +1,26 @@
 import { Injectable } from "@angular/core";
 import { Vector3 } from "three";
 import { Track, Vector3Struct } from "../../../../common/communication/track";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 
 const BACKEND_URL: string = "http://localhost:3000/";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
-class MongoResponse {
-    public constructor (
-        public n: number,
-        public nModified: number,
-        public opTime: {ts: string, t: number},
-        public electionId: string,
-        public ok: number
-    ) {}
-}
-
 @Injectable()
 export class TrackSaverService {
+
     public constructor(private http: HttpClient) {}
 
     public save(id: string, name: string, description: string, points: Vector3[]): Observable<boolean> {
         const track: Track = this.getTrack(id, name, description, points);
+        const requestHeader: HttpHeaders = new HttpHeaders({"Content-Type": "application/json"});
 
-        return this.http.post(TRACK_SAVER_URL, track).map((obj: MongoResponse) => {
-            return (obj.n > 0);
-        });
+        if (track._id) {
+            return this.http.put<Track>(TRACK_SAVER_URL + id, { track : track}, { headers : requestHeader}).map((obj) => true);
+        } else {
+            return this.http.post<Track>(TRACK_SAVER_URL, {track : track}, { headers : requestHeader}).map((obj) => true);
+        }
 
     }
 

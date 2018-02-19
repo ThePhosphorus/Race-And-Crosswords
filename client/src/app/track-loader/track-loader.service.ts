@@ -13,11 +13,11 @@ export class TrackLoaderService {
     public constructor(private http: HttpClient) {}
 
     public loadAll(): Observable<Track[]> {
-        return this.http.get(TRACK_SAVER_URL + "all").map((value: Track[]) => value);
+        return this.http.get<Track[]>(TRACK_SAVER_URL + "all");
     }
 
     public loadOne(id: string): Observable<Track> {
-        return this.http.get(TRACK_SAVER_URL + id).map((value: Track) => value);
+        return this.http.get<Track>(TRACK_SAVER_URL + id);
     }
 
     public toVector(vector: Vector3Struct): Vector3 {
