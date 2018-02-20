@@ -83,7 +83,7 @@ export class TrackEditorComponent implements AfterViewInit {
         const points: Vector3[] = this.trackRenderer.saveTrack();
         if (this.testTrack(points)) {
             this.trackSaver.save(this.id, this.name, this.description, points)
-                .subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/track-list"]); } });
+                .subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/tracks"]); } });
         }
     }
 
@@ -107,8 +107,8 @@ export class TrackEditorComponent implements AfterViewInit {
     }
 
     public deleteTrack(): void {
-        if (this.id) {
-            this.trackSaver.delete(this.id).subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/track-list"]); } });
+        if (this.id && confirm("Delete track?")) {
+            this.trackSaver.delete(this.id).subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/tracks"]); } });
         }
     }
 }

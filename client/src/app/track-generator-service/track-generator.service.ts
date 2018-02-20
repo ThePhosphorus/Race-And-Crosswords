@@ -13,7 +13,7 @@ const MAX_ZOOM: number = 200;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
-const LINK_MINIMUM_POINTS: number = 2;
+export const LINK_MINIMUM_POINTS: number = 2;
 
 // Keycodes
 const ZOOM_IN_KEYCODE: number = 187; // +

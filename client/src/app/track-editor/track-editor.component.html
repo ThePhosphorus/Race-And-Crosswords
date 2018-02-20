@@ -9,11 +9,11 @@
         <form>
           <div class="form-group">
             <label for="name">Name</label>
-            <input required maxlength="20" [(ngModel)]="name" type="text" class="form-control" id="name" placeholder="Enter name">
+            <input name="name" required maxlength="20" [(ngModel)]="name" type="text" class="form-control" id="name" placeholder="Enter name">
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <input [(ngModel)]="description" maxlength="255" type="text" class="form-control" id="name" placeholder="Enter a description">
+            <input name="description" [(ngModel)]="description" maxlength="255" type="text" class="form-control" id="description" placeholder="Enter a description">
           </div>
         </form>
       </div>
@@ -29,7 +29,7 @@
         </ul>
       </div>
       <button class="btn btn-success mt-2 btn-block" type="submit" (click)="saveTrack()">Save</button>
-      <!-- <button class="btn btn-danger" type="submit" (click)="deleteTrack()" [disabled]="id == null">Delete</button> -->
+      <button class="btn btn-danger btn-block" type="submit" (click)="deleteTrack()" [disabled]="id == null">Delete</button>
     </div>
   </div>
 </div>
