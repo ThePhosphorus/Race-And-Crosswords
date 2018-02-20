@@ -103,18 +103,28 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public saveTrack(): void {
         const points: Vector3[] = this.trackRenderer.saveTrack();
-        if (points == null) {
-            window.alert("Constrains are not valid");
-        } else if (this.name === "") {
-            window.alert("Name is not set");
-        } else if (this.points.length < LINK_MINIMUM_POINTS) {
-            window.alert("There must be at least " + LINK_MINIMUM_POINTS + " points.");
-        } else if (!this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
-            window.alert("Track must be closed");
-        } else {
+        if (this.testTrack(points)) {
             this.trackSaver.save(this.id, this.name, this.description, points)
                 .subscribe((bool: boolean) => {if (bool) { this.router.navigate(["/admin/track-list"]); } });
         }
+    }
+
+    private testTrack(points: Vector3[]): boolean {
+        let errMsg: string = "";
+        if (points == null) {
+            errMsg = "Constrains are not valid";
+        } else if (this.name === "") {
+            errMsg = "Name is not set";
+        } else if (this.points.length < LINK_MINIMUM_POINTS) {
+            errMsg = "There must be at least " + LINK_MINIMUM_POINTS + " points.";
+        } else if (!this.points[0].pos.equals(this.points[this.points.length - 1].pos)) {
+            errMsg = "Track must be closed";
+        } else {
+            return true;
+        }
+        window.alert(errMsg);
+
+        return false;
     }
 
     public deleteTrack(): void {
