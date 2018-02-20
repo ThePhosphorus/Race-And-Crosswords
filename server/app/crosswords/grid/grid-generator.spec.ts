@@ -10,6 +10,23 @@ const gridSize: number = 5;
 gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: CrosswordGrid) => {
     describe("Grid generation", () => {
         describe("When the grid is generated", () => {
+            it("should give a grid with the right size", (done: MochaDone) => {
+                assert.strictEqual(grid.size, gridSize, "Attribute size of grid is not the expected size.");
+                assert.strictEqual(grid.grid.length, gridSize * gridSize, "Vertical length is not the right length");
+                done();
+            });
+
+            it("should give us a grid with no blackTiles in the first row and the first column ", (done: MochaDone) => {
+                for (let i: number = 0; i < gridSize; i++) {
+                    if (grid.grid[i].isBlackTile) {
+                        assert.fail("Detected blackTile on the first row");
+                    } else if (grid.grid[i * gridSize].isBlackTile) {
+                        assert.fail("Detected blackTile on the first column");
+                    }
+                }
+                done();
+            });
+
             it("should have a word on each colomn/row", (done: MochaDone) => {
                 const hasAcrossWord: boolean[] = new Array<boolean>(gridSize).fill(false, 0, gridSize - 1);
                 const hasDownWord: boolean[] = new Array<boolean>(gridSize).fill(false, 0, gridSize - 1);
