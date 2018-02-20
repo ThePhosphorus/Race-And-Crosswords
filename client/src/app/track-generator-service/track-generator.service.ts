@@ -42,14 +42,13 @@ export class TrackGenerator extends Renderer {
     private constraintValidator: ConstraintValidator;
 
     public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {
-        super(cameraManager, false );
+        super(cameraManager, false);
         this.points = new PointsHandler(this);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
         this.constraintValidator = new ConstraintValidator();
         this.inputManager.resetBindings();
         this.setupKeyBindings();
-        this.setupMouseBindings();
     }
 
     public setupKeyBindings(): void {
@@ -61,24 +60,24 @@ export class TrackGenerator extends Renderer {
         this.inputManager.registerKeyUp(DELETE_KEY, this.points.removeSelectedPoint);
     }
 
-    public setupMouseBindings(): void {
-        this.inputManager.registerMouseDown(LEFT_CLICK_CODE, this.mouseEventLeftClick);
-        this.inputManager.registerMouseDown(MIDDLE_CLICK_CODE, this.mouseEventMiddleClick);
-        this.inputManager.registerMouseDown(RIGHT_CLICK_CODE, this.mouseEventRightClick);
-
-        this.inputManager.registerMouseUp(LEFT_CLICK_CODE, this.mouseEventReleaseClick);
-        this.inputManager.registerMouseUp(MIDDLE_CLICK_CODE, this.mouseEventReleaseClick);
-        this.inputManager.registerMouseUp(RIGHT_CLICK_CODE, this.mouseEventReleaseClick);
-    }
-
     public mouseEventReleaseClick = (event: MouseEvent): void => {
         this.disableDragMode();
         this.disableTranslateMode();
         this.points.updateStartingPosition();
     }
 
-    public mouseEventRightClick = (event: MouseEvent): void => {
-        if (this.points.length > 0 ) {
+    public mouseEventclick(event: MouseEvent): void {
+        if (event.button === LEFT_CLICK_CODE) {
+            this.mouseEventLeftClick(event);
+        } else if (event.button === MIDDLE_CLICK_CODE) {
+            this.mouseEventMiddleClick(event);
+        } else if (event.button === RIGHT_CLICK_CODE) {
+            this.mouseEventRightClick(event);
+        }
+    }
+
+    private mouseEventRightClick = (event: MouseEvent): void => {
+        if (this.points.length > 0) {
             this.points.removePoint(this.points.length - 1);
         }
         this.resetValidation();
@@ -98,7 +97,7 @@ export class TrackGenerator extends Renderer {
             }
 
             const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY),
-                                                  (this.points.length > 0) ? this.points.top.position : null);
+                (this.points.length > 0) ? this.points.top.position : null);
 
             this.points.push(newPoint);
             this.points.updateStartingPosition();
@@ -206,7 +205,7 @@ export class TrackGenerator extends Renderer {
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
-        const line: Line = new Line(lineG,  C.LINE_MATERIAL);
+        const line: Line = new Line(lineG, C.LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this.scene.add(line);
     }
@@ -232,11 +231,11 @@ export class TrackGenerator extends Renderer {
         if ((pointId === this.points.length - 1 || pointId === 0) && this.points.top.position.equals(this.points.point(0).position)) {
             this.enableClosingDragMode();
         } else {
-                this._dragPoints = new C.PointsSpan(
-                    this.points.point(pointId),
-                    (pointId === 0) ? null : this.points.point(pointId - 1),
-                    (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
-                    null);
+            this._dragPoints = new C.PointsSpan(
+                this.points.point(pointId),
+                (pointId === 0) ? null : this.points.point(pointId - 1),
+                (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
+                null);
         }
         this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
     }
@@ -262,7 +261,7 @@ export class TrackGenerator extends Renderer {
     // Validation
     public resetValidation(): void {
         this.constraintValidator.points = this.points.points;
-        for (let i: number = 0; i < this.points.points.length - 1; i++ ) {
+        for (let i: number = 0; i < this.points.points.length - 1; i++) {
             if (this.points.points[i + 1] !== null) {
                 (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material =
                     this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])

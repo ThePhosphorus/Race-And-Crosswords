@@ -12,7 +12,7 @@ export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
     private elem: ElementRef;
 
-    public constructor(private trackRenderer: TrackGenerator) {}
+    public constructor(private trackRenderer: TrackGenerator) { }
 
     public ngAfterViewInit(): void {
         this.trackRenderer.setContainer(this.elem.nativeElement);
@@ -26,6 +26,14 @@ export class TrackEditorComponent implements AfterViewInit {
     @HostListener("window:wheel", ["$event"])
     public onScroll(event: MouseWheelEvent): void {
         this.trackRenderer.mouseWheelEvent(event);
+    }
+
+    public onClick(event: MouseEvent): void {
+        this.trackRenderer.mouseEventclick(event);
+    }
+
+    public onClickRelease(event: MouseEvent): void {
+        this.trackRenderer.mouseEventReleaseClick(event);
     }
 
     public removePoint(index: number): void {
