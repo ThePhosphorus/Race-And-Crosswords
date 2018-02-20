@@ -28,6 +28,10 @@ export class SoundManagerService {
         this.cars.get(id).engine.updateRPM(rpm);
     }
 
+    public collide(carId: number): void {
+        this.cars.get(carId).collision.play();
+    }
+
     public init(listener: AudioListener): void {
         this.listener = listener;
     }
