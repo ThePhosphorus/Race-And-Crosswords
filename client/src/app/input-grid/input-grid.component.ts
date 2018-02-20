@@ -11,24 +11,39 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
+    private _solvedGrid: CrosswordGrid;
     public currentOrientation: Orientation;
     public currentLetter: number;
     public highlightedLetters: number[];
     public hoveredLetters: number[];
+    public disabledLetters: number[];
 
     public constructor(private crosswordService: CrosswordService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
         this.hoveredLetters = [];
+        this.disabledLetters = [];
         this.currentOrientation = Orientation.Across;
         this.initializeGrid();
     }
 
     public ngOnInit(): void {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
-            this._grid = grid;
+            // this._grid = grid;
+            this._solvedGrid = grid;
         });
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
+
+    }
+
+    private loweredCaseGrid(): void {
+        this._solvedGrid.words.forEach((w: Word) => {
+            w.letters.forEach((l: Letter) => {
+                l.char.toLowerCase();
+            });
+
+        });
+
     }
 
     private initializeGrid(): void {
@@ -80,8 +95,22 @@ export class InputGridComponent implements OnInit {
 
         return null;
     }
+    private findCorrectWordFromLetter(index: number, orientation: string): Word {
+        for (const word of this._solvedGrid.words) {
+            if (word.orientation === orientation) {
+                for (const letter of word.letters) {
+                    if (index === letter.id) {
+                        return word;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 
     public setSelectedWord(word: Word): void {
+        this.loweredCaseGrid();
         this.highlightedLetters = [];
         for (const letter of word.letters) {
             this.highlightedLetters.push(letter.id);
@@ -100,9 +129,10 @@ export class InputGridComponent implements OnInit {
 
     @HostListener("window:keyup", ["$event"])
     public writeChar(event: KeyboardEvent): void {
-        if (this.currentLetter != null) {
+
+        if (this.currentLetter != null && !(this.disabledLetters.indexOf(this.currentLetter) > 0)) {
             if (event.key.length === 1 && event.key.match(/^[a-z]+$/i) !== null) {
-                this._grid.grid[this.currentLetter].char = event.key;
+                this._grid.grid[this.currentLetter].char = event.key.toLowerCase();
                 if (this.highlightedLetters.indexOf(this.currentLetter) < this.highlightedLetters.length - 1) {
                     this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) + 1];
                 }
@@ -112,6 +142,21 @@ export class InputGridComponent implements OnInit {
                     this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) - 1];
                 }
             }
+            this.verifyWord();
         }
     }
+
+    public verifyWord(): void {
+        const index: number = this.currentLetter;
+        const w: Word = (this.findWordFromLetter(index, this.currentOrientation));
+        if (w !== null) {
+            if ((w) ===
+                (this.findCorrectWordFromLetter(index, this.currentOrientation))) {
+                for (const letter of w.letters) {
+                    this.disabledLetters.push(letter.id);
+                }
+            }
+        }
+    }
+
 }

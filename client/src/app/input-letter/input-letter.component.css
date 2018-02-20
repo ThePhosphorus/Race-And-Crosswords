@@ -12,15 +12,17 @@ button {
     border: none;
     padding: 0%;
     margin: 0;
+    border-radius:0%;
     box-sizing: border-box;
 }
-
-
 
 .highlight {
     background-color: #b6cee2 ;
     box-shadow: inset 0 0 5vmin steelblue;
     border: none;
+}
+.disabled{
+    background-color: red;
 }
 
 .current {
@@ -42,8 +44,7 @@ button {
     font-family: "CrossWords Font";
     src: url("/assets/fonts/coffee+teademo-Regular.ttf") format("truetype")
 }
-
-@keyframes blinker {
+ @keyframes blinker {
     50% {
         background-color: white;
     }

@@ -1,3 +1,1 @@
-<button  (click)="select()"
-[ngClass]="{'hovered': hoveredLetters.indexOf(id) > -1 , 'highlight': highlightedLetters.indexOf(id) > -1 , 'current': id === currentLetter}" >{{letter | uppercase}}</button>
-
+<button type="button" class="btn btn-light" (click)="select()" [ngClass]="{'disabled': disabledLetters.indexOf(id) > -1 , 'hovered': hoveredLetters.indexOf(id) > -1 , 'highlight': highlightedLetters.indexOf(id) > -1 , 'current': id === currentLetter}" >{{letter | uppercase}}</button>
