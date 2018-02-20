@@ -32,6 +32,14 @@ export class SoundManagerService {
         this.cars.get(carId).collision.play();
     }
 
+    public startDrift(carId: number): void {
+        this.cars.get(carId).drift.start();
+    }
+
+    public endDrift(carId: number): void {
+        this.cars.get(carId).drift.stop();
+    }
+
     public init(listener: AudioListener): void {
         this.listener = listener;
     }
