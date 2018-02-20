@@ -38,4 +38,18 @@ export class Datamuse {
 
         return JSON.stringify(word);
     }
+
+    public async getDefinitions(word: string): Promise<string> {
+        const datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
+
+        if (datamuseWords !== undefined) {
+            for (const datamuseWord of datamuseWords) {
+                if (datamuseWord.word === word) {
+                    return JSON.stringify(datamuseWord);
+                }
+            }
+        }
+
+        return undefined;
+    }
 }
