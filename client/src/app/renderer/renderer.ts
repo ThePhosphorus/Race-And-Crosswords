@@ -1,5 +1,5 @@
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
-import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3, PCFSoftShadowMap } from "three";
+import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3 } from "three";
 import Stats = require("stats.js");
 import * as C from "../track-generator-service/track.constantes";
 

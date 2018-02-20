@@ -28,6 +28,9 @@ export class RenderService extends Renderer {
     private brakeLight: SpotLight;
     private brakeReflectionRight: SpotLight;
     private brakeReflectionLeft: SpotLight;
+    private brakeReflectionRightExt: SpotLight;
+    private brakeReflectionLeftExt: SpotLight;
+
 
     public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, false);
@@ -49,6 +52,8 @@ export class RenderService extends Renderer {
                 this.brakeLight.intensity = 0.4;
                 this.brakeReflectionLeft.intensity = 10;
                 this.brakeReflectionRight.intensity = 10;
+                this.brakeReflectionLeftExt.intensity = 10;
+                this.brakeReflectionRightExt.intensity = 10;
                 break;
             case CarControls.Left:
                 this._car.steerLeft();
@@ -71,6 +76,8 @@ export class RenderService extends Renderer {
                 this.brakeLight.intensity = 0;
                 this.brakeReflectionLeft.intensity = 0;
                 this.brakeReflectionRight.intensity = 0;
+                this.brakeReflectionLeftExt.intensity = 0;
+                this.brakeReflectionRightExt.intensity = 0;
                 break;
             case (CarControls.Left):
                 this._car.releaseSteering();
@@ -109,10 +116,14 @@ export class RenderService extends Renderer {
         this.brakeLight = new SpotLight(0xFF0000, 0);
         this.brakeLight.angle = 0.6;
         this.brakeLight.penumbra = 1;
-        this.brakeReflectionLeft = new SpotLight(0xFF0000, 0, 2, 0.06);
-        this.brakeReflectionRight = new SpotLight(0xFF0000, 0, 2, 0.06);
+        this.brakeReflectionLeft = new SpotLight(0xFF0000, 0, 2, 0.1);
+        this.brakeReflectionRight = new SpotLight(0xFF0000, 0, 2, 0.1);
+        this.brakeReflectionLeftExt = new SpotLight(0xFF0000,0,2,0.1);
+        this.brakeReflectionRightExt = new SpotLight(0xFF0000,0,2,0.1);
         this.scene.add(this.brakeReflectionLeft);
         this.scene.add(this.brakeReflectionRight);
+        this.scene.add(this.brakeReflectionLeftExt);
+        this.scene.add(this.brakeReflectionRightExt);
         this.scene.add(this.brakeLight);
     }
     private loadSunlight(): void {
@@ -206,21 +217,32 @@ export class RenderService extends Renderer {
         this.brakeLight.target.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(4))));
         this.brakeLight.target.updateMatrixWorld(true);
 
-        const brakeReflectionOffset: Vector3 = new Vector3(0, 0.69, 0);
+        const brakeReflectionOffset: Vector3 = new Vector3(0, 0.63, 0);
+
         const upVector: Vector3 = new Vector3(0, 1, 0);
         const downVector: Vector3 = new Vector3(0, -1, 0);
-        this.brakeReflectionLeft.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(3)).add(brakeReflectionOffset)));
-        this.brakeReflectionLeft.position.add(upVector.cross(this._car.direction).multiplyScalar(0.4));
+        this.brakeReflectionLeft.position.copy((this._car.getPosition().clone().sub(this._car.direction.clone().multiplyScalar(2)).add(brakeReflectionOffset)));
+        this.brakeReflectionLeft.position.add(upVector.clone().cross(this._car.direction).multiplyScalar(0.29));
         this.brakeReflectionLeft.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
         this.brakeReflectionLeft.target.updateMatrixWorld(true);
 
-        this.brakeReflectionRight.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(3)).add(brakeReflectionOffset)));
-        this.brakeReflectionRight.position.add(downVector.cross(this._car.direction).multiplyScalar(0.4));
+        this.brakeReflectionRight.position.copy((this._car.getPosition().clone().sub(this._car.direction.clone().multiplyScalar(2)).add(brakeReflectionOffset)));
+        this.brakeReflectionRight.position.add(downVector.clone().cross(this._car.direction).multiplyScalar(0.29));
         this.brakeReflectionRight.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
         this.brakeReflectionRight.target.updateMatrixWorld(true);
+
+
+        this.brakeReflectionLeftExt.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(2)).add(brakeReflectionOffset)));
+        this.brakeReflectionLeftExt.position.add(upVector.clone().cross(this._car.direction).multiplyScalar(0.47));
+        this.brakeReflectionLeftExt.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
+        this.brakeReflectionLeftExt.target.updateMatrixWorld(true);
+
+        this.brakeReflectionRightExt.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(2)).add(brakeReflectionOffset)));
+        this.brakeReflectionRightExt.position.add(downVector.clone().cross(this._car.direction).multiplyScalar(0.47));
+        this.brakeReflectionRightExt.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
+        this.brakeReflectionRightExt.target.updateMatrixWorld(true);
     }
 }
-
 export class CarInfos {
     public constructor(
         public speed: number,
