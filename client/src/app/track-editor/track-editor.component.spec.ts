@@ -6,6 +6,7 @@ import { HttpClientModule } from "@angular/common/http/";
 import { TrackSaverService } from "../track-saver/track-saver.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe("TrackEditorComponent", () => {
   let component: TrackEditorComponent;
@@ -15,6 +16,7 @@ describe("TrackEditorComponent", () => {
     TestBed.configureTestingModule({
       declarations: [ TrackEditorComponent, ReversePipe ],
       imports: [HttpClientModule],
+      schemas : [NO_ERRORS_SCHEMA],
       providers: [
           TrackLoaderService,
           TrackSaverService,

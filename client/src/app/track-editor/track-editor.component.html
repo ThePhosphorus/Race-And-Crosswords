@@ -21,11 +21,11 @@
   <div class="row">
     <div class="col-md-3">
       <span>Name</span>
-      <input [(value)]="name" type="text" maxlength="20" required />
+      <input [(ngModel)]="name" type="text" maxlength="20" required />
     </div>
     <div class="col-md-9">
       <span>Description</span>
-      <input [(value)]="description" type="text" maxlength="255"/>
+      <input [(ngModel)]="description" type="text" maxlength="255"/>
     </div>
   </div>
   <div class="row">
