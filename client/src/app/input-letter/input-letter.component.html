@@ -1,2 +1,3 @@
-<input type="text" maxlength="1" placeholder="{{letter | uppercase}}" (click)="select()"
-[ngClass]="{ 'current': id === currentLetter, 'highlight': highlightedLetters.indexOf(id) > -1, 'hovered': hoveredLetters.indexOf(id) > -1}" >
+<button  (click)="select()"
+[ngClass]="{'hovered': hoveredLetters.indexOf(id) > -1 , 'highlight': highlightedLetters.indexOf(id) > -1 , 'current': id === currentLetter}" >{{letter | uppercase}}</button>
+

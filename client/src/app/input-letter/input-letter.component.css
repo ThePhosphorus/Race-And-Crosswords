@@ -1,11 +1,11 @@
-input {
+button {
     align-self: center;
     font-family: "CrossWords Font", 'Times New Roman', Times, serif;
     font-size: 4vmin;
     font-weight: bold;
     width: 100%;
     height: 100%;
-    color: black;
+    color: #212529;
     text-align: center;
     outline: none;
     background-color: transparent;
@@ -15,26 +15,21 @@ input {
     box-sizing: border-box;
 }
 
-input:focus {
-    color: #212529;
-    cursor: text;
-}
+
 
 .highlight {
-    border: #7aa1c2 solid 0.5vmin;
-    cursor: text;
-    color: #212529;
-    /* border-radius: 0% 0% 0% 0%; */
-    background-color: #a3c2db !important;
-    box-shadow: 1vmin #a3c2db;
+    background-color: #b6cee2 ;
+    box-shadow: inset 0 0 5vmin steelblue;
+    border: none;
 }
 
 .current {
     color: #212529;
-    background-color: aquamarine;
+    text-decoration: underline;
+    animation: blinker 1.5s linear infinite;
 }
 
-input:hover, .hovered {
+.hovered {
     background-color: #a3c2db;
 }
 
@@ -46,4 +41,10 @@ input:hover, .hovered {
 @font-face {
     font-family: "CrossWords Font";
     src: url("/assets/fonts/coffee+teademo-Regular.ttf") format("truetype")
+}
+
+@keyframes blinker {
+    50% {
+        background-color: white;
+    }
 }
