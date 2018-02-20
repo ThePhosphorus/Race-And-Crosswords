@@ -10,6 +10,11 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
+import { AdminComponent } from "./admin/admin.component";
+import { TrackListComponent } from "./track-list/track-list.component";
+import { TrackEditorComponent } from "./track-editor/track-editor.component";
+import { ReversePipe } from "./reverse-pipe/reverse.pipe";
+import { InputManagerService } from "./input-manager-service/input-manager.service";
 
 @NgModule({
     declarations: [
@@ -17,7 +22,11 @@ import { HomePageComponent } from "./home-page/home-page.component";
         GameComponent,
         CrosswordsComponent,
         PlayermodeComponent,
-        HomePageComponent
+        HomePageComponent,
+        AdminComponent,
+        TrackListComponent,
+        TrackEditorComponent,
+        ReversePipe
     ],
     imports: [
         BrowserModule,
@@ -25,7 +34,7 @@ import { HomePageComponent } from "./home-page/home-page.component";
         AppRoutingModule,
         FormsModule
     ],
-    providers: [],
+    providers: [InputManagerService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,10 +1,37 @@
+#teamTitle{
+    border: transparent;
+    font-family: "Team Font",'Times New Roman', Times, serif;
+    font-size: 900%;
+    background-color: transparent;
+    margin-bottom: 0%;
+    max-height: 25vmin;
+
+}
 .card{
     border: transparent;
-    font-family: "Title Font",'Times New Roman', Times, serif;
-    font-size: 500%;
-    text-align: center;
+}
+#presentTitle{
+    border: transparent;
+    font-family: "Team Font",'Times New Roman', Times, serif;
+    font-size: 200%;
+    text-align: top;
     background-color: transparent;
     text-shadow: 0.4vmin 0.4vmin 0.4vmin 0.4vmin gray;
+    margin-top: 0%;
+    padding-top: 0%;
+    padding-bottom: 0%;
+}
+
+.btn-group-vertical{
+    margin-top: 0%;
+    margin-bottom: 0%;
+    width: 100%;
+}
+.btn{
+    align-self: center;
+    width: 45%;
+    align-items: center;
+    text-align: center;
 }
 
 #raceBtn {
@@ -12,19 +39,34 @@
     font-size: 300%;
     text-align: center;
     background-color: steelblue;
-    border-radius: 15%;
-    border: solid 0.7vmin white;
-    padding-top: 7%;
-    padding-bottom: 5%;
-
+    border-radius:3vmin;
+    border: solid 0.7vmin darkgrey;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    margin-top: 0%;
+    margin-bottom: 0%;
 }
 #wordBtn {
     font-family: "Word Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    font-size: 400%;
+    font-size: 430%;
     text-align: center;
     background-color: steelblue;
-    border-radius: 15%;
+    border-radius: 3vmin;
+    border: solid 0.7vmin darkgrey;
+    margin-bottom: 0%;
+}
+
+#adminBtn {
+    font-family: "Admin Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 120%;
+    text-align: center;
+    align-self: center;
+    background-color:  #a3293d;
+    border-radius: 1.5vmin;
     border: solid 0.7vmin white;
+    margin-top: 2%;
+
+
 }
 
 @font-face {
@@ -38,7 +80,12 @@
   }
 
   @font-face {
-    font-family: "Title Font";
+    font-family: "Admin Font";
     src: url("/assets/fonts/imagine_font.otf") format("opentype")
   }
+  @font-face {
+    font-family: "Team Font";
+    src: url("/assets/fonts/Saturday Nights Personal Use.ttf") format("truetype")
+  }
+
 

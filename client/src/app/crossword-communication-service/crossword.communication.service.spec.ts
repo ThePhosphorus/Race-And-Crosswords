@@ -4,6 +4,7 @@ import { CrosswordCommunicationService } from "./crossword.communication.service
 import { HttpClientModule } from "@angular/common/http";
 import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 
+// tslint:disable:no-magic-numbers
 describe("CommunicationService", () => {
 
     beforeEach(() => {
