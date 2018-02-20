@@ -58,6 +58,10 @@ export class DefinitionComponent implements OnInit {
         this.setHoveredWord.emit(this.findWordByIndex(index, orientation));
     }
 
+    public unHover(): void {
+        this.setHoveredWord.emit(null);
+    }
+
     private findWordByIndex(index: number, orientation: string): Word {
         let targetWord: Word;
         for (const word of this._wordGrid) {

@@ -53,8 +53,8 @@ export class InputGridComponent implements OnInit {
 
     public setSelectedLetter(index: number): void {
         this.currentOrientation = (index === this.currentLetter) ?
-                                (this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
-                                (this.currentOrientation = Orientation.Across);
+            (this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
+            (this.currentOrientation = Orientation.Across);
         let targetWord: Word;
         if ((targetWord = this.findWordFromLetter(index, this.currentOrientation)) === null) {
             for (const ori in Orientation) {
@@ -84,15 +84,17 @@ export class InputGridComponent implements OnInit {
     public setSelectedWord(word: Word): void {
         this.highlightedLetters = [];
         for (const letter of word.letters) {
-                this.highlightedLetters.push(letter.id);
+            this.highlightedLetters.push(letter.id);
         }
         this.currentLetter = this.highlightedLetters[0];
     }
 
     public setHoveredWord(word: Word): void {
         this.hoveredLetters = [];
-        for (const letter of word.letters) {
+        if (word !== null) {
+            for (const letter of word.letters) {
                 this.hoveredLetters.push(letter.id);
+            }
         }
     }
 

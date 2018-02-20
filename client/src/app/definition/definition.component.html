@@ -1,4 +1,3 @@
-
 <div class="row" id="hints">
   <div class="col-md pr-0">
     <table class="table text-center">
@@ -8,7 +7,7 @@
         </tr>
       </thead>
       <tr *ngFor="let item of acrossDefinitions; let row = index">
-        <td (mouseenter)="hover(row, 'Across')" (click)="select(row, 'Across')">{{ row + 1 }}. {{ item[cheatMode] }}</td>
+        <td (mouseenter)="hover(row, 'Across')" (mouseleave)="unHover()" (click)="select(row, 'Across')">{{ row + 1 }}. {{ item[cheatMode] }}</td>
       </tr>
     </table>
   </div>
@@ -20,7 +19,7 @@
         </tr>
       </thead>
       <tr *ngFor="let item of downDefinitions;let row= index">
-        <td (mouseenter)="hover(row, 'Down')" (click)="select(row, 'Down')">{{ row + 1 }}. {{ item[cheatMode] }}</td>
+        <td (mouseenter)="hover(row, 'Down')" (mouseleave)="unHover()" (click)="select(row, 'Down')">{{ row + 1 }}. {{ item[cheatMode] }}</td>
       </tr>
     </table>
 
@@ -31,12 +30,9 @@
 
 
 <div class="pretty p-icon p-curve p-thick  p-pulse">
-  <input type="checkbox"  (click)="toogleCheatMode()" />
+  <input type="checkbox" (click)="toogleCheatMode()" />
   <div class="state p-danger-o">
-      <i class="icon mdi mdi-emoticon-devil"></i>
-      <label> I'M A CHEATER</label>
+    <i class="icon mdi mdi-emoticon-devil"></i>
+    <label> I'M A CHEATER</label>
   </div>
 </div>
-
-
-

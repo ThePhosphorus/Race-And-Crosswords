@@ -1,7 +1,7 @@
 input {
     align-self: center;
     font-family: "CrossWords Font", 'Times New Roman', Times, serif;
-    font-size:4vmin;
+    font-size: 4vmin;
     font-weight: bold;
     width: 100%;
     height: 100%;
@@ -19,27 +19,31 @@ input:focus {
     color: #212529;
     cursor: text;
 }
-.highlight{
-    border: #a3c2db solid 0.5vmin
-    ;
+
+.highlight {
+    border: #7aa1c2 solid 0.5vmin;
     cursor: text;
     color: #212529;
     /* border-radius: 0% 0% 0% 0%; */
-    background-color: #a3c2db;
+    background-color: #a3c2db !important;
+    box-shadow: 1vmin #a3c2db;
 }
-.form-current{
-    color: #212529;
 
+.current {
+    color: #212529;
+    background-color: aquamarine;
 }
-.form-control:hover, .hovered{
-    background-color: #dae7f1;
+
+input:hover, .hovered {
+    background-color: #a3c2db;
 }
 
 @font-face {
     font-family: "Letter Font";
     src: url("/assets/fonts/GABRWFFR.TTF") format("truetype")
-  }
-  @font-face {
+}
+
+@font-face {
     font-family: "CrossWords Font";
     src: url("/assets/fonts/coffee+teademo-Regular.ttf") format("truetype")
-  }
+}

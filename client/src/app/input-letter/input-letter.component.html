@@ -1,2 +1,2 @@
 <input type="text" maxlength="1" placeholder="{{letter | uppercase}}" (click)="select()"
-[ngClass]="{'form-current': id === currentLetter, 'highlight': highlightedLetters.indexOf(id) > -1, 'hovered': hoveredLetters.indexOf(id) > -1}" >
+[ngClass]="{ 'current': id === currentLetter, 'highlight': highlightedLetters.indexOf(id) > -1, 'hovered': hoveredLetters.indexOf(id) > -1}" >
