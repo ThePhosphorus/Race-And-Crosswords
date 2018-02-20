@@ -29,25 +29,14 @@ export class InputGridComponent implements OnInit {
 
     public ngOnInit(): void {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
-            // this._grid = grid;
+            this._grid = grid;
             this._solvedGrid = grid;
         });
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
-
     }
-
-    private loweredCaseGrid(): void {
-        this._solvedGrid.words.forEach((w: Word) => {
-            w.letters.forEach((l: Letter) => {
-                l.char.toLowerCase();
-            });
-
-        });
-
-    }
-
     private initializeGrid(): void {
         this._grid = new CrosswordGrid();
+        this._solvedGrid = new CrosswordGrid();
         this._grid.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._grid.size * this._grid.size); i++) {
             this._grid.grid.push(new Letter(""));
@@ -110,7 +99,6 @@ export class InputGridComponent implements OnInit {
     }
 
     public setSelectedWord(word: Word): void {
-        this.loweredCaseGrid();
         this.highlightedLetters = [];
         for (const letter of word.letters) {
             this.highlightedLetters.push(letter.id);
@@ -129,29 +117,35 @@ export class InputGridComponent implements OnInit {
 
     @HostListener("window:keyup", ["$event"])
     public writeChar(event: KeyboardEvent): void {
-
-        if (this.currentLetter != null && !(this.disabledLetters.indexOf(this.currentLetter) > 0)) {
+        const ENTER: number = 13;
+        if (this.currentLetter != null) {
             if (event.key.length === 1 && event.key.match(/^[a-z]+$/i) !== null) {
-                this._grid.grid[this.currentLetter].char = event.key.toLowerCase();
+                if (this.disabledLetters.indexOf(this.currentLetter) < 0) {
+                this._grid.grid[this.currentLetter].char = event.key;
+                }
                 if (this.highlightedLetters.indexOf(this.currentLetter) < this.highlightedLetters.length - 1) {
                     this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) + 1];
                 }
             } else if (event.key === "Backspace") {
+                if (this.disabledLetters.indexOf(this.currentLetter) < 0) {
                 this._grid.grid[this.currentLetter].char = " ";
+                }
                 if (this.highlightedLetters.indexOf(this.currentLetter) > 0) {
                     this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) - 1];
                 }
             }
+        }
+        if ( ENTER === event.keyCode) {
             this.verifyWord();
         }
     }
 
-    public verifyWord(): void {
+    private verifyWord(): void {
         const index: number = this.currentLetter;
         const w: Word = (this.findWordFromLetter(index, this.currentOrientation));
         if (w !== null) {
-            if ((w) ===
-                (this.findCorrectWordFromLetter(index, this.currentOrientation))) {
+            if ((w).letters ===
+                (this.findCorrectWordFromLetter(index, this.currentOrientation)).letters) {
                 for (const letter of w.letters) {
                     this.disabledLetters.push(letter.id);
                 }
