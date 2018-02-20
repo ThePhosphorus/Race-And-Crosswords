@@ -52,10 +52,10 @@ export class PointsHandler {
         if (pointId === 0 && !this.top.position.equals(this._points[0].position)) {
             this.closeLoop();
         }
-
+        if (this.length <= 2 || !this.top.position.equals(this._points[pointId].position)) {
+            this.point(pointId).material = C.SELECTION_MATERIAL;
+        }
         this._selectedPoint = pointId;
-        this.point(pointId).material = C.SELECTION_MATERIAL;
-
     }
 
     public removeSelectedPoint (): void {
