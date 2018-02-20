@@ -9,6 +9,7 @@ import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/com
 })
 export class DefinitionComponent implements OnInit {
     @Output() public setSelectedWord: EventEmitter<Word> = new EventEmitter<Word>();
+    @Output() public setHoveredWord: EventEmitter<Word> = new EventEmitter<Word>();
     private _cheatmode: boolean;
     private _wordGrid: Word[];
     public acrossDefinitions: {[cheat: string]: string}[];
@@ -50,6 +51,14 @@ export class DefinitionComponent implements OnInit {
     }
 
     public select(index: number, orientation: string): void {
+        this.setSelectedWord.emit(this.findWordByIndex(index, orientation));
+    }
+
+    public hover(index: number, orientation: string): void {
+        this.setHoveredWord.emit(this.findWordByIndex(index, orientation));
+    }
+
+    private findWordByIndex(index: number, orientation: string): Word {
         let targetWord: Word;
         for (const word of this._wordGrid) {
             if (word.orientation === orientation) {
@@ -61,6 +70,7 @@ export class DefinitionComponent implements OnInit {
                 }
             }
         }
-        this.setSelectedWord.emit(targetWord);
+
+        return targetWord;
     }
 }

@@ -14,10 +14,12 @@ export class InputGridComponent implements OnInit {
     public currentOrientation: Orientation;
     public currentLetter: number;
     public highlightedLetters: number[];
+    public hoveredLetters: number[];
 
     public constructor(private crosswordService: CrosswordService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
+        this.hoveredLetters = [];
         this.currentOrientation = Orientation.Across;
         this.initializeGrid();
     }
@@ -85,6 +87,13 @@ export class InputGridComponent implements OnInit {
                 this.highlightedLetters.push(letter.id);
         }
         this.currentLetter = this.highlightedLetters[0];
+    }
+
+    public setHoveredWord(word: Word): void {
+        this.hoveredLetters = [];
+        for (const letter of word.letters) {
+                this.hoveredLetters.push(letter.id);
+        }
     }
 
     @HostListener("window:keyup", ["$event"])

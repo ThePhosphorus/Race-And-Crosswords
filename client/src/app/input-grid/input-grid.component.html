@@ -12,7 +12,8 @@
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
           <app-input-letter [letter]="letter.char" [id]="(twoDimensionGrid.length*row)+col"
-          [highlightedLetters]="highlightedLetters" [currentLetter]="currentLetter"
+          [highlightedLetters]="highlightedLetters" [hoveredLetters]="hoveredLetters"
+          [currentLetter]="currentLetter"
           (setSelectedLetter)="setSelectedLetter($event)" (advertiseWrittenLetter)="writeChar($event)"></app-input-letter>
         </span>
       </td>

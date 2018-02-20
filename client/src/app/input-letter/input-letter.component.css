@@ -31,7 +31,7 @@ input:focus {
     color: #212529;
 
 }
-.form-control:hover{
+.form-control:hover, .hovered{
     background-color: #dae7f1;
 }
 

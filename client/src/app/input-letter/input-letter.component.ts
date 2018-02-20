@@ -10,6 +10,7 @@ export class InputLetterComponent implements OnInit {
     @Input() public id: number;
     @Input() public currentLetter: number;
     @Input() public highlightedLetters: number[];
+    @Input() public hoveredLetters: number[];
     @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
     @Output() public advertiseWrittenLetter: EventEmitter<string> = new EventEmitter<string>();
 
