@@ -16,14 +16,21 @@ export class GridGenerator {
     private notPlacedWords: Word[];
     private rollbackCount: number = 0;
 
-    public async getNewGrid(difficulty: Difficulty, size: number, blackTileRatio: number): Promise<CrosswordGrid> {
-        this.emptyGridFactory = new EmptyGridFactory(size, blackTileRatio);
+    public async getNewGrid(difficulty: Difficulty, size: number): Promise<CrosswordGrid> {
+        this.emptyGridFactory = new EmptyGridFactory(size);
         this.initialiseEmptyGrid();
         await this.findWords(difficulty);
         this.cleanGrid();
         this.displayGrid();
 
         return this.crossword;
+    }
+
+    private initialiseEmptyGrid(): void {
+
+        this.crossword = this.emptyGridFactory.getNewGrid();
+        this.crossword.words = new Array<Word>();
+        this.notPlacedWords = this.crossword.findWords();
     }
 
     private getWordWeight(word: Word): number {
@@ -82,20 +89,6 @@ export class GridGenerator {
             await this.backjump(word);
             this.rollbackCount++;
         }
-    }
-
-    private displayGrid(): void {
-        // Used for debugging puposes
-        let s: string = "";
-        for (let i: number = 0; i < this.crossword.size; i++) {
-            for (let j: number = 0; j < this.crossword.size; j++) {
-                const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
-                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
-            }
-            s += "\n";
-        }
-        console.log(s);
-
     }
 
     private getStringFromWord(word: Word): string {
@@ -198,13 +191,6 @@ export class GridGenerator {
         return constraint;
     }
 
-    private initialiseEmptyGrid(): void {
-
-        this.crossword = this.emptyGridFactory.getNewGrid();
-        this.crossword.words = new Array<Word>();
-        this.notPlacedWords = this.crossword.findWords();
-    }
-
     private cleanGrid(): void {
         for (const tile of this.crossword.grid) {
             if (tile.char === "") {
@@ -213,6 +199,20 @@ export class GridGenerator {
                 tile.char = tile.char.normalize("NFD")[0];
             }
         }
+    }
+
+    private displayGrid(): void {
+        // Used for debugging puposes
+        let s: string = "";
+        for (let i: number = 0; i < this.crossword.size; i++) {
+            for (let j: number = 0; j < this.crossword.size; j++) {
+                const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
+                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
+            }
+            s += "\n";
+        }
+        console.log(s);
+
     }
 
 }

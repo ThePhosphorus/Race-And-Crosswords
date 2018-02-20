@@ -7,14 +7,14 @@ export class EmptyGridFactory {
 
     private crossword: ExtendedCrosswordGrid;
 
-    public constructor(private size: number, private blackTileRatio: number) { }
+    public constructor(private size: number) { }
 
     public getNewGrid(): ExtendedCrosswordGrid {
         let complexity: number;
         do {
             this.crossword = new ExtendedCrosswordGrid();
             this.initializeGrid(this.size);
-            this.generateBlackTiles(this.blackTileRatio);
+            this.generateBlackTiles();
             complexity = this.getComplexity();
         } while (complexity > COMPLEXITY_THRESHOLD);
 
@@ -29,7 +29,7 @@ export class EmptyGridFactory {
         }
     }
 
-    private generateBlackTiles(blackTileRatio: number): void {
+    private generateBlackTiles(): void {
         let complexity: number;
         let tileCount: number = 0;
         do {
