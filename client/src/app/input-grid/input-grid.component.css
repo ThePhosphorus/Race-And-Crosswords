@@ -27,9 +27,12 @@
     height: 6.5vmin;
     text-align: center;
     border: solid #212529 0.1vmin;
-    padding-top: 0%;
-    padding-bottom: 0%;
+    padding:0% !important;
+    align-items: flex-start;
+    line-height: 0%;
 }
-span {
-    white-space: nowrap;
+span{
+    align-self: flex-start;
+    line-height: 0%
 }
+
