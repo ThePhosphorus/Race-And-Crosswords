@@ -21,7 +21,6 @@ export class GridGenerator {
         this.initialiseEmptyGrid();
         await this.findWords(difficulty);
         this.cleanGrid();
-        this.displayGrid();
 
         return this.crossword;
     }
@@ -174,7 +173,7 @@ export class GridGenerator {
                 });
                 if (isProblemword) {
                     this.unsetWord(this.crossword.words[i]);
-                    this.crossword.words.splice(i, 1); // TODO: Add it to unset Word
+                    this.crossword.words.splice(i, 1); // Add it to unset Word
                     await this.findWord(currentWord, Difficulty.Easy);
                     break;
                 }
@@ -200,19 +199,4 @@ export class GridGenerator {
             }
         }
     }
-
-    private displayGrid(): void {
-        // Used for debugging puposes
-        let s: string = "";
-        for (let i: number = 0; i < this.crossword.size; i++) {
-            for (let j: number = 0; j < this.crossword.size; j++) {
-                const l: Letter = this.crossword.grid[(this.crossword.size * i) + j];
-                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
-            }
-            s += "\n";
-        }
-        console.log(s);
-
-    }
-
 }
