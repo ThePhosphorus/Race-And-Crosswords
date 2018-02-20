@@ -23,7 +23,6 @@ export class RenderService extends Renderer {
     public constructor(private cameraManager: CameraManagerService,  private soundManager: SoundManagerService) {
         super(cameraManager, false);
         this._car = new Car();
-        this._car.id = 0;
         this._carInfos = new CarInfos(0, 0, 0);
     }
 
@@ -128,7 +127,7 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
-        this.soundManager.updateCarRpm(this._car.rpm);
+        this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
     }
 
     private updateCarInfos(): void {
