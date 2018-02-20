@@ -29,13 +29,6 @@ export const START_POINT_MATERIAL: MeshBasicMaterial = new MeshBasicMaterial({co
 
 export const ZOOM_FACTOR: number = 50;
 
-export class PosSelect {
-    public constructor(
-        public pos: Vector2,
-        public selected: boolean
-    ) { }
-}
-
 export class PointsSpan {
     public constructor(
         public point: Mesh,
