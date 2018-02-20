@@ -9,23 +9,23 @@ import { Car } from "../car/car";
 @Injectable()
 export class SoundManagerService {
 
-    private cars: CarSounds[];
+    private cars: Map<Number, CarSounds>;
     private listener: AudioListener;
     private startSound: StartSound;
 
     public constructor() {
-        this.cars = new Array<CarSounds>();
+        this.cars = new Map<Number, CarSounds>();
     }
 
     public startRace(): void {
         this.startSound = new StartSound(this.listener);
     }
     public addCarSound(car: Car): void {
-        this.cars.push(new CarSounds(car.carMesh, this.listener));
+        this.cars.set(car.id, new CarSounds(car.carMesh, this.listener));
     }
 
-    public updateCarRpm(rpm: number): void {
-        this.cars[0].engine.updateRPM(rpm);
+    public updateCarRpm(id: number, rpm: number): void {
+        this.cars.get(id).engine.updateRPM(rpm);
     }
 
     public init(listener: AudioListener): void {
