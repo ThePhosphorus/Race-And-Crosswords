@@ -109,7 +109,7 @@ export class EmptyGridFactory {
                     verticalComplexity = 0;
                 }
 
-                if (!this.crossword.grid[(this.size * i) + j].isBlackTile) {
+                if (!this.crossword.grid[(this.size * j) + i].isBlackTile) {
                     if (this.isInAWord((this.size * j) + i, Orientation.Across) &&
                         this.isInAWord((this.size * j) + i, Orientation.Down)) {
                         complexity += ++verticalComplexity;
