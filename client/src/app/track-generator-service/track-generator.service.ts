@@ -1,14 +1,4 @@
-import {
-    Vector3,
-    GridHelper,
-    Color,
-    AmbientLight,
-    Vector2,
-    Mesh,
-    Geometry,
-    Line,
-    Object3D
-} from "three";
+import { Vector3, GridHelper, Color, AmbientLight, Vector2, Mesh, Geometry, Line, Object3D } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
@@ -18,9 +8,8 @@ import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 const LINE_STR_PREFIX: string = "Line to ";
-
 const MIN_ZOOM: number = 10;
-const MAX_ZOOM: number = 100;
+const MAX_ZOOM: number = 200;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
@@ -160,9 +149,9 @@ export class TrackGenerator extends Renderer {
     }
 
     // ThreeJs object handeling
-    public createDot(pos: Vector2, topMesh: Vector3): Mesh {
+    public createDot(pos: Vector2, topMesh: Vector3, pos3?: Vector3): Mesh {
         const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
-        circle.position.copy(this.getRelativePosition(pos));
+        circle.position.copy((pos3) ? pos3 : this.getRelativePosition(pos));
         if (topMesh) { this.createLine(topMesh, circle.position, circle.id); }
         this.scene.add(circle);
         this.disableDragMode();
@@ -210,7 +199,6 @@ export class TrackGenerator extends Renderer {
         this.scene.add(line);
     }
 
-    // Converters and tools
     private findPointId(pos: Vector2): number {
         for (let i: number = this.points.length - 1; i >= 0; i--) {
             const diff: number = this.getClientPosition(this.points.point(i).position).sub(pos).length();
@@ -259,14 +247,33 @@ export class TrackGenerator extends Renderer {
     }
 
     // Validation
-    public resetValidation(): void {
+    public resetValidation(): boolean {
+        let valid: boolean = true;
         this.constraintValidator.points = this.points.points;
         for (let i: number = 0; i < this.points.points.length - 1; i++) {
             if (this.points.points[i + 1] !== null) {
-                (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material =
-                    this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])
-                        ? C.LINE_MATERIAL : C.LINE_MATERIAL_INVALID;
+                if (this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])) {
+                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL;
+                } else {
+                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL_INVALID;
+                    valid = false;
+                }
             }
         }
+
+        return valid;
+    }
+
+    public loadTrack(points: Vector3[]): void {
+        points.forEach((point: Vector3) => {
+            const topPosition: Vector3 = (this.points.length > 0) ? this.points.top.position : null;
+            this.points.push(this.createDot(null, topPosition, point));
+            this.points.updateStartingPosition();
+            this.resetValidation();
+        });
+    }
+
+    public saveTrack(): Vector3[] {
+        return (this.resetValidation()) ? this.points.points : null;
     }
 }
