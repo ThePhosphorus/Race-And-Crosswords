@@ -24,6 +24,7 @@ const CHANGE_CAMERA_KEYCODE: number = 67; // c
 const TOOGLE_CAMERA_EFFECT_MODE: number = 88; // ,
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
+const FULLSCREEN_KEYCODE: number = 70; // F
 
 @Injectable()
 export class RenderService extends Renderer {
@@ -51,6 +52,7 @@ export class RenderService extends Renderer {
         this.inputManager.registerKeyDown(TOOGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
+        this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
 
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
@@ -58,6 +60,11 @@ export class RenderService extends Renderer {
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteering());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
+    }
+
+    private fullscreen(): void {
+        this.container.webkitRequestFullscreen();
+        this.onResize();
     }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
