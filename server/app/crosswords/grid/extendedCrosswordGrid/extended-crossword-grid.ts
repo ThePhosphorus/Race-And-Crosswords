@@ -9,6 +9,10 @@ export class ExtendedCrosswordGrid extends CrosswordGrid {
         return position % this.size;
     }
 
+    public getPosition(row: number, column: number): number {
+        return row * this.size + column;
+    }
+
     public findWords(): Word[] {
         const notPlacedWords: Word[] = new Array<Word>();
         let acrossWord: Word = new Word();
