@@ -3,7 +3,7 @@ import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3, PCFSoftShadowMap 
 import Stats = require("stats.js");
 import * as C from "../track-generator-service/track.constantes";
 
-const WHITE: number = 0xffe382;
+const WHITE: number = 0xFFE382;
 const AMBIENT_LIGHT_OPACITY: number = 0.3;
 
 const HALF: number = 0.5;
@@ -52,7 +52,6 @@ export abstract class Renderer {
             this.container.clientHeight
         );
         this._webGlRenderer.shadowMapEnabled = true;
-        this._webGlRenderer.shadowMap.type = PCFSoftShadowMap;
         this._lastDate = Date.now();
         this.container.appendChild(this.renderer.domElement);
         this.render();

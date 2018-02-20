@@ -1,12 +1,15 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3, SpotLight} from "three";
+import {
+    CubeTextureLoader,
+    Mesh, Texture, TextureLoader, RepeatWrapping, PlaneGeometry, DoubleSide, DirectionalLight, MeshPhongMaterial, Vector3, SpotLight
+} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { Renderer } from "../renderer/renderer";
 
-const FLOOR_DIMENSION: number = 10000;
+const FLOOR_DIMENSION: number = 1000;
 const SPAWN_DIMENSION: number = 100;
-const FLOOR_TEXTURE_RATIO: number = 0.1;
+const FLOOR_TEXTURE_RATIO: number = 0.05;
 const OFF_ROAD_Z_TRANSLATION: number = 0.01;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
@@ -25,7 +28,6 @@ export class RenderService extends Renderer {
     private brakeLight: SpotLight;
     private brakeReflectionRight: SpotLight;
     private brakeReflectionLeft: SpotLight;
-   // private brakelightRight: PointLight;
 
     public constructor(private cameraManager: CameraManagerService) {
         super(cameraManager, false);
@@ -99,7 +101,7 @@ export class RenderService extends Renderer {
         this.startRenderingLoop();
     }
     private loadCarLights(): void {
-        this.carlight = new SpotLight( 0xFFE6CC, 1, 15, 1 );
+        this.carlight = new SpotLight(0xFFE6CC, 1, 15, 1);
         this.carlight.penumbra = 0.4;
         this.scene.add(this.carlight);
     }
@@ -114,7 +116,7 @@ export class RenderService extends Renderer {
         this.scene.add(this.brakeLight);
     }
     private loadSunlight(): void {
-        this.sunlight = new DirectionalLight( 0xffe382, 0.7 );
+        this.sunlight = new DirectionalLight(0xffe382, 0.7);
         this.sunlight.position.set(-1, 1, -1);
         this.sunlight.position.multiplyScalar(25);
         this.sunlight.castShadow = true;
@@ -122,11 +124,11 @@ export class RenderService extends Renderer {
         this.sunlight.shadow.camera.top = S_LIGHT;
         this.sunlight.shadow.camera.left = -S_LIGHT;
         this.sunlight.shadow.camera.right = S_LIGHT;
-        this.sunlight.shadow.camera.near = D_LIGHT/30;
+        this.sunlight.shadow.camera.near = D_LIGHT / 30;
         this.sunlight.shadow.camera.far = D_LIGHT;
         this.sunlight.shadow.mapSize.x = 1024 * 2;
         this.sunlight.shadow.mapSize.y = 1024 * 2;
-        //this.scene.add(this.sunlight);
+        this.scene.add(this.sunlight);
     }
     private getFloor(): Mesh {
         const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
@@ -205,8 +207,8 @@ export class RenderService extends Renderer {
         this.brakeLight.target.updateMatrixWorld(true);
 
         const brakeReflectionOffset: Vector3 = new Vector3(0, 0.69, 0);
-        const upVector: Vector3 = new Vector3(0,1,0);
-        const downVector: Vector3 = new Vector3(0,-1,0);
+        const upVector: Vector3 = new Vector3(0, 1, 0);
+        const downVector: Vector3 = new Vector3(0, -1, 0);
         this.brakeReflectionLeft.position.copy((this._car.getPosition().clone().sub(this._car.direction.multiplyScalar(3)).add(brakeReflectionOffset)));
         this.brakeReflectionLeft.position.add(upVector.cross(this._car.direction).multiplyScalar(0.4));
         this.brakeReflectionLeft.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
@@ -216,7 +218,7 @@ export class RenderService extends Renderer {
         this.brakeReflectionRight.position.add(downVector.cross(this._car.direction).multiplyScalar(0.4));
         this.brakeReflectionRight.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
         this.brakeReflectionRight.target.updateMatrixWorld(true);
-        }
+    }
 }
 
 export class CarInfos {
