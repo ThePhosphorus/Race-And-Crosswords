@@ -128,6 +128,8 @@ export class TrackEditorComponent implements AfterViewInit {
     }
 
     public deleteTrack(): void {
-        this.trackSaver.delete(this.id).subscribe((bool: boolean) => {if (bool) { this.router.navigate(["/admin/track-list"]); } });
+        if (this.id) {
+            this.trackSaver.delete(this.id).subscribe((bool: boolean) => {if (bool) { this.router.navigate(["/admin/track-list"]); } });
+        }
     }
 }

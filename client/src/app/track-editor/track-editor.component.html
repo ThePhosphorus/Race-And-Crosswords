@@ -32,7 +32,7 @@
     <div class="col-md-3"></div>
     <button class="btn btn-success col-md-1 " type="submit" (click)="saveTrack()" >Save</button>
     <div class="col-md-4"></div>
-    <button class="btn btn-danger col-md-1 " type="submit" (click)="deleteTrack()" >delete</button>
+    <button class="btn btn-danger col-md-1 " type="submit" (click)="deleteTrack()" [disabled]="id == null" >delete</button>
     <div class="col-md-3"></div>
   </div>
 </div>
