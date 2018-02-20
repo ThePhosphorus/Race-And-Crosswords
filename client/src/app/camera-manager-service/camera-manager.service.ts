@@ -218,7 +218,7 @@ export class CameraManagerService {
     }
 
     // Input manager callbacks
-    public switchCamera = (): void => {
+    public switchCamera (): void {
         if (this.type === CameraType.Ortho) {
             this.type = CameraType.Persp;
         } else if (this.type === CameraType.Persp) {
@@ -226,19 +226,19 @@ export class CameraManagerService {
         }
     }
 
-    public toggleEffect = (): void => {
+    public toggleEffect (): void {
         this.effectModeEnabled = !this.effectModeEnabled;
     }
 
-    public zoomIn = (): void => {
+    public zoomIn (): void {
         this.zoom = 1;
     }
 
-    public zoomOut = (): void => {
+    public zoomOut (): void {
         this.zoom = -1;
     }
 
-    public zoomRelease = (): void => {
+    public zoomRelease (): void {
         this.zoom = 0;
     }
 }

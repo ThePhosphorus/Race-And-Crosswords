@@ -97,7 +97,7 @@ export class TrackGenerator extends Renderer {
             }
 
             const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY),
-                (this.points.length > 0) ? this.points.top.position : null);
+                                                  (this.points.length > 0) ? this.points.top.position : null);
 
             this.points.push(newPoint);
             this.points.updateStartingPosition();

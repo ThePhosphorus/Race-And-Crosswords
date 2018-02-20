@@ -128,31 +128,31 @@ export class Car extends Object3D {
     }
 
     // Input manager callback methods
-    public accelerate = (): void => {
+    public accelerate (): void {
         this.isAcceleratorPressed = true;
     }
 
-    public steerLeft = (): void => {
+    public steerLeft (): void {
         this.steeringWheelState = 1;
     }
 
-    public steerRight = (): void => {
+    public steerRight (): void {
         this.steeringWheelState = -1;
     }
 
-    public brake = (): void => {
+    public brake (): void {
         this.isBraking = true;
     }
 
-    public releaseSteering = (): void => {
+    public releaseSteering (): void {
         this.steeringWheelState = 0;
     }
 
-    public releaseBrakes = (): void => {
+    public releaseBrakes (): void {
         this.isBraking = false;
     }
 
-    public releaseAccelerator = (): void => {
+    public releaseAccelerator (): void {
         this.isAcceleratorPressed = false;
     }
 

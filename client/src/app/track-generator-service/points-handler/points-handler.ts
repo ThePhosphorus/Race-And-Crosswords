@@ -58,7 +58,7 @@ export class PointsHandler {
 
     }
 
-    public removeSelectedPoint = (): void => {
+    public removeSelectedPoint (): void {
         if (this.pointSelected()) {
             this.removePoint(this.selectedPointId);
         }
