@@ -5,6 +5,7 @@ import {
 import {CarSounds} from "./sound-containers/car-sounds";
 import {StartSound} from "./sound-containers/start-sound";
 import { Car } from "../car/car";
+import { BackgroundMusic } from "./sound-containers/background-music";
 
 @Injectable()
 export class SoundManagerService {
@@ -12,6 +13,7 @@ export class SoundManagerService {
     private cars: Map<Number, CarSounds>;
     private listener: AudioListener;
     private startSound: StartSound;
+    private bgm: BackgroundMusic;
 
     public constructor() {
         this.cars = new Map<Number, CarSounds>();
@@ -42,11 +44,15 @@ export class SoundManagerService {
 
     public init(listener: AudioListener): void {
         this.listener = listener;
+        this.bgm = new BackgroundMusic(listener);
     }
 
     public stopAllSounds(): void {
         this.cars.forEach((car: CarSounds) => {
             car.stop();
+            this.startSound.stop();
+            this.bgm.stop();
+
         });
     }
 
