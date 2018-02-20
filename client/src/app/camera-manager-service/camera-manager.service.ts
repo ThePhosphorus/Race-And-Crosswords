@@ -7,7 +7,7 @@ const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 const INITIAL_CAMERA_DISTANCE: number = 10;
 const PERS_CAMERA_ANGLE: number = 25;
-const INITIAL_CAMERA_POSITION_Y: number = 25;
+const INITIAL_CAMERA_POSITION_Y: number = 5;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
 const STARTING_ASPECTRATIO_WIDTH: number = 16;
@@ -86,7 +86,6 @@ export class CameraManagerService {
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
-        this.ortho.add(this.audioListener);
         this.persp.add(this.audioListener);
     }
 
@@ -121,8 +120,12 @@ export class CameraManagerService {
     public switchCamera(): void {
         if (this.type === CameraType.Ortho) {
             this.type = CameraType.Persp;
+            this.persp.add(this.audioListener);
+            this.ortho.remove(this.audioListener);
         } else if (this.type === CameraType.Persp) {
             this.type = CameraType.Ortho;
+            this.ortho.add(this.audioListener);
+            this.persp.remove(this.audioListener);
         }
     }
 

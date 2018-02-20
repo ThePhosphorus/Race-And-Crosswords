@@ -5,7 +5,7 @@ import {
     AudioListener
 } from "three";
 
-const DEFAULT_SOUND_PATH: string = "../../assets/sounds/fake/";
+const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 export const DEFAULT_VOLUME: number = 0.5;
 
 export abstract class AbstractSoundContainer {

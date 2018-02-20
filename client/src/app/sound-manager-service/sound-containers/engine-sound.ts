@@ -11,7 +11,7 @@ export class EngineSound extends AbstractPositionalSoundContainer {
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(true);
-        this.sound.setVolume(DEFAULT_VOLUME);
+        this.sound.setVolume(DEFAULT_VOLUME+0.5);
         this.sound.play();
     }
     protected getFileName(): string {
