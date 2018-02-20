@@ -3,11 +3,10 @@ import { CrosswordGrid, Difficulty, Letter, Orientation, Word } from "../../../.
 import { GridGenerator } from "./grid-generator";
 
 const gridGenerator: GridGenerator = new GridGenerator();
-const btRatio: number = 0.4;
 const gridSize: number = 5;
 
 // tslint:disable-next-line:max-func-body-length
-gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: CrosswordGrid) => {
+gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
     describe("Grid generation", () => {
         describe("When the grid is generated", () => {
             it("should have a word on each colomn/row", (done: MochaDone) => {
