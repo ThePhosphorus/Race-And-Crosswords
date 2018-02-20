@@ -1,42 +1,35 @@
 <div>
   <div class="row">
     <div class="col-10 text-center">
-      <div #editor id="editor" (mousedown)="onClick($event)" (mouseup)="onClickRelease($event)" (mousewheel)="onScroll($event)" oncontextmenu="return false;"  >
+      <div #editor id="editor" (mousewheel)="onScroll($event)" oncontextmenu="return false;" (mousedown)="onClick($event)" (mouseup)="onClickRelease($event)">
       </div>
     </div>
-    <div class="col-2 text-center">
-      <div class="card" id="points">
+    <div class="col-2">
+      <div>
+        <form>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input name="name" required maxlength="20" [(ngModel)]="name" type="text" class="form-control" id="name" placeholder="Enter name">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input name="description" [(ngModel)]="description" maxlength="255" type="text" class="form-control" id="description" placeholder="Enter a description">
+          </div>
+        </form>
+      </div>
+      <div class="card text-center" id="points">
         <ul class="list-group list-group-flush">
-          <li *ngFor="let point of points | reverse; let i = index" class="list-group-item" [ngClass]="{'selected': point.selected}"
-            (click)="selectPoint(points.length - i - 1)">
-            <span>[{{ point["pos"].x | number : '1.1-1'}}, {{ point["pos"].y | number : '1.1-1'}}]</span>
-            <button type="button" class="ml-3 close" (click)="removePoint(points.length - i - 1)">
+          <li *ngFor="let point of trackRenderer.points.points; let i = index" class="list-group-item" [ngClass]="{'selected': i === trackRenderer.points.selectedPointId}"
+            (click)="selectPoint(i)">
+            <span>[{{point.x | number : '1.1-1'}}, {{point.z | number : '1.1-1'}}]</span>
+            <button type="button" class="ml-3 close" (click)="removePoint(i)">
               <span aria-hidden="true">&times;</span>
             </button>
           </li>
         </ul>
       </div>
+      <button class="btn btn-success mt-2 btn-block" type="submit" (click)="saveTrack()">Save</button>
+      <button class="btn btn-danger btn-block" type="submit" (click)="deleteTrack()" [disabled]="id == null">Delete</button>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
-      <span>Name</span>
-      <input [(ngModel)]="name" type="text" maxlength="20" required />
-    </div>
-    <div class="col-md-9">
-      <span>Description</span>
-      <input [(ngModel)]="description" type="text" maxlength="255"/>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-1">
-      <button class="btn btn-success" type="submit" (click)="saveTrack()" >Save</button>
-    </div>
-    <div class="col-md-4"></div>
-    <div class="col-md-1">
-      <button class="btn btn-danger" type="submit" (click)="deleteTrack()" [disabled]="id == null" >delete</button>
-    </div>
-    <div class="col-md-3"></div>
   </div>
 </div>

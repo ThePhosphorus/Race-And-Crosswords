@@ -1,11 +1,11 @@
 import { Vector3, GridHelper, Color, AmbientLight, Vector2, Mesh, Geometry, Line, Object3D } from "three";
 import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
-import { ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE } from "../input-manager-service/input-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 import { ConstraintValidator } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
+import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;
@@ -14,6 +14,10 @@ const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
 export const LINK_MINIMUM_POINTS: number = 2;
+
+// Keycodes
+const ZOOM_IN_KEYCODE: number = 187; // +
+const ZOOM_OUT_KEYCODE: number = 189; // -
 const DELETE_KEY: number = 46;
 
 @Injectable()
@@ -26,63 +30,29 @@ export class TrackGenerator extends Renderer {
     public points: PointsHandler;
     private constraintValidator: ConstraintValidator;
 
-    public constructor(private cameraManager: CameraManagerService) {
-        super(cameraManager, false );
+    public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {
+        super(cameraManager, false);
         this.points = new PointsHandler(this);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
         this.onMouseTranslateListner = this.onTranslateCamera.bind(this);
         this.constraintValidator = new ConstraintValidator();
+        this.inputManager.resetBindings();
+        this.setupKeyBindings();
     }
 
-    public setContainer(container: HTMLDivElement): void {
-        this.init(container);
-        this.startRenderingLoop();
+    public setupKeyBindings(): void {
+        this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, this.cameraManager.zoomIn);
+        this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, this.cameraManager.zoomOut);
+
+        this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, this.cameraManager.zoomRelease);
+        this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, this.cameraManager.zoomRelease);
+        this.inputManager.registerKeyUp(DELETE_KEY, this.points.removeSelectedPoint);
     }
 
-    protected onInit(): void {
-        this.cameraManager.cameraType = CameraType.Ortho;
-        this._gridHelper = new GridHelper(
-            C.GRID_DIMENSION,
-            C.GRID_DIVISIONS,
-            new Color(C.GRID_PRIMARY_COLOR),
-            new Color(C.GRID_SECONDARY_COLOR)
-        );
-        this.scene.add(this._gridHelper);
-        this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
-        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
-        this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
-    }
-
-    // Input
-    public InputKeyDown(event: KeyboardEvent): void {
-        switch (event.keyCode) {
-            case ZOOM_IN_KEYCODE:
-                this.cameraManager.zoomIn();
-                break;
-            case ZOOM_OUT_KEYCODE:
-                this.cameraManager.zoomOut();
-                break;
-            case DELETE_KEY:
-                if (this.points.pointSelected()) {
-                    this.points.removePoint(this.points.selectedPointId);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public InputKeyUp(event: KeyboardEvent): void {
-        switch (event.keyCode) {
-            case ZOOM_IN_KEYCODE:
-                this.cameraManager.zoomRelease();
-                break;
-            case ZOOM_OUT_KEYCODE:
-                this.cameraManager.zoomRelease();
-                break;
-            default:
-                break;
-        }
+    public mouseEventReleaseClick = (event: MouseEvent): void => {
+        this.disableDragMode();
+        this.disableTranslateMode();
+        this.points.updateStartingPosition();
     }
 
     public mouseEventclick(event: MouseEvent): void {
@@ -95,34 +65,14 @@ export class TrackGenerator extends Renderer {
         }
     }
 
-    public mouseEventRightClick(event: MouseEvent): void {
-        if (this.points.length > 0 ) {
+    private mouseEventRightClick = (event: MouseEvent): void => {
+        if (this.points.length > 0) {
             this.points.removePoint(this.points.length - 1);
         }
         this.resetValidation();
     }
 
-    public mouseEventReleaseClick(event: MouseEvent): void {
-        this.disableDragMode();
-        this.disableTranslateMode();
-        this.points.updateStartingPosition();
-    }
-
-    public mouseWheelEvent(event: MouseWheelEvent): void {
-        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
-    }
-
-    private mouseEventMiddleClick(event: MouseEvent): void {
-        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
-        if (possiblePointId !== null) {
-            this.points.removePoint(possiblePointId);
-            this.resetValidation();
-        } else {
-            this.enableTranslateMode(event);
-        }
-    }
-
-    private mouseEventLeftClick(event: MouseEvent): void {
+    private mouseEventLeftClick = (event: MouseEvent): void => {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.points.selectPoint(possiblePointId);
@@ -146,6 +96,16 @@ export class TrackGenerator extends Renderer {
         }
     }
 
+    private mouseEventMiddleClick = (event: MouseEvent): void => {
+        const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
+        if (possiblePointId !== null) {
+            this.points.removePoint(possiblePointId);
+            this.resetValidation();
+        } else {
+            this.enableTranslateMode(event);
+        }
+    }
+
     private onMouseMove(event: MouseEvent): void {
         this._dragPoints.point.position.copy(this.getRelativePosition(new Vector2(event.offsetX, event.offsetY)));
         if (this._dragPoints.closingPoint) {
@@ -156,6 +116,30 @@ export class TrackGenerator extends Renderer {
             this.updateLine(this._dragPoints.point, this._dragPoints.before, this._dragPoints.after);
         }
         this.resetValidation();
+    }
+
+    public mouseWheelEvent(event: MouseWheelEvent): void {
+        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
+    }
+
+    // Rendering
+    public setContainer(container: HTMLDivElement): void {
+        this.init(container);
+        this.startRenderingLoop();
+    }
+
+    protected onInit(): void {
+        this.cameraManager.cameraType = CameraType.Ortho;
+        this._gridHelper = new GridHelper(
+            C.GRID_DIMENSION,
+            C.GRID_DIVISIONS,
+            new Color(C.GRID_PRIMARY_COLOR),
+            new Color(C.GRID_SECONDARY_COLOR)
+        );
+        this.scene.add(this._gridHelper);
+        this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
+        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
+        this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
 
     private onTranslateCamera(event: MouseEvent): void {
@@ -210,7 +194,7 @@ export class TrackGenerator extends Renderer {
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
-        const line: Line = new Line(lineG,  C.LINE_MATERIAL);
+        const line: Line = new Line(lineG, C.LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this.scene.add(line);
     }
@@ -226,10 +210,6 @@ export class TrackGenerator extends Renderer {
         return null;
     }
 
-    public get PositionSelectPoints(): C.PosSelect[] {
-        return this.points.PositionSelectPoints;
-    }
-
     // Event functions
     public disableDragMode(): void {
         this.container.removeEventListener("mousemove", this.onMouseMoveListner, false);
@@ -239,11 +219,11 @@ export class TrackGenerator extends Renderer {
         if ((pointId === this.points.length - 1 || pointId === 0) && this.points.top.position.equals(this.points.point(0).position)) {
             this.enableClosingDragMode();
         } else {
-                this._dragPoints = new C.PointsSpan(
-                    this.points.point(pointId),
-                    (pointId === 0) ? null : this.points.point(pointId - 1),
-                    (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
-                    null);
+            this._dragPoints = new C.PointsSpan(
+                this.points.point(pointId),
+                (pointId === 0) ? null : this.points.point(pointId - 1),
+                (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
+                null);
         }
         this.container.addEventListener("mousemove", this.onMouseMoveListner, false);
     }
@@ -270,7 +250,7 @@ export class TrackGenerator extends Renderer {
     public resetValidation(): boolean {
         let valid: boolean = true;
         this.constraintValidator.points = this.points.points;
-        for (let i: number = 0; i < this.points.points.length - 1; i++ ) {
+        for (let i: number = 0; i < this.points.points.length - 1; i++) {
             if (this.points.points[i + 1] !== null) {
                 if (this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])) {
                     (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL;

@@ -15,13 +15,13 @@
             <td>{{track._id}}</td>
             <td>{{track.name}}</td>
             <td>
-              <button class="btn btn-light"  href="#" [routerLink]="['/admin/track-editor', track._id]" >Edit</button>
+              <button class="btn btn-light"  href="#" [routerLink]="['/admin/tracks', track._id]" >Edit</button>
             </td>
         </tr>
       </tbody>
     </table>
     <div>
-      <button class="btn mt-1 btn-block-no-wrap pt-0 align-text-top" id="btnAdd" href="#" routerLink="/admin/track-editor/new">
+      <button class="btn mt-1 btn-block-no-wrap pt-0 align-text-top" id="btnAdd" href="#" routerLink="/admin/tracks/new">
         +
       </button>
     </div>
