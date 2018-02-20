@@ -17,6 +17,7 @@ describe("Service Lexical", () => {
             const testString: string = "????";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
                         const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
+                        assert.notEqual(words, undefined, "Did not receive array of words.\n Response:\n" + strResponse);
                         assert.notEqual(words.length, 0, "Received an empty array of words.\n Response:\n" + strResponse);
                         done();
                     });
@@ -27,6 +28,7 @@ describe("Service Lexical", () => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
 
                 words.forEach((wordStruct: DatamuseWord) => {
+                    assert.notEqual(wordStruct, undefined, "Did not receive a word");
                     assert.strictEqual(wordStruct.word.length, testString.length, "Did not receive the right length");
                 });
                 done();
@@ -41,9 +43,11 @@ describe("Service Lexical", () => {
                 words.forEach((wordStruct: DatamuseWord) => {
                     for ( let i: number = 0; i < testString.length ; i++ ) {
                         if (testString.charAt(i) !== "?") {
+                            assert.notEqual(wordStruct, undefined, "Did not receive a word");
                             assert.strictEqual(wordStruct.word.charAt(i), testString.charAt(i), "Letter criteria is not respected.");
                         }
                     }
+                    assert.notEqual(wordStruct, undefined, "Did not receive a word");
                     assert.strictEqual(wordStruct.word.length, testString.length, "Did not receive the right length");
                 });
                 done();
@@ -88,7 +92,7 @@ describe("Service Lexical", () => {
             const testString: string = "???e";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
-
+                assert.notEqual(words, undefined, "Did not receive any word");
                 words.forEach((wordStruct: DatamuseWord) => {
                     assert.ok(wordStruct.score > HARD_THRESHOLD);
                 });
@@ -100,7 +104,7 @@ describe("Service Lexical", () => {
             const testString: string = "???e";
             datamuse.getWords(testString, true).then( (strResponse: string) => {
                 const words: DatamuseWord[] = JSON.parse(strResponse) as Array<DatamuseWord>;
-
+                assert.notEqual(words, undefined, "Did not receive any word");
                 words.forEach((wordStruct: DatamuseWord) => {
                     assert.ok(wordStruct.score > HARD_THRESHOLD);
                 });

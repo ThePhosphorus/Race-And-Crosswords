@@ -3,7 +3,7 @@ import { CrosswordGrid} from "../../../../../common/communication/crossword-grid
 import { EmptyGridFactory } from "./empty-grid-factory";
 
 const MAX_TESTED_SIZE: number = 10;
-const gridSize: number = 5;
+const gridSize: number = 10;
 
 describe(" Empty grid generation", () => {
     describe("When the empty grid is generated", () => {

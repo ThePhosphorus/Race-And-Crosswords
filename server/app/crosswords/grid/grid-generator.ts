@@ -21,6 +21,7 @@ export class GridGenerator {
         this.initialiseEmptyGrid();
         await this.findWords(difficulty);
         this.cleanGrid();
+        this.displayGrid();
 
         return this.crossword;
     }

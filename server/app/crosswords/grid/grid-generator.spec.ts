@@ -67,4 +67,6 @@ gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: Crosswo
             });
         });
     });
+}).catch((err: Error) => {
+    console.error(" Grid generator : " + err.message);
 });
