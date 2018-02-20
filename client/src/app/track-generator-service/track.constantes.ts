@@ -1,4 +1,4 @@
-import { Vector3, MeshBasicMaterial, SphereGeometry, LineBasicMaterial, Vector2, Mesh } from "three";
+import { Vector3, MeshBasicMaterial, SphereGeometry, LineBasicMaterial, Mesh } from "three";
 
 export const STARTING_CAMERA_HEIGHT: number = 60;
 export const CAMERA_STARTING_POSITION: Vector3 = new Vector3(0, STARTING_CAMERA_HEIGHT, 0);
