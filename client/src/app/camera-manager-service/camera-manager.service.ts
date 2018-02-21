@@ -45,7 +45,7 @@ export class CameraManagerService {
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
     private zoom: number;
-    public audioListener: AudioListener;
+    private audioListener: AudioListener;
     public zoomLimit: ZoomLimit;
 
     public constructor() {
