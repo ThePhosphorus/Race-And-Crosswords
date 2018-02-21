@@ -70,7 +70,7 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        this.soundManager.init(this.cameraManager.listener);
+        this.soundManager.init(this.cameraManager.audioListener);
         await this._car.init();
         this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
