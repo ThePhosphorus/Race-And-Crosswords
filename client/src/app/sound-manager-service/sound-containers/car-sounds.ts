@@ -16,9 +16,8 @@ export class CarSounds {
     // public drift: DriftSound;
 
     public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
-        this.engine = new PositionalSoundContainer(soundEmittingObject, soundListener, true, FILE_NAME, sourcePath);
-        //this.engine.play();
-        console.log("engine play");
+        this.engine = new PositionalSoundContainer(soundEmittingObject, soundListener, true);
+        this.engine.init(FILE_NAME, sourcePath).then(() => this.engine.play());
         // this.collision = new CollisionSound(soundEmittingObject, soundListener, sourcePath);
         // this.drift = new DriftSound(soundEmittingObject, soundListener, sourcePath);
     }

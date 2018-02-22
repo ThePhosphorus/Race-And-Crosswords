@@ -14,7 +14,7 @@ export class GlobalSoundContainer extends AbstractSoundContainer {
         isLoop: boolean,
         fileName: string,
         sourcePath?: string) {
-        super(soundListener, isLoop, fileName, sourcePath);
+        super(soundListener, isLoop);
     }
 
     protected instanciateSound(soundListener: AudioListener): void {

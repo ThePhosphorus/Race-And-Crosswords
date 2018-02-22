@@ -12,31 +12,32 @@ export const DEFAULT_VOLUME: number = 0.5;
 export abstract class AbstractSoundContainer {
     private isLoop: boolean;
     public sound: Audio;
-    public constructor(soundListener: AudioListener, isLoop: boolean, fileName: string, sourcePath ?: string) {
+    public constructor(soundListener: AudioListener, isLoop: boolean) {
         this.instanciateSound(soundListener);
+        this.isLoop = isLoop;
+    }
+
+    public async init(fileName: string, sourcePath?: string): Promise<void> {
         let path: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
         path += fileName;
-        this.isLoop = isLoop;
-        this.loadSound(path);
+
+        return this.loadSound(path).then((buffer) => this.setSoundSettings(buffer));
     }
 
     protected abstract instanciateSound(soundListener: AudioListener): void;
 
-    protected loadSound(path: string): void {
-        new AudioLoader().load(
-            path,
-            (buffer: AudioBuffer) => {
-                this.setSoundSettings(buffer);
+    protected async loadSound(path: string): Promise<AudioBuffer> {
+        return new Promise<AudioBuffer>((resolve, reject) => {
+            new AudioLoader().load(path, (buffer: AudioBuffer) => {
+                resolve(buffer);
             },
-            () => { },
-            () => { });
+                                   () => { }, () => { });
+        });
     }
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(this.isLoop);
         this.sound.setVolume(DEFAULT_VOLUME);
-        console.log(this.sound.getVolume());
-        this.sound.play();
     }
 
     public setVolume(volume: number): void {
@@ -44,10 +45,10 @@ export abstract class AbstractSoundContainer {
     }
 
     public play(): void {
-         this.sound.play();
-         console.log("test" + this.sound.getVolume());
+        this.sound.play();
+        console.log("test" + this.sound.getVolume());
     }
-    public  stop(): void {
+    public stop(): void {
         this.sound.stop();
     }
 }

@@ -13,10 +13,8 @@ export  class PositionalSoundContainer extends AbstractSoundContainer {
     public constructor(
         soundEmittingObject: Object3D,
         soundListener: AudioListener,
-        isLoop: boolean,
-        fileName: string,
-        sourcePath?: string) {
-        super(soundListener, isLoop, fileName, sourcePath);
+        isLoop: boolean) {
+        super(soundListener, isLoop);
         soundEmittingObject.add(this.sound);
     }
 
