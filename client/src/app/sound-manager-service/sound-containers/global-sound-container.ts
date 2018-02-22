@@ -11,9 +11,7 @@ export class GlobalSoundContainer extends AbstractSoundContainer {
 
     public constructor(
         soundListener: AudioListener,
-        isLoop: boolean,
-        fileName: string,
-        sourcePath?: string) {
+        isLoop: boolean) {
         super(soundListener, isLoop);
     }
 

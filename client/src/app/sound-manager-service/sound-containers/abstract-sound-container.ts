@@ -46,7 +46,6 @@ export abstract class AbstractSoundContainer {
 
     public play(): void {
         this.sound.play();
-        console.log("test" + this.sound.getVolume());
     }
     public stop(): void {
         this.sound.stop();
