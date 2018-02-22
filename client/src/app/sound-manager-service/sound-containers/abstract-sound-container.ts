@@ -2,19 +2,22 @@
 import {
     AudioLoader,
     AudioBuffer,
-    AudioListener
+    AudioListener,
+    Audio
 } from "three";
 
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 export const DEFAULT_VOLUME: number = 0.5;
 
 export abstract class AbstractSoundContainer {
-
-    public constructor(soundListener: AudioListener, sourcePath?: string) {
+    private isLoop: boolean;
+    public sound: Audio;
+    public constructor(soundListener: AudioListener, isLoop: boolean, fileName: string, sourcePath ?: string) {
         this.instanciateSound(soundListener);
-        let soundPath: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
-        soundPath += this.getFileName();
-        this.loadSound(soundPath);
+        let path: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
+        path += fileName;
+        this.isLoop = isLoop;
+        this.loadSound(path);
     }
 
     protected abstract instanciateSound(soundListener: AudioListener): void;
@@ -28,10 +31,23 @@ export abstract class AbstractSoundContainer {
             () => { },
             () => { });
     }
+    protected setSoundSettings(buffer: AudioBuffer): void {
+        this.sound.setBuffer(buffer);
+        this.sound.setLoop(this.isLoop);
+        this.sound.setVolume(DEFAULT_VOLUME);
+        console.log(this.sound.getVolume());
+        this.sound.play();
+    }
 
-    public abstract stop(): void;
+    public setVolume(volume: number): void {
+        this.sound.setVolume(volume);
+    }
 
-    protected abstract setSoundSettings(buffer: AudioBuffer): void;
-
-    protected abstract getFileName(): string;
+    public play(): void {
+         this.sound.play();
+         console.log("test" + this.sound.getVolume());
+    }
+    public  stop(): void {
+        this.sound.stop();
+    }
 }

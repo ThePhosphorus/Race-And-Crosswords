@@ -7,9 +7,15 @@ import {
     AbstractSoundContainer
 } from "./abstract-sound-container";
 
-export abstract class AbstractGlobalSoundContainer extends AbstractSoundContainer {
+export class GlobalSoundContainer extends AbstractSoundContainer {
 
-    protected sound: Audio;
+    public constructor(
+        soundListener: AudioListener,
+        isLoop: boolean,
+        fileName: string,
+        sourcePath?: string) {
+        super(soundListener, isLoop, fileName, sourcePath);
+    }
 
     protected instanciateSound(soundListener: AudioListener): void {
         this.sound = new Audio(soundListener);

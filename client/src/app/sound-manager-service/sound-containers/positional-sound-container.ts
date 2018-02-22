@@ -8,22 +8,19 @@ import {
     AbstractSoundContainer
 } from "./abstract-sound-container";
 
-export abstract class AbstractPositionalSoundContainer extends AbstractSoundContainer {
+export  class PositionalSoundContainer extends AbstractSoundContainer {
 
     public constructor(
         soundEmittingObject: Object3D,
         soundListener: AudioListener,
+        isLoop: boolean,
+        fileName: string,
         sourcePath?: string) {
-        super(soundListener, sourcePath);
+        super(soundListener, isLoop, fileName, sourcePath);
         soundEmittingObject.add(this.sound);
     }
 
-    protected sound: PositionalAudio;
-
     protected instanciateSound(soundListener: AudioListener): void {
         this.sound = new PositionalAudio(soundListener);
-    }
-    public stop(): void {
-        this.sound.stop();
     }
 }
