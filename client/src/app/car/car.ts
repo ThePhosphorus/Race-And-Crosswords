@@ -217,6 +217,7 @@ export class Car extends Object3D {
             const brakeForce: Vector3 = this.getBrakeForce();
             resultingForce.add(brakeForce);
         }
+
         return resultingForce;
     }
 
