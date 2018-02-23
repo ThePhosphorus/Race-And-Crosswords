@@ -38,7 +38,8 @@ export class Car extends Object3D {
     private mesh: Object3D;
     private steeringWheelDirection: number;
     private weightRear: number;
-    private steeringWheelState: number;
+    private isSteeringLeft: boolean;
+    private isSteeringRight: boolean;
 
     public get carMesh(): Object3D {
         return this.mesh;
@@ -103,8 +104,8 @@ export class Car extends Object3D {
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
 
-        this.steeringWheelState = 0;
-
+        this.isSteeringLeft = false;
+        this.isSteeringRight = false;
     }
 
     // TODO: move loading code outside of car class.
@@ -127,7 +128,8 @@ export class Car extends Object3D {
     }
 
     private updateSteering(): void {
-        this.steeringWheelDirection = this.steeringWheelState *
+        const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
+        this.steeringWheelDirection = steeringState *
         MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
@@ -137,19 +139,23 @@ export class Car extends Object3D {
     }
 
     public steerLeft (): void {
-        this.steeringWheelState = 1;
+        this.isSteeringLeft = true;
     }
 
     public steerRight (): void {
-        this.steeringWheelState = -1;
+        this.isSteeringRight = true;
     }
 
     public brake (): void {
         this.isBraking = true;
     }
 
-    public releaseSteering (): void {
-        this.steeringWheelState = 0;
+    public releaseSteeringLeft (): void {
+        this.isSteeringLeft = false;
+    }
+
+    public releaseSteeringRight (): void {
+        this.isSteeringRight = false;
     }
 
     public releaseBrakes (): void {
