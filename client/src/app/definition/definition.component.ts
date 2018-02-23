@@ -10,7 +10,7 @@ import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/com
 export class DefinitionComponent implements OnInit {
     @Output() public setSelectedWord: EventEmitter<Word> = new EventEmitter<Word>();
     @Output() public setHoveredWord: EventEmitter<Word> = new EventEmitter<Word>();
-    private _cheatmode: boolean;
+    @Output() public _cheatmode: boolean;
     private _wordGrid: Word[];
     public acrossDefinitions: {[cheat: string]: string}[];
     public downDefinitions: {[cheat: string]: string}[];

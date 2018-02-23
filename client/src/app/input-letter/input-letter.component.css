@@ -22,7 +22,9 @@ button {
     border: none;
 }
 .disabled{
-    background-color: red;
+    background-color: darkgrey;
+    color: white;
+    text-shadow:0vmin 0vmin 10vmin #7db446 ;
 }
 
 .current {

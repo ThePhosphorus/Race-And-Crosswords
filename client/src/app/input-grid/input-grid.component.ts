@@ -12,6 +12,7 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 export class InputGridComponent implements OnInit {
     private _grid: CrosswordGrid;
     private _solvedGrid: CrosswordGrid;
+    private _writtenWord: Word;
     public currentOrientation: Orientation;
     public currentLetter: number;
     public highlightedLetters: number[];
@@ -21,6 +22,7 @@ export class InputGridComponent implements OnInit {
     public constructor(private crosswordService: CrosswordService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
+        this._writtenWord = null;
         this.hoveredLetters = [];
         this.disabledLetters = [];
         this.currentOrientation = Orientation.Across;
@@ -29,8 +31,8 @@ export class InputGridComponent implements OnInit {
 
     public ngOnInit(): void {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
-            this._grid = grid;
             this._solvedGrid = grid;
+            this._grid = grid;
         });
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
@@ -122,6 +124,7 @@ export class InputGridComponent implements OnInit {
             if (event.key.length === 1 && event.key.match(/^[a-z]+$/i) !== null) {
                 if (this.disabledLetters.indexOf(this.currentLetter) < 0) {
                 this._grid.grid[this.currentLetter].char = event.key;
+                this._writtenWord.letters.push(this._grid.grid[this.currentLetter]);
                 }
                 if (this.highlightedLetters.indexOf(this.currentLetter) < this.highlightedLetters.length - 1) {
                     this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) + 1];
@@ -129,13 +132,14 @@ export class InputGridComponent implements OnInit {
             } else if (event.key === "Backspace") {
                 if (this.disabledLetters.indexOf(this.currentLetter) < 0) {
                 this._grid.grid[this.currentLetter].char = " ";
+                this._writtenWord.letters.pop();
                 }
                 if (this.highlightedLetters.indexOf(this.currentLetter) > 0) {
                     this.currentLetter = this.highlightedLetters[this.highlightedLetters.indexOf(this.currentLetter) - 1];
                 }
             }
         }
-        if ( ENTER === event.keyCode) {
+        if ( this._writtenWord.letters.length === this.findWordFromLetter(this.currentLetter, this.currentOrientation).letters.length) {
             this.verifyWord();
         }
     }
