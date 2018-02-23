@@ -6,7 +6,7 @@ export const DEFAULT_VOLUME: number = 0.5;
 
 export abstract class AbstractSoundContainer {
     private isLoop: boolean;
-    public sound: Audio;
+    protected sound: Audio;
     public constructor(soundListener: AudioListener, isLoop: boolean) {
         this.instanciateSound(soundListener);
         this.isLoop = isLoop;
@@ -37,6 +37,10 @@ export abstract class AbstractSoundContainer {
 
     public setVolume(volume: number): void {
         this.sound.setVolume(volume);
+    }
+
+    public setPlaybackRate(playBackRate: number): void {
+        this.sound.setPlaybackRate(playBackRate);
     }
 
     public play(): void {

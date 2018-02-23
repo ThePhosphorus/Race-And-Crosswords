@@ -16,7 +16,4 @@ export class GlobalSoundContainer extends AbstractSoundContainer {
     protected instanciateSound(soundListener: AudioListener): void {
         this.sound = new Audio(soundListener);
     }
-    public stop(): void {
-        this.sound.stop();
-    }
 }

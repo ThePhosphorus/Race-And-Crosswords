@@ -15,7 +15,7 @@ export class CarSounds {
         this.engine.init(FILE_NAME, sourcePath).then(() => this.engine.play());
     }
     public updateRPM(rpm: number): void {
-        this.engine.sound.setPlaybackRate(this.getPlaybackRate(rpm));
+        this.engine.setPlaybackRate(this.getPlaybackRate(rpm));
     }
     private getPlaybackRate(rpm: number): number {
         return (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
