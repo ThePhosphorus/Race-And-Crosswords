@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import {
     AudioListener
 } from "three";
-import {CarSounds} from "./sound-containers/car-sounds";
+import {CarSounds} from "./sound-facades/car-sounds";
 import { Car } from "../car/car";
-import { GlobalSoundFacade } from "./sound-containers/global-sound-facade";
+import { GlobalSoundFacade } from "./sound-facades/global-sound-facade";
 const startpath: string = "starting.ogg";
 @Injectable()
 export class SoundManagerService {
