@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy} from "@angular/core";
 import { RenderService, CarInfos } from "../render-service/render.service";
-import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 
@@ -10,7 +9,6 @@ import { SoundManagerService } from "../sound-manager-service/sound-manager.serv
     templateUrl: "./game.component.html",
     styleUrls: ["./game.component.css"],
     providers: [
-        InputManagerService,
         RenderService,
         CameraManagerService,
         SoundManagerService
@@ -22,22 +20,11 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     @ViewChild("container")
     private containerRef: ElementRef;
 
-    public constructor(private renderService: RenderService , private inputmanager: InputManagerService,
-                       private soundManager: SoundManagerService) { }
+    public constructor(private renderService: RenderService, private soundManager: SoundManagerService) { }
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {
         this.renderService.onResize();
-    }
-
-    @HostListener("window:keydown", ["$event"])
-    public onKeyDown(event: KeyboardEvent): void {
-        this.inputmanager.handleKeyDown(event);
-    }
-
-    @HostListener("window:keyup", ["$event"])
-    public onKeyUp(event: KeyboardEvent): void {
-        this.inputmanager.handleKeyUp(event);
     }
 
     public ngAfterViewInit(): void {

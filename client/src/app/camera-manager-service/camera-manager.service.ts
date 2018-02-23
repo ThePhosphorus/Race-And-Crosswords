@@ -117,40 +117,12 @@ export class CameraManagerService {
         this.resizeOrtho();
     }
 
-    public switchCamera(): void {
-        if (this.type === CameraType.Ortho) {
-            this.type = CameraType.Persp;
-            this.persp.add(this.audioListener);
-            this.ortho.remove(this.audioListener);
-        } else if (this.type === CameraType.Persp) {
-            this.type = CameraType.Ortho;
-            this.ortho.add(this.audioListener);
-            this.persp.remove(this.audioListener);
-        }
-    }
-
     public get cameraType(): CameraType {
         return this.type;
     }
 
     public set cameraType(type: CameraType) {
         this.type = type;
-    }
-
-    public set zoomFactor(zoom: number) {
-        this.zoom = zoom;
-    }
-
-    public zoomIn(): void {
-        this.zoomFactor = 1;
-    }
-
-    public zoomOut(): void {
-        this.zoomFactor = -1;
-    }
-
-    public zoomRelease(): void {
-        this.zoomFactor = 0;
     }
 
     public scrollZoom(deltaZoom: number): void {
@@ -249,5 +221,34 @@ export class CameraManagerService {
                 );
             this.persp.position.add(deltaPos);
         } else { this.persp.position.copy(this.thirdPersonPoint); }
+    }
+
+    // Input manager callbacks
+    public switchCamera(): void {
+        if (this.type === CameraType.Ortho) {
+            this.type = CameraType.Persp;
+            this.persp.add(this.audioListener);
+            this.ortho.remove(this.audioListener);
+        } else if (this.type === CameraType.Persp) {
+            this.type = CameraType.Ortho;
+            this.ortho.add(this.audioListener);
+            this.persp.remove(this.audioListener);
+        }
+    }
+
+    public toggleEffect (): void {
+        this.effectModeEnabled = !this.effectModeEnabled;
+    }
+
+    public zoomIn (): void {
+        this.zoom = 1;
+    }
+
+    public zoomOut (): void {
+        this.zoom = -1;
+    }
+
+    public zoomRelease (): void {
+        this.zoom = 0;
     }
 }

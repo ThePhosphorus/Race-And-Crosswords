@@ -6,5 +6,6 @@ export default  {
         Race: Symbol("Race"),
         Lexical: Symbol("Lexical"),
         Grid: Symbol("Grid"),
-        GridGenerator: Symbol("GridGenerator")
+        GridGenerator: Symbol("GridGenerator"),
+        TrackSaver: Symbol("TrackSaver")
 };
