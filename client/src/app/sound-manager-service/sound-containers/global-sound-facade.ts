@@ -3,9 +3,9 @@ import {
     AudioListener
 } from "three";
 
-import {AbstractSoundContainer} from "./abstract-sound-container";
+import {AbstractSoundFacade} from "./abstract-sound-facade";
 
-export class GlobalSoundContainer extends AbstractSoundContainer {
+export class GlobalSoundFacade extends AbstractSoundFacade {
 
     public constructor(
         soundListener: AudioListener,

@@ -4,21 +4,21 @@ import {
 } from "three";
 import {CarSounds} from "./sound-containers/car-sounds";
 import { Car } from "../car/car";
-import { GlobalSoundContainer } from "./sound-containers/global-sound-container";
+import { GlobalSoundFacade } from "./sound-containers/global-sound-facade";
 const startpath: string = "starting.ogg";
 @Injectable()
 export class SoundManagerService {
 
     private cars: Map<number, CarSounds>;
     private listener: AudioListener;
-    private startSound: GlobalSoundContainer;
+    private startSound: GlobalSoundFacade;
 
     public constructor() {
         this.cars = new Map<number, CarSounds>();
     }
 
     public startRace(): void {
-          this.startSound = new GlobalSoundContainer(this.listener, false);
+          this.startSound = new GlobalSoundFacade(this.listener, false);
           this.startSound.init(startpath).then(() => this.startSound.play());
     }
 
