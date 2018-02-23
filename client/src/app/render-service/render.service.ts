@@ -59,8 +59,8 @@ export class RenderService extends Renderer {
 
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
-        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteering());
-        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteering());
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteeringLeft());
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
     }
