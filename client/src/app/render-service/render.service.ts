@@ -5,7 +5,9 @@ import {
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../renderer/renderer";
+import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 const FLOOR_DIMENSION: number = 1000;
 const SPAWN_DIMENSION: number = 100;
@@ -19,6 +21,17 @@ const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const D_LIGHT: number = 200;
 const S_LIGHT: number = D_LIGHT * 0.25;
 
+// Keycodes
+const ACCELERATE_KEYCODE: number = 87; // w
+const LEFT_KEYCODE: number = 65; // a
+const BRAKE_KEYCODE: number = 83; // s
+const RIGHT_KEYCODE: number = 68; // d
+const CHANGE_CAMERA_KEYCODE: number = 67; // c
+const TOOGLE_CAMERA_EFFECT_MODE: number = 88; // ,
+const ZOOM_IN_KEYCODE: number = 187; // +
+const ZOOM_OUT_KEYCODE: number = 189; // -
+const FULLSCREEN_KEYCODE: number = 70; // F
+
 @Injectable()
 export class RenderService extends Renderer {
     private _car: Car;
@@ -31,72 +44,54 @@ export class RenderService extends Renderer {
     private brakeReflectionRightExt: SpotLight;
     private brakeReflectionLeftExt: SpotLight;
 
-
-    public constructor(private cameraManager: CameraManagerService) {
+    public constructor(private cameraManager: CameraManagerService,
+                       private inputManager: InputManagerService,
+                       private soundManager: SoundManagerService) {
         super(cameraManager, false);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
+        this.setupKeyBindings();
     }
 
     public get carInfos(): CarInfos {
         return this._carInfos;
     }
 
-    public handleCarInputsDown(carControls: CarControls): void {
-        switch (carControls) {
-            case CarControls.Accelerate:
-                this._car.isAcceleratorPressed = true;
-                break;
-            case CarControls.Brake:
-                this._car.brake();
-                this.brakeLight.intensity = 0.4;
-                this.brakeReflectionLeft.intensity = 10;
-                this.brakeReflectionRight.intensity = 10;
-                this.brakeReflectionLeftExt.intensity = 10;
-                this.brakeReflectionRightExt.intensity = 10;
-                break;
-            case CarControls.Left:
-                this._car.steerLeft();
-                break;
-            case CarControls.Right:
-                this._car.steerRight();
-                break;
-            default:
-                break;
-        }
+    private setupKeyBindings(): void {
+        this.inputManager.resetBindings();
+        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this._car.accelerate());
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this._car.brake());
+        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._car.steerLeft());
+        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._car.steerRight());
+        this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
+        this.inputManager.registerKeyDown(TOOGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleEffect());
+        this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
+        this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
+        this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
+
+        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteering());
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteering());
+        this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
+        this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
     }
 
-    public handleCarInputsUp(carControls: CarControls): void {
-        switch (carControls) {
-            case CarControls.Accelerate:
-                this._car.isAcceleratorPressed = false;
-                break;
-            case CarControls.Brake:
-                this._car.releaseBrakes();
-                this.brakeLight.intensity = 0;
-                this.brakeReflectionLeft.intensity = 0;
-                this.brakeReflectionRight.intensity = 0;
-                this.brakeReflectionLeftExt.intensity = 0;
-                this.brakeReflectionRightExt.intensity = 0;
-                break;
-            case (CarControls.Left):
-                this._car.releaseSteering();
-                break;
-            case (CarControls.Right):
-                this._car.releaseSteering();
-                break;
-            default:
-                break;
-        }
+    private fullscreen(): void {
+        this.container.webkitRequestFullscreen();
+        this.onResize();
     }
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
+        this.soundManager.init(this.cameraManager.listener);
         this.loadSunlight();
         this.loadCarLights();
         this.loadBrakeLights();
 
         await this._car.init();
+        this.soundManager.startRace();
+        this.soundManager.addCarSound(this._car);
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
             this._car.direction
@@ -104,7 +99,6 @@ export class RenderService extends Renderer {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
-
         this.startRenderingLoop();
     }
     private loadCarLights(): void {
@@ -190,6 +184,7 @@ export class RenderService extends Renderer {
         this.updateCarlight();
         this.updateBrakelights();
         this.updateSunlight();
+        this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
     }
 
     private updateCarInfos(): void {

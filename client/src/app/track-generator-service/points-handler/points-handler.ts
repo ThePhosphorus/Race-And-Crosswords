@@ -1,5 +1,5 @@
 import * as C from "../track.constantes";
-import { Mesh, Vector3, Vector2 } from "three";
+import { Mesh, Vector3 } from "three";
 import { TrackGenerator } from "../track-generator.service";
 import { EmptyArrayException } from "../../exceptions/EmptyArrayException";
 import { OutOfRangeException } from "../../exceptions/OutOfRangeException";
@@ -23,15 +23,6 @@ export class PointsHandler {
         }
 
         return this.point(this.length - 1);
-    }
-
-    public get PositionSelectPoints(): C.PosSelect[] {
-        const result: C.PosSelect[] = [];
-        for (let i: number = 0 ; i < this.length; i++) {
-            result.push(new C.PosSelect(this.toVector2(this._points[i].position), i === this._selectedPoint));
-        }
-
-        return result;
     }
 
     public get selectedPointId(): number {
@@ -61,10 +52,16 @@ export class PointsHandler {
         if (pointId === 0 && !this.top.position.equals(this._points[0].position)) {
             this.closeLoop();
         }
-
+        if (this.length <= 2 || !this.top.position.equals(this._points[pointId].position)) {
+            this.point(pointId).material = C.SELECTION_MATERIAL;
+        }
         this._selectedPoint = pointId;
-        this.point(pointId).material = C.SELECTION_MATERIAL;
+    }
 
+    public removeSelectedPoint (): void {
+        if (this.pointSelected()) {
+            this.removePoint(this.selectedPointId);
+        }
     }
 
     public removePoint(index: number): void {
@@ -90,10 +87,6 @@ export class PointsHandler {
         if (this._points[0]) {
             this._points[0].material = C.START_POINT_MATERIAL;
         }
-    }
-
-    private toVector2(v: Vector3): Vector2 {
-        return new Vector2(v.x, v.z);
     }
 
     private closeLoop(): void {

@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { TrackListComponent } from "./track-list.component";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { TrackLoaderService } from "../track-loader/track-loader.service";
+import { HttpClientModule } from "@angular/common/http/";
 
 describe("TrackListComponent", () => {
   let component: TrackListComponent;
@@ -8,7 +11,10 @@ describe("TrackListComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TrackListComponent ]
+      declarations: [ TrackListComponent],
+      schemas : [NO_ERRORS_SCHEMA],
+      providers: [TrackLoaderService],
+      imports: [HttpClientModule]
     })
     .compileComponents();
   }));

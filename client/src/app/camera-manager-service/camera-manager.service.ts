@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { PerspectiveCamera, OrthographicCamera, Vector3, Camera } from "three";
+import { PerspectiveCamera, OrthographicCamera, Vector3, Camera, AudioListener } from "three";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
 
 const FAR_CLIPPING_PLANE: number = 1000;
@@ -7,7 +7,7 @@ const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 const INITIAL_CAMERA_DISTANCE: number = 10;
 const PERS_CAMERA_ANGLE: number = 25;
-const INITIAL_CAMERA_POSITION_Y: number = 25;
+const INITIAL_CAMERA_POSITION_Y: number = 10;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
 const STARTING_ASPECTRATIO_WIDTH: number = 16;
@@ -45,6 +45,7 @@ export class CameraManagerService {
     private thirdPersonPoint: Vector3;
     private effectModeisEnabled: boolean;
     private zoom: number;
+    private audioListener: AudioListener;
     public zoomLimit: ZoomLimit;
 
     public constructor() {
@@ -52,6 +53,7 @@ export class CameraManagerService {
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
         this.aspectRatio = STARTING_ASPECTRATIO;
+        this.audioListener = new AudioListener();
         this.zoomLimit = new ZoomLimit();
         this.init();
      }
@@ -76,7 +78,6 @@ export class CameraManagerService {
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
-
         this.persp.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this.persp.lookAt(this.carInfos.position);
         this.ortho.position.set(
@@ -85,6 +86,7 @@ export class CameraManagerService {
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
+        this.persp.add(this.audioListener);
     }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
@@ -115,36 +117,12 @@ export class CameraManagerService {
         this.resizeOrtho();
     }
 
-    public switchCamera(): void {
-        if (this.type === CameraType.Ortho) {
-            this.type = CameraType.Persp;
-        } else if (this.type === CameraType.Persp) {
-            this.type = CameraType.Ortho;
-        }
-    }
-
     public get cameraType(): CameraType {
         return this.type;
     }
 
     public set cameraType(type: CameraType) {
         this.type = type;
-    }
-
-    public set zoomFactor(zoom: number) {
-        this.zoom = zoom;
-    }
-
-    public zoomIn(): void {
-        this.zoomFactor = 1;
-    }
-
-    public zoomOut(): void {
-        this.zoomFactor = -1;
-    }
-
-    public zoomRelease(): void {
-        this.zoomFactor = 0;
     }
 
     public scrollZoom(deltaZoom: number): void {
@@ -175,6 +153,10 @@ export class CameraManagerService {
 
     public set cameraDistanceToCar(distance: number) {
         this.cameraDistance = distance;
+    }
+
+    public get listener(): AudioListener {
+        return this.audioListener;
     }
 
     public get effectModeEnabled(): boolean {
@@ -239,5 +221,34 @@ export class CameraManagerService {
                 );
             this.persp.position.add(deltaPos);
         } else { this.persp.position.copy(this.thirdPersonPoint); }
+    }
+
+    // Input manager callbacks
+    public switchCamera(): void {
+        if (this.type === CameraType.Ortho) {
+            this.type = CameraType.Persp;
+            this.persp.add(this.audioListener);
+            this.ortho.remove(this.audioListener);
+        } else if (this.type === CameraType.Persp) {
+            this.type = CameraType.Ortho;
+            this.ortho.add(this.audioListener);
+            this.persp.remove(this.audioListener);
+        }
+    }
+
+    public toggleEffect (): void {
+        this.effectModeEnabled = !this.effectModeEnabled;
+    }
+
+    public zoomIn (): void {
+        this.zoom = 1;
+    }
+
+    public zoomOut (): void {
+        this.zoom = -1;
+    }
+
+    public zoomRelease (): void {
+        this.zoom = 0;
     }
 }

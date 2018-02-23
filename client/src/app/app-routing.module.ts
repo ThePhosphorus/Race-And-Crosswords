@@ -14,9 +14,10 @@ const routes: Routes = [
   { path: "crosswords", component: CrosswordsComponent },
   { path: "admin", component: AdminComponent,
     children: [
-        { path: "" , redirectTo: "track-list", pathMatch: "full" },
-        { path : "track-list", component: TrackListComponent},
-        { path: "track-editor", component: TrackEditorComponent}
+        { path: "" , redirectTo: "tracks", pathMatch: "full" },
+        { path : "tracks", component: TrackListComponent},
+        { path: "tracks/new", component: TrackEditorComponent},
+        { path: "tracks/:id", component: TrackEditorComponent}
     ] }
 ];
 
