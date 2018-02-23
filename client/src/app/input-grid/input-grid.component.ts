@@ -29,7 +29,7 @@ export class InputGridComponent implements OnInit {
 
     public ngOnInit(): void {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
-            // this._grid = grid;
+            this._grid = grid;
             this._solvedGrid = grid;
         });
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
