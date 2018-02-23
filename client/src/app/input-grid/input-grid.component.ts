@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Letter, Difficulty, Word, Orientation, ClonableCrosswordGrid } from "../../../../common/communication/crossword-grid";
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
@@ -31,7 +31,7 @@ export class InputGridComponent implements OnInit {
 
     public ngOnInit(): void {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
-            this._solvedGrid = grid;
+            this._solvedGrid = new ClonableCrosswordGrid(grid).clone();
             this._grid = grid;
         });
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
