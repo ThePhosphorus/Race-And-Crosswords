@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, HostListener} from "@angular/core";
+import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy} from "@angular/core";
 import { RenderService, CarInfos } from "../render-service/render.service";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
@@ -17,7 +17,7 @@ import { SoundManagerService } from "../sound-manager-service/sound-manager.serv
             ]
 })
 
-export class GameComponent implements AfterViewInit {
+export class GameComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild("container")
     private containerRef: ElementRef;

@@ -3,9 +3,7 @@ import {
     AudioListener
 } from "three";
 
-import {
-    AbstractSoundContainer
-} from "./abstract-sound-container";
+import {AbstractSoundContainer} from "./abstract-sound-container";
 
 export class GlobalSoundContainer extends AbstractSoundContainer {
 

@@ -9,13 +9,12 @@ const startpath: string = "starting.ogg";
 @Injectable()
 export class SoundManagerService {
 
-    private cars: Map<Number, CarSounds>;
+    private cars: Map<number, CarSounds>;
     private listener: AudioListener;
     private startSound: GlobalSoundContainer;
-    // private bgm: BackgroundMusic;
 
     public constructor() {
-        this.cars = new Map<Number, CarSounds>();
+        this.cars = new Map<number, CarSounds>();
     }
 
     public startRace(): void {
@@ -32,7 +31,6 @@ export class SoundManagerService {
 
     public init(listener: AudioListener): void {
         this.listener = listener;
-        // this.bgm = new BackgroundMusic(listener);
     }
 
     public stopAllSounds(): void {

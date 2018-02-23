@@ -1,8 +1,4 @@
-import {
-    PositionalAudio,
-    AudioListener,
-    Object3D
-} from "three";
+import {PositionalAudio, AudioListener, Object3D} from "three";
 
 import {
     AbstractSoundContainer
