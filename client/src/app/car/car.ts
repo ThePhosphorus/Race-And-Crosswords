@@ -20,8 +20,9 @@ const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
 const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
-const APPROX_MAXIMUM_SPEED: number = 220;
+const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
+const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
 
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
@@ -39,6 +40,9 @@ export class Car extends Object3D {
     private weightRear: number;
     private steeringWheelState: number;
 
+    public get carMesh(): Object3D {
+        return this.mesh;
+    }
     public get speed(): Vector3 {
         return this._speed.clone();
     }
@@ -109,7 +113,7 @@ export class Car extends Object3D {
             const loader: ObjectLoader = new ObjectLoader();
             loader.load(
                 "../../assets/camero/camero-2010-low-poly.json",
-                object => {
+                (object) => {
                     resolve(object);
                 }
             );
@@ -236,10 +240,10 @@ export class Car extends Object3D {
                 (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
         if (this.isGoingForward()) {
-            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
+        return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
         }
 
-        return this.direction.multiplyScalar(-1 * rollingCoefficient * this.mass * GRAVITY);
+        return this.direction.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.mass * GRAVITY);
     }
 
     private getDragForce(): Vector3 {

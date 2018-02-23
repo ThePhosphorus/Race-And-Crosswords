@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../renderer/renderer";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 
@@ -31,7 +32,9 @@ export class RenderService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
 
-    public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {
+    public constructor(private cameraManager: CameraManagerService,
+                       private inputManager: InputManagerService,
+                       private soundManager: SoundManagerService) {
         super(cameraManager, false);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
@@ -69,8 +72,10 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-
+        this.soundManager.init(this.cameraManager.listener);
         await this._car.init();
+        this.soundManager.startRace();
+        this.soundManager.addCarSound(this._car);
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
             this._car.direction
@@ -78,7 +83,6 @@ export class RenderService extends Renderer {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
-
         this.startRenderingLoop();
     }
 
@@ -125,6 +129,7 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
+        this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
     }
 
     private updateCarInfos(): void {
