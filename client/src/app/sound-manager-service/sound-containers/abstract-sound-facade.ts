@@ -1,5 +1,5 @@
 
-import {AudioLoader, AudioBuffer, AudioListener, Audio} from "three";
+import { AudioLoader, AudioBuffer, AudioListener, Audio } from "three";
 
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 export const DEFAULT_VOLUME: number = 0.5;
@@ -12,14 +12,14 @@ export abstract class AbstractSoundFacade {
         this.isLoop = isLoop;
     }
 
+    protected abstract instanciateSound(soundListener: AudioListener): void;
+
     public async init(fileName: string, sourcePath?: string): Promise<void> {
         let path: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
         path += fileName;
 
         return this.loadSound(path).then((buffer) => this.setSoundSettings(buffer));
     }
-
-    protected abstract instanciateSound(soundListener: AudioListener): void;
 
     protected async loadSound(path: string): Promise<AudioBuffer> {
         return new Promise<AudioBuffer>((resolve, reject) => {
