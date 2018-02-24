@@ -59,10 +59,7 @@ export class CameraManagerService {
      }
 
     public init(): void {
-        this.zoom = 0;
-        this.cameraDistance = INITIAL_CAMERA_DISTANCE;
-        this.type = CameraType.Persp;
-
+        this.initMembers();
         this.persp = new PerspectiveCamera(
             FIELD_OF_VIEW,
             this.aspectRatio,
@@ -78,17 +75,27 @@ export class CameraManagerService {
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
+        this.initPerspCamera();
+        this.initOrthoCamera();
+    }
+    private initPerspCamera(): void {
         this.persp.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this.persp.lookAt(this.carInfos.position);
+        this.persp.add(this.audioListener);
+    }
+    private initOrthoCamera(): void {
         this.ortho.position.set(
             this.carInfos.position.x,
             INITIAL_CAMERA_POSITION_Y,
             this.carInfos.position.z
         );
         this.ortho.lookAt(this.carInfos.position);
-        this.persp.add(this.audioListener);
     }
-
+    private initMembers(): void {
+        this.zoom = 0;
+        this.cameraDistance = INITIAL_CAMERA_DISTANCE;
+        this.type = CameraType.Persp;
+    }
     public updatecarInfos(position: Vector3, direction: Vector3): void {
         this.carInfos.position = position;
         this.carInfos.direction = direction;

@@ -82,19 +82,29 @@ export class RenderService extends Renderer {
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
         await this._car.init();
+        this.setupGame();
+    }
+
+    private setupGame(): void {
         this.setupSoundManager();
+        this.setupCameraManager();
+        this.setupScene();
+        this.startRenderingLoop();
+    }
+
+    private setupCameraManager(): void {
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
             this._car.direction
         );
-        this.setupScene();
-        this.startRenderingLoop();
     }
+
     private setupSoundManager(): void {
         this.soundManager.init(this.cameraManager.listener);
         this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
     }
+
     private setupScene(): void {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
