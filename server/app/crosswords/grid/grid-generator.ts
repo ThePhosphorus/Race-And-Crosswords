@@ -1,21 +1,22 @@
 import { Word, CrosswordGrid, Letter, Difficulty } from "../../../../common/communication/crossword-grid";
-import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
+import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 
 const MAX_TOTAL_ROLLBACKS: number = 200;
-const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical";
-const LEXICAL_REQUEST_WORDS: string = "/query-word";
-const LEXICAL_TEST_WORD: string = "/query-definitions";
 
 export class GridGenerator {
 
+    private externalCommunications: ExternalCommunications;
     private emptyGridFactory: EmptyGridFactory;
     private crossword: ExtendedCrosswordGrid;
     private notPlacedWords: Word[];
     private rollbackCount: number = 0;
 
+    public constructor() {
+        this.externalCommunications = new ExternalCommunications();
+    }
     public async getNewGrid(difficulty: Difficulty, size: number): Promise<CrosswordGrid> {
         this.emptyGridFactory = new EmptyGridFactory();
         this.initialiseEmptyGrid(size);
@@ -70,12 +71,12 @@ export class GridGenerator {
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
         const constraint: string = this.getConstraints(word);
         if (constraint.indexOf("?") === -1) {
-            const receivedWord: DatamuseWord = await this.getDefinitionsFromServer(this.getStringFromWord(word));
+            const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(this.getStringFromWord(word));
             this.addWord(receivedWord, word, difficulty);
 
         } else {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
-            const receivedWord: DatamuseWord = await this.getWordsFromServer(constraint, word, isEasyWord);
+            const receivedWord: DatamuseWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
             this.addWord(receivedWord, word, difficulty);
         }
     }
@@ -106,31 +107,6 @@ export class GridGenerator {
         });
 
         return isUnique;
-    }
-
-    private async getWordsFromServer(constraint: string, word: Word, isEasyWord: boolean): Promise<DatamuseWord> {
-        const options: Request.RequestPromiseOptions = {
-            method: "POST",
-            body: {
-                constraint: constraint,
-                easy: isEasyWord
-            },
-            json: true
-        };
-
-        return await Request(LEXICAL_SERVICE_URL + LEXICAL_REQUEST_WORDS, options) as DatamuseWord;
-    }
-
-    private async getDefinitionsFromServer(word: string): Promise<DatamuseWord> {
-        const options: Request.RequestPromiseOptions = {
-            method: "POST",
-            body: {
-                word: word
-            },
-            json: true
-        };
-
-        return await Request(LEXICAL_SERVICE_URL + LEXICAL_TEST_WORD, options) as DatamuseWord;
     }
 
     private setWord(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
