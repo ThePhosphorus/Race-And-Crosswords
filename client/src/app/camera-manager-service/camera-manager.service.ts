@@ -19,6 +19,7 @@ export class CameraManagerService {
     private _cameraArray: Array<CameraContainer>;
     private selectedCameraIndex: number;
     private targetInfos: TargetInfos;
+    private _audioListener: AudioListener;
 
     public constructor() {
         this.targetInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
@@ -28,16 +29,17 @@ export class CameraManagerService {
      // DONE
     public init(): void {
         this.selectedCameraIndex = 0;
+        this._cameraArray = new Array<CameraContainer>();
         const perspContainer: PerspectiveCameraContainer =
-            new PerspectiveCameraContainer(this.audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+            new PerspectiveCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
         const orthoContainer: OrthographicCameraContainer =
-            new OrthographicCameraContainer(this.audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+            new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
-        this.selectedCamera.addAudioListener();
+        // this.selectedCamera.addAudioListener();
      }
 
-    public updatecarInfos(position: Vector3, direction: Vector3): void {
+    public updateTargetInfos(position: Vector3, direction: Vector3): void {
         this.targetInfos.position = position;
         this.targetInfos.direction = direction;
      }
@@ -89,10 +91,10 @@ export class CameraManagerService {
 
     // Input manager callbacks
     public switchCamera(): void {
-        this.selectedCamera.removeAudioListener();
-        this.selectedCameraIndex++;
-        this.selectedCameraIndex %= this._cameraArray.length - 1;
-        this.selectedCamera.addAudioListener();
+        // this.selectedCamera.removeAudioListener();
+        this.selectedCameraIndex += 1;
+        this.selectedCameraIndex %= this._cameraArray.length;
+        // this.selectedCamera.addAudioListener();
     }
 
     public zoomIn (): void {

@@ -28,11 +28,11 @@ export abstract class CameraContainer {
      }
 
     public zoomIn(): void {
-        this.zoom = 1;
+        this.zoom = -1;
      }
 
     public zoomOut(): void {
-        this.zoom = -1;
+        this.zoom = 1;
      }
 
     public zoomRelease (): void {
@@ -66,7 +66,7 @@ export abstract class CameraContainer {
 
     public update(deltaTime: number): void {
         if (this.checkZoom) {
-            this.cameraDistance -= this.zoom * ZOOM_FACTOR;
+            this.cameraDistance += this.zoom * ZOOM_FACTOR;
         }
 
         this.fixUpdate(deltaTime);

@@ -30,7 +30,7 @@ export abstract class Renderer {
 
         this.initStats();
         this.createScene();
-        this._cameraManager.updatecarInfos(
+        this._cameraManager.updateTargetInfos(
             this.cameraTargetPosition,
             this.cameraTargetDirection
         );
@@ -105,7 +105,7 @@ export abstract class Renderer {
     private rendererUpdate(): void {
         const timeSinceLastFrame: number = Date.now() - this._lastDate;
         this.update(timeSinceLastFrame);
-        this._cameraManager.updatecarInfos(
+        this._cameraManager.updateTargetInfos(
             this.cameraTargetPosition,
             this.cameraTargetDirection
         );
