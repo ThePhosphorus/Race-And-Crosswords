@@ -35,7 +35,6 @@ export class PerspectiveCameraContainer extends CameraContainer {
     private init(): void {
         this._perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this._perspCamera.lookAt(this._targetInfos.position);
-        // TODO: bind x to enable effect mode
     }
 
     public fixUpdate(deltaTime: number): void {

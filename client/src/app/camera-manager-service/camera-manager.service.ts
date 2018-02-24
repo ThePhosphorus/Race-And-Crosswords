@@ -28,6 +28,7 @@ export class CameraManagerService {
 
      // DONE
     public init(): void {
+        this._audioListener = new AudioListener();
         this.selectedCameraIndex = 0;
         this._cameraArray = new Array<CameraContainer>();
         const perspContainer: PerspectiveCameraContainer =
@@ -36,7 +37,7 @@ export class CameraManagerService {
             new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
-        // this.selectedCamera.addAudioListener();
+        this.selectedCamera.addAudioListener();
      }
 
     public updateTargetInfos(position: Vector3, direction: Vector3): void {
@@ -57,13 +58,6 @@ export class CameraManagerService {
             camera.onResize(aspectRatio);
         });
      }
-
-    // public scrollZoom(deltaZoom: number): void {
-    //     if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
-    //      (deltaZoom > 0 && this.cameraDistance < this.zoomLimit.max)) {
-    //         this.cameraDistance += deltaZoom;
-    //     }
-    // } // TODO
 
     private get selectedCamera(): CameraContainer {
         return this._cameraArray[this.selectedCameraIndex];

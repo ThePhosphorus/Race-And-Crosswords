@@ -52,7 +52,6 @@ export class RenderService extends Renderer {
         this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._car.steerLeft());
         this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._car.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
-        // this.inputManager.registerKeyDown(TOOGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
@@ -72,10 +71,10 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        // this.soundManager.init(this.cameraManager.listener);
+        this.soundManager.init(this.cameraManager.audioListener);
         await this._car.init();
-        // this.soundManager.startRace();
-        // this.soundManager.addCarSound(this._car);
+        this.soundManager.startRace();
+        this.soundManager.addCarSound(this._car);
         this.cameraManager.updateTargetInfos(
             this._car.getPosition(),
             this._car.direction
@@ -129,7 +128,7 @@ export class RenderService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
-        // this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
+        this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
     }
 
     private updateCarInfos(): void {
