@@ -41,6 +41,7 @@ export class CameraManagerService {
     private cameraIndex: number;
     private thirdPersonPoint: Vector3;
     private zoom: number;
+    private type: CameraType;
     public zoomLimit: ZoomLimit;
     private aspectRatio: number;
     private carInfos: { position: Vector3, direction: Vector3 };
@@ -56,12 +57,14 @@ export class CameraManagerService {
         this.init();
      }
 
+     // DONE
     public init(): void {
         this.zoom = 0;
         this.cameraDistance = INITIAL_CAMERA_DISTANCE;
         this.cameraIndex = 0;
-        this.perspContainer = new PerspectiveCameraContainer();
-        this.orthoContainer = new OrthographicCameraContainer();
+        this.type = this.cameraIndex % NB_CAMERAS;
+        this.perspContainer = new PerspectiveCameraContainer(this.audioListener, this.carInfos);
+        this.orthoContainer = new OrthographicCameraContainer(this.audioListener, this.cameraDistance);
         this.cameras.push(this.perspContainer);
         this.cameras.push(this.orthoContainer);
         this.cameras[this.cameraIndex].addAudioListener(this.audioListener);
@@ -71,21 +74,25 @@ export class CameraManagerService {
         this.carInfos.position = position;
         this.carInfos.direction = direction;
     }
-
-    public update(deltaTime: number): void {
+    // TODO
+    public update(deltaTime: number, ): void {
+        this.cameras.forEach((camera) => {
+            camera.update(deltaTime, this.thirdPersonPoint, this.effectModeisEnabled)
+        });
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.updateCameraPostion(deltaTime);
     }
 
+    // DONE
     public get camera(): Camera {
-        return this.cameras[this.cameraIndex % NB_CAMERAS]._camera;
+        return this.cameras[this.type].camera();
     }
 
+    // Done
     public onResize(aspectRatio: number): void {
-        this.aspectRatio = aspectRatio;
-        this.persp.aspect = this.aspectRatio;
-        this.persp.updateProjectionMatrix();
-        this.resizeOrtho();
+        this.cameras.forEach((camera) => {
+            camera.onResize(aspectRatio);
+        });
     }
 
     public get cameraType(): CameraType {
@@ -103,8 +110,9 @@ export class CameraManagerService {
         }
     }
 
+    // DONE
     public get position(): Vector3 {
-        return this.cameras[this.cameraIndex % NB_CAMERAS].position;
+        return this.cameras[this.type].position();
     }
 
     public get realPosition(): Vector3 {
@@ -162,14 +170,6 @@ export class CameraManagerService {
             this.carInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
             this.carInfos.position.z + (- carDirection.z * projectionXZ)
         );
-    }
-
-    private resizeOrtho(): void {
-        this.ortho.left = -this.cameraDistance * this.aspectRatio;
-        this.ortho.right = this.cameraDistance * this.aspectRatio;
-        this.ortho.top = this.cameraDistance;
-        this.ortho.bottom = -this.cameraDistance;
-        this.ortho.updateProjectionMatrix();
     }
 
     private perspCameraPhysicUpdate(deltaTime: number): void {
