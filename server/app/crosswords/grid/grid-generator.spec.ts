@@ -4,7 +4,6 @@ import { GridGenerator } from "./grid-generator";
 
 const gridGenerator: GridGenerator = new GridGenerator();
 const gridSize: number = 5;
-const TIMEOUT: number = 10000; // Increase test timeout so that grid has time to generate
 
 // tslint:disable-next-line:max-func-body-length
 
@@ -15,7 +14,7 @@ describe("Grid generation", () => {
                 assert.strictEqual(grid.size, gridSize, "Attribute size of grid is not the expected size.");
                 assert.strictEqual(grid.grid.length, gridSize * gridSize, "Vertical length is not the right length");
             });
-        }).timeout(TIMEOUT);
+        });
 
         it("should give us a grid with no blackTiles in the f irst row and the first column ", (done: MochaDone) => {
             return gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
@@ -27,7 +26,7 @@ describe("Grid generation", () => {
                     }
                 }
             });
-        }).timeout(TIMEOUT);
+        });
 
         it("should have a word on each colomn/row", (done: MochaDone) => {
             return gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
@@ -45,7 +44,7 @@ describe("Grid generation", () => {
                     assert.ok(hasDownWord[i], "There is no word on column : " + i);
                 }
             });
-        }).timeout(TIMEOUT);
+        });
 
         it("should give us words with definitions ", (done: MochaDone) => {
             return gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
@@ -53,7 +52,7 @@ describe("Grid generation", () => {
                     assert.ok(word.definitions.length > 0, " Word : " + word.id);
                 });
             });
-        }).timeout(TIMEOUT);
+        });
 
         it("should not have apostrophe or apostrophe", (done: MochaDone) => {
             return gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
@@ -64,7 +63,7 @@ describe("Grid generation", () => {
                     }
                 });
             });
-        }).timeout(TIMEOUT);
+        });
 
         it("should not have special letters (accents, etc)", (done: MochaDone) => {
             return gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
@@ -74,7 +73,7 @@ describe("Grid generation", () => {
                     }
                 });
             });
-        }).timeout(TIMEOUT);
+        });
 
         it("should not have duplicate word", (done: MochaDone) => {
             return gridGenerator.getNewGrid(Difficulty.Easy, gridSize).then((grid: CrosswordGrid) => {
@@ -88,7 +87,7 @@ describe("Grid generation", () => {
                     words.push(wordString);
                 });
             });
-        }).timeout(TIMEOUT);
+        });
 
     });
 });
