@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import * as Rx from "rxjs/";
+import { Observable } from "rxjs/Observable";
+import { of } from "rxjs/observable/of";
 import { Subject } from "rxjs/Subject";
 import { MOCK } from "../mock-crossword/mock-crossword";
 
@@ -28,8 +29,8 @@ export class CrosswordService {
     public get gridSize(): number { return this._gridSize; }
     public get blackTileRatio(): number { return this._blackTilesRatio; }
 
-    public get grid(): Rx.Observable<CrosswordGrid> {
-        return USE_MOCK_GRID ? Rx.Observable.of(MOCK) : this._gridSubject.asObservable();
+    public get grid(): Observable<CrosswordGrid> {
+        return USE_MOCK_GRID ? of(MOCK) : this._gridSubject.asObservable();
     }
 
     public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): void {
