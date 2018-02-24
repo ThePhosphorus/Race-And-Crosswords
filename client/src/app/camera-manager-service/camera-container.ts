@@ -40,11 +40,11 @@ export abstract class CameraContainer {
      }
 
     public addAudioListener(): void {
-        this.camera().add(this._audioListener);
+        this.camera.add(this._audioListener);
      }
 
     public removeAudioListener(): void {
-        this.camera().remove(this._audioListener);
+        this.camera.remove(this._audioListener);
      }
 
     public get audioListener(): AudioListener {
@@ -72,7 +72,7 @@ export abstract class CameraContainer {
         this.fixUpdate(deltaTime);
      }
 
-    public abstract camera(): Camera;
+    public abstract get camera(): Camera;
     public abstract position(): Vector3;
     public abstract onResize(aspectRatio: number): void;
     protected abstract fixUpdate(deltaTime: number): void;

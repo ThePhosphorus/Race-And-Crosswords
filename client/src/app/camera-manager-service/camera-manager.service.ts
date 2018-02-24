@@ -54,7 +54,7 @@ export class CameraManagerService {
      }
 
     public get camera(): Camera {
-        return this.selectedCamera.camera();
+        return this.selectedCamera.camera;
      }
 
     public onResize(aspectRatio: number): void {
@@ -70,7 +70,7 @@ export class CameraManagerService {
      }
 
     public get realPosition(): Vector3 {
-        return this.selectedCamera.camera().position;
+        return this.selectedCamera.camera.position;
      }
 
     public get cameraDistanceToCar(): number {

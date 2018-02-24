@@ -80,7 +80,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
         return this.thirdPersonPoint;
      }
 
-    public camera(): Camera {
+    public get camera(): Camera {
         return this._perspCamera;
      }
 

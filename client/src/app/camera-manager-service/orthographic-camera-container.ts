@@ -54,7 +54,7 @@ export class OrthographicCameraContainer extends CameraContainer {
         this._orthoCamera.bottom = -this.cameraDistance;
         this._orthoCamera.updateProjectionMatrix();
      }
-    public camera(): Camera {
+    public get camera(): Camera {
         return this._orthoCamera;
      }
 
