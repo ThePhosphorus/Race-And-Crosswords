@@ -19,6 +19,7 @@ export class PerspectiveCameraContainer implements ICameraContainer {
     private aspectRatio: number;
     private audioListener: AudioListener;
     private carInfos: { position: Vector3, direction: Vector3 };
+    private cameraDistance: number;
     public constructor(audioListener: AudioListener, carInfos: { position: Vector3, direction: Vector3 }) {
         this.aspectRatio = INITIAL_ASPECT_RATIO;
         this.thirdPersonPoint = new Vector3(0, 0, 0);
@@ -94,10 +95,11 @@ export class PerspectiveCameraContainer implements ICameraContainer {
             this._camera.position.add(deltaPos);
         } else { this._camera.position.copy(thirdPersonPoint); }
     }
+
     public position(): Vector3 {
         return this.thirdPersonPoint;
     }
-    
+
     public  camera(): Camera {
         return this._camera;
     }

@@ -8,9 +8,11 @@ export class OrthographicCameraContainer implements ICameraContainer {
     private _camera: OrthographicCamera;
     private audioListener: AudioListener;
     private aspectRatio: number;
+    private cameraDistance: number;
     private carInfos: { position: Vector3, direction: Vector3 };
     public constructor(audioListener: AudioListener, cameraDistance: number) {
         this.audioListener = audioListener;
+        this.cameraDistance = cameraDistance;
         this._camera = new OrthographicCamera(
             -cameraDistance * this.aspectRatio,
             cameraDistance * this.aspectRatio,
@@ -48,12 +50,12 @@ export class OrthographicCameraContainer implements ICameraContainer {
     public removeAudioListener(): void {
         this._camera.remove(this.audioListener);
     }
-    public onResize(aspectRatio: number, cameraDistance?: number): void {
+    public onResize(aspectRatio: number): void {
         this.aspectRatio = aspectRatio;
-        this._camera.left = -cameraDistance * this.aspectRatio;
-        this._camera.right = cameraDistance * this.aspectRatio;
-        this._camera.top = cameraDistance;
-        this._camera.bottom = -cameraDistance;
+        this._camera.left = -this.cameraDistance * this.aspectRatio;
+        this._camera.right = this.cameraDistance * this.aspectRatio;
+        this._camera.top = this.cameraDistance;
+        this._camera.bottom = -this.cameraDistance;
         this._camera.updateProjectionMatrix();
     }
     public camera(): Camera {
