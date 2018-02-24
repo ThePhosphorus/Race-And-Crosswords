@@ -1,21 +1,16 @@
 import { Injectable } from "@angular/core";
-import { PerspectiveCamera, OrthographicCamera, Vector3, Camera, AudioListener } from "three";
+import { Vector3, Camera, AudioListener } from "three";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
-import { CameraContainerInterface } from "./camera-container-interface";
+import { ICameraContainer } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
 
-const FAR_CLIPPING_PLANE: number = 1000;
-const NEAR_CLIPPING_PLANE: number = 1;
-const FIELD_OF_VIEW: number = 70;
+const NB_CAMERAS: number = 2;
 const INITIAL_CAMERA_DISTANCE: number = 10;
 const PERS_CAMERA_ANGLE: number = 25;
 const INITIAL_CAMERA_POSITION_Y: number = 10;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
-const STARTING_ASPECTRATIO_WIDTH: number = 16;
-const STARTING_ASPECTRATIO_HEIGHT: number = 9;
-const STARTING_ASPECTRATIO: number = STARTING_ASPECTRATIO_WIDTH / STARTING_ASPECTRATIO_HEIGHT;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
 const MINIMAL_ZOOM: number = 4;
 const MAXIMAL_ZOOM: number = 25;
@@ -39,11 +34,11 @@ export class ZoomLimit {
 @Injectable()
 export class CameraManagerService {
 
-    private cameras: Array<CameraContainerInterface>;
+    private cameras: Array<ICameraContainer>;
     private perspContainer: PerspectiveCameraContainer;
     private orthoContainer: OrthographicCameraContainer;
     private cameraDistance: number;
-    private type: CameraType;
+    private cameraIndex: number;
     private thirdPersonPoint: Vector3;
     private zoom: number;
     public zoomLimit: ZoomLimit;
@@ -56,7 +51,6 @@ export class CameraManagerService {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this.effectModeisEnabled = false;
-        this.aspectRatio = STARTING_ASPECTRATIO;
         this.audioListener = new AudioListener();
         this.zoomLimit = new ZoomLimit();
         this.init();
@@ -65,22 +59,11 @@ export class CameraManagerService {
     public init(): void {
         this.zoom = 0;
         this.cameraDistance = INITIAL_CAMERA_DISTANCE;
-        this.type = CameraType.Persp;
-
-        this.perspContainer = new PerspectiveCameraContainer();
-        this.orthoContainer = new OrthographicCameraContainer();
+        this.cameraIndex = 0;
+        this.perspContainer = new PerspectiveCameraContainer(this.audioListener);
+        this.orthoContainer = new OrthographicCameraContainer(this.audioListener);
         this.cameras.push(this.perspContainer);
         this.cameras.push(this.orthoContainer);
-
-        this.persp.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this.persp.lookAt(this.carInfos.position);
-        this.ortho.position.set(
-            this.carInfos.position.x,
-            INITIAL_CAMERA_POSITION_Y,
-            this.carInfos.position.z
-        );
-        this.ortho.lookAt(this.carInfos.position);
-        this.persp.add(this.audioListener);
     }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
