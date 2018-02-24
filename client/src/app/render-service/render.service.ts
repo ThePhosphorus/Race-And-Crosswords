@@ -1,5 +1,15 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, Vector3 } from "three";
+import {
+        CubeTextureLoader,
+        Mesh,
+        Texture,
+        TextureLoader,
+        RepeatWrapping,
+        MeshLambertMaterial,
+        PlaneGeometry,
+        DoubleSide,
+        Vector3
+        } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
@@ -22,7 +32,7 @@ const LEFT_KEYCODE: number = 65; // a
 const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
-const TOOGLE_CAMERA_EFFECT_MODE: number = 88; // ,
+const TOOGLE_CAMERA_EFFECT_MODE: number = 88; // x
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const FULLSCREEN_KEYCODE: number = 70; // F
