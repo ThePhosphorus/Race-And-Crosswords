@@ -5,11 +5,10 @@ const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const INITIAL_CAMERA_POSITION_Y: number = 10;
 
-export class OrthographicCameraContainer extends ICameraContainer {
-
+export class OrthographicCameraContainer implements ICameraContainer {
+    private _camera: OrthographicCamera;
     public constructor() {
-        super();
-        this.cam = new OrthographicCamera(
+        this._camera = new OrthographicCamera(
             -this.cameraDistance * this.aspectRatio,
             this.cameraDistance * this.aspectRatio,
             this.cameraDistance,
@@ -24,14 +23,33 @@ export class OrthographicCameraContainer extends ICameraContainer {
 
     }
     private init(): void {
-        this.cam.position.set(
+        this._camera.position.set(
             this.carInfos.position.x,
             INITIAL_CAMERA_POSITION_Y,
             this.carInfos.position.z
         );
-        this.cam.lookAt(this.carInfos.position);
+        this._camera.lookAt(this.carInfos.position);
+    }
+    public zoomIn(): void {
+        
+    }
+    public zoomOut(): void {
+        
+    }
+    public addAudioListener(): void {
+        
+    }
+    
+    public removeAudioListener(): void {
+        
+    }
+    public resize(aspectRatio: number): void{
+        
+    }
+    public get camera(): OrthographicCamera {
+        return this._camera;
     }
     public get position(): Vector3 {
-        return this.cam.position;
+        return this._camera.position;
     }
 }

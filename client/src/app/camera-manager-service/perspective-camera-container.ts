@@ -6,11 +6,11 @@ const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 const INITIAL_CAMERA_POSITION_Y: number = 10;
 
-export class PerspectiveCameraContainer extends ICameraContainer {
+export class PerspectiveCameraContainer implements ICameraContainer {
     private thirdPersonPoint: Vector3;
     public constructor( ) {
         super();
-        this.cam = new PerspectiveCamera(
+        this._camera = new PerspectiveCamera(
             FIELD_OF_VIEW,
             this.aspectRatio,
             NEAR_CLIPPING_PLANE,
@@ -21,8 +21,8 @@ export class PerspectiveCameraContainer extends ICameraContainer {
     }
 
     private init(): void {
-        this.cam.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this.cam.lookAt(this.carInfos.position);
+        this._camera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
+        this._camera.lookAt(this.carInfos.position);
     }
 
     public update(targetInfos: CarInfos, timelapse: number): void {
@@ -34,8 +34,8 @@ export class PerspectiveCameraContainer extends ICameraContainer {
     }
 
     public resize(aspectRatio: number): void {
-        this.cam.aspect = this.aspectRatio;
-        this.cam.updateProjectionMatrix();
+        this._camera.aspect = this.aspectRatio;
+        this._camera.updateProjectionMatrix();
     }
 
     private updateProjectionMatrix(): void{

@@ -78,11 +78,11 @@ export class CameraManagerService {
     }
 
     public get camera(): Camera {
-        return this.cameras[this.cameraIndex % NB_CAMERAS].camera;
+        return this.cameras[this.cameraIndex % NB_CAMERAS]._camera;
     }
 
-    public onResize(aspectRation: number): void {
-        this.aspectRatio = aspectRation;
+    public onResize(aspectRatio: number): void {
+        this.aspectRatio = aspectRatio;
         this.persp.aspect = this.aspectRatio;
         this.persp.updateProjectionMatrix();
         this.resizeOrtho();
