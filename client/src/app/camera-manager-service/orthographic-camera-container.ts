@@ -1,5 +1,5 @@
 import { OrthographicCamera, Vector3, AudioListener, Camera } from "three";
-import { CameraContainer, ZoomLimit } from "./camera-container";
+import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
 import { TargetInfos } from "./camera-manager.service";
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
@@ -13,7 +13,7 @@ export class OrthographicCameraContainer extends CameraContainer {
     private aspectRatio: number;
 
     public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
-        super(audioListener, targetInfos, cameraDistance, zoomLimit);
+        super(audioListener, targetInfos, cameraDistance, zoomLimit, CameraType.Orthographic);
         this.aspectRatio = INITIAL_ASPECT_RATIO;
         this._orthoCamera = new OrthographicCamera(
             -cameraDistance * this.aspectRatio,

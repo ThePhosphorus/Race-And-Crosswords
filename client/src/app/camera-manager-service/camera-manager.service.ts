@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Camera, AudioListener } from "three";
-import { CameraContainer, ZoomLimit } from "./camera-container";
+import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
@@ -104,4 +104,19 @@ export class CameraManagerService {
     public zoomRelease (): void {
         this.selectedCamera.zoomRelease();
      }
+
+    public set zoomLimit(zoomLimit: ZoomLimit) {
+        this._cameraArray.forEach((container: CameraContainer) =>
+            container.updateZoomLimit(zoomLimit));
+    }
+
+    public get cameraType(): CameraType {
+        return this.selectedCamera.type;
+    }
+
+    public set cameraType(type: CameraType) {
+        this._cameraArray.forEach((container: CameraContainer, index: number) => {
+            if (container.type === type) { this.selectedCameraIndex = index; }
+        });
+    }
 }

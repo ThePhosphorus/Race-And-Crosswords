@@ -6,11 +6,11 @@ import { ConstraintValidator } from "./constraint-validator/constraint-validator
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
-// import { ZoomLimit } from "../camera-manager-service/camera-container";
+import { ZoomLimit, CameraType } from "../camera-manager-service/camera-container";
 
 const LINE_STR_PREFIX: string = "Line to ";
-// const MIN_ZOOM: number = 10;
-// const MAX_ZOOM: number = 200;
+const MIN_ZOOM: number = 10;
+const MAX_ZOOM: number = 200;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
@@ -130,6 +130,7 @@ export class TrackGenerator extends Renderer {
     }
 
     protected onInit(): void {
+        this.cameraManager.cameraType = CameraType.Orthographic;
         this._gridHelper = new GridHelper(
             C.GRID_DIMENSION,
             C.GRID_DIVISIONS,
@@ -139,7 +140,7 @@ export class TrackGenerator extends Renderer {
         this.scene.add(this._gridHelper);
         this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
         this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
-        // this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
+        this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
 
     private onTranslateCamera(event: MouseEvent): void {

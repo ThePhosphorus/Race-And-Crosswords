@@ -1,5 +1,5 @@
 import { PerspectiveCamera, Vector3, AudioListener, Camera } from "three";
-import { CameraContainer, ZoomLimit } from "./camera-container";
+import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
 import { TargetInfos } from "./camera-manager.service";
 
@@ -21,7 +21,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
     private effectModeisEnabled: boolean;
 
     public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
-        super(audioListener, targetInfos, cameraDistance, zoomLimit);
+        super(audioListener, targetInfos, cameraDistance, zoomLimit, CameraType.Perspective);
         this.thirdPersonPoint = new Vector3(0, 0, 0);
         this._perspCamera = new PerspectiveCamera(
             FIELD_OF_VIEW,

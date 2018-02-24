@@ -15,6 +15,12 @@ export class ZoomLimit {
      }
  }
 
+// TODO put this in the constantes file
+export enum CameraType {
+    Perspective,
+    Orthographic
+ }
+
 export abstract class CameraContainer {
     protected zoom: number;
 
@@ -22,7 +28,8 @@ export abstract class CameraContainer {
         private _audioListener: AudioListener,
         protected _targetInfos: TargetInfos,
         protected cameraDistance: number,
-        protected zoomLimit: ZoomLimit
+        private zoomLimit: ZoomLimit,
+        public readonly type: CameraType
     ) {
         this.zoom = 0;
      }
@@ -38,6 +45,10 @@ export abstract class CameraContainer {
     public zoomRelease (): void {
         this.zoom = 0;
      }
+
+    public updateZoomLimit(zoomLimit: ZoomLimit): void {
+        this.zoomLimit = zoomLimit;
+    }
 
     public addAudioListener(): void {
         this.camera.add(this._audioListener);
