@@ -1,5 +1,5 @@
 import {AudioListener, Object3D} from "three";
-import { PositionalSoundContainer } from "./positional-sound-container";
+import { PositionalSoundFacade } from "./positional-sound-facade";
 
 const FILE_NAME: string = "idle.ogg";
 const MAX_RPM: number = 5500;
@@ -8,10 +8,10 @@ const PLAYBACK_SPEED_FACTOR: number = 2;
 
 export class CarSounds {
 
-    public engine: PositionalSoundContainer;
+    public engine: PositionalSoundFacade;
 
     public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
-        this.engine = new PositionalSoundContainer(soundEmittingObject, soundListener, true);
+        this.engine = new PositionalSoundFacade(soundEmittingObject, soundListener, true);
         this.engine.init(FILE_NAME, sourcePath).then(() => this.engine.play());
     }
     public updateRPM(rpm: number): void {

@@ -1,10 +1,10 @@
 import {PositionalAudio, AudioListener, Object3D} from "three";
 
 import {
-    AbstractSoundContainer
-} from "./abstract-sound-container";
+    AbstractSoundFacade
+} from "./abstract-sound-facade";
 
-export  class PositionalSoundContainer extends AbstractSoundContainer {
+export  class PositionalSoundFacade extends AbstractSoundFacade {
 
     public constructor(
         soundEmittingObject: Object3D,
