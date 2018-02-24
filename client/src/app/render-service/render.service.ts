@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, Vector3 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
@@ -80,32 +80,36 @@ export class RenderService extends Renderer {
             this._car.getPosition(),
             this._car.direction
         );
+        this.setupScene();
+        this.startRenderingLoop();
+    }
+    private setupScene(): void {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
-        this.startRenderingLoop();
     }
 
     private getFloor(): Mesh {
-        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
-        texture.wrapS = RepeatWrapping;
-        texture.wrapT = RepeatWrapping;
-        texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
-        const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
-        plane.rotateX(PI_OVER_2);
-        plane.translateZ(OFF_ROAD_Z_TRANSLATION);
+        let plane: Mesh = new Mesh();
+        plane =  this.setTexture(FLOOR_DIMENSION, OFF_ROAD_PATH);
+        plane.translate(OFF_ROAD_Z_TRANSLATION, new Vector3(0, 0, 1));
 
         return plane;
     }
 
     private getTrack(): Mesh {
-        const texture: Texture = new TextureLoader().load(TRACK_PATH);
+        let plane: Mesh = new Mesh();
+        plane =  this.setTexture(SPAWN_DIMENSION, TRACK_PATH);
+
+        return plane;
+    }
+    private setTexture(dimension: number, path: string): Mesh {
+        const texture: Texture = new TextureLoader().load(path);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
-        texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
+        texture.repeat.set(dimension * FLOOR_TEXTURE_RATIO, dimension * FLOOR_TEXTURE_RATIO);
         const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
-        const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
+        const plane: Mesh = new Mesh(new PlaneGeometry(dimension, dimension), material);
         plane.rotateX(PI_OVER_2);
 
         return plane;
