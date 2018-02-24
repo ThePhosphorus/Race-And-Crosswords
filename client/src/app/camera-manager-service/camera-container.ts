@@ -1,8 +1,8 @@
 import {Camera, Vector3, AudioListener } from "three";
 import { TargetInfos } from "./camera-manager.service";
 
-const MINIMAL_ZOOM: number = 4;
-const MAXIMAL_ZOOM: number = 25;
+const DEFAULT_MINIMAL_ZOOM: number = 4;
+const DEFAULT_MAXIMAL_ZOOM: number = 25;
 const ZOOM_FACTOR: number = 0.5;
 
 export class ZoomLimit {
@@ -10,8 +10,8 @@ export class ZoomLimit {
     public max: number;
 
     public constructor(min?: number, max?: number) {
-        this.min = (min) ? min : MINIMAL_ZOOM;
-        this.max = (max) ? max : MAXIMAL_ZOOM;
+        this.min = (min) ? min : DEFAULT_MINIMAL_ZOOM;
+        this.max = (max) ? max : DEFAULT_MAXIMAL_ZOOM;
      }
  }
 
