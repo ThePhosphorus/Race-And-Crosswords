@@ -49,13 +49,13 @@ export class EmptyGridFactory {
             return false;
         }
 
-        const acrossLetter: Letter[] = [];
-        for (let i: number = id - (id % this.crossword.size); i < id + this.crossword.size - (id % this.crossword.size); i++) {
-            acrossLetter.push(this.crossword.grid[i]);
-        }
-        const downLetters: Letter[] = [];
-        for (let i: number = id % this.crossword.size; i < this.crossword.grid.length; i += this.crossword.size) {
-            downLetters.push(this.crossword.grid[i]);
+        const acrossLetter: Letter[] = new Array<Letter>();
+        const downLetters: Letter[] = new Array<Letter>();
+        const blackTileRow: number = this.crossword.getRow(id);
+        const blackTileColumn: number = this.crossword.getColumn(id);
+        for (let i: number = 0; i < this.crossword.size; i++) {
+            acrossLetter.push(this.crossword.grid[this.crossword.getPosition(blackTileRow, i)]);
+            downLetters.push(this.crossword.grid[this.crossword.getPosition(i, blackTileColumn)]);
         }
 
         return this.getNumberOfWordsInLine(acrossLetter) > 0 &&
@@ -88,9 +88,9 @@ export class EmptyGridFactory {
         let verticalComplexity: number = 0;
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
-                if (!this.crossword.grid[(this.crossword.size * i) + j].isBlackTile) {
-                    if (this.isInAWord((this.crossword.size * i) + j, Orientation.Across) &&
-                        this.isInAWord((this.crossword.size * i) + j, Orientation.Down)) {
+                if (!this.crossword.grid[this.crossword.getPosition(i, j)].isBlackTile) {
+                    if (this.isInAWord(this.crossword.getPosition(i, j), Orientation.Across) &&
+                        this.isInAWord(this.crossword.getPosition(i, j), Orientation.Down)) {
                         complexity += ++horizontalComplexity;
                     }
                 } else {
@@ -98,9 +98,9 @@ export class EmptyGridFactory {
                     verticalComplexity = 0;
                 }
 
-                if (!this.crossword.grid[(this.crossword.size * j) + i].isBlackTile) {
-                    if (this.isInAWord((this.crossword.size * j) + i, Orientation.Across) &&
-                        this.isInAWord((this.crossword.size * j) + i, Orientation.Down)) {
+                if (!this.crossword.grid[this.crossword.getPosition(j, i)].isBlackTile) {
+                    if (this.isInAWord(this.crossword.getPosition(j, i), Orientation.Across) &&
+                        this.isInAWord(this.crossword.getPosition(j, i), Orientation.Down)) {
                         complexity += ++verticalComplexity;
                     }
 

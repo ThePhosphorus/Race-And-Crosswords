@@ -19,8 +19,8 @@ export class ExtendedCrosswordGrid extends CrosswordGrid {
         let downWord: Word = new Word();
         for (let i: number = 0; i < this.size; i++) {
             for (let j: number = 0; j < this.size; j++) {
-                acrossWord = this.initializeLetter(acrossWord, (this.size * i) + j, Orientation.Across, notPlacedWords);
-                downWord = this.initializeLetter(downWord, (this.size * j) + i, Orientation.Down, notPlacedWords);
+                acrossWord = this.initializeLetter(acrossWord, this.getPosition(i, j), Orientation.Across, notPlacedWords);
+                downWord = this.initializeLetter(downWord, this.getPosition(j, i), Orientation.Down, notPlacedWords);
             }
             this.addWord(acrossWord, Orientation.Across, notPlacedWords);
             this.addWord(downWord, Orientation.Down, notPlacedWords);
