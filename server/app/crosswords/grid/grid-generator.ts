@@ -17,17 +17,17 @@ export class GridGenerator {
     private rollbackCount: number = 0;
 
     public async getNewGrid(difficulty: Difficulty, size: number): Promise<CrosswordGrid> {
-        this.emptyGridFactory = new EmptyGridFactory(size);
-        this.initialiseEmptyGrid();
+        this.emptyGridFactory = new EmptyGridFactory();
+        this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);
         this.cleanGrid();
 
         return this.crossword;
     }
 
-    private initialiseEmptyGrid(): void {
+    private initialiseEmptyGrid(size: number): void {
 
-        this.crossword = this.emptyGridFactory.getNewGrid();
+        this.crossword = this.emptyGridFactory.getNewGrid(size);
         this.crossword.words = new Array<Word>();
         this.notPlacedWords = this.crossword.findWords();
     }
@@ -57,7 +57,7 @@ export class GridGenerator {
 
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_TOTAL_ROLLBACKS) {
-                this.initialiseEmptyGrid();
+                this.initialiseEmptyGrid(this.crossword.size);
                 this.rollbackCount = 0;
             }
 

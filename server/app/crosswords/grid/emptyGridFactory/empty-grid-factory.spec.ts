@@ -9,7 +9,7 @@ describe(" Empty grid generation", () => {
     describe("When the empty grid is generated", () => {
         it("should give a grid with the right size", (done: MochaDone) => {
             for (let i: number = 1; i <= MAX_TESTED_SIZE; i++) {
-                const grid: CrosswordGrid = new EmptyGridFactory(i).getNewGrid();
+                const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid(i);
                 assert.strictEqual(grid.size, i, "Attribute size of grid is not the expected size.");
                 assert.strictEqual(grid.grid.length, i * i, "Vertical length is not the right length");
             }
@@ -17,7 +17,7 @@ describe(" Empty grid generation", () => {
         });
 
         it("should give us a grid with no blackTiles in the first row and the first column ", (done: MochaDone) => {
-            const grid: CrosswordGrid = new EmptyGridFactory(MAX_TESTED_SIZE).getNewGrid();
+            const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid(MAX_TESTED_SIZE);
             for (let i: number = 0; i < gridSize; i++) {
                 if (grid.grid[i].isBlackTile) {
                     assert.fail("Detected blackTile on the first row");

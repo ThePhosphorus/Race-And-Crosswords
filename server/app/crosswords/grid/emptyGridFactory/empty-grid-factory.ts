@@ -7,13 +7,11 @@ export class EmptyGridFactory {
 
     private crossword: ExtendedCrosswordGrid;
 
-    public constructor(private size: number) { }
-
-    public getNewGrid(): ExtendedCrosswordGrid {
+    public getNewGrid(size: number): ExtendedCrosswordGrid {
         let complexity: number;
         do {
             this.crossword = new ExtendedCrosswordGrid();
-            this.initializeGrid(this.size);
+            this.initializeGrid(size);
             this.generateBlackTiles();
             complexity = this.getComplexity();
         } while (complexity > COMPLEXITY_THRESHOLD);
@@ -99,9 +97,9 @@ export class EmptyGridFactory {
         let verticalComplexity: number = 0;
         for (let i: number = 0; i < this.crossword.size; i++) {
             for (let j: number = 0; j < this.crossword.size; j++) {
-                if (!this.crossword.grid[(this.size * i) + j].isBlackTile) {
-                    if (this.isInAWord((this.size * i) + j, Orientation.Across) &&
-                        this.isInAWord((this.size * i) + j, Orientation.Down)) {
+                if (!this.crossword.grid[(this.crossword.size * i) + j].isBlackTile) {
+                    if (this.isInAWord((this.crossword.size * i) + j, Orientation.Across) &&
+                        this.isInAWord((this.crossword.size * i) + j, Orientation.Down)) {
                         complexity += ++horizontalComplexity;
                     }
                 } else {
@@ -109,9 +107,9 @@ export class EmptyGridFactory {
                     verticalComplexity = 0;
                 }
 
-                if (!this.crossword.grid[(this.size * j) + i].isBlackTile) {
-                    if (this.isInAWord((this.size * j) + i, Orientation.Across) &&
-                        this.isInAWord((this.size * j) + i, Orientation.Down)) {
+                if (!this.crossword.grid[(this.crossword.size * j) + i].isBlackTile) {
+                    if (this.isInAWord((this.crossword.size * j) + i, Orientation.Across) &&
+                        this.isInAWord((this.crossword.size * j) + i, Orientation.Down)) {
                         complexity += ++verticalComplexity;
                     }
 
