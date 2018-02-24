@@ -121,7 +121,7 @@ export class InputGridComponent implements OnInit {
     public writeChar(event: KeyboardEvent): void {
         const ENTER: number = 13;
         if (this.currentLetter != null) {
-            if (event.key.length === 1 && event.key.match(/^[a-z]+$/i) !== null) {
+            if (event.key.match(/^[a-z]$/i) !== null) {
                 if (this.disabledLetters.indexOf(this.currentLetter) < 0) {
                 this._grid.grid[this.currentLetter].char = event.key;
                 this._writtenWord.letters.push(this._grid.grid[this.currentLetter]);
