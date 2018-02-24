@@ -6,7 +6,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
     styleUrls: ["./input-letter.component.css"]
 })
 export class InputLetterComponent implements OnInit {
-    @Input() public cheatmode: boolean;
     @Input() public letter: string;
     @Input() public id: number;
     @Input() public currentLetter: number;
@@ -14,7 +13,6 @@ export class InputLetterComponent implements OnInit {
     @Input() public hoveredLetters: number[];
     @Input() public disabledLetters: number[];
     @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
-    @Output() public advertiseWrittenLetter: EventEmitter<string> = new EventEmitter<string>();
 
     public constructor() {
         this.letter = "";

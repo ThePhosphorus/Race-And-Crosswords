@@ -13,8 +13,8 @@
         <span *ngIf="letter.char">
           <app-input-letter [letter]="letter.char" [id]="(twoDimensionGrid.length*row)+col"
           [highlightedLetters]="highlightedLetters" [hoveredLetters]="hoveredLetters"
-          [currentLetter]="currentLetter"
-          (setSelectedLetter)="setSelectedLetter($event)" [disabledLetters]="disabledLetters"(advertiseWrittenLetter)="writeChar($event)"></app-input-letter>
+          [currentLetter]="currentLetter" [disabledLetters]="disabledLetters"
+          (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
         </span>
       </td>
 
