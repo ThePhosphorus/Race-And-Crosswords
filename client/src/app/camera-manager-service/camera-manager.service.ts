@@ -119,4 +119,8 @@ export class CameraManagerService {
             if (container.type === type) { this.selectedCameraIndex = index; }
         });
     }
+
+    public scrollZoom(deltaZoom: number): void {
+        this.selectedCamera.scrollZoom(deltaZoom);
+    }
 }

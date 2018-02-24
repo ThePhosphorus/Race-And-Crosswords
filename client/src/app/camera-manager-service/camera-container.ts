@@ -50,6 +50,13 @@ export abstract class CameraContainer {
         this.zoomLimit = zoomLimit;
     }
 
+    public scrollZoom(deltaZoom: number): void {
+        if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
+         (deltaZoom > 0 && this.cameraDistance < this.zoomLimit.max)) {
+            this.cameraDistance += deltaZoom;
+        }
+    }
+
     public addAudioListener(): void {
         this.camera.add(this._audioListener);
      }

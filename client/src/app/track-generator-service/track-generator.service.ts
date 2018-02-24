@@ -120,7 +120,7 @@ export class TrackGenerator extends Renderer {
     }
 
     public mouseWheelEvent(event: MouseWheelEvent): void {
-        // this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
+        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
     }
 
     // Rendering
