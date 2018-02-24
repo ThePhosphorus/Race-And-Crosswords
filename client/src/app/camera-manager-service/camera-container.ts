@@ -3,6 +3,7 @@ import { TargetInfos } from "./camera-manager.service";
 
 const MINIMAL_ZOOM: number = 4;
 const MAXIMAL_ZOOM: number = 25;
+const ZOOM_FACTOR: number = 0.5;
 
 export class ZoomLimit {
     public min: number;
@@ -18,7 +19,7 @@ export abstract class CameraContainer {
     protected zoom: number;
 
     public constructor(
-        protected _audioListener: AudioListener,
+        private _audioListener: AudioListener,
         protected _targetInfos: TargetInfos,
         protected cameraDistance: number,
         protected zoomLimit: ZoomLimit
@@ -63,10 +64,16 @@ export abstract class CameraContainer {
         (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max);
      }
 
+    public update(deltaTime: number): void {
+        if (this.checkZoom) {
+            this.cameraDistance -= this.zoom * ZOOM_FACTOR;
+        }
+
+        this.fixUpdate(deltaTime);
+     }
+
     public abstract camera(): Camera;
     public abstract position(): Vector3;
     public abstract onResize(aspectRatio: number): void;
-    public abstract update(deltaTime: number): void;
-
-    protected abstract updateCameraPosition(): void;
+    protected abstract fixUpdate(deltaTime: number): void;
  }

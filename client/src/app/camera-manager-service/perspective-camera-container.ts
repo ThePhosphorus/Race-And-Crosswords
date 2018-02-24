@@ -1,6 +1,8 @@
 import { PerspectiveCamera, Vector3, AudioListener, Camera } from "three";
-import { CameraContainer } from "./camera-container";
+import { CameraContainer, ZoomLimit } from "./camera-container";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
+import { TargetInfos } from "./camera-manager.service";
+
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
@@ -13,19 +15,17 @@ const INITIAL_RATIO_WIDTH: number = 16;
 const INITIAL_RATIO_HEIGHT: number = 9;
 const INITIAL_ASPECT_RATIO: number = INITIAL_RATIO_WIDTH / INITIAL_RATIO_HEIGHT;
 
-export class PerspectiveCameraContainer implements CameraContainer {
+export class PerspectiveCameraContainer extends CameraContainer {
     private thirdPersonPoint: Vector3;
     private _perspCamera: PerspectiveCamera;
     private effectModeisEnabled: boolean;
 
-    public constructor(audioListener: AudioListener, carInfos: { position: Vector3, direction: Vector3 }) {
-        this.aspectRatio = INITIAL_ASPECT_RATIO;
+    public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
+        super(audioListener, targetInfos, cameraDistance, zoomLimit);
         this.thirdPersonPoint = new Vector3(0, 0, 0);
-        this.audioListener = audioListener;
-        this.carInfos = carInfos;
-        this._camera = new PerspectiveCamera(
+        this._perspCamera = new PerspectiveCamera(
             FIELD_OF_VIEW,
-            this.aspectRatio,
+            INITIAL_ASPECT_RATIO,
             NEAR_CLIPPING_PLANE,
             FAR_CLIPPING_PLANE
         );
@@ -33,50 +33,48 @@ export class PerspectiveCameraContainer implements CameraContainer {
     }
 
     private init(): void {
-        this._camera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this._camera.lookAt(this.carInfos.position);
+        this._perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
+        this._perspCamera.lookAt(this._targetInfos.position);
+        // TODO: bind x to enable effect mode
     }
 
-    public update(deltaTime: number, thirdPersonPoint: Vector3, effectModeisEnabled: boolean): void {
+    public fixUpdate(deltaTime: number): void {
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
-        this.perspCameraPhysicUpdate(deltaTime, thirdPersonPoint, effectModeisEnabled);
-        this._camera.lookAt(this.carInfos.position);
+        this.perspCameraPhysicUpdate(deltaTime);
+        this._perspCamera.lookAt(this._targetInfos.position);
     }
-    public updateCameraPosition(): void {
 
-    }
     public onResize(aspectRatio: number): void {
-        this.aspectRatio = aspectRatio;
-        this._camera.aspect = this.aspectRatio;
-        this._camera.updateProjectionMatrix();
+        this._perspCamera.aspect = aspectRatio;
+        this._perspCamera.updateProjectionMatrix();
     }
 
     private calcPosPerspCamera(): Vector3 {
-        const carDirection: Vector3 = this.carInfos.direction;
+        const carDirection: Vector3 = this._targetInfos.direction;
         const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
         carDirection.setY(0);
         carDirection.normalize();
 
         return new Vector3(
-            this.carInfos.position.x + (- carDirection.x * projectionXZ),
-            this.carInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
-            this.carInfos.position.z + (- carDirection.z * projectionXZ)
+            this._targetInfos.position.x + (- carDirection.x * projectionXZ),
+            this._targetInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
+            this._targetInfos.position.z + (- carDirection.z * projectionXZ)
         );
     }
 
-    private perspCameraPhysicUpdate(deltaTime: number, thirdPersonPoint: Vector3, effectModeisEnabled: boolean): void {
-        if (effectModeisEnabled) {
+    private perspCameraPhysicUpdate(deltaTime: number): void {
+        if (this.effectModeisEnabled) {
 
             deltaTime = deltaTime / MS_TO_SECONDS;
-            const deltaPos: Vector3 = thirdPersonPoint.clone().sub(this._camera.position);
+            const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this._perspCamera.position);
             deltaPos.multiplyScalar(
                 PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
                 (
                     (deltaPos.length() >= MAX_RECOIL_DISTANCE ) ?
                     (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE)  + 1) : 1)
                 );
-            this._camera.position.add(deltaPos);
-        } else { this._camera.position.copy(thirdPersonPoint); }
+            this._perspCamera.position.add(deltaPos);
+        } else { this._perspCamera.position.copy(this.thirdPersonPoint); }
     }
 
     public position(): Vector3 {
@@ -84,7 +82,7 @@ export class PerspectiveCameraContainer implements CameraContainer {
     }
 
     public  camera(): Camera {
-        return this._camera;
+        return this._perspCamera;
     }
 
     public toggleEffect (): void {
