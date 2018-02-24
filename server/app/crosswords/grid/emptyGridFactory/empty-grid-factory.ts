@@ -32,10 +32,11 @@ export class EmptyGridFactory {
         let tileCount: number = 0;
         do {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
-            if (this.isCorrectBlackTile(id)) {
+            if (!this.crossword.grid[id].isBlackTile) {
                 this.crossword.grid[id].isBlackTile = true;
-                tileCount++;
-                if (!this.isValidBlackTile(id)) {
+                if (this.isValidBlackTile(id)) {
+                    tileCount++;
+                } else {
                     this.crossword.grid[id].isBlackTile = false;
                 }
             }
@@ -44,6 +45,10 @@ export class EmptyGridFactory {
     }
 
     private isValidBlackTile(id: number): boolean {
+        if (id <= this.crossword.size || id % this.crossword.size === 0) {
+            return false;
+        }
+
         const acrossLetter: Letter[] = [];
         for (let i: number = id - (id % this.crossword.size); i < id + this.crossword.size - (id % this.crossword.size); i++) {
             acrossLetter.push(this.crossword.grid[i]);
@@ -53,22 +58,8 @@ export class EmptyGridFactory {
             downLetters.push(this.crossword.grid[i]);
         }
 
-        return id >= this.crossword.size &&
-            id % this.crossword.size !== 0 &&
-            this.getNumberOfWordsInLine(acrossLetter) > 0 &&
+        return this.getNumberOfWordsInLine(acrossLetter) > 0 &&
             this.getNumberOfWordsInLine(downLetters) > 0;
-    }
-
-    private isCorrectBlackTile(id: number): boolean {
-
-        if (this.crossword.grid[id].isBlackTile) {
-            return false;
-        }
-        if (id <= this.crossword.size || id % this.crossword.size === 0) {
-            return false;
-        }
-
-        return true;
     }
 
     private getNumberOfWordsInLine(letters: Letter[]): number {
