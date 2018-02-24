@@ -60,7 +60,6 @@ export class RenderService extends Renderer {
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
-        // this.inputManager.registerKeyDown(88, () => console.log("ere"));
     }
 
     private fullscreen(): void {

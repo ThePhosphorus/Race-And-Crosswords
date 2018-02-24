@@ -6,7 +6,7 @@ import { OrthographicCameraContainer } from "./orthographic-camera-container";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 const INITIAL_CAMERA_DISTANCE: number = 10;
-const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // ,
+const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 
 export class TargetInfos {
     public constructor (
@@ -29,7 +29,6 @@ export class CameraManagerService {
         this.init();
      }
 
-     // DONE
     public init(): void {
         this._audioListener = new AudioListener();
         this.selectedCameraIndex = 0;
@@ -88,10 +87,10 @@ export class CameraManagerService {
 
     // Input manager callbacks
     public switchCamera(): void {
-        // this.selectedCamera.removeAudioListener();
+        this.selectedCamera.removeAudioListener();
         this.selectedCameraIndex += 1;
         this.selectedCameraIndex %= this._cameraArray.length;
-        // this.selectedCamera.addAudioListener();
+        this.selectedCamera.addAudioListener();
      }
 
     public zoomIn (): void {
