@@ -1,4 +1,5 @@
 import {Camera, Vector3, AudioListener } from "three";
+import { TargetInfos } from "./camera-manager.service";
 
 const MINIMAL_ZOOM: number = 4;
 const MAXIMAL_ZOOM: number = 25;
@@ -14,12 +15,12 @@ export class ZoomLimit {
  }
 
 export abstract class CameraContainer {
+    protected zoom: number;
+
     public constructor(
-        private _audioListener: AudioListener,
-        protected _targetPosition: Vector3,
-        protected _TargetDirection: Vector3,
+        protected _audioListener: AudioListener,
+        protected _targetInfos: TargetInfos,
         protected cameraDistance: number,
-        protected zoom: number,
         protected zoomLimit: ZoomLimit
     ) {
 
@@ -39,7 +40,7 @@ export abstract class CameraContainer {
 
     public addAudioListener(): void {
         this.camera().add(this._audioListener);
-    }
+     }
 
     public removeAudioListener(): void {
         this.camera().remove(this._audioListener);
@@ -55,6 +56,11 @@ export abstract class CameraContainer {
 
     public set cameraDistanceToCar(distance: number) {
         this.cameraDistance = distance;
+     }
+
+    public checkZoom(): boolean {
+        return (this.zoom > 0 && this.cameraDistance > this.zoomLimit.min) ||
+        (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max);
      }
 
     public abstract camera(): Camera;
