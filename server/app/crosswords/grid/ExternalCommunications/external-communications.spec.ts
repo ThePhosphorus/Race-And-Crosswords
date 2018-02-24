@@ -25,8 +25,10 @@ describe("External Communications", () => {
 
     it("should find word with letters", (done: MochaDone) => {
         const word: Word = new Word();
-        for (const letter of testWord) {
+        let i: number = 0;
+        while (i < testWord.length) {
             word.letters.push(new Letter());
+            i++;
         }
 
         externalCommunication.getWordsFromServer(testWord, word, true).then((datamuseWord: DatamuseWord) => {
