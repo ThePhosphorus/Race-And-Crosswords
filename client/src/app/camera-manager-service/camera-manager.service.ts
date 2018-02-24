@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
 import { PerspectiveCamera, OrthographicCamera, Vector3, Camera, AudioListener } from "three";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
+import { CameraContainerInterface } from "./camera-container-interface";
+import { PerspectiveCameraContainer } from "./perspective-camera-container";
+import { OrthographicCameraContainer } from "./orthographic-camera-container";
 
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
@@ -36,17 +39,18 @@ export class ZoomLimit {
 @Injectable()
 export class CameraManagerService {
 
-    private persp: PerspectiveCamera;
-    private ortho: OrthographicCamera;
+    private cameras: Array<CameraContainerInterface>;
+    private perspContainer: PerspectiveCameraContainer;
+    private orthoContainer: OrthographicCameraContainer;
     private cameraDistance: number;
-    private aspectRatio: number;
     private type: CameraType;
-    private carInfos: { position: Vector3, direction: Vector3 };
     private thirdPersonPoint: Vector3;
-    private effectModeisEnabled: boolean;
     private zoom: number;
-    private audioListener: AudioListener;
     public zoomLimit: ZoomLimit;
+    private aspectRatio: number;
+    private carInfos: { position: Vector3, direction: Vector3 };
+    private effectModeisEnabled: boolean;
+    private audioListener: AudioListener;
 
     public constructor() {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
@@ -63,21 +67,11 @@ export class CameraManagerService {
         this.cameraDistance = INITIAL_CAMERA_DISTANCE;
         this.type = CameraType.Persp;
 
-        this.persp = new PerspectiveCamera(
-            FIELD_OF_VIEW,
-            this.aspectRatio,
-            NEAR_CLIPPING_PLANE,
-            FAR_CLIPPING_PLANE
-        );
+        this.perspContainer = new PerspectiveCameraContainer();
+        this.orthoContainer = new OrthographicCameraContainer();
+        this.cameras.push(this.perspContainer);
+        this.cameras.push(this.orthoContainer);
 
-        this.ortho = new OrthographicCamera(
-            -this.cameraDistance * this.aspectRatio,
-            this.cameraDistance * this.aspectRatio,
-            this.cameraDistance,
-            -this.cameraDistance,
-            NEAR_CLIPPING_PLANE,
-            FAR_CLIPPING_PLANE
-        );
         this.persp.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this.persp.lookAt(this.carInfos.position);
         this.ortho.position.set(
