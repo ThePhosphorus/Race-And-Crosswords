@@ -60,12 +60,12 @@ export abstract class CameraContainer {
      }
 
     public checkZoom(): boolean {
-        return (this.zoom > 0 && this.cameraDistance > this.zoomLimit.min) ||
-        (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max);
+        return (this.zoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
+        (this.zoom > 0 && this.cameraDistance < this.zoomLimit.max);
      }
 
     public update(deltaTime: number): void {
-        if (this.checkZoom) {
+        if (this.checkZoom()) {
             this.cameraDistance += this.zoom * ZOOM_FACTOR;
         }
 
