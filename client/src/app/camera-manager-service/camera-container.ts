@@ -32,4 +32,6 @@ export abstract class ICameraContainer {
         this.cam.remove(this.audioListener);
     }
 
+    public abstract get position(): Vector3;
+    public abstract resize(aspectRatio: number): void;
 }

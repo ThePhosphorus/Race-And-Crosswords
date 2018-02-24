@@ -1,4 +1,4 @@
-import { OrthographicCamera, AudioListener } from "three";
+import { OrthographicCamera, Vector3 } from "three";
 import { CarInfos } from "../render-service/render.service";
 import { ICameraContainer } from "./camera-container";
 const FAR_CLIPPING_PLANE: number = 1000;
@@ -30,5 +30,8 @@ export class OrthographicCameraContainer extends ICameraContainer {
             this.carInfos.position.z
         );
         this.cam.lookAt(this.carInfos.position);
+    }
+    public get position(): Vector3 {
+        return this.cam.position;
     }
 }

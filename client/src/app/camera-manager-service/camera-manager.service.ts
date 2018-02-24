@@ -60,10 +60,11 @@ export class CameraManagerService {
         this.zoom = 0;
         this.cameraDistance = INITIAL_CAMERA_DISTANCE;
         this.cameraIndex = 0;
-        this.perspContainer = new PerspectiveCameraContainer(this.audioListener);
-        this.orthoContainer = new OrthographicCameraContainer(this.audioListener);
+        this.perspContainer = new PerspectiveCameraContainer();
+        this.orthoContainer = new OrthographicCameraContainer();
         this.cameras.push(this.perspContainer);
         this.cameras.push(this.orthoContainer);
+        this.cameras[this.cameraIndex].addAudioListener(this.audioListener);
     }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
@@ -77,14 +78,7 @@ export class CameraManagerService {
     }
 
     public get camera(): Camera {
-        switch (this.type) {
-            case CameraType.Ortho:
-                return this.ortho;
-            case CameraType.Persp:
-                return this.persp;
-            default:
-                return this.persp;
-        }
+        return this.cameras[this.cameraIndex % NB_CAMERAS].camera;
     }
 
     public onResize(aspectRation: number): void {
@@ -110,14 +104,7 @@ export class CameraManagerService {
     }
 
     public get position(): Vector3 {
-        switch (this.type) {
-            case CameraType.Ortho:
-                return this.ortho.position;
-            case CameraType.Persp:
-                return this.thirdPersonPoint;
-            default:
-                return this.thirdPersonPoint;
-        }
+        return this.cameras[this.cameraIndex % NB_CAMERAS].position;
     }
 
     public get realPosition(): Vector3 {
