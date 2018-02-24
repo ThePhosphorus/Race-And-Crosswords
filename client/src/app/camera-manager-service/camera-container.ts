@@ -24,7 +24,7 @@ export abstract class CameraContainer {
         protected cameraDistance: number,
         protected zoomLimit: ZoomLimit
     ) {
-
+        this.zoom = 0;
      }
 
     public zoomIn(): void {

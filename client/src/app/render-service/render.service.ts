@@ -76,7 +76,7 @@ export class RenderService extends Renderer {
         await this._car.init();
         // this.soundManager.startRace();
         // this.soundManager.addCarSound(this._car);
-        this.cameraManager.updatecarInfos(
+        this.cameraManager.updateTargetInfos(
             this._car.getPosition(),
             this._car.direction
         );

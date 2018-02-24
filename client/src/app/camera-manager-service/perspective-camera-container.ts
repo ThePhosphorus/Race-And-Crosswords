@@ -42,6 +42,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.perspCameraPhysicUpdate(deltaTime);
         this._perspCamera.lookAt(this._targetInfos.position);
+
     }
 
     public onResize(aspectRatio: number): void {
