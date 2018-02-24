@@ -66,7 +66,6 @@ export class RenderService extends Renderer {
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteeringLeft());
@@ -82,16 +81,19 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        this.soundManager.init(this.cameraManager.listener);
         await this._car.init();
-        this.soundManager.startRace();
-        this.soundManager.addCarSound(this._car);
+        this.setupSoundManager();
         this.cameraManager.updatecarInfos(
             this._car.getPosition(),
             this._car.direction
         );
         this.setupScene();
         this.startRenderingLoop();
+    }
+    private setupSoundManager(): void {
+        this.soundManager.init(this.cameraManager.listener);
+        this.soundManager.startRace();
+        this.soundManager.addCarSound(this._car);
     }
     private setupScene(): void {
         this.scene.add(this._car);
