@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Camera, AudioListener } from "three";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
-import { ICameraContainer } from "./camera-container";
+import { CameraContainer } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
 
@@ -19,12 +19,10 @@ export enum CameraType {
     Persp
 }
 
-
-
 @Injectable()
 export class CameraManagerService {
 
-    private cameras: Array<ICameraContainer>;
+    private cameras: Array<CameraContainer>;
     private perspContainer: PerspectiveCameraContainer;
     private orthoContainer: OrthographicCameraContainer;
     private cameraDistance: number;
@@ -33,8 +31,6 @@ export class CameraManagerService {
 
     private type: CameraType;
     private carInfos: { position: Vector3, direction: Vector3 };
-    private effectModeisEnabled: boolean;
-    private audioListener: AudioListener;
 
     public constructor() {
         this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
@@ -65,7 +61,7 @@ export class CameraManagerService {
     // TODO
     public update(deltaTime: number, ): void {
         this.cameras.forEach((camera) => {
-            camera.update(deltaTime, this.thirdPersonPoint, this.effectModeisEnabled)
+            camera.update(deltaTime, this.thirdPersonPoint, this.effectModeisEnabled);
         });
         // ORIGINAL>>>
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
@@ -102,11 +98,11 @@ export class CameraManagerService {
 
     // DONE
     public get position(): Vector3 {
-        return this.cameras[this.type].position();
+        return this.cameras[this.cameraIndex].position();
     }
 
     public get realPosition(): Vector3 {
-        return this.camera.position;
+        return this.cameras[this.cameraIndex].camera().position;
     }
 
     public get cameraDistanceToCar(): number {
@@ -117,16 +113,8 @@ export class CameraManagerService {
         this.cameraDistance = distance;
     }
 
-    public get listener(): AudioListener {
-        return this.audioListener;
-    }
-
-    public get effectModeEnabled(): boolean {
-        return this.effectModeisEnabled;
-    }
-
-    public set effectModeEnabled(value: boolean) {
-        this.effectModeisEnabled = value;
+    public get audioListener(): AudioListener {
+        return this.cameras[this.cameraIndex].audioListener;
     }
 
     // TODO UPDATE POSITION.
@@ -152,26 +140,20 @@ export class CameraManagerService {
 
     // Input manager callbacks
     public switchCamera(): void {
-        this.cameras.forEach((camera) => {
-            camera.removeAudioListener();
-        });
-        this.cameraIndex++;
+        this.cameras[this.cameraIndex++].removeAudioListener();
+        this.cameraIndex %= this.cameras.length - 1;
         this.cameras[this.cameraIndex].addAudioListener();
     }
 
-    public toggleEffect (): void {
-        this.effectModeEnabled = !this.effectModeEnabled;
-    }
-
     public zoomIn (): void {
-        this.zoom = 1;
+        this.cameras[this.cameraIndex].zoomIn();
     }
 
     public zoomOut (): void {
-        this.zoom = -1;
+        this.cameras[this.cameraIndex].zoomOut();
     }
 
     public zoomRelease (): void {
-        this.zoom = 0;
+        this.cameras[this.cameraIndex].zoomRelease();
     }
 }

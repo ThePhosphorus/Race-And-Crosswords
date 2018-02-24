@@ -16,6 +16,8 @@ const INITIAL_ASPECT_RATIO: number = INITIAL_RATIO_WIDTH / INITIAL_RATIO_HEIGHT;
 export class PerspectiveCameraContainer implements CameraContainer {
     private thirdPersonPoint: Vector3;
     private _perspCamera: PerspectiveCamera;
+    private effectModeisEnabled: boolean;
+
     public constructor(audioListener: AudioListener, carInfos: { position: Vector3, direction: Vector3 }) {
         this.aspectRatio = INITIAL_ASPECT_RATIO;
         this.thirdPersonPoint = new Vector3(0, 0, 0);
@@ -83,5 +85,17 @@ export class PerspectiveCameraContainer implements CameraContainer {
 
     public  camera(): Camera {
         return this._camera;
+    }
+
+    public toggleEffect (): void {
+        this.effectModeEnabled = !this.effectModeEnabled;
+    }
+
+    public get effectModeEnabled(): boolean {
+        return this.effectModeisEnabled;
+    }
+
+    public set effectModeEnabled(value: boolean) {
+        this.effectModeisEnabled = value;
     }
 }

@@ -45,6 +45,18 @@ export abstract class CameraContainer {
         this.camera().remove(this._audioListener);
      }
 
+    public get audioListener(): AudioListener {
+        return this._audioListener;
+     }
+
+    public get cameraDistanceToCar(): number {
+        return this.cameraDistance;
+     }
+
+    public set cameraDistanceToCar(distance: number) {
+        this.cameraDistance = distance;
+     }
+
     public abstract camera(): Camera;
     public abstract position(): Vector3;
     public abstract onResize(aspectRatio: number): void;
