@@ -1,10 +1,10 @@
 import { OrthographicCamera, Vector3, AudioListener, Camera } from "three";
-import { ICameraContainer } from "./camera-container";
+import { CameraContainer } from "./camera-container";
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const INITIAL_CAMERA_POSITION_Y: number = 10;
 
-export class OrthographicCameraContainer implements ICameraContainer {
+export class OrthographicCameraContainer implements CameraContainer {
     private _camera: OrthographicCamera;
     private audioListener: AudioListener;
     private aspectRatio: number;
@@ -39,14 +39,12 @@ export class OrthographicCameraContainer implements ICameraContainer {
 
     }
     public zoomIn(): void {
-        
+
     }
     public zoomOut(): void {
 
     }
-    public addAudioListener(): void {
-        this._camera.add(this.audioListener);
-    }
+
     public removeAudioListener(): void {
         this._camera.remove(this.audioListener);
     }

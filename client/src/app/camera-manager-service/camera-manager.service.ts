@@ -12,8 +12,6 @@ const INITIAL_CAMERA_POSITION_Y: number = 10;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const MAX_RECOIL_DISTANCE: number = 8;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
-const MINIMAL_ZOOM: number = 4;
-const MAXIMAL_ZOOM: number = 25;
 const ZOOM_FACTOR: number = 0.5;
 
 export enum CameraType {
@@ -21,15 +19,7 @@ export enum CameraType {
     Persp
 }
 
-export class ZoomLimit {
-    public min: number;
-    public max: number;
 
-    public constructor(min?: number, max?: number) {
-        this.min = (min) ? min : MINIMAL_ZOOM;
-        this.max = (max) ? max : MAXIMAL_ZOOM;
-    }
-}
 
 @Injectable()
 export class CameraManagerService {
@@ -40,10 +30,8 @@ export class CameraManagerService {
     private cameraDistance: number;
     private cameraIndex: number;
     private thirdPersonPoint: Vector3;
-    private zoom: number;
+
     private type: CameraType;
-    public zoomLimit: ZoomLimit;
-    private aspectRatio: number;
     private carInfos: { position: Vector3, direction: Vector3 };
     private effectModeisEnabled: boolean;
     private audioListener: AudioListener;
@@ -79,10 +67,10 @@ export class CameraManagerService {
         this.cameras.forEach((camera) => {
             camera.update(deltaTime, this.thirdPersonPoint, this.effectModeisEnabled)
         });
-        //ORIGINAL>>>
+        // ORIGINAL>>>
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.updateCameraPostion(deltaTime);
-        //ORIGINAL<<
+        // ORIGINAL<<
     }
 
     // DONE
@@ -141,7 +129,7 @@ export class CameraManagerService {
         this.effectModeisEnabled = value;
     }
 
-    // TODO UPDATE POSITION. 
+    // TODO UPDATE POSITION.
     private updateCameraPostion(deltaTime: number): void {
         if ((this.zoom > 0 && this.cameraDistance > this.zoomLimit.min) ||
          (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max)) {

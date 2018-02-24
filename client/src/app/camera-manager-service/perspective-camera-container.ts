@@ -1,5 +1,5 @@
 import { PerspectiveCamera, Vector3, AudioListener, Camera } from "three";
-import { ICameraContainer } from "./camera-container";
+import { CameraContainer } from "./camera-container";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
@@ -13,13 +13,9 @@ const INITIAL_RATIO_WIDTH: number = 16;
 const INITIAL_RATIO_HEIGHT: number = 9;
 const INITIAL_ASPECT_RATIO: number = INITIAL_RATIO_WIDTH / INITIAL_RATIO_HEIGHT;
 
-export class PerspectiveCameraContainer implements ICameraContainer {
+export class PerspectiveCameraContainer implements CameraContainer {
     private thirdPersonPoint: Vector3;
-    private _camera: PerspectiveCamera;
-    private aspectRatio: number;
-    private audioListener: AudioListener;
-    private carInfos: { position: Vector3, direction: Vector3 };
-    private cameraDistance: number;
+    private _perspCamera: PerspectiveCamera;
     public constructor(audioListener: AudioListener, carInfos: { position: Vector3, direction: Vector3 }) {
         this.aspectRatio = INITIAL_ASPECT_RATIO;
         this.thirdPersonPoint = new Vector3(0, 0, 0);
@@ -45,23 +41,8 @@ export class PerspectiveCameraContainer implements ICameraContainer {
         this._camera.lookAt(this.carInfos.position);
     }
     public updateCameraPosition(): void {
-        
+
     }
-    
-    public zoomIn(): void {
-        
-    }
-    public zoomOut(): void {
-        
-    }
-    public addAudioListener(): void {
-        this._camera.add(this.audioListener);
-    }
-    
-    public removeAudioListener(): void {
-        this._camera.remove(this.audioListener);
-    }
-    
     public onResize(aspectRatio: number): void {
         this.aspectRatio = aspectRatio;
         this._camera.aspect = this.aspectRatio;
