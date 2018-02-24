@@ -145,10 +145,3 @@ export class CarInfos {
         public rpm: number
     ) { }
 }
-
-export enum CarControls {
-    Accelerate,
-    Brake,
-    Left,
-    Right
-}

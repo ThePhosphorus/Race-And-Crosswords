@@ -54,9 +54,7 @@ export class CameraManagerService {
      }
 
     public onResize(aspectRatio: number): void {
-        this._cameraArray.forEach((camera) => {
-            camera.onResize(aspectRatio);
-        });
+        this._cameraArray.forEach((camera) => camera.onResize(aspectRatio));
      }
 
     private get selectedCamera(): CameraContainer {
@@ -89,17 +87,17 @@ export class CameraManagerService {
         this.selectedCameraIndex += 1;
         this.selectedCameraIndex %= this._cameraArray.length;
         // this.selectedCamera.addAudioListener();
-    }
+     }
 
     public zoomIn (): void {
         this.selectedCamera.zoomIn();
-    }
+     }
 
     public zoomOut (): void {
         this.selectedCamera.zoomOut();
-    }
+     }
 
     public zoomRelease (): void {
         this.selectedCamera.zoomRelease();
-    }
+     }
 }

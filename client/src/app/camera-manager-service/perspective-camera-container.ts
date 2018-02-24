@@ -30,24 +30,23 @@ export class PerspectiveCameraContainer extends CameraContainer {
             FAR_CLIPPING_PLANE
         );
         this.init();
-    }
+     }
 
     private init(): void {
         this._perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this._perspCamera.lookAt(this._targetInfos.position);
-    }
+     }
 
     public fixUpdate(deltaTime: number): void {
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.perspCameraPhysicUpdate(deltaTime);
         this._perspCamera.lookAt(this._targetInfos.position);
-
-    }
+     }
 
     public onResize(aspectRatio: number): void {
         this._perspCamera.aspect = aspectRatio;
         this._perspCamera.updateProjectionMatrix();
-    }
+     }
 
     private calcPosPerspCamera(): Vector3 {
         const carDirection: Vector3 = this._targetInfos.direction;
@@ -60,7 +59,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
             this._targetInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
             this._targetInfos.position.z + (- carDirection.z * projectionXZ)
         );
-    }
+     }
 
     private perspCameraPhysicUpdate(deltaTime: number): void {
         if (this.effectModeisEnabled) {
@@ -74,26 +73,26 @@ export class PerspectiveCameraContainer extends CameraContainer {
                     (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE)  + 1) : 1)
                 );
             this._perspCamera.position.add(deltaPos);
-        } else { this._perspCamera.position.copy(this.thirdPersonPoint); }
-    }
+         } else { this._perspCamera.position.copy(this.thirdPersonPoint); }
+     }
 
     public position(): Vector3 {
         return this.thirdPersonPoint;
-    }
+     }
 
-    public  camera(): Camera {
+    public camera(): Camera {
         return this._perspCamera;
-    }
+     }
 
     public toggleEffect (): void {
         this.effectModeEnabled = !this.effectModeEnabled;
-    }
+     }
 
     public get effectModeEnabled(): boolean {
         return this.effectModeisEnabled;
-    }
+     }
 
     public set effectModeEnabled(value: boolean) {
         this.effectModeisEnabled = value;
-    }
+     }
 }
