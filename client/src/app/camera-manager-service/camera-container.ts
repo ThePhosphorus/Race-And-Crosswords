@@ -10,8 +10,8 @@ export class ZoomLimit {
     public constructor(min?: number, max?: number) {
         this.min = (min) ? min : MINIMAL_ZOOM;
         this.max = (max) ? max : MAXIMAL_ZOOM;
-    }
-}
+     }
+ }
 
 export abstract class CameraContainer {
     public constructor(
@@ -20,24 +20,30 @@ export abstract class CameraContainer {
         protected _TargetDirection: Vector3,
         protected cameraDistance: number,
         protected zoom: number,
-        protected zoomLimit: ZoomLimit;
+        protected zoomLimit: ZoomLimit
     ) {
 
-    }
+     }
 
     public zoomIn(): void {
         this.zoom = 1;
-    }
+     }
+
     public zoomOut(): void {
         this.zoom = -1;
-    }
+     }
+
+    public zoomRelease (): void {
+        this.zoom = 0;
+     }
+
     public addAudioListener(): void {
         this.camera().add(this._audioListener);
     }
 
     public removeAudioListener(): void {
         this.camera().remove(this._audioListener);
-    }
+     }
 
     public abstract camera(): Camera;
     public abstract position(): Vector3;
@@ -45,4 +51,4 @@ export abstract class CameraContainer {
     public abstract update(deltaTime: number): void;
 
     protected abstract updateCameraPosition(): void;
-}
+ }
