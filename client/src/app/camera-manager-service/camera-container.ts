@@ -1,9 +1,9 @@
-import { AudioListener, Camera, Vector3 } from "three";
+import {Camera, Vector3 } from "three";
 
 export interface ICameraContainer {
     zoomIn(): void;
     zoomOut(): void;
-    addAudioListener(audioListener: AudioListener): void;
+    addAudioListener(): void;
     removeAudioListener(): void;
     camera(): Camera;
     updateCameraPosition(): void;

@@ -67,7 +67,7 @@ export class CameraManagerService {
         this.orthoContainer = new OrthographicCameraContainer(this.audioListener, this.cameraDistance);
         this.cameras.push(this.perspContainer);
         this.cameras.push(this.orthoContainer);
-        this.cameras[this.cameraIndex].addAudioListener(this.audioListener);
+        this.cameras[this.cameraIndex].addAudioListener();
     }
 
     public updatecarInfos(position: Vector3, direction: Vector3): void {
@@ -79,8 +79,10 @@ export class CameraManagerService {
         this.cameras.forEach((camera) => {
             camera.update(deltaTime, this.thirdPersonPoint, this.effectModeisEnabled)
         });
+        //ORIGINAL>>>
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.updateCameraPostion(deltaTime);
+        //ORIGINAL<<
     }
 
     // DONE
@@ -139,6 +141,7 @@ export class CameraManagerService {
         this.effectModeisEnabled = value;
     }
 
+    // TODO UPDATE POSITION. 
     private updateCameraPostion(deltaTime: number): void {
         if ((this.zoom > 0 && this.cameraDistance > this.zoomLimit.min) ||
          (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max)) {
@@ -159,45 +162,13 @@ export class CameraManagerService {
         }
     }
 
-    private calcPosPerspCamera(): Vector3 {
-        const carDirection: Vector3 = this.carInfos.direction;
-        const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
-        carDirection.setY(0);
-        carDirection.normalize();
-
-        return new Vector3(
-            this.carInfos.position.x + (- carDirection.x * projectionXZ),
-            this.carInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
-            this.carInfos.position.z + (- carDirection.z * projectionXZ)
-        );
-    }
-
-    private perspCameraPhysicUpdate(deltaTime: number): void {
-        if (this.effectModeisEnabled) {
-
-            deltaTime = deltaTime / MS_TO_SECONDS;
-            const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this.persp.position);
-            deltaPos.multiplyScalar(
-                PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
-                (
-                    (deltaPos.length() >= MAX_RECOIL_DISTANCE ) ?
-                    (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE)  + 1) : 1)
-                );
-            this.persp.position.add(deltaPos);
-        } else { this.persp.position.copy(this.thirdPersonPoint); }
-    }
-
     // Input manager callbacks
     public switchCamera(): void {
-        if (this.type === CameraType.Ortho) {
-            this.type = CameraType.Persp;
-            this.persp.add(this.audioListener);
-            this.ortho.remove(this.audioListener);
-        } else if (this.type === CameraType.Persp) {
-            this.type = CameraType.Ortho;
-            this.ortho.add(this.audioListener);
-            this.persp.remove(this.audioListener);
-        }
+        this.cameras.forEach((camera) => {
+            camera.removeAudioListener();
+        });
+        this.cameraIndex++;
+        this.cameras[this.cameraIndex].addAudioListener();
     }
 
     public toggleEffect (): void {
