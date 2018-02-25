@@ -177,6 +177,7 @@ export class InputGridComponent implements OnInit {
                     this.disabledLetters.push(letter.id);
                 }
                 this.currentLetter = null;
+                this.highlightedLetters = [];
             }
         }
     }
