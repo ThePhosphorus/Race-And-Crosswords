@@ -18,7 +18,8 @@ describe("CrosswordService", () => {
   }));
 
   it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
-      service.newGame(Difficulty.Easy, 4, 0.3).subscribe( (grid: CrosswordGrid) => {
+      service.newGame(Difficulty.Easy, 4, 0.3);
+      service.grid.subscribe( (grid: CrosswordGrid) => {
         expect(grid).toBeDefined();
       });
   }));
