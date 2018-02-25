@@ -31,6 +31,7 @@ export class InputGridComponent implements OnInit {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._solvedGrid = grid;
             this._playerGrid = JSON.parse(JSON.stringify(grid));
+            this.relinkLetters();
             this._playerGrid.grid.forEach((letter: Letter) => {
                 if (!letter.isBlackTile) {
                     letter.char = " ";
@@ -47,6 +48,16 @@ export class InputGridComponent implements OnInit {
         for (let i: number = 0; i < (this._playerGrid.size * this._playerGrid.size); i++) {
             this._playerGrid.grid.push(new Letter(" "));
         }
+    }
+
+    private relinkLetters(): void {
+        this._playerGrid.words.forEach((word: Word) => {
+            const linkedLetters: Letter[] = [];
+            word.letters.forEach((letter: Letter) => {
+                linkedLetters.push(this._playerGrid.grid[letter.id]);
+            });
+            word.letters = linkedLetters;
+        });
     }
 
     public get twoDimensionPlayerGrid(): Letter[][] {
