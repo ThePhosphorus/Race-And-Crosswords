@@ -6,7 +6,7 @@ import { TargetInfos } from "./camera-manager.service";
 const FAR_CLIPPING_PLANE: number = 1000;
 const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
-const PERS_CAMERA_ANGLE: number = 25;
+export const PERS_CAMERA_ANGLE: number = 25;
 const MAX_RECOIL_DISTANCE: number = 8;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;

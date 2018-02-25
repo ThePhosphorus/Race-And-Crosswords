@@ -44,9 +44,8 @@ export class CameraManagerService {
         this.selectedCamera.addAudioListener();
      }
 
-    public updateTargetInfos(position: Vector3, direction: Vector3): void {
-        this.targetInfos.position = position;
-        this.targetInfos.direction = direction;
+    public updateTargetInfos(infos: TargetInfos): void {
+        this.targetInfos = infos;
      }
 
     public update(deltaTime: number, ): void {
