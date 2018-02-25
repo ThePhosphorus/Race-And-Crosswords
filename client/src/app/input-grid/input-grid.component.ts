@@ -19,7 +19,7 @@ export class InputGridComponent implements OnInit {
     public hoveredLetters: number[];
     public disabledLetters: number[];
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService, private _crosswordGameService: CrosswordGameService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
         this.hoveredLetters = [];
@@ -188,6 +188,7 @@ export class InputGridComponent implements OnInit {
                 }
                 this.currentLetter = null;
                 this.highlightedLetters = [];
+                this._crosswordGameService.addSolvedWord(this._playerGrid.words.indexOf(playerWord));
             }
         }
     }
