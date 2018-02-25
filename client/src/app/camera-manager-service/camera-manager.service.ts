@@ -1,254 +1,130 @@
 import { Injectable } from "@angular/core";
-import { PerspectiveCamera, OrthographicCamera, Vector3, Camera, AudioListener } from "three";
-import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
+import { Vector3, Camera, AudioListener } from "three";
+import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
+import { PerspectiveCameraContainer } from "./perspective-camera-container";
+import { OrthographicCameraContainer } from "./orthographic-camera-container";
+import { InputManagerService } from "../input-manager-service/input-manager.service";
 
-const FAR_CLIPPING_PLANE: number = 1000;
-const NEAR_CLIPPING_PLANE: number = 1;
-const FIELD_OF_VIEW: number = 70;
 const INITIAL_CAMERA_DISTANCE: number = 10;
-const PERS_CAMERA_ANGLE: number = 25;
-const INITIAL_CAMERA_POSITION_Y: number = 10;
-const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
-const MAX_RECOIL_DISTANCE: number = 8;
-const STARTING_ASPECTRATIO_WIDTH: number = 16;
-const STARTING_ASPECTRATIO_HEIGHT: number = 9;
-const STARTING_ASPECTRATIO: number = STARTING_ASPECTRATIO_WIDTH / STARTING_ASPECTRATIO_HEIGHT;
-const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
-const MINIMAL_ZOOM: number = 4;
-const MAXIMAL_ZOOM: number = 25;
-const ZOOM_FACTOR: number = 0.5;
+const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 
-export enum CameraType {
-    Ortho,
-    Persp
-}
+export class TargetInfos {
+    public constructor (
+        public position: Vector3,
+        public direction: Vector3
+    ) {}
 
-export class ZoomLimit {
-    public min: number;
-    public max: number;
-
-    public constructor(min?: number, max?: number) {
-        this.min = (min) ? min : MINIMAL_ZOOM;
-        this.max = (max) ? max : MAXIMAL_ZOOM;
+    public copy(copy: TargetInfos): void {
+        this.position = copy.position;
+        this.direction = copy.direction;
     }
 }
 
 @Injectable()
 export class CameraManagerService {
 
-    private persp: PerspectiveCamera;
-    private ortho: OrthographicCamera;
-    private cameraDistance: number;
-    private aspectRatio: number;
-    private type: CameraType;
-    private carInfos: { position: Vector3, direction: Vector3 };
-    private thirdPersonPoint: Vector3;
-    private effectModeisEnabled: boolean;
-    private zoom: number;
-    private audioListener: AudioListener;
-    public zoomLimit: ZoomLimit;
+    private _cameraArray: Array<CameraContainer>;
+    private selectedCameraIndex: number;
+    private targetInfos: TargetInfos;
+    private _audioListener: AudioListener;
 
-    public constructor() {
-        this.carInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
-        this.thirdPersonPoint = new Vector3(0, 0, 0);
-        this.effectModeisEnabled = false;
-        this.aspectRatio = STARTING_ASPECTRATIO;
-        this.audioListener = new AudioListener();
-        this.zoomLimit = new ZoomLimit();
+    public constructor(private inputManager: InputManagerService) {
+        this.targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+        this.inputManager.resetBindings();
         this.init();
      }
 
     public init(): void {
-        this.zoom = 0;
-        this.cameraDistance = INITIAL_CAMERA_DISTANCE;
-        this.type = CameraType.Persp;
+        this._audioListener = new AudioListener();
+        this.selectedCameraIndex = 0;
+        this._cameraArray = new Array<CameraContainer>();
+        const perspContainer: PerspectiveCameraContainer =
+            new PerspectiveCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+        this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => perspContainer.toggleEffect());
 
-        this.persp = new PerspectiveCamera(
-            FIELD_OF_VIEW,
-            this.aspectRatio,
-            NEAR_CLIPPING_PLANE,
-            FAR_CLIPPING_PLANE
-        );
+        const orthoContainer: OrthographicCameraContainer =
+            new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+        this._cameraArray.push(perspContainer);
+        this._cameraArray.push(orthoContainer);
+        this.selectedCamera.addAudioListener();
+     }
 
-        this.ortho = new OrthographicCamera(
-            -this.cameraDistance * this.aspectRatio,
-            this.cameraDistance * this.aspectRatio,
-            this.cameraDistance,
-            -this.cameraDistance,
-            NEAR_CLIPPING_PLANE,
-            FAR_CLIPPING_PLANE
-        );
-        this.persp.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
-        this.persp.lookAt(this.carInfos.position);
-        this.ortho.position.set(
-            this.carInfos.position.x,
-            INITIAL_CAMERA_POSITION_Y,
-            this.carInfos.position.z
-        );
-        this.ortho.lookAt(this.carInfos.position);
-        this.persp.add(this.audioListener);
-    }
+    public updateTargetInfos(infos: TargetInfos): void {
+        this.targetInfos.copy(infos);
+     }
 
-    public updatecarInfos(position: Vector3, direction: Vector3): void {
-        this.carInfos.position = position;
-        this.carInfos.direction = direction;
-    }
-
-    public update(deltaTime: number): void {
-        this.thirdPersonPoint.copy(this.calcPosPerspCamera());
-        this.updateCameraPostion(deltaTime);
-    }
+    public update(deltaTime: number, ): void {
+        this.selectedCamera.update(deltaTime);
+     }
 
     public get camera(): Camera {
-        switch (this.type) {
-            case CameraType.Ortho:
-                return this.ortho;
-            case CameraType.Persp:
-                return this.persp;
-            default:
-                return this.persp;
-        }
-    }
+        return this.selectedCamera.camera;
+     }
 
-    public onResize(aspectRation: number): void {
-        this.aspectRatio = aspectRation;
-        this.persp.aspect = this.aspectRatio;
-        this.persp.updateProjectionMatrix();
-        this.resizeOrtho();
-    }
+    public onResize(aspectRatio: number): void {
+        this._cameraArray.forEach((camera) => camera.onResize(aspectRatio));
+     }
 
-    public get cameraType(): CameraType {
-        return this.type;
-    }
-
-    public set cameraType(type: CameraType) {
-        this.type = type;
-    }
-
-    public scrollZoom(deltaZoom: number): void {
-        if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
-         (deltaZoom > 0 && this.cameraDistance < this.zoomLimit.max)) {
-            this.cameraDistance += deltaZoom;
-        }
-    }
+    private get selectedCamera(): CameraContainer {
+        return this._cameraArray[this.selectedCameraIndex];
+     }
 
     public get position(): Vector3 {
-        switch (this.type) {
-            case CameraType.Ortho:
-                return this.ortho.position;
-            case CameraType.Persp:
-                return this.thirdPersonPoint;
-            default:
-                return this.thirdPersonPoint;
-        }
-    }
+        return this.selectedCamera.position();
+     }
 
     public get realPosition(): Vector3 {
-        return this.camera.position;
-    }
+        return this.selectedCamera.camera.position;
+     }
 
     public get cameraDistanceToCar(): number {
-        return this.cameraDistance;
-    }
+        return this.selectedCamera.cameraDistanceToCar;
+     }
 
     public set cameraDistanceToCar(distance: number) {
-        this.cameraDistance = distance;
-    }
+        this.selectedCamera.cameraDistanceToCar = distance;
+     }
 
-    public get listener(): AudioListener {
-        return this.audioListener;
-    }
-
-    public get effectModeEnabled(): boolean {
-        return this.effectModeisEnabled;
-    }
-
-    public set effectModeEnabled(value: boolean) {
-        this.effectModeisEnabled = value;
-    }
-
-    private updateCameraPostion(deltaTime: number): void {
-        if ((this.zoom > 0 && this.cameraDistance > this.zoomLimit.min) ||
-         (this.zoom < 0 && this.cameraDistance < this.zoomLimit.max)) {
-            this.cameraDistance -= this.zoom * ZOOM_FACTOR;
-        }
-        switch (this.type) {
-            case CameraType.Persp:
-                this.perspCameraPhysicUpdate(deltaTime);
-                this.persp.lookAt(this.carInfos.position);
-                break;
-            case CameraType.Ortho:
-                this.resizeOrtho();
-                this.ortho.position.copy(this.carInfos.position);
-                this.ortho.position.setY(INITIAL_CAMERA_POSITION_Y);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private calcPosPerspCamera(): Vector3 {
-        const carDirection: Vector3 = this.carInfos.direction;
-        const projectionXZ: number = Math.cos(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance;
-        carDirection.setY(0);
-        carDirection.normalize();
-
-        return new Vector3(
-            this.carInfos.position.x + (- carDirection.x * projectionXZ),
-            this.carInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
-            this.carInfos.position.z + (- carDirection.z * projectionXZ)
-        );
-    }
-
-    private resizeOrtho(): void {
-        this.ortho.left = -this.cameraDistance * this.aspectRatio;
-        this.ortho.right = this.cameraDistance * this.aspectRatio;
-        this.ortho.top = this.cameraDistance;
-        this.ortho.bottom = -this.cameraDistance;
-        this.ortho.updateProjectionMatrix();
-    }
-
-    private perspCameraPhysicUpdate(deltaTime: number): void {
-        if (this.effectModeisEnabled) {
-
-            deltaTime = deltaTime / MS_TO_SECONDS;
-            const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this.persp.position);
-            deltaPos.multiplyScalar(
-                PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
-                (
-                    (deltaPos.length() >= MAX_RECOIL_DISTANCE ) ?
-                    (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE)  + 1) : 1)
-                );
-            this.persp.position.add(deltaPos);
-        } else { this.persp.position.copy(this.thirdPersonPoint); }
-    }
+    public get audioListener(): AudioListener {
+        return this.selectedCamera.audioListener;
+     }
 
     // Input manager callbacks
     public switchCamera(): void {
-        if (this.type === CameraType.Ortho) {
-            this.type = CameraType.Persp;
-            this.persp.add(this.audioListener);
-            this.ortho.remove(this.audioListener);
-        } else if (this.type === CameraType.Persp) {
-            this.type = CameraType.Ortho;
-            this.ortho.add(this.audioListener);
-            this.persp.remove(this.audioListener);
-        }
-    }
-
-    public toggleEffect (): void {
-        this.effectModeEnabled = !this.effectModeEnabled;
-    }
+        this.selectedCamera.removeAudioListener();
+        this.selectedCameraIndex += 1;
+        this.selectedCameraIndex %= this._cameraArray.length;
+        this.selectedCamera.addAudioListener();
+     }
 
     public zoomIn (): void {
-        this.zoom = 1;
-    }
+        this.selectedCamera.zoomIn();
+     }
 
     public zoomOut (): void {
-        this.zoom = -1;
-    }
+        this.selectedCamera.zoomOut();
+     }
 
     public zoomRelease (): void {
-        this.zoom = 0;
+        this.selectedCamera.zoomRelease();
+     }
+
+    public set zoomLimit(zoomLimit: ZoomLimit) {
+        this._cameraArray.forEach((container: CameraContainer) =>
+            container.updateZoomLimit(zoomLimit));
+    }
+
+    public get cameraType(): CameraType {
+        return this.selectedCamera.type;
+    }
+
+    public set cameraType(type: CameraType) {
+        this._cameraArray.forEach((container: CameraContainer, index: number) => {
+            if (container.type === type) { this.selectedCameraIndex = index; }
+        });
+    }
+
+    public scrollZoom(deltaZoom: number): void {
+        this.selectedCamera.scrollZoom(deltaZoom);
     }
 }

@@ -10,7 +10,7 @@ const startpath: string = "starting.ogg";
 export class SoundManagerService {
 
     private cars: Map<number, CarSounds>;
-    private listener: AudioListener;
+    private audioListener: AudioListener;
     private startSound: GlobalSoundFacade;
 
     public constructor() {
@@ -18,20 +18,20 @@ export class SoundManagerService {
     }
 
     public startRace(): void {
-          this.startSound = new GlobalSoundFacade(this.listener, false);
+          this.startSound = new GlobalSoundFacade(this.audioListener, false);
           this.startSound.init(startpath).then(() => this.startSound.play());
     }
 
     public addCarSound(car: Car): void {
-        this.cars.set(car.id, new CarSounds(car.carMesh, this.listener));
+        this.cars.set(car.id, new CarSounds(car.carMesh, this.audioListener));
     }
 
     public updateCarRpm(id: number, rpm: number): void {
         this.cars.get(id).updateRPM(rpm);
     }
 
-    public init(listener: AudioListener): void {
-        this.listener = listener;
+    public init(audioListener: AudioListener): void {
+        this.audioListener = audioListener;
     }
 
     public stopAllSounds(): void {

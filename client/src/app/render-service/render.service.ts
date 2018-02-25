@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
 import { Car } from "../car/car";
-import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../renderer/renderer";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
+import { CameraType } from "../camera-manager-service/camera-container";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -22,7 +23,6 @@ const LEFT_KEYCODE: number = 65; // a
 const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
-const TOOGLE_CAMERA_EFFECT_MODE: number = 88; // ,
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const FULLSCREEN_KEYCODE: number = 70; // F
@@ -46,13 +46,11 @@ export class RenderService extends Renderer {
     }
 
     private setupKeyBindings(): void {
-        this.inputManager.resetBindings();
         this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this._car.accelerate());
         this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this._car.brake());
         this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._car.steerLeft());
         this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._car.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
-        this.inputManager.registerKeyDown(TOOGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
@@ -72,14 +70,15 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        this.soundManager.init(this.cameraManager.listener);
+        this.soundManager.init(this.cameraManager.audioListener);
         await this._car.init();
         this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
-        this.cameraManager.updatecarInfos(
+        this.cameraManager.cameraType = CameraType.Perspective;
+        this.cameraManager.updateTargetInfos( new TargetInfos(
             this._car.getPosition(),
             this._car.direction
-        );
+        ));
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
@@ -145,11 +144,4 @@ export class CarInfos {
         public gear: number,
         public rpm: number
     ) { }
-}
-
-export enum CarControls {
-    Accelerate,
-    Brake,
-    Left,
-    Right
 }

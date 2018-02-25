@@ -88,7 +88,8 @@ describe("Car", () => {
         car.update(MS_BETWEEN_FRAMES);
 
         const initialAngle: number = car.angle;
-        car.releaseSteering();
+        car.releaseSteeringLeft();
+        car.releaseSteeringRight();
         car.update(MS_BETWEEN_FRAMES);
         expect(car.angle).toBe(initialAngle);
     });
