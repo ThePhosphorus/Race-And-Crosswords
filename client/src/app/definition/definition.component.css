@@ -1,25 +1,25 @@
 #hints td:hover {
     background-color: #e7e7e7;
 }
-#hints th{
-    font-weight: lighter;
 
+#hints th {
+    font-weight: lighter;
 }
 
-#hints td{
+#hints td {
     text-align: left;
 }
-label{
+
+label {
     font-family: "Hints Font",'Times New Roman', Times, serif;
 }
 
-
-
-#hints{
+#hints {
     font-size:100%;
     font-family: "Hints Font",'Times New Roman', Times, serif;
 }
+
 @font-face {
     font-family: "Hints Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")
-  }
+}
