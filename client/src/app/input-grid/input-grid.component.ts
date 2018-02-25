@@ -1,9 +1,10 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGameService } from "../crossword-game-service/crossword-game.service";
+
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
+const EMPTY_TILE_SPACE: string = "\xa0\xa0";
 
 @Component({
     selector: "app-input-grid",
@@ -36,7 +37,7 @@ export class InputGridComponent implements OnInit {
             this.relinkLetters(this._playerGrid);
             this._playerGrid.grid.forEach((letter: Letter) => {
                 if (!letter.isBlackTile) {
-                    letter.char = " ";
+                    letter.char = EMPTY_TILE_SPACE;
                 }
             });
         });
@@ -58,7 +59,7 @@ export class InputGridComponent implements OnInit {
         this._playerGrid = new CrosswordGrid();
         this._playerGrid.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._playerGrid.size * this._playerGrid.size); i++) {
-            this._playerGrid.grid.push(new Letter(" "));
+            this._playerGrid.grid.push(new Letter("	 "));
         }
     }
 

@@ -15,7 +15,7 @@ export class InputLetterComponent implements OnInit {
     @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
 
     public constructor() {
-        this.letter = "";
+        this.letter = "	 ";
     }
 
     public ngOnInit(): void {
