@@ -70,21 +70,31 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        this.soundManager.init(this.cameraManager.audioListener);
         await this._car.init();
+        this.initSoundManager();
+        this.initCameraManager();
+        this.initScene();
+        this.startRenderingLoop();
+    }
+    private initSoundManager(): void {
+        this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
+
+    }
+    private initCameraManager(): void {
         this.cameraManager.cameraType = CameraType.Perspective;
         this.cameraManager.updateTargetInfos( new TargetInfos(
             this._car.getPosition(),
             this._car.direction
         ));
+
+    }
+    private initScene(): void {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
-        this.startRenderingLoop();
     }
-
     private getFloor(): Mesh {
         const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
         texture.wrapS = RepeatWrapping;
