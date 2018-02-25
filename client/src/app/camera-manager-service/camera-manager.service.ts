@@ -30,21 +30,24 @@ export class CameraManagerService {
 
     public constructor(private inputManager: InputManagerService) {
         this.init();
-    }
+     }
 
     public init(): void {
         this.initMembers();
         this.inputManager.resetBindings();
         this.initCameraArray();
         this.initAudioListener();
-    }
+     }
+
     private initMembers(): void {
         this.targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
         this._audioListener = new AudioListener();
-    }
+     }
+
     private initAudioListener(): void {
         this.selectedCamera.addAudioListener();
-    }
+     }
+
     private initCameraArray(): void {
         this.selectedCameraIndex = 0;
         this._cameraArray = new Array<CameraContainer>();
@@ -56,7 +59,7 @@ export class CameraManagerService {
             new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
-    }
+     }
 
     public updateTargetInfos(infos: TargetInfos): void {
         this.targetInfos.copy(infos);
@@ -121,19 +124,19 @@ export class CameraManagerService {
     public set zoomLimit(zoomLimit: ZoomLimit) {
         this._cameraArray.forEach((container: CameraContainer) =>
             container.updateZoomLimit(zoomLimit));
-    }
+     }
 
     public get cameraType(): CameraType {
         return this.selectedCamera.type;
-    }
+     }
 
     public set cameraType(type: CameraType) {
         this._cameraArray.forEach((container: CameraContainer, index: number) => {
             if (container.type === type) { this.selectedCameraIndex = index; }
         });
-    }
+     }
 
     public scrollZoom(deltaZoom: number): void {
         this.selectedCamera.scrollZoom(deltaZoom);
-    }
+     }
 }
