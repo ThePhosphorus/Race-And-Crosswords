@@ -147,10 +147,14 @@ export class InputGridComponent implements OnInit {
                 }
                 this.verifyWord();
             } else if (event.key === "Backspace") {
-                this._playerGrid.grid[this.currentLetter].char = " ";
-                nextLetterIndex = this.findNextLetterIndex(false);
-                if (nextLetterIndex !== null) {
-                    this.currentLetter = this.highlightedLetters[nextLetterIndex];
+                if (this._playerGrid.grid[this.currentLetter].char === " ") {
+                    nextLetterIndex = this.findNextLetterIndex(false);
+                    if (nextLetterIndex !== null) {
+                        this.currentLetter = this.highlightedLetters[nextLetterIndex];
+                    }
+                    this._playerGrid.grid[this.currentLetter].char = " ";
+                } else {
+                    this._playerGrid.grid[this.currentLetter].char = " ";
                 }
             }
         }
