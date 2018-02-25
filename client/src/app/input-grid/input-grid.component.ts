@@ -1,6 +1,5 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGameService } from "../crossword-game-service/crossword-game.service";
 import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../common/communication/crossword-grid";
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
@@ -20,7 +19,7 @@ export class InputGridComponent implements OnInit {
     public hoveredLetters: number[];
     public disabledLetters: number[];
 
-    public constructor(private _crosswordService: CrosswordService, private _crosswordGameService: CrosswordGameService) {
+    public constructor(private _crosswordService: CrosswordService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
         this.hoveredLetters = [];
@@ -190,7 +189,7 @@ export class InputGridComponent implements OnInit {
                     if (orientation === this.currentOrientation) {
                         this.currentLetter = null;
                         this.highlightedLetters = [];
-                        this._crosswordGameService.addSolvedWord(this._playerGrid.words.indexOf(playerWord));
+                        this._crosswordService.addSolvedWord(this._playerGrid.words.indexOf(playerWord));
                     }
                 }
             }

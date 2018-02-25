@@ -18,6 +18,7 @@ export class CrosswordService {
     private _blackTilesRatio: number;
     private _gridSubject: Subject<CrosswordGrid>;
     private _playerColors: number[];
+    private _solvedWords: number[];
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._diff = Difficulty.Easy;
@@ -31,6 +32,7 @@ export class CrosswordService {
     public get gridSize(): number { return this._gridSize; }
     public get blackTileRatio(): number { return this._blackTilesRatio; }
     public get playerColors(): number[] { return this._playerColors; }
+    public get solvedWords(): Observable<number[]> { return of(this._solvedWords); }
 
     public get grid(): Observable<CrosswordGrid> {
         return USE_MOCK_GRID ? of(MOCK) : this._gridSubject.asObservable();
@@ -43,5 +45,9 @@ export class CrosswordService {
             this._blackTilesRatio = btRatio;
             this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe(this._gridSubject);
         }
+    }
+
+    public addSolvedWord(index: number): void {
+        this._solvedWords.push(index);
     }
 }
