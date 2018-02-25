@@ -30,8 +30,9 @@ export class InputGridComponent implements OnInit {
     public ngOnInit(): void {
         this.crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._solvedGrid = grid;
+            this.relinkLetters(this._solvedGrid);
             this._playerGrid = JSON.parse(JSON.stringify(grid));
-            this.relinkLetters();
+            this.relinkLetters(this._playerGrid);
             this._playerGrid.grid.forEach((letter: Letter) => {
                 if (!letter.isBlackTile) {
                     letter.char = " ";
@@ -41,6 +42,16 @@ export class InputGridComponent implements OnInit {
         this.crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 
+    private relinkLetters(crosswordGrid: CrosswordGrid): void {
+        crosswordGrid.words.forEach((word: Word) => {
+            const linkedLetters: Letter[] = [];
+            word.letters.forEach((letter: Letter) => {
+                linkedLetters.push(crosswordGrid.grid[letter.id]);
+            });
+            word.letters = linkedLetters;
+        });
+    }
+
     private initializeEmptyGrid(): void {
         this._solvedGrid = new CrosswordGrid();
         this._playerGrid = new CrosswordGrid();
@@ -48,16 +59,6 @@ export class InputGridComponent implements OnInit {
         for (let i: number = 0; i < (this._playerGrid.size * this._playerGrid.size); i++) {
             this._playerGrid.grid.push(new Letter(" "));
         }
-    }
-
-    private relinkLetters(): void {
-        this._playerGrid.words.forEach((word: Word) => {
-            const linkedLetters: Letter[] = [];
-            word.letters.forEach((letter: Letter) => {
-                linkedLetters.push(this._playerGrid.grid[letter.id]);
-            });
-            word.letters = linkedLetters;
-        });
     }
 
     public get twoDimensionPlayerGrid(): Letter[][] {
