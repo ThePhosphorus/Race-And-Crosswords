@@ -118,14 +118,14 @@ export class EmptyGridFactory {
         const increment: number = orientation === Orientation.Across ? 1 : this.crossword.size;
 
         if (!(orientation === Orientation.Across &&
-            this.crossword.getColumn[tileId] === this.crossword.size - 1)) { // The first if is to prevent overflow to next row
+            this.crossword.getColumn(tileId) === this.crossword.size - 1)) { // The first if is to prevent overflow to next row
             if (tileId + increment < this.crossword.grid.length &&
                 !this.crossword.grid[tileId + increment].isBlackTile) {
                 return true;
             }
         }
         if (!(orientation === Orientation.Across &&
-            this.crossword.getColumn[tileId] === 0)) { // The first if is to prevent underflow to previous row
+            this.crossword.getColumn(tileId) === 0)) { // The first if is to prevent underflow to previous row
             if (tileId - increment >= 0 && !this.crossword.grid[tileId - increment].isBlackTile) {
                 return true;
             }
