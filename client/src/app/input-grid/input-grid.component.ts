@@ -144,16 +144,13 @@ export class InputGridComponent implements OnInit {
                 nextLetterIndex = this.findNextLetterIndex(true);
                 if (nextLetterIndex !== null) {
                     this.currentLetter = this.highlightedLetters[nextLetterIndex];
-                } else {
-                    this.verifyWord();
                 }
+                this.verifyWord();
             } else if (event.key === "Backspace") {
                 this._playerGrid.grid[this.currentLetter].char = " ";
                 nextLetterIndex = this.findNextLetterIndex(false);
                 if (nextLetterIndex !== null) {
                     this.currentLetter = this.highlightedLetters[nextLetterIndex];
-                } else {
-                    this.verifyWord();
                 }
             }
         }
