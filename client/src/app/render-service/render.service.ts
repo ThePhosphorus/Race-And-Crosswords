@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
 import { Car } from "../car/car";
-import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../renderer/renderer";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
+import { CameraType } from "../camera-manager-service/camera-container";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -73,10 +74,11 @@ export class RenderService extends Renderer {
         await this._car.init();
         this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
-        this.cameraManager.updateTargetInfos(
+        this.cameraManager.cameraType = CameraType.Perspective;
+        this.cameraManager.updateTargetInfos( new TargetInfos(
             this._car.getPosition(),
             this._car.direction
-        );
+        ));
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());

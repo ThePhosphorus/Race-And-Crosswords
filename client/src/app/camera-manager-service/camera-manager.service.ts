@@ -13,6 +13,11 @@ export class TargetInfos {
         public position: Vector3,
         public direction: Vector3
     ) {}
+
+    public copy(copy: TargetInfos): void {
+        this.position = copy.position;
+        this.direction = copy.direction;
+    }
 }
 
 @Injectable()
@@ -24,7 +29,7 @@ export class CameraManagerService {
     private _audioListener: AudioListener;
 
     public constructor(private inputManager: InputManagerService) {
-        this.targetInfos = {position: new Vector3(0, 0, 0), direction: new Vector3(0, 0, 0)};
+        this.targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
         this.inputManager.resetBindings();
         this.init();
      }
@@ -45,7 +50,7 @@ export class CameraManagerService {
      }
 
     public updateTargetInfos(infos: TargetInfos): void {
-        this.targetInfos = infos;
+        this.targetInfos.copy(infos);
      }
 
     public update(deltaTime: number, ): void {
