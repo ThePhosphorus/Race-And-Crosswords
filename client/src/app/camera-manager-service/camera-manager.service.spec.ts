@@ -41,16 +41,6 @@ describe("CameraManagerService", () => {
         })
     );
 
-  it("should be at distance distance of the car",
-     inject([CameraManagerService], (manager: CameraManagerService) => {
-        const carInfos: TargetInfos = new TargetInfos(new Vector3(10, 0, 25), new Vector3(1, 0, 1));
-        manager.updateTargetInfos(carInfos);
-        manager.cameraDistanceToCar = 25;
-        manager.init();
-        manager.update(5);
-        expect(manager.position.distanceTo(new Vector3(10, 0, 25))).toBeCloseTo(manager.cameraDistanceToCar, 0);
-  }) );
-
   it("should zoom in",
      inject([CameraManagerService], (manager: CameraManagerService) => {
         manager.init();
@@ -68,16 +58,4 @@ describe("CameraManagerService", () => {
         manager.update(1);
         expect(manager.cameraDistanceToCar).toBeGreaterThan(cameraDistance);
   }) );
-
-  it("should have the right angle for Perspective camera",
-     inject([CameraManagerService], (manager: CameraManagerService) => {
-         const carInfos: TargetInfos = new TargetInfos(new Vector3(10, 0, 10), new Vector3(1, 0, 0));
-         manager.updateTargetInfos(carInfos);
-         manager.init();
-         manager.cameraType = CameraType.Perspective;
-         manager.update(5);
-         const position: Vector3 = carInfos.position.clone().sub(manager.position);
-         expect(position.angleTo(carInfos.direction) * RAD_TO_DEG).toBeCloseTo(PERS_CAMERA_ANGLE, 1);
-  }) );
-
 });
