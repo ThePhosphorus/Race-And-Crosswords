@@ -70,46 +70,53 @@ export class RenderService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        this.soundManager.init(this.cameraManager.audioListener);
         await this._car.init();
+        this.initSoundManager();
+        this.initCameraManager();
+        this.initScene();
+        this.startRenderingLoop();
+    }
+    private initSoundManager(): void {
+        this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
         this.soundManager.addCarSound(this._car);
+
+    }
+    private initCameraManager(): void {
         this.cameraManager.cameraType = CameraType.Perspective;
-        this.cameraManager.updateTargetInfos( new TargetInfos(
+        this.cameraManager.updateTargetInfos(new TargetInfos(
             this._car.getPosition(),
             this._car.direction
         ));
+
+    }
+    private initScene(): void {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
-        this.startRenderingLoop();
     }
-
     private getFloor(): Mesh {
-        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
-        texture.wrapS = RepeatWrapping;
-        texture.wrapT = RepeatWrapping;
-        texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
-        const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
-        plane.rotateX(PI_OVER_2);
+        const plane: Mesh = this.setTexture(FLOOR_DIMENSION, OFF_ROAD_PATH);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
 
         return plane;
     }
 
     private getTrack(): Mesh {
-        const texture: Texture = new TextureLoader().load(TRACK_PATH);
+        return this.setTexture(SPAWN_DIMENSION, TRACK_PATH);
+    }
+
+    private setTexture(dimension: number, path: string): Mesh {
+        const texture: Texture = new TextureLoader().load(path);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
-        texture.repeat.set(SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO, SPAWN_DIMENSION * FLOOR_TEXTURE_RATIO);
+        texture.repeat.set(dimension * FLOOR_TEXTURE_RATIO, dimension * FLOOR_TEXTURE_RATIO);
         const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
-        const plane: Mesh = new Mesh(new PlaneGeometry(SPAWN_DIMENSION, SPAWN_DIMENSION), material);
+        const plane: Mesh = new Mesh(new PlaneGeometry(dimension, dimension), material);
         plane.rotateX(PI_OVER_2);
 
         return plane;
     }
-
     protected onInit(): void {
         this.scene.background = new CubeTextureLoader()
             .setPath(BACKGROUND_PATH)
