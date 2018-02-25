@@ -17,17 +17,22 @@ export class CrosswordService {
     private _gridSize: number;
     private _blackTilesRatio: number;
     private _gridSubject: Subject<CrosswordGrid>;
+    private _playerColors: number[];
+    private _solvedWords: number[];
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._diff = Difficulty.Easy;
         this._gridSize = STARTING_GRID_SIZE;
         this._blackTilesRatio = STARTING_BLACK_TILE_RATIO;
         this._gridSubject = new Subject<CrosswordGrid>();
+        this._playerColors = [0];
     }
 
     public get difficulty(): Difficulty { return this._diff; }
     public get gridSize(): number { return this._gridSize; }
     public get blackTileRatio(): number { return this._blackTilesRatio; }
+    public get playerColors(): number[] { return this._playerColors; }
+    public get solvedWords(): Observable<number[]> { return of(this._solvedWords); }
 
     public get grid(): Observable<CrosswordGrid> {
         return USE_MOCK_GRID ? of(MOCK) : this._gridSubject.asObservable();
@@ -40,5 +45,9 @@ export class CrosswordService {
             this._blackTilesRatio = btRatio;
             this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe(this._gridSubject);
         }
+    }
+
+    public addSolvedWord(index: number): void {
+        this._solvedWords.push(index);
     }
 }
