@@ -20,7 +20,7 @@ export class InputGridComponent implements OnInit {
     public hoveredLetters: number[];
     public disabledLetters: number[];
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService, private _crosswordGameService: CrosswordGameService) {
         this.currentLetter = null;
         this.highlightedLetters = [];
         this.hoveredLetters = [];
@@ -145,16 +145,17 @@ export class InputGridComponent implements OnInit {
                 nextLetterIndex = this.findNextLetterIndex(true);
                 if (nextLetterIndex !== null) {
                     this.currentLetter = this.highlightedLetters[nextLetterIndex];
-                } else {
-                    this.verifyWord();
                 }
+                this.verifyWord();
             } else if (event.key === "Backspace") {
-                this._playerGrid.grid[this.currentLetter].char = " ";
-                nextLetterIndex = this.findNextLetterIndex(false);
-                if (nextLetterIndex !== null) {
-                    this.currentLetter = this.highlightedLetters[nextLetterIndex];
+                if (this._playerGrid.grid[this.currentLetter].char === " ") {
+                    nextLetterIndex = this.findNextLetterIndex(false);
+                    if (nextLetterIndex !== null) {
+                        this.currentLetter = this.highlightedLetters[nextLetterIndex];
+                    }
+                    this._playerGrid.grid[this.currentLetter].char = " ";
                 } else {
-                    this.verifyWord();
+                    this._playerGrid.grid[this.currentLetter].char = " ";
                 }
             }
         }
@@ -189,6 +190,7 @@ export class InputGridComponent implements OnInit {
                 }
                 this.currentLetter = null;
                 this.highlightedLetters = [];
+                this._crosswordGameService.addSolvedWord(this._playerGrid.words.indexOf(playerWord));
             }
         }
     }
