@@ -29,7 +29,7 @@ import { InputLetterComponent } from "./input-letter/input-letter.component";
         AdminComponent,
         TrackListComponent,
         TrackEditorComponent,
-        ReversePipe
+        ReversePipe,
         HomePageComponent,
         InputGridComponent,
         DefinitionComponent,
