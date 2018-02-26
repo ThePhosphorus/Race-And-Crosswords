@@ -4,6 +4,7 @@ import { Difficulty, CrosswordGrid } from "../../../../common/communication/cros
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http/";
 
+// tslint:disable:no-magic-numbers
 describe("CrosswordService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
