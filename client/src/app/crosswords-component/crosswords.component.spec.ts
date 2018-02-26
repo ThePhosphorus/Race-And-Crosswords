@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
+import { InputLetterComponent } from "../input-letter/input-letter.component";
 import { CrosswordsComponent } from "./crosswords.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { PlayermodeComponent } from "../playermode-component/playermode.component";
@@ -14,7 +14,7 @@ describe("CrosswordsComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ CrosswordsComponent, PlayermodeComponent, InputGridComponent, DefinitionComponent ],
+      declarations: [ CrosswordsComponent, PlayermodeComponent, InputGridComponent, InputLetterComponent, DefinitionComponent ],
       imports: [HttpClientModule],
       providers: [ CrosswordCommunicationService, CrosswordService ]
     })
