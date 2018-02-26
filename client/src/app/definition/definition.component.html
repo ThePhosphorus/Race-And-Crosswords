@@ -29,10 +29,14 @@
 </div>
 
 
-<div class="pretty p-icon p-curve p-thick  p-pulse">
+<div class="pretty p-icon p-curve p-thick p-toggle p-plain p-pulse">
   <input type="checkbox" (click)="toogleCheatMode()" />
-  <div class="state p-danger-o">
-    <i class="icon mdi mdi-emoticon-devil"></i>
-    <label> I'M A CHEATER</label>
+  <div class="state p-danger-o p-on">
+    <i class="icon mdi mdi-eye-outline"></i>
+    <label>Disable cheat mode</label>
   </div>
+  <div class="state p-off">
+    <i class="icon mdi mdi-eye-off"></i>
+    <label>Enable cheat mode</label>
+</div>
 </div>
