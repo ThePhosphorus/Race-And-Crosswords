@@ -11,12 +11,12 @@
 }
 
 label {
-    font-family: "Hints Font",'Times New Roman', Times, serif;
+    font-family: "Hints Font", 'Times New Roman', Times, serif;
 }
 
 #hints {
-    font-size:100%;
-    font-family: "Hints Font",'Times New Roman', Times, serif;
+    font-size: 100%;
+    font-family: "Hints Font", 'Times New Roman', Times, serif;
 }
 
 @font-face {

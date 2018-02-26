@@ -1,6 +1,5 @@
-<button type="button" class="btn btn-light" (click)="select()"
-[ngClass]="{'disabled': disabledLetters.indexOf(id) > -1 , 'hovered': hoveredLetters.indexOf(id) > -1 && !(disabledLetters.indexOf(id) > -1),
+<button type="button" class="btn btn-light" (click)="select()" [ngClass]="{'disabled': disabledLetters.indexOf(id) > -1 , 'hovered': hoveredLetters.indexOf(id) > -1 && !(disabledLetters.indexOf(id) > -1),
 'highlight-player-1': highlightedLetters.indexOf(id) > -1 && currentPlayer === 1,
 'highlight-player-2': highlightedLetters.indexOf(id) > -1 && currentPlayer === 2,
 'current': id === currentLetter}">
-{{letter | uppercase }}</button>
+  {{letter | uppercase }}</button>

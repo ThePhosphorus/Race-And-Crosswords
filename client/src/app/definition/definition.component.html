@@ -22,12 +22,8 @@
         <td (mouseenter)="hover(row, 'Down')" (mouseleave)="unHover()" (click)="select(row, 'Down')">{{ row + 1 }}. {{ item[cheatMode] }}</td>
       </tr>
     </table>
-
-
   </div>
-
 </div>
-
 
 <div class="pretty p-icon p-curve p-thick p-toggle p-plain p-pulse">
   <input type="checkbox" (click)="toogleCheatMode()" />
@@ -38,5 +34,5 @@
   <div class="state p-off">
     <i class="icon mdi mdi-eye-off"></i>
     <label>Enable cheat mode</label>
-</div>
+  </div>
 </div>

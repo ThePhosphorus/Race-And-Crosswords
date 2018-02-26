@@ -1,14 +1,15 @@
 .black {
     background-color: #212529;
 }
-#grid  {
+
+#grid {
     border-collapse: collapse;
     text-align: center;
     align-self: center;
     border: solid #212529 1vmin;
     box-shadow: 0.4vmin 0.4vmin 0.4vmin 0.4vmin gray;
-
 }
+
 #grid th {
     text-align: center;
     align-self: center;
@@ -16,10 +17,9 @@
     background-color: white;
 }
 
-#grid tbody{
+#grid tbody {
     background-color: white;
 }
-
 
 #grid td {
     font-size: 4vmin;
@@ -27,8 +27,7 @@
     height: 6.5vmin;
     text-align: center;
     border: solid #212529 0.1vmin;
-    padding:0% !important;
+    padding: 0% !important;
     align-items: flex-start;
     line-height: 0%;
 }
-
