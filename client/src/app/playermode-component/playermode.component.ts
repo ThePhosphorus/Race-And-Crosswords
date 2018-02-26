@@ -17,7 +17,9 @@ export class PlayermodeComponent implements OnInit {
     public isCollapsed: boolean = false;
     public isCollapsed2: boolean = false;
 
-    public constructor(private _crosswordService: CrosswordService) { }
+    public constructor(private _crosswordService: CrosswordService) {
+        this.lvl = Difficulty.Easy;
+     }
 
     public ngOnInit(): void {
         this.nbPlayers = 1;
