@@ -77,12 +77,8 @@ describe("Grid generation", () => {
         it("should not have duplicate word", () => {
                 const words: string[] = new Array<string>();
                 grid.words.forEach((gridWord: Word) => {
-                    let wordString: string = "";
-                    gridWord.letters.forEach((letter: Letter) => {
-                        wordString += letter.char;
-                    });
-                    assert.equal(words.indexOf(wordString), -1, "Duplicate of : " + wordString);
-                    words.push(wordString);
+                    assert.equal(words.indexOf(gridWord.toString()), -1, "Duplicate of : " + gridWord.toString());
+                    words.push(gridWord.toString());
             });
         });
 

@@ -92,12 +92,14 @@ export class GridGenerator {
     }
 
     private isUnique(word: DatamuseWord): boolean {
-        let isUnique: boolean = true;
-        this.crossword.words.forEach((w: Word) => {
-            isUnique = isUnique && w.letters.map((l: Letter) => l.char).reduce((acc: string, val: string) => acc += val) !== word.word;
-        });
 
-        return isUnique;
+        for (const w of this.crossword.words) {
+            if (w.toString() === word.word) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private setWord(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
