@@ -94,9 +94,6 @@ input:checked {
     border: #b44646;
 }
 
-input {
-    display: inline-block;
-}
 
 #level {
     text-align: center;
@@ -108,6 +105,16 @@ input {
 
 .btn p {
     margin-top: 0%;
+}
+#difficultySelector .btn-secondary:focus {
+    box-shadow: none;
+}
+#difficultySelector .btn-secondary:hover {
+    box-shadow: none;
+}
+#difficultySelector .active{
+   text-decoration-line: underline;
+   border: inset  #212529;
 }
 
 #info {

@@ -22,13 +22,13 @@
       <div id="list" [hidden]="!isCollapsed2">
         <div class="card card-block w-100">
           <div id="difficultySelector" class="btn-group btn-group-block w-100 " data-toggle = "buttons" >
-            <button class="btn btn-secondary w-100 mb-0" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
+            <button class="btn btn-secondary w-100 m-0" [class.active]="lvl == 'Difficulty.Easy'" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
              EASY
             </button>
-            <button class="btn w-100 btn-secondary mb-0 " id="mediumBtn"  (click)="changeLevel('Difficulty.Medium')">
+            <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="lvl == 'Difficulty.Medium'" (click)="changeLevel('Difficulty.Medium')">
              MEDIUM
             </button>
-            <button class="btn w-100 btn-secondary mb-0" id="hardBtn" (click)="changeLevel('Difficulty.Hard')">
+            <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="lvl == 'Difficulty.Hard'" (click)="changeLevel('Difficulty.Hard')">
               HARD
             </button>
           </div>
