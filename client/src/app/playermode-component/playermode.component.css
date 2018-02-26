@@ -37,6 +37,14 @@ p {
     margin-bottom: 0%
 }
 
+#player1{
+    background-color: #b6cee2;
+}
+#player2{
+    background-color:  #dbb1a3;
+}
+
+
 #info .btn:hover {
     background-color: transparent;
     box-shadow: transparent;
@@ -66,14 +74,7 @@ p {
 }
 
 
-#difficultySelector input:checked{
-    background-color: #212529
-}
 
-input:checked {
-    box-shadow: unset;
-    background-color: #212529;
-}
 
 #result {
     text-align: right;
@@ -115,6 +116,9 @@ input:checked {
 #difficultySelector .active{
    text-decoration-line: underline;
    border: inset  #212529;
+}
+table td, table th{
+    border-top: none;
 }
 
 #info {
