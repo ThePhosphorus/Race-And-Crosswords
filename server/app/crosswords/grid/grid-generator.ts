@@ -82,7 +82,7 @@ export class GridGenerator {
     }
 
     private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
-        if (receivedWord !== undefined && this.isUnique(receivedWord)) {
+        if (receivedWord != null && this.isUnique(receivedWord) && receivedWord.defs != null) {
             this.setWord(receivedWord, word, difficulty);
             // this.displayGrid();
         } else {
