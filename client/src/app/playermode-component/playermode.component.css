@@ -3,7 +3,7 @@
 }
 
 .medium {
-    color:#dbdb1f;
+    color: #dbdb1f;
 }
 
 .hard {
@@ -37,13 +37,13 @@ p {
     margin-bottom: 0%
 }
 
-#player1{
+#player1 {
     background-color: #b6cee2;
 }
-#player2{
-    background-color:  #dbb1a3;
-}
 
+#player2 {
+    background-color: #dbb1a3;
+}
 
 #info .btn:hover {
     background-color: transparent;
@@ -73,9 +73,6 @@ p {
     font-size: 10vmin
 }
 
-
-
-
 #result {
     text-align: right;
 }
@@ -95,30 +92,33 @@ p {
     border: #b44646;
 }
 
-
 #level {
     text-align: center;
-}
-
-.card {
-    font-family: "Button Font", 'Times New Roman', Times, serif;
 }
 
 .btn p {
     margin-top: 0%;
 }
+
 #difficultySelector .btn-secondary:focus {
     box-shadow: none;
 }
+
 #difficultySelector .btn-secondary:hover {
     box-shadow: none;
 }
-#difficultySelector .active{
-   text-decoration-line: underline;
-   border: inset  #212529;
+
+#difficultySelector .active {
+    text-decoration-line: underline;
+    border: inset #212529;
 }
-table td, table th{
+
+table td, table th {
     border-top: none;
+}
+
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
 }
 
 #info {
@@ -141,3 +141,5 @@ table td, table th{
     font-family: "Button Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")
 }
+
+
