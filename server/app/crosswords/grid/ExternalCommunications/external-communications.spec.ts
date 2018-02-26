@@ -37,4 +37,19 @@ describe("External Communications", () => {
             done();
         });
     });
+
+    it("should not find fake words", (done: MochaDone) => {
+        const fakeWord: string = "csdjbn";
+        const word: Word = new Word();
+        let i: number = 0;
+        while (i < fakeWord.length) {
+            word.letters.push(new Letter());
+            i++;
+        }
+
+        externalCommunication.getDefinitionsFromServer(fakeWord).then((datamuseWord: DatamuseWord) => {
+            assert.equal(datamuseWord, undefined, "Found word for : " + fakeWord);
+            done();
+        });
+    });
 });
