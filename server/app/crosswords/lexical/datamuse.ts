@@ -13,13 +13,13 @@ export class Datamuse {
     public async getWord(constraint: string, isEasy: boolean): Promise<string> {
         let words: Array<DatamuseWord> = await this.makeRequest(constraint);
         words = words.filter((w: DatamuseWord) => isEasy ? w.score > HARD_THRESHOLD : w.score < HARD_THRESHOLD)
-                     .filter((w: DatamuseWord) => w.defs !== undefined)
-                     .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
+            .filter((w: DatamuseWord) => w.defs !== undefined)
+            .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
         if (word == null) { return undefined; }
 
         const defIndex: number = this.definitionContainesWord(word);
-        if ( defIndex !== -1) {
+        if (defIndex !== -1) {
             word.defs.splice(defIndex, 1);
         }
 
@@ -28,7 +28,7 @@ export class Datamuse {
 
     private definitionContainesWord(word: DatamuseWord): number {
         for (let i: number = 0; i < word.defs.length; i++) {
-            if (word.defs[i].indexOf(word.word) !== -1 ) {
+            if (word.defs[i].indexOf(word.word) !== -1) {
                 return i;
             }
         }
@@ -39,11 +39,16 @@ export class Datamuse {
     public async getDefinitions(word: string): Promise<string> {
         let datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
         datamuseWords = datamuseWords.filter((w: DatamuseWord) => w.defs !== undefined)
-                     .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
+            .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
 
         if (datamuseWords !== undefined) {
             for (const datamuseWord of datamuseWords) {
                 if (datamuseWord.word === word) {
+                    const defIndex: number = this.definitionContainesWord(datamuseWord);
+                    if (defIndex !== -1) {
+                        datamuseWord.defs.splice(defIndex, 1);
+                    }
+
                     return JSON.stringify(datamuseWord);
                 }
             }
