@@ -141,9 +141,10 @@ export class InputGridComponent implements OnInit {
         }
     }
 
-    public unselectWord(mouseEvent: MouseEvent): void {
+    // tslint:disable-next-line:no-any (the MouseEvent type has an invalid prototype)
+    public unselectWord(mouseEvent: any): void {
         let unselect: boolean = true;
-        mouseEvent.path.forEach((element) => {
+        mouseEvent.path.forEach((element: HTMLElement) => {
             if (element.tagName === "APP-INPUT-GRID" || element.tagName === "APP-DEFINITION") {
                 unselect = false;
             }
