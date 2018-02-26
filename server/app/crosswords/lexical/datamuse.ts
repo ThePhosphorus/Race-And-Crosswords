@@ -16,8 +16,24 @@ export class Datamuse {
                      .filter((w: DatamuseWord) => w.defs !== undefined)
                      .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
+        if (word == null) { return undefined; }
+
+        const defIndex: number = this.definitionContainesWord(word);
+        if ( defIndex !== -1) {
+            word.defs.splice(defIndex, 1);
+        }
 
         return JSON.stringify(word);
+    }
+
+    private definitionContainesWord(word: DatamuseWord): number {
+        for (let i: number = 0; i < word.defs.length; i++) {
+            if (word.defs[i].indexOf(word.word) !== -1 ) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public async getDefinitions(word: string): Promise<string> {
