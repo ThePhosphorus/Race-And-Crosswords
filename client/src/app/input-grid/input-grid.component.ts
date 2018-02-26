@@ -95,7 +95,10 @@ export class InputGridComponent implements OnInit {
                 }
             }
             this.setSelectedWord(targetWord);
-            this.currentLetter = index;
+            this.currentLetter = targetWord.letters[0].id;
+            if (this.disabledLetters.indexOf(this.currentLetter) > -1) {
+                this.currentLetter = this.findNextLetterIndex(true);
+            }
         }
     }
 
