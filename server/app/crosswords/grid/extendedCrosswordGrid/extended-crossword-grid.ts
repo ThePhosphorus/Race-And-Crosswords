@@ -1,4 +1,4 @@
-import { CrosswordGrid, Word, Orientation, MIN_WORD_LENGTH } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Word, Orientation, MIN_WORD_LENGTH, Letter } from "../../../../../common/communication/crossword-grid";
 
 export class ExtendedCrosswordGrid extends CrosswordGrid {
     public getRow(position: number): number {
@@ -50,6 +50,20 @@ export class ExtendedCrosswordGrid extends CrosswordGrid {
             word.orientation = orientation;
             wordList.push(word);
         }
+    }
+
+    public displayGrid(): void {
+        // Used for debugging and test purposes
+        let s: string = "";
+        for (let i: number = 0; i < this.size; i++) {
+            for (let j: number = 0; j < this.size; j++) {
+                const l: Letter = this.grid[(this.size * i) + j];
+                s += l.char !== "" ? l.char : (l.isBlackTile ? "#" : "-");
+            }
+            s += "\n";
+        }
+        console.log(s);
+
     }
 
 }
