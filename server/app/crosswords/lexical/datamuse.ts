@@ -37,7 +37,9 @@ export class Datamuse {
     }
 
     public async getDefinitions(word: string): Promise<string> {
-        const datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
+        let datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
+        datamuseWords = datamuseWords.filter((w: DatamuseWord) => w.defs !== undefined)
+                     .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
 
         if (datamuseWords !== undefined) {
             for (const datamuseWord of datamuseWords) {
