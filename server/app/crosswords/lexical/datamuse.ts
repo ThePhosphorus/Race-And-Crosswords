@@ -16,6 +16,8 @@ export class Datamuse {
                      .filter((w: DatamuseWord) => w.defs !== undefined)
                      .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
+        if (word == null) { return undefined; }
+
         const defIndex: number = this.definitionContainesWord(word);
         if ( defIndex !== -1) {
             word.defs.splice(defIndex, 1);
