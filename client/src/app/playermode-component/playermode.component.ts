@@ -1,13 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-
-enum DifficultyLevel {
-    Easy = "Easy",
-    Medium = "Medium",
-    Hard = "Hard"
-}
+import { CrosswordService } from "../crossword-service/crossword.service";
+import { Difficulty } from "../../../../common/communication/crossword-grid";
+const INITIAL_GRID_SIZE: number = 10;
+const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
-    selector: "app-playermode" ,
+    selector: "app-playermode",
     templateUrl: "./playermode.component.html",
     styleUrls: ["./playermode.component.css"]
 })
@@ -15,14 +13,18 @@ enum DifficultyLevel {
 export class PlayermodeComponent implements OnInit {
 
     public nbPlayers: number;
-    public lvl: DifficultyLevel;
+    public lvl: Difficulty;
     public isCollapsed: boolean = false;
     public isCollapsed2: boolean = false;
 
-    public constructor() { }
+    public constructor(private _crosswordService: CrosswordService) { }
 
     public ngOnInit(): void {
         this.nbPlayers = 1;
-        this.lvl = DifficultyLevel.Easy;
+        this.lvl = Difficulty.Easy;
+    }
+    public changeLevel(lvl: Difficulty): void {
+        this.lvl = lvl;
+        this._crosswordService.newGame(this.lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 }

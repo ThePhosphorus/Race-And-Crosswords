@@ -1,9 +1,9 @@
 .easy {
-    color: green;
+    color: #328132;
 }
 
 .medium {
-    color: rgb(160, 117, 0);
+    color:#dbdb1f;
 }
 
 .hard {
@@ -56,20 +56,54 @@ p {
     font-weight: lighter;
 }
 
-
 #player {
     text-align: left;
 }
 
-#difficultySelector .btn {
-    font-weight: lighter;
+#difficultySelector {
+    border: none;
+    font-size: 10vmin
 }
+
+
+#difficultySelector input:checked{
+    background-color: #212529
+}
+
+input:checked {
+    box-shadow: unset;
+    background-color: #212529;
+}
+
 #result {
     text-align: right;
 }
 
+#easyBtn {
+    background-color: #61b446;
+    border: #61b446 solid;
+}
+
+#mediumBtn {
+    background-color: #b4b446;
+    border: #b4b446 solid;
+}
+
+#hardBtn {
+    background-color: #b44646;
+    border: #b44646;
+}
+
+input {
+    display: inline-block;
+}
+
 #level {
     text-align: center;
+}
+
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
 }
 
 .btn p {
