@@ -90,6 +90,7 @@ export class InputGridComponent implements OnInit {
                     if (ori !== this.currentOrientation) {
                         this.currentOrientation = ori as Orientation;
                         targetWord = this.findWordFromLetter(index, ori, false);
+                        break;
                     }
                 }
             }
