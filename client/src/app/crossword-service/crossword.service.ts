@@ -28,6 +28,7 @@ export class CrosswordService {
         this._gridSubject = new Subject<CrosswordGrid>();
         this._currentPlayer = 1;
         this._currentPlayerSubject = new Subject<number>();
+        this._solvedWords = [];
     }
 
     public get difficulty(): Difficulty { return this._diff; }
