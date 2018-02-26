@@ -1,25 +1,33 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { CrosswordService } from "../crossword-service/crossword.service";
+import { DefinitionComponent } from "./definition.component";
+import { HttpClientModule } from "@angular/common/http";
 
-import { DefinitionComponent } from './definition.component';
+describe("DefinitionComponent", () => {
+    let component: DefinitionComponent;
+    let fixture: ComponentFixture<DefinitionComponent>;
 
-describe('DefinitionComponent', () => {
-  let component: DefinitionComponent;
-  let fixture: ComponentFixture<DefinitionComponent>;
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [DefinitionComponent],
+            providers : [CrosswordService],
+            imports: [HttpClientModule]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ DefinitionComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(() => {
+        fixture = TestBed.createComponent(DefinitionComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DefinitionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+    it("cheat mode should switch", () => {
+        const pastCheatmodeState: boolean = component.cheatMode;
+        component.toogleCheatMode();
+        expect(component.cheatMode).toEqual(!pastCheatmodeState);
+    });
 });
