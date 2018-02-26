@@ -48,7 +48,10 @@ export class CrosswordService {
             this._diff = difficulty;
             this._gridSize = gridSize;
             this._blackTilesRatio = btRatio;
-            this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe(this._gridSubject);
+            this._currentPlayer = 1;
+            this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
+                this._gridSubject.next(crosswordGrid);
+            });
         }
         this._currentPlayerSubject.next(this._currentPlayer);
     }
