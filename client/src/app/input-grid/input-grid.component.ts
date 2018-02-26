@@ -18,6 +18,7 @@ export class InputGridComponent implements OnInit {
     public highlightedLetters: number[];
     public hoveredLetters: number[];
     public disabledLetters: number[];
+    public currentPlayer: number;
 
     public constructor(private _crosswordService: CrosswordService) {
         this.currentLetter = null;
@@ -25,10 +26,14 @@ export class InputGridComponent implements OnInit {
         this.hoveredLetters = [];
         this.disabledLetters = [];
         this.currentOrientation = Orientation.Across;
+        this.currentPlayer = 1;
         this.initializeEmptyGrid();
     }
 
     public ngOnInit(): void {
+        this._crosswordService.currentPlayer.subscribe((currentPlayer: number) => {
+            this.currentPlayer = currentPlayer;
+        });
         this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._solvedGrid = grid;
             this.relinkLetters(this._solvedGrid);

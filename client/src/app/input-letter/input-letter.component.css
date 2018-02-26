@@ -13,24 +13,29 @@ button {
     padding: 0%;
     white-space: nowrap;
     margin: 0;
-    border-radius:0%;
+    border-radius: 0%;
     box-sizing: border-box;
 }
 
-.highlight {
-    background-color: #b6cee2 ;
+.highlight-player-1 {
+    background-color: #b6cee2;
     box-shadow: inset 0 0 5vmin steelblue;
     border: none;
 }
-.disabled{
+
+.highlight-player-2 {
+    background-color: #ff411f;
+    box-shadow: inset 0 0 5vmin steelblue;
+    border: none;
+}
+
+.disabled {
     background-color: darkgrey;
     color: white;
-    text-shadow:0vmin 0vmin 10vmin #7db446 ;
+    text-shadow: 0vmin 0vmin 10vmin #7db446;
 }
 
 .current {
-
-
     color: #212529;
     text-decoration: underline;
     animation: blinker 1.5s linear infinite;
@@ -49,10 +54,10 @@ button {
     font-family: "CrossWords Font";
     src: url("/assets/fonts/coffee+teademo-Regular.ttf") format("truetype")
 }
- @keyframes blinker {
+
+@keyframes blinker {
     50% {
         background-color: white;
         box-shadow: inset 0 0 3vmin steelblue;
-
     }
 }
