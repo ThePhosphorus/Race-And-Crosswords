@@ -72,25 +72,46 @@ export class GridGenerator {
         const constraint: string = this.getConstraints(word);
         if (constraint.indexOf("?") === -1) {
             const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
-            this.addWord(receivedWord, word, difficulty);
+            await this.addWord(receivedWord, word, difficulty);
 
         } else {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
             const receivedWord: DatamuseWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
-            this.addWord(receivedWord, word, difficulty);
+            await this.addWord(receivedWord, word, difficulty);
         }
+        /*
+        if (!this.verifyConstraints(constraint, word)) {
+            this.crossword.displayGrid();
+            throw new Error(" Placed invalid word");
+        }*/
     }
 
     private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
         if (receivedWord != null && this.isUnique(receivedWord) && receivedWord.defs != null) {
             this.setWord(receivedWord, word, difficulty);
-            // this.crossword.displayGrid();
+            this.crossword.displayGrid();
         } else {
             await this.backjump(word);
             this.rollbackCount++;
         }
-    }
+    }/*
+    private verifyConstraints(constraint: string, placedWord: Word): boolean {
 
+        if (constraint.length !== placedWord.letters.length) {
+            console.error("Placed a word with length of : " + constraint.length + " for a word of length : " + placedWord.letters.length);
+
+            return false;
+        }
+        for (let i: number = 0; i < constraint.length; i++) {
+            if (constraint[i] !== "?" && constraint[i] !== placedWord.letters[i].char) {
+                console.error("Placed a word  : " + placedWord.toString() + " for constraints: " + constraint);
+
+                return false;
+            }
+        }
+
+        return true;
+    }*/
     private isUnique(word: DatamuseWord): boolean {
 
         for (const w of this.crossword.words) {
@@ -106,6 +127,9 @@ export class GridGenerator {
         for (let i: number = 0; i < gridWord.letters.length; i++) {
             gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord.word[i] : gridWord.letters[i].char;
             gridWord.letters[i].count++;
+        }
+        if (receivedWord.word !== gridWord.toString()) {
+            console.error("Placed " + receivedWord.word + ", but have " + gridWord.toString());
         }
         if (receivedWord.defs.length === 1 || difficulty === Difficulty.Easy) {
             gridWord.definitions.push(receivedWord.defs[0]);
