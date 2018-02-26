@@ -5,6 +5,7 @@ import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crosswor
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 
 const MAX_TOTAL_ROLLBACKS: number = 50;
+const CONSTRAINT_CHAR: string = "?";
 
 export class GridGenerator {
 
@@ -70,7 +71,7 @@ export class GridGenerator {
 
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
         const constraint: string = this.getConstraints(word);
-        if (constraint.indexOf("?") === -1) {
+        if (constraint.indexOf(CONSTRAINT_CHAR) === -1) {
             const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
             await this.addWord(receivedWord, word, difficulty);
 
@@ -162,7 +163,7 @@ export class GridGenerator {
     private getConstraints(word: Word): string {
         let constraint: string = "";
         word.letters.forEach((letter: Letter) => {
-            constraint += (letter.char === "") ? "?" : letter.char;
+            constraint += (letter.char === "") ? CONSTRAINT_CHAR : letter.char;
         });
 
         return constraint;
