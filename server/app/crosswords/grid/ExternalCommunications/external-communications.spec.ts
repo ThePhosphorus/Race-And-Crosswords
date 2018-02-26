@@ -31,7 +31,7 @@ describe("External Communications", () => {
             i++;
         }
 
-        externalCommunication.getWordsFromServer(testWord, word, true).then((datamuseWord: DatamuseWord) => {
+        externalCommunication.getDefinitionsFromServer(testWord).then((datamuseWord: DatamuseWord) => {
             assert.equal(datamuseWord.word, testWord, "Expected : " + testWord + " got : " + datamuseWord.word);
             assert.notEqual(datamuseWord.defs, undefined, "Did not fetch definitions");
             done();
