@@ -2,9 +2,12 @@ import * as assert from "assert";
 import { Difficulty, Letter, Orientation, Word } from "../../../../common/communication/crossword-grid";
 import { GridGenerator } from "./grid-generator";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
+import {ExternalCommunications} from "./ExternalCommunications/external-communications";
+import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const gridGenerator: GridGenerator = new GridGenerator();
-const gridSize: number = 5;
+const communication: ExternalCommunications = new ExternalCommunications();
+const gridSize: number = 10 ;
 const difficulty: Difficulty = Difficulty.Easy;
 
 // tslint:disable-next-line:max-func-body-length
@@ -66,7 +69,7 @@ describe("Grid generation", () => {
         it("should not have special letters (accents, etc)", () => {
                 grid.grid.forEach((tile: Letter) => {
                     if (!tile.isBlackTile) {
-                        assert.ok(tile.char.normalize("NFD").length === 1, "Has character : " + tile.char);
+                        assert.ok(tile.char.normalize("NFD").length === 1, "Has character : \"" + tile.char + "\"");
                     }
             });
         });
@@ -83,5 +86,15 @@ describe("Grid generation", () => {
             });
         });
 
+        it("should have real words", (done: MochaDone) => {
+                for (const word of grid.words) {
+                    communication.getDefinitionsFromServer(word.toString()).then((datamuseWord: DatamuseWord) => {
+                        assert.notEqual(datamuseWord, null, word.toString() + " does not exist");
+                        assert.equal(datamuseWord.word, word.toString(), " Expected : " + word.toString() + " got : " + datamuseWord.word);
+                        assert.notEqual(datamuseWord.defs, null, word.toString() + " does not have defs");
+                    });
+                }
+                done();
+            });
     });
 });
