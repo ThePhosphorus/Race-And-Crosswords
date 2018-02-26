@@ -34,15 +34,19 @@ describe("Service Lexical", () => {
         });
 
         it("should respect the letter criterias", (done: MochaDone) => {
-            const testString: string = "a??c?";
+            const testString: string = "a????";
             datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+                if (strResponse == null) {
+                    assert.fail("received null or undefined from datamuse");
+                } else {
+                    const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
 
-                assert.notEqual(word, undefined, "Did not receive a word");
-                assert.strictEqual(word.word.length, testString.length, "Did not receive the right length");
-                for (let i: number = 0; i < testString.length; i++) {
-                    if (testString.charAt(i) !== "?") {
-                        assert.strictEqual(word.word.charAt(i), testString.charAt(i), "Letter criteria is not respected.");
+                    assert.notEqual(word, undefined, "Did not receive a word");
+                    assert.strictEqual(word.word.length, testString.length, "Did not receive the right length");
+                    for (let i: number = 0; i < testString.length; i++) {
+                        if (testString.charAt(i) !== "?") {
+                            assert.strictEqual(word.word.charAt(i), testString.charAt(i), "Letter criteria is not respected.");
+                        }
                     }
                 }
                 done();
