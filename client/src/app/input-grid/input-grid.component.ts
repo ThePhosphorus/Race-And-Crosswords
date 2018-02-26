@@ -141,6 +141,21 @@ export class InputGridComponent implements OnInit {
         }
     }
 
+    public unselectWord(mouseEvent: MouseEvent): void {
+        let unselect: boolean = true;
+        mouseEvent.path.forEach((element) => {
+            if (element.tagName === "APP-INPUT-GRID" || element.tagName === "APP-DEFINITION") {
+                unselect = false;
+            }
+        });
+        if (unselect) {
+            this.currentLetter = null;
+            this.highlightedLetters = [];
+            this.hoveredLetters = [];
+            this.currentOrientation = Orientation.Across;
+        }
+    }
+
     @HostListener("window:keyup", ["$event"])
     public writeChar(event: KeyboardEvent): void {
         if (this.currentLetter != null) {

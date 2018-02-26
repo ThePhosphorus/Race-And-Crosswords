@@ -1,25 +1,20 @@
 <table id="grid" align="center">
   <thead>
-      <th>#</th>
+    <th>#</th>
     <th *ngFor="let letters of twoDimensionPlayerGrid;let i = index">
       {{ i+1 }}
     </th>
-
   </thead>
   <tbody>
     <tr *ngFor="let letters of twoDimensionPlayerGrid;let row = index">
       <th scope="row">{{ row+1 }}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <app-input-letter [letter]="letter.char" [id]="(twoDimensionPlayerGrid.length*row)+col"
-          [highlightedLetters]="highlightedLetters" [hoveredLetters]="hoveredLetters"
-          [currentLetter]="currentLetter" [disabledLetters]="disabledLetters"
-          [currentPlayer]="currentPlayer" (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
+          <app-input-letter [letter]="letter.char" [id]="(twoDimensionPlayerGrid.length*row)+col" [highlightedLetters]="highlightedLetters"
+            [hoveredLetters]="hoveredLetters" [currentLetter]="currentLetter" [disabledLetters]="disabledLetters" [currentPlayer]="currentPlayer"
+            (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
         </span>
       </td>
-
     </tr>
-
   </tbody>
-
 </table>
