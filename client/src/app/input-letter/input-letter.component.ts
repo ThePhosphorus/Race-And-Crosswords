@@ -12,6 +12,7 @@ export class InputLetterComponent implements OnInit {
     @Input() public highlightedLetters: number[];
     @Input() public hoveredLetters: number[];
     @Input() public disabledLetters: number[];
+    @Input() public currentPlayer: number;
     @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
 
     public constructor() {

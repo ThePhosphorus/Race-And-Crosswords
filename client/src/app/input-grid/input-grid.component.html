@@ -14,7 +14,7 @@
           <app-input-letter [letter]="letter.char" [id]="(twoDimensionPlayerGrid.length*row)+col"
           [highlightedLetters]="highlightedLetters" [hoveredLetters]="hoveredLetters"
           [currentLetter]="currentLetter" [disabledLetters]="disabledLetters"
-          (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
+          [currentPlayer]="currentPlayer" (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
         </span>
       </td>
 
