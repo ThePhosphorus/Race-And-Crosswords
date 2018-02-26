@@ -1,4 +1,4 @@
-import { Word, CrosswordGrid, Letter, Difficulty } from "../../../../common/communication/crossword-grid";
+import { Word, CrosswordGrid, Letter, Difficulty, Orientation } from "../../../../common/communication/crossword-grid";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
@@ -79,11 +79,6 @@ export class GridGenerator {
             const receivedWord: DatamuseWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
             await this.addWord(receivedWord, word, difficulty);
         }
-        /*
-        if (!this.verifyConstraints(constraint, word)) {
-            this.crossword.displayGrid();
-            throw new Error(" Placed invalid word");
-        }*/
     }
 
     private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
@@ -92,28 +87,10 @@ export class GridGenerator {
             this.crossword.displayGrid();
         } else {
             await this.backjump(word);
-            this.rollbackCount++;
         }
-    }/*
-    private verifyConstraints(constraint: string, placedWord: Word): boolean {
+    }
 
-        if (constraint.length !== placedWord.letters.length) {
-            console.error("Placed a word with length of : " + constraint.length + " for a word of length : " + placedWord.letters.length);
-
-            return false;
-        }
-        for (let i: number = 0; i < constraint.length; i++) {
-            if (constraint[i] !== "?" && constraint[i] !== placedWord.letters[i].char) {
-                console.error("Placed a word  : " + placedWord.toString() + " for constraints: " + constraint);
-
-                return false;
-            }
-        }
-
-        return true;
-    }*/
     private isUnique(word: DatamuseWord): boolean {
-
         for (const w of this.crossword.words) {
             if (w.toString() === word.word) {
                 return false;
@@ -139,39 +116,47 @@ export class GridGenerator {
         this.crossword.words.push(gridWord);
     }
 
-    private unsetWord(word: Word): void {
+    private async backjump(currentWord: Word): Promise<void> {
+        this.rollbackCount++;
+        for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
+            if (this.doesIntersect(this.crossword.words[i], currentWord)) {
+                this.unsetWord(i);
+            }
+        }
+        await this.findWord(currentWord, Difficulty.Easy);
+    }
+
+    private unsetWord(index: number): void {
+        const word: Word = this.crossword.words[index];
         this.notPlacedWords.push(word);
         for (const letter of word.letters) {
             if ((--letter.count) <= 0) {
                 letter.char = "";
             }
         }
+        this.crossword.words.splice(index, 1);
     }
-    private async backjump(currentWord: Word): Promise<void> {
-        this.rollbackCount++;
-        let isProblemword: boolean = false;
-        for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
-            if (this.crossword.words[i].orientation !== currentWord.orientation) {
-                this.crossword.words[i].letters.forEach((letter: Letter) => {
-                    currentWord.letters.forEach((currentWordLetter: Letter) => {
-                        if (currentWordLetter.char !== "" && currentWordLetter.id === letter.id) {
-                            isProblemword = true;
 
-                            return;
-                        }
-                    });
-                    if (isProblemword) {
-                        return;
-                    }
-                });
-                if (isProblemword) {
-                    this.unsetWord(this.crossword.words[i]);
-                    this.crossword.words.splice(i, 1); // Add it to unset Word
-                    await this.findWord(currentWord, Difficulty.Easy);
-                    break;
-                }
-            }
+    private doesIntersect(word1: Word, word2: Word): boolean {
+
+        if (word1.orientation === word2.orientation) {
+            return false;
         }
+
+        const acrossWord: Word = word1.orientation === Orientation.Across ? word1 : word2;
+        const downWord: Word = word1.orientation === Orientation.Down ? word1 : word2;
+
+        const column: number = this.crossword.getColumn(downWord.id);
+        const row: number = this.crossword.getRow(acrossWord.id);
+
+        if (this.crossword.getColumn(acrossWord.letters[0].id) > column ||
+            this.crossword.getColumn(acrossWord.letters[acrossWord.letters.length - 1].id) < column ||
+            this.crossword.getRow(downWord.letters[0].id) > row ||
+            this.crossword.getRow(downWord.letters[downWord.letters.length - 1].id) < row) {
+            return false;
+        }
+
+        return true;
     }
 
     private getConstraints(word: Word): string {
