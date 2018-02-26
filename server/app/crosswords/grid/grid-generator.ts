@@ -4,7 +4,7 @@ import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 
-const MAX_TOTAL_ROLLBACKS: number = 200;
+const MAX_TOTAL_ROLLBACKS: number = 50;
 
 export class GridGenerator {
 
@@ -71,7 +71,7 @@ export class GridGenerator {
     private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
         const constraint: string = this.getConstraints(word);
         if (constraint.indexOf("?") === -1) {
-            const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(this.getStringFromWord(word));
+            const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
             this.addWord(receivedWord, word, difficulty);
 
         } else {
@@ -84,20 +84,11 @@ export class GridGenerator {
     private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
         if (receivedWord != null && this.isUnique(receivedWord) && receivedWord.defs != null) {
             this.setWord(receivedWord, word, difficulty);
-            // this.displayGrid();
+            // this.crossword.displayGrid();
         } else {
             await this.backjump(word);
             this.rollbackCount++;
         }
-    }
-
-    private getStringFromWord(word: Word): string {
-        let wordString: string = "";
-        word.letters.forEach((letter: Letter) => {
-            wordString += letter.char;
-        });
-
-        return wordString;
     }
 
     private isUnique(word: DatamuseWord): boolean {
