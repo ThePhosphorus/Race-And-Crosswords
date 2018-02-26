@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { DefinitionComponent } from "./definition.component";
+import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
 
 describe("DefinitionComponent", () => {
@@ -10,7 +11,7 @@ describe("DefinitionComponent", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DefinitionComponent],
-            providers : [CrosswordService],
+            providers : [CrosswordService, CrosswordCommunicationService],
             imports: [HttpClientModule]
         })
             .compileComponents();
