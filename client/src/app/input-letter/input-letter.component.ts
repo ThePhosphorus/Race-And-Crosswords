@@ -17,6 +17,12 @@ export class InputLetterComponent implements OnInit {
 
     public constructor() {
         this.letter = "	 ";
+        this.currentLetter = null;
+        this.highlightedLetters = [];
+        this.hoveredLetters = [];
+        this.disabledLetters = [];
+        this.currentPlayer = 1;
+        this.id = 1;
     }
 
     public ngOnInit(): void {
