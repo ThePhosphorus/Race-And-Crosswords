@@ -27,7 +27,7 @@ export class CrosswordService {
         this._gridSize = STARTING_GRID_SIZE;
         this._blackTilesRatio = STARTING_BLACK_TILE_RATIO;
         this._gridSubject = new Subject<CrosswordGrid>();
-        this._currentPlayer = 1;
+        this._currentPlayer = 2;
         this._currentPlayerSubject = new Subject<number>();
         this._solvedWords = [];
     }

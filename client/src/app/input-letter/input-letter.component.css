@@ -1,38 +1,49 @@
-button {
+.btn {
+    display: inline-block;
+    align-items: center;
     align-self: center;
     font-family: "CrossWords Font", 'Times New Roman', Times, serif;
     font-size: 4vmin;
     font-weight: bold;
+    line-height: 0%;
     width: 100%;
     height: 100%;
     color: #212529;
     text-align: center;
     outline: none;
     background-color: transparent;
+
+    margin:0%;
     border: none;
     padding: 0%;
-    white-space: nowrap;
-    margin: 0;
     border-radius: 0%;
-    box-sizing: border-box;
+
 }
 
 .highlight-player-1 {
-    background-color: #b6cee2;
-    box-shadow: inset 0 0 5vmin steelblue;
-    border: none;
+
+    background-color: #b6cee2 !important;
+    border-style: dotted;
+    width:90% ;
+    height: 90%;
+    box-shadow: 0 0 0 0.4vmin steelblue,inset 0 0 1vmin steelblue ;
+    border-width: 0.2vmin;
+    border-color: steelblue!important;
 }
 
 .highlight-player-2 {
-    background-color: #dbb1a3;
-    box-shadow: inset 0 0 5vmin #b46146;
-    border: none;
+    background-color: #dbb1a3 !important;
+    border-style: dotted;
+    width:90% ;
+    height: 90%;
+    box-shadow: 0 0 0 0.4vmin #b46146,inset 0 0 1.5vmin #b46146 ;
+    border-width: 0.2vmin;
+    border-color: #b46146!important;
 }
 
 .disabled {
     background-color: darkgrey;
     color: white;
-    text-shadow: 0vmin 0vmin 10vmin #7db446;
 }
 
 .current {
@@ -42,7 +53,8 @@ button {
 }
 
 .hovered {
-    background-color: #a3c2db;
+    background-color: lightgrey;
+    border-color: none;
 }
 
 @font-face {
@@ -58,6 +70,5 @@ button {
 @keyframes blinker {
     50% {
         background-color: white;
-        box-shadow: inset 0 0 3vmin steelblue;
     }
 }
