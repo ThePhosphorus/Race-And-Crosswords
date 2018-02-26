@@ -50,32 +50,17 @@ export class Datamuse {
         return word.word.indexOf(" ") === -1 && word.word.indexOf("-") === -1;
     }
 
-    private definitionContainesWord(word: DatamuseWord): number {
-        for (let i: number = 0; i < word.defs.length; i++) {
-            if (word.defs[i].indexOf(word.word) !== -1) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
     public async getDefinitions(word: string): Promise<string> {
-        let datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
-        datamuseWords = datamuseWords.filter((w: DatamuseWord) => w.defs !== undefined)
-            .filter((w: DatamuseWord) => w.word.indexOf(" ") === -1 && w.word.indexOf("-") === -1);
+        const datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
 
         if (datamuseWords !== undefined) {
-            for (const datamuseWord of datamuseWords) {
-                if (datamuseWord.word === word) {
-                    const defIndex: number = this.definitionContainesWord(datamuseWord);
-                    if (defIndex !== -1) {
-                        datamuseWord.defs.splice(defIndex, 1);
-                    }
-
-                    return JSON.stringify(datamuseWord);
+            const dmWord: DatamuseWord = datamuseWords[0];
+            if (dmWord != null &&
+                dmWord.word === word &&
+                this.testHasDefinitions(dmWord) &&
+                this.testRemoveDefsWithWord(dmWord)) {
+                    return JSON.stringify(dmWord);
                 }
-            }
         }
 
         return undefined;
