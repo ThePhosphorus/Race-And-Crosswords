@@ -27,6 +27,8 @@ export class Grid extends WebService {
             const size: number = (req.query.size !== undefined && Number(req.query.size))
                                             ? Math.max(MIN_GRID_SIZE, Math.min(MAX_GRID_SIZE, Number(req.query.size)))
                                             : DEFAULT_GRID_SIZE;
+
+            res.setHeader("Content-Type", "application/json");
             this.gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
         });
     }
