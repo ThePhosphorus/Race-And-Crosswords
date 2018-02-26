@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGameService } from "../crossword-game-service/crossword-game.service";
 import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 
 @Component({
@@ -17,7 +16,7 @@ export class DefinitionComponent implements OnInit {
     public acrossDefinitions: {[cheat: string]: string}[];
     public downDefinitions: {[cheat: string]: string}[];
 
-    public constructor(private _crosswordService: CrosswordService, private _crosswordGameService: CrosswordGameService) {
+    public constructor(private _crosswordService: CrosswordService) {
         this._cheatmode = false;
         this._wordGrid = null;
     }
@@ -30,7 +29,7 @@ export class DefinitionComponent implements OnInit {
             this.downDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
                 .map((w: Word) => this.wordToDictionary(w));
         });
-        this._crosswordGameService.solvedWords.subscribe((solvedWords: number[]) => {
+        this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
             this._solvedWords = solvedWords;
         });
     }
