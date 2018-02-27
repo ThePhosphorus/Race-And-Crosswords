@@ -2,6 +2,10 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 
+class DisplayedDefinition {
+    public constructor(public definition: string, public word: string) {}
+}
+
 @Component({
     selector: "app-definition",
     templateUrl: "./definition.component.html",
@@ -12,9 +16,8 @@ export class DefinitionComponent implements OnInit {
     @Output() public setHoveredWord: EventEmitter<Word> = new EventEmitter<Word>();
     @Output() public _cheatmode: boolean;
     private _wordGrid: Word[];
-    private _solvedWords: number[];
-    public acrossDefinitions: {[cheat: string]: string}[];
-    public downDefinitions: {[cheat: string]: string}[];
+    public acrossDefinitions: Array<DisplayedDefinition>;
+    public downDefinitions: Array<DisplayedDefinition>;
 
     public constructor(private _crosswordService: CrosswordService) {
         this._cheatmode = false;
@@ -25,21 +28,15 @@ export class DefinitionComponent implements OnInit {
         this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._wordGrid = grid.words;
             this.acrossDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Across)
-                .map((w: Word) => this.wordToDictionary(w));
+                .map((w: Word) => this.wordToDefinition(w));
             this.downDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
-                .map((w: Word) => this.wordToDictionary(w));
-        });
-        this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
-            this._solvedWords = solvedWords;
+                .map((w: Word) => this.wordToDefinition(w));
         });
     }
 
-    private wordToDictionary(word: Word): {[cheat: string]: string} {
-        const tempDictionary: {[cheat: string]: string} = {};
-        tempDictionary["true"] = this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join(""));
-        tempDictionary["false"] = this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1));
-
-        return tempDictionary;
+    private wordToDefinition(word: Word): DisplayedDefinition {
+        return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1)),
+                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")));
     }
 
     private upperFirstLetter(str: string): string {
