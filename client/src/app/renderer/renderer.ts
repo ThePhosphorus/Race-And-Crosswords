@@ -1,4 +1,4 @@
-import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
 import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3 } from "three";
 import Stats = require("stats.js");
 import * as C from "../track-generator-service/track.constantes";
@@ -30,10 +30,10 @@ export abstract class Renderer {
 
         this.initStats();
         this.createScene();
-        this._cameraManager.updatecarInfos(
+        this._cameraManager.updateTargetInfos( new TargetInfos(
             this.cameraTargetPosition,
             this.cameraTargetDirection
-        );
+        ));
         this.onInit();
      }
 
@@ -105,10 +105,10 @@ export abstract class Renderer {
     private rendererUpdate(): void {
         const timeSinceLastFrame: number = Date.now() - this._lastDate;
         this.update(timeSinceLastFrame);
-        this._cameraManager.updatecarInfos(
+        this._cameraManager.updateTargetInfos( new TargetInfos(
             this.cameraTargetPosition,
             this.cameraTargetDirection
-        );
+        ));
         this._cameraManager.update(timeSinceLastFrame);
         this._lastDate = Date.now();
      }

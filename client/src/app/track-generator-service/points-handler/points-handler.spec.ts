@@ -7,10 +7,12 @@ import { ConstraintValidator } from "../constraint-validator/constraint-validato
 import { EMPTY_ARRAY_EXCEPTION_MSG } from "../../exceptions/EmptyArrayException";
 import { Mesh } from "three";
 import { OUT_OF_RANGE_EXCEPTION_MSG } from "../../exceptions/OutOfRangeException";
+import { InputManagerService } from "../../input-manager-service/input-manager.service";
 
 describe("PointsHandler for TrackGeneratorService", () => {
-    const cameraManager: CameraManagerService = new CameraManagerService();
-    const trackGen: TrackGenerator = new TrackGenerator(cameraManager);
+    const inputManager: InputManagerService = new InputManagerService();
+    const cameraManager: CameraManagerService = new CameraManagerService(inputManager);
+    const trackGen: TrackGenerator = new TrackGenerator(cameraManager, inputManager);
 
     beforeEach(async () => {
         TestBed.configureTestingModule({

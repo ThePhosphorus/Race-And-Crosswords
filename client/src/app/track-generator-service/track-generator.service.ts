@@ -1,11 +1,12 @@
 import { Vector3, GridHelper, Color, AmbientLight, Vector2, Mesh, Geometry, Line, Object3D } from "three";
-import { CameraManagerService, CameraType, ZoomLimit } from "../camera-manager-service/camera-manager.service";
+import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import * as C from "./track.constantes";
 import { Renderer } from "../renderer/renderer";
 import { ConstraintValidator } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
+import { ZoomLimit, CameraType } from "../camera-manager-service/camera-container";
 
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;
@@ -129,7 +130,7 @@ export class TrackGenerator extends Renderer {
     }
 
     protected onInit(): void {
-        this.cameraManager.cameraType = CameraType.Ortho;
+        this.cameraManager.cameraType = CameraType.Orthographic;
         this._gridHelper = new GridHelper(
             C.GRID_DIMENSION,
             C.GRID_DIVISIONS,
