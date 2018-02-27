@@ -27,7 +27,7 @@ export class CrosswordService {
         this._gridSize = STARTING_GRID_SIZE;
         this._blackTilesRatio = STARTING_BLACK_TILE_RATIO;
         this._gridSubject = new Subject<CrosswordGrid>();
-        this._currentPlayer = 2;
+        this._currentPlayer = 1;
         this._currentPlayerSubject = new Subject<number>();
         this._solvedWords = [];
     }
@@ -45,7 +45,7 @@ export class CrosswordService {
         return USE_MOCK_GRID ? of(MOCK) : this._gridSubject.asObservable();
     }
 
-    public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): void {
+    public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
         if (!USE_MOCK_GRID) {
             this._diff = difficulty;
             this._gridSize = gridSize;
@@ -56,6 +56,8 @@ export class CrosswordService {
             });
         }
         this._currentPlayerSubject.next(this._currentPlayer);
+
+        return this.grid;
     }
 
     public addSolvedWord(index: number): void {
