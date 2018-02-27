@@ -95,9 +95,10 @@ p {
 #level {
     text-align: center;
 }
-#levelMod{
+#levelMod .modal-content{
     font-family: "Button Font", 'Times New Roman', Times, serif;
-    border: #212529 solid;
+    border: #212529 solid 2vmin;
+    background-color: lightgrey;
 }
 #levelMod.show{
     display: block;
@@ -106,14 +107,7 @@ p {
     font-size: 200%;
     margin: 3vmin;
 }
-#closeBtn{
-    font-size: 100%;
-    margin: 2vmin;
-    display: inline-block;
-    width:30%;
-    align-self: center;
-    width: 100%;
-}
+
 
 .btn p {
     margin-top: 0%;

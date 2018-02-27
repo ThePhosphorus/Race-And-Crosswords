@@ -4,15 +4,15 @@
       <div #editor id="editor" (mousewheel)="onScroll($event)" oncontextmenu="return false;" (mousedown)="onClick($event)" (mouseup)="onClickRelease($event)">
       </div>
     </div>
-    <div class="col-2">
+    <div id="infoForm" class="col-2">
       <div>
         <form>
           <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">NAME</label>
             <input name="name" required maxlength="20" [(ngModel)]="name" type="text" class="form-control" id="name" placeholder="Enter name">
           </div>
           <div class="form-group">
-            <label for="description">Description</label>
+            <label for="description">DESCRIPTION</label>
             <input name="description" [(ngModel)]="description" maxlength="255" type="text" class="form-control" id="description" placeholder="Enter a description">
           </div>
         </form>
@@ -28,8 +28,8 @@
           </li>
         </ul>
       </div>
-      <button class="btn btn-success mt-2 btn-block" type="submit" (click)="saveTrack()">Save</button>
-      <button class="btn btn-danger btn-block" type="submit" (click)="deleteTrack()" [disabled]="id == null">Delete</button>
+      <button class="btn btn-success mt-2 btn-block" type="submit" (click)="saveTrack()">SAVE</button>
+      <button class="btn btn-danger btn-block" type="submit" (click)="deleteTrack()" [disabled]="id == null">DELETE</button>
     </div>
   </div>
 </div>

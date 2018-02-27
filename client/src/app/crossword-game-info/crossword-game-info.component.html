@@ -18,7 +18,7 @@
 
   </div>
 
-  <div id="levelMod" class="modal fade" tabindex="-1"   [class.show]="showLevel">
+  <div id="levelMod" class="modal fade" tabindex="-1"   [class.show]="!showLevel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <h5 class="modal-title" id="modalLabel">Difficulty Level</h5>
@@ -26,21 +26,19 @@
         <div class="modal-body">
           <div class="card card-block w-100">
             <div id="difficultySelector" class="btn-group btn-group-block w-100 " data-toggle="buttons">
-              <button class="btn btn-secondary w-100 m-0" [class.active]="lvl == 'Difficulty.Easy'" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
+              <button class="btn btn-secondary w-100 m-0" [class.active]="lvl == 'Difficulty.Easy'" id="easyBtn" (click)="changeLevel('Difficulty.Easy');showLevel =!showLevel">
                 EASY
               </button>
-              <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="lvl == 'Difficulty.Medium'" (click)="changeLevel('Difficulty.Medium')">
+              <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="lvl == 'Difficulty.Medium'" (click)="changeLevel('Difficulty.Medium'); showLevel =!showLevel">
                 MEDIUM
               </button>
-              <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="lvl == 'Difficulty.Hard'" (click)="changeLevel('Difficulty.Hard')">
+              <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="lvl == 'Difficulty.Hard'" (click)="changeLevel('Difficulty.Hard'); showLevel =!showLevel">
                 HARD
               </button>
             </div>
           </div>
         </div>
-        <button type="button" id="closeBtn" class="close" data-dismiss="modal" (click)="showLevel =!showLevel" aria-label="Close">
-            <span aria-hidden="true">X</span>
-        </button>
+
       </div>
     </div>
   </div>
