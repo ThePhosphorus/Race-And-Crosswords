@@ -3,17 +3,17 @@ import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crosswo
 import {DEFAULT_BLACK_TILES} from "./default-black-tiles";
 
 const COMPLEXITY_THRESHOLD: number = 125;
-const MIN_SIZE_DEFAULT_BLACK_TILES: number = 10;
+export const GRID_SIZE: number = 10;
 
 export class EmptyGridFactory {
 
     private crossword: ExtendedCrosswordGrid;
 
-    public getNewGrid(size: number): ExtendedCrosswordGrid {
+    public getNewGrid(): ExtendedCrosswordGrid {
         let complexity: number;
         do {
             this.crossword = new ExtendedCrosswordGrid();
-            this.initializeGrid(size);
+            this.initializeGrid();
             this.generateBlackTiles();
             complexity = this.getComplexity();
         } while (complexity > COMPLEXITY_THRESHOLD);
@@ -21,18 +21,16 @@ export class EmptyGridFactory {
         return this.crossword;
     }
 
-    private initializeGrid(size: number): void {
-        this.crossword.size = size;
-        this.crossword.grid = new Array<Letter>(size * size);
-        for (let i: number = 0; i < size * size; i++) {
+    private initializeGrid(): void {
+        this.crossword.size = GRID_SIZE;
+        this.crossword.grid = new Array<Letter>(GRID_SIZE * GRID_SIZE);
+        for (let i: number = 0; i < GRID_SIZE * GRID_SIZE; i++) {
             this.crossword.grid[i] = new Letter("", i);
         }
     }
 
     private generateBlackTiles(): void {
-        if ( this.crossword.size >= MIN_SIZE_DEFAULT_BLACK_TILES) {
-            this.generateDefaultBlackTiles();
-        }
+        this.generateDefaultBlackTiles();
         this.generateRandomBlackTiles();
     }
 

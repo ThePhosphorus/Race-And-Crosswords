@@ -29,7 +29,7 @@ export class GridGenerator {
 
     private initialiseEmptyGrid(size: number): void {
 
-        this.crossword = this.emptyGridFactory.getNewGrid(size);
+        this.crossword = this.emptyGridFactory.getNewGrid();
         this.crossword.words = new Array<Word>();
         this.notPlacedWords = this.crossword.findWords();
     }

@@ -1,22 +1,17 @@
 import * as assert from "assert";
-import { CrosswordGrid} from "../../../../../common/communication/crossword-grid";
-import { EmptyGridFactory } from "./empty-grid-factory";
-
-const GRID_SIZE: number = 10;
+import { CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { EmptyGridFactory, GRID_SIZE } from "./empty-grid-factory";
 
 describe(" Empty grid generation", () => {
     describe("When the empty grid is generated", () => {
-        it("should give a grid with the right size", (done: MochaDone) => {
-            for (let i: number = GRID_SIZE; i <= GRID_SIZE; i++) {
-                const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid(i);
-                assert.strictEqual(grid.size, i, "Attribute size of grid is not the expected size.");
-                assert.strictEqual(grid.grid.length, i * i, "Vertical length is not the right length");
-            }
-            done();
+        it("should give a grid with the right size", () => {
+            const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid();
+            assert.strictEqual(grid.size, GRID_SIZE, "Attribute size of grid is not the expected size.");
+            assert.strictEqual(grid.grid.length, GRID_SIZE * GRID_SIZE, "Vertical length is not the right length");
         });
 
-        it("should give us a grid with no blackTiles in the first row and the first column ", (done: MochaDone) => {
-            const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid(GRID_SIZE);
+        it("should give us a grid with no blackTiles in the first row and the first column ", () => {
+            const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid();
             for (let i: number = 0; i < GRID_SIZE; i++) {
                 if (grid.grid[i].isBlackTile) {
                     assert.fail("Detected blackTile on the first row");
@@ -24,7 +19,6 @@ describe(" Empty grid generation", () => {
                     assert.fail("Detected blackTile on the first column");
                 }
             }
-            done();
         });
     });
 });
