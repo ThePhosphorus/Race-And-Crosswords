@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Camera, AudioListener } from "three";
-import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
+import { CameraContainer, ZoomLimit } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
+import { CameraType } from "../global-constants/constants";
+
 
 const INITIAL_CAMERA_DISTANCE: number = 10;
 const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
