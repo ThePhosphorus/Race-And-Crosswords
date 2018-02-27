@@ -1,11 +1,8 @@
 import { TestBed, inject } from "@angular/core/testing";
 
-import { CameraManagerService, TargetInfos } from "./camera-manager.service";
-import { Vector3 } from "three";
-import { CameraType } from "./camera-container";
-import { PERS_CAMERA_ANGLE } from "./perspective-camera-container";
+import { CameraManagerService } from "./camera-manager.service";
+import { CameraType } from "../global-constants/constants";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
-import { RAD_TO_DEG } from "../constants";
 
 // tslint:disable:no-magic-numbers
 

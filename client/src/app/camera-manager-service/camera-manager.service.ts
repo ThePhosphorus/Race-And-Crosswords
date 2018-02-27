@@ -6,7 +6,6 @@ import { OrthographicCameraContainer } from "./orthographic-camera-container";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraType } from "../global-constants/constants";
 
-
 const INITIAL_CAMERA_DISTANCE: number = 10;
 const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 
