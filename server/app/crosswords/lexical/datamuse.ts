@@ -12,8 +12,7 @@ export class Datamuse {
 
     public async getWord(constraint: string, isEasy: boolean): Promise<string> {
         let words: Array<DatamuseWord> = await this.makeRequest(constraint);
-        words = words.filter((w: DatamuseWord) => this.isValidWord(w))
-                        .sort((a: DatamuseWord, b: DatamuseWord) => b.score - a.score);
+        words = words.filter((w: DatamuseWord) => this.isValidWord(w));
         this.selectWordsFromDifficulty(words, isEasy);
 
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
@@ -23,11 +22,8 @@ export class Datamuse {
     }
 
     private selectWordsFromDifficulty(words: Array<DatamuseWord>, isEasy: boolean): void {
-        if (isEasy) {
-            words.slice(Math.floor(words.length * HALF), words.length);
-        } else {
-            words.slice(Math.floor(words.length * HALF));
-        }
+        words.sort((a: DatamuseWord, b: DatamuseWord) => b.score - a.score);
+        words = isEasy ? words.slice(Math.floor(words.length * HALF)) : words.slice(Math.floor(words.length * HALF), words.length);
     }
 
     private isValidWord(word: DatamuseWord): boolean {
