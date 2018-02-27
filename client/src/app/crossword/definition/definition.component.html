@@ -1,0 +1,40 @@
+<div class="row" id="hints">
+  <div class="col-md pr-0">
+    <table class="table text-center">
+      <thead class="thead-dark">
+        <tr>
+          <th>ACROSS</th>
+        </tr>
+      </thead>
+      <tr *ngFor="let item of acrossDefinitions; let row = index">
+        <td (mouseenter)="hover(row, 'Across')" (mouseleave)="unHover()" (click)="select(row, 'Across')"
+        [ngClass]="solvedWords.indexOf(item.id) > -1 ? 'disabled' : 'enabled'">{{ row + 1 }}. {{ cheatMode ? item.word : item.definition}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md pl-0">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>DOWN</th>
+        </tr>
+      </thead>
+      <tr *ngFor="let item of downDefinitions;let row= index">
+        <td (mouseenter)="hover(row, 'Down')" (mouseleave)="unHover()" (click)="select(row, 'Down')"
+        [ngClass]="solvedWords.indexOf(item.id) > -1 ? 'disabled' : 'enabled'">{{ row + 1 }}. {{ cheatMode ? item.word : item.definition}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="pretty p-icon p-curve p-thick p-toggle p-plain p-pulse">
+  <input type="checkbox" (click)="toogleCheatMode()" />
+  <div class="state p-danger-o p-on">
+    <i class="icon mdi mdi-eye-outline"></i>
+    <label>Disable cheat mode</label>
+  </div>
+  <div class="state p-off">
+    <i class="icon mdi mdi-eye-off"></i>
+    <label>Enable cheat mode</label>
+  </div>
+</div>
