@@ -12,8 +12,8 @@ class DisplayedDefinition {
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-    @Output() public setSelectedWord: EventEmitter<Word> = new EventEmitter<Word>();
-    @Output() public setHoveredWord: EventEmitter<Word> = new EventEmitter<Word>();
+    @Output() public setSelectedWord: EventEmitter<Word>;
+    @Output() public setHoveredWord: EventEmitter<Word>;
     @Output() public _cheatmode: boolean;
     private _wordGrid: Word[];
     public solvedWords: number[];
@@ -25,6 +25,8 @@ export class DefinitionComponent implements OnInit {
         this._wordGrid = null;
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
+        this.setSelectedWord = new EventEmitter<Word>();
+        this.setHoveredWord = new EventEmitter<Word>();
     }
 
     public ngOnInit(): void {
