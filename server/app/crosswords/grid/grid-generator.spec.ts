@@ -1,86 +1,137 @@
 import * as assert from "assert";
-import { CrosswordGrid, Difficulty, Letter, Orientation, Word } from "../../../../common/communication/crossword-grid";
+import { Difficulty, Letter, Orientation, Word } from "../../../../common/communication/crossword-grid";
 import { GridGenerator } from "./grid-generator";
+import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
+import { ExternalCommunications } from "./ExternalCommunications/external-communications";
+import { DatamuseWord} from "../../../../common/communication/datamuse-word";
 
 const gridGenerator: GridGenerator = new GridGenerator();
-const btRatio: number = 0.4;
-const gridSize: number = 5;
+const communication: ExternalCommunications = new ExternalCommunications();
+const GRID_SIZE: number = 10;
+const DEFAULT_DIFFICULTY: Difficulty = Difficulty.Easy;
 
 // tslint:disable-next-line:max-func-body-length
-gridGenerator.getNewGrid(Difficulty.Easy, gridSize, btRatio).then((grid: CrosswordGrid) => {
-    describe("Grid generation", () => {
-        describe("When the grid is generated", () => {
-            it("should give a grid with the right size", (done: MochaDone) => {
-                assert.strictEqual(grid.size, gridSize, "Attribute size of grid is not the expected size.");
-                assert.strictEqual(grid.grid.length, gridSize * gridSize, "Vertical length is not the right length");
-                done();
-            });
+describe("Grid generation", () => {
 
-            it("should give us a grid with no blackTiles in the first row and the first column ", (done: MochaDone) => {
-                for (let i: number = 0; i < gridSize; i++) {
-                    if (grid.grid[i].isBlackTile) {
-                        assert.fail("Detected blackTile on the first row");
-                    } else if (grid.grid[i * gridSize].isBlackTile) {
-                        assert.fail("Detected blackTile on the first column");
-                    }
+    let grid: ExtendedCrosswordGrid;
+
+    before(() => {
+        return gridGenerator.getNewGrid(DEFAULT_DIFFICULTY, GRID_SIZE).then((g: ExtendedCrosswordGrid) => grid = g);
+    });
+
+    describe("When the grid is generated (easy)", () => {
+        it("should give a grid with the right size", () => {
+            assert.strictEqual(grid.size, GRID_SIZE, "Attribute size of grid is not the expected size.");
+            assert.strictEqual(grid.grid.length, GRID_SIZE * GRID_SIZE, "Vertical length is not the right length");
+        });
+
+        it("should give us a grid with no blackTiles in the first row and the first column ", () => {
+            for (let i: number = 0; i < GRID_SIZE; i++) {
+                if (grid.grid[i].isBlackTile) {
+                    assert.fail("Detected blackTile on the first row");
+                } else if (grid.grid[i * GRID_SIZE].isBlackTile) {
+                    assert.fail("Detected blackTile on the first column");
                 }
-                done();
-            });
+            }
+        });
 
-            it("should have a word on each colomn/row", (done: MochaDone) => {
-                const hasAcrossWord: boolean[] = new Array<boolean>(gridSize).fill(false, 0, gridSize - 1);
-                const hasDownWord: boolean[] = new Array<boolean>(gridSize).fill(false, 0, gridSize - 1);
-                for (const word of grid.words) {
-                    if (word.orientation === Orientation.Across) {
-                        hasAcrossWord[Math.floor(word.id / gridSize)] = true;
-                    } else {
-                        hasDownWord[word.id % gridSize] = true;
-                    }
+        it("should have a word on each colomn/row", () => {
+            const hasAcrossWord: boolean[] = new Array<boolean>(GRID_SIZE).fill(false, 0, GRID_SIZE - 1);
+            const hasDownWord: boolean[] = new Array<boolean>(GRID_SIZE).fill(false, 0, GRID_SIZE - 1);
+            for (const word of grid.words) {
+                if (word.orientation === Orientation.Across) {
+                    hasAcrossWord[Math.floor(word.id / GRID_SIZE)] = true;
+                } else {
+                    hasDownWord[word.id % GRID_SIZE] = true;
                 }
-                for (let i: number = 0; i < gridSize; i++) {
-                    assert.ok(hasAcrossWord[i], "There is no word on row : " + i);
-                    assert.ok(hasDownWord[i], "There is no word on column : " + i);
+            }
+            for (let i: number = 0; i < GRID_SIZE; i++) {
+                assert.ok(hasAcrossWord[i], "There is no word on row : " + i);
+                assert.ok(hasDownWord[i], "There is no word on column : " + i);
+            }
+        });
+
+        it("should give us words with definitions ", () => {
+            grid.words.forEach((word: Word) => {
+                assert.ok(word.definitions.length > 0, " Word : " + word.id);
+            });
+        });
+
+        it("should not have apostrophe or apostrophe", () => {
+            grid.grid.forEach((tile: Letter) => {
+                if (!tile.isBlackTile) {
+                    assert.notEqual(tile.char, "-", "Has hypen");
+                    assert.notEqual(tile.char, "'", "Has apostrophe");
                 }
-                done();
             });
+        });
 
-            it("should give us words with definitions ", (done: MochaDone) => {
-                grid.words.forEach((word: Word) => {
-                    assert.ok(word.definitions.length > 0, " Word : " + word.id );
+        it("should not have special letters (accents, etc)", () => {
+            grid.grid.forEach((tile: Letter) => {
+                if (!tile.isBlackTile) {
+                    assert.ok(tile.char.normalize("NFD").length === 1, "Has character : \"" + tile.char + "\"");
+                }
+            });
+        });
+
+        it("should not have duplicate word", () => {
+            const words: string[] = new Array<string>();
+            grid.words.forEach((gridWord: Word) => {
+                assert.equal(words.indexOf(gridWord.toString()), -1, "Duplicate of : " + gridWord.toString());
+                words.push(gridWord.toString());
+            });
+        });
+
+        it("should have real words", (done: MochaDone) => {
+            for (const word of grid.words) {
+                communication.getDefinitionsFromServer(word.toString()).then((datamuseWord: DatamuseWord) => {
+                    assert.notEqual(datamuseWord, null, word.toString() + " does not exist");
+                    assert.equal(datamuseWord.word, word.toString(), " Expected : " + word.toString() + " got : " + datamuseWord.word);
+                    assert.notEqual(datamuseWord.defs, null, word.toString() + " does not have defs");
                 });
+            }
+            done();
+        });
+
+        it("should have easy words", (done: MochaDone) => {
+            communication.getDefinitionsFromServer(grid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
+                assert.equal(grid.words[0].definitions[0],
+                             datamuseWord.defs[0],
+                             grid.words[0].toString() + " does not use it's first definition");
                 done();
             });
+        });
+    });
 
-            it("should not have apostrophe or apostrophe", (done: MochaDone) => {
-                grid.grid.forEach((tile: Letter) => {
-                    if (!tile.isBlackTile) {
-                        assert.notEqual(tile.char, "-", "Has hypen");
-                        assert.notEqual(tile.char, "'", "Has apostrophe");
+    describe("When the grid is generated by diffculty", () => {
+
+        it("should create a medium grid", (done: MochaDone) => {
+            gridGenerator.getNewGrid(Difficulty.Medium, GRID_SIZE).then((mediumGrid: ExtendedCrosswordGrid) => {
+                assert.notEqual(mediumGrid, undefined, "There is no grid");
+                assert.notEqual(mediumGrid.words, undefined, "it does not have words");
+                communication.getDefinitionsFromServer(mediumGrid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
+                    if (datamuseWord.defs.length > 1) {
+                        assert.notEqual(mediumGrid.words[0].definitions[0],
+                                        datamuseWord.defs[0],
+                                        mediumGrid.words[0].toString() + " uses it's first definition");
                     }
+                    done();
                 });
-                done();
             });
+        });
 
-            it("should not have special letters (accents, etc)", (done: MochaDone) => {
-                grid.grid.forEach((tile: Letter) => {
-                    if (!tile.isBlackTile) {
-                        assert.ok(tile.char.normalize("NFD").length === 1 , "Has character : " + tile.char);
+        it("should create a Hard grid", (done: MochaDone) => {
+            gridGenerator.getNewGrid(Difficulty.Medium, GRID_SIZE).then((hardGrid: ExtendedCrosswordGrid) => {
+                assert.notEqual(hardGrid, undefined, "There is no grid");
+                assert.notEqual(hardGrid.words, undefined, "it does not have words");
+                communication.getDefinitionsFromServer(hardGrid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
+                    if (datamuseWord.defs.length > 1) {
+                        assert.notEqual(hardGrid.words[0].definitions[0],
+                                        datamuseWord.defs[0],
+                                        hardGrid.words[0].toString() + " uses it's first definition");
                     }
+                    done();
                 });
-                done();
-            });
-
-            it("should not have duplicate word", (done: MochaDone) => {
-                const words: string[] = new Array<string>();
-                grid.words.forEach((gridWord: Word) => {
-                    let wordString: string = "";
-                    gridWord.letters.forEach((letter: Letter) => {
-                        wordString += letter.char;
-                    });
-                    assert.equal(words.indexOf(wordString), -1, "Duplicate of : " + wordString);
-                    words.push(wordString);
-                });
-                done();
             });
         });
     });
