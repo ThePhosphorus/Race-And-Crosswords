@@ -1,7 +1,6 @@
 <div class="container " ng-controller="CollapseDemoCtrl">
   <div class="row mb-0 " id="info">
     <div class="col-lg-7 w-100 pr-0 pl-0 pb-0" id="nbPlayers">
-
       <button type="button" class="btn pb-0 w-100" (click)="isCollapsedPlayer =!isCollapsedPlayer">
         <p *ngIf="nbPlayers == 1">
           ▼ SINGLE PLAYER ▼
@@ -10,19 +9,16 @@
           ▼ {{nbPlayers}} PLAYERS ▼
         </p>
       </button>
-
     </div>
     <div class="col-lg-5 w-100 " id="level">
       <button type="button" data-toogle="modal" data-target="#levelMod" class="btn pb-0 w-100" (click)="showLevel =!showLevel " *ngIf="lvl" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':true}">NEW GAME</button>
     </div>
-
   </div>
 
   <div id="levelMod" class="modal fade" tabindex="-1"   [class.show]="!showLevel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <h5 class="modal-title" id="modalLabel">Difficulty Level</h5>
-
         <div class="modal-body">
           <div class="card card-block w-100">
             <div id="difficultySelector" class="btn-group btn-group-block w-100 " data-toggle="buttons">
@@ -38,12 +34,9 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
-
-
 
   <div class="row justify-content-center mt-1 mb-2">
     <div class="col ">
