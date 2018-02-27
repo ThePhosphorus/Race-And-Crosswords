@@ -1,7 +1,7 @@
 export const MIN_WORD_LENGTH: number = 2;
 
 export enum Difficulty {
-    Easy = 1,
+    Easy,
     Medium,
     Hard,
 }
