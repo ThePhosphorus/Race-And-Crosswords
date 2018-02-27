@@ -1,7 +1,11 @@
 import { Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
 import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
 
-const COMPLEXITY_THRESHOLD: number = 250;
+const COMPLEXITY_THRESHOLD: number = 125;
+/* tslint:disable */
+const DEFAULT_BLACK_TILES: [number, number][] = [[1, 6], [2, 3], [3, 1], [3, 5], [4, 2], [4, 7], [4, 9], [5, 4], [6, 8], [7, 1], [7, 6], [8, 4], [9, 6]];
+/* tslint:enable */
+const MIN_SIZE_DEFAULT_BLACK_TILES: number = 10;
 
 export class EmptyGridFactory {
 
@@ -28,20 +32,33 @@ export class EmptyGridFactory {
     }
 
     private generateBlackTiles(): void {
+        if ( this.crossword.size >= MIN_SIZE_DEFAULT_BLACK_TILES) {
+            this.generateDefaultBlackTiles();
+        }
+        this.generateRandomBlackTiles();
+    }
+
+    private generateRandomBlackTiles(): void {
         let complexity: number;
         let tileCount: number = 0;
         do {
             const id: number = Math.floor(Math.random() * (this.crossword.size * this.crossword.size));
             if (!this.crossword.grid[id].isBlackTile) {
                 this.crossword.grid[id].isBlackTile = true;
-                if (this.isValidBlackTile(id)) {
-                    tileCount++;
-                } else {
+                if (!this.isValidBlackTile(id)) {
                     this.crossword.grid[id].isBlackTile = false;
                 }
             }
+            tileCount++;
             complexity = this.getComplexity();
+            // console.log(complexity);
         } while (complexity > COMPLEXITY_THRESHOLD && tileCount < this.crossword.grid.length);
+    }
+
+    private generateDefaultBlackTiles(): void {
+        for (const tile of DEFAULT_BLACK_TILES) {
+            this.crossword.grid[this.crossword.getPosition(tile["0"], tile["1"])].isBlackTile = true;
+        }
     }
 
     private isValidBlackTile(id: number): boolean {

@@ -7,7 +7,7 @@ const GRID_SIZE: number = 10;
 describe(" Empty grid generation", () => {
     describe("When the empty grid is generated", () => {
         it("should give a grid with the right size", (done: MochaDone) => {
-            for (let i: number = 1; i <= GRID_SIZE; i++) {
+            for (let i: number = GRID_SIZE; i <= GRID_SIZE; i++) {
                 const grid: CrosswordGrid = new EmptyGridFactory().getNewGrid(i);
                 assert.strictEqual(grid.size, i, "Attribute size of grid is not the expected size.");
                 assert.strictEqual(grid.grid.length, i * i, "Vertical length is not the right length");
