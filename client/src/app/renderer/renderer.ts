@@ -2,12 +2,7 @@ import { CameraManagerService, TargetInfos } from "../camera-manager-service/cam
 import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3 } from "three";
 import Stats = require("stats.js");
 import * as C from "../track-generator-service/track.constantes";
-
-const WHITE: number = 0xFFFFFF;
-const AMBIENT_LIGHT_OPACITY: number = 0.85;
-
-const HALF: number = 0.5;
-const DOUBLE: number = 2;
+import {HALF, DOUBLE, AMBIENT_LIGHT_OPACITY, WHITE} from "../global-constants/constants";
 
 export abstract class Renderer {
     private _container: HTMLDivElement;

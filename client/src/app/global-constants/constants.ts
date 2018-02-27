@@ -1,4 +1,10 @@
 
+// global
+export const HALF: number = 0.5;
+export const DOUBLE: number = 2;
+export const AMBIENT_LIGHT_OPACITY: number = 0.85;
+export const WHITE: number = 0xFFFFFF;
+
 // camera constants
 export const FAR_CLIPPING_PLANE: number = 1000;
 export const NEAR_CLIPPING_PLANE: number = 1;

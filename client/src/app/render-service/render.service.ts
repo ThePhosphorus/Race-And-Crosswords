@@ -5,7 +5,7 @@ import { CameraManagerService, TargetInfos } from "../camera-manager-service/cam
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../renderer/renderer";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
-import { CameraType } from "../global-constants/constants";
+import { CameraType, HALF } from "../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -13,7 +13,6 @@ const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
-const HALF: number = 0.5;
 const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 
