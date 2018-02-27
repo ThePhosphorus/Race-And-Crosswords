@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Letter, Word, Orientation, CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
 
 class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
+import { CrosswordsComponent } from "./crossword/crosswords-component/crosswords.component";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { GameComponent } from "./race/game-component/game.component";
 import { TrackEditorComponent } from "./race/admin/track-editor/track-editor.component";

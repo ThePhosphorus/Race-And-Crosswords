@@ -4,7 +4,7 @@ import { InputGridComponent } from "./input-grid.component";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { HttpClientModule } from "@angular/common/http";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import { CrosswordGrid, Word, Letter } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Word, Letter } from "../../../../../common/communication/crossword-grid";
 import { MOCK } from "../mock-crossword/mock-crossword";
 
 // tslint:disable:no-magic-numbers

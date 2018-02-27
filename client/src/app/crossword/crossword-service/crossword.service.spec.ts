@@ -1,6 +1,6 @@
 import { TestBed, inject, async } from "@angular/core/testing";
 import { CrosswordService } from "./crossword.service";
-import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { Difficulty, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http/";
 

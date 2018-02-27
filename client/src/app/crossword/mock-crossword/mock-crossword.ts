@@ -1,4 +1,4 @@
-import { CrosswordGrid, Orientation} from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Orientation} from "../../../../../common/communication/crossword-grid";
 
 // tslint:disable
 export const MOCK: CrosswordGrid = {

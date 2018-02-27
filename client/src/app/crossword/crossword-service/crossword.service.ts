@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
+import { Difficulty, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";

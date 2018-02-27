@@ -3,7 +3,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { CrosswordGameInfoComponent } from "./crossword-game-info.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Difficulty } from '../../../../common/communication/crossword-grid';
+import { Difficulty } from "../../../../../common/communication/crossword-grid";
 
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
