@@ -140,7 +140,7 @@ export class TrackGenerator extends Renderer {
         );
         this.scene.add(this._gridHelper);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
-        this.cameraManager.cameraDistanceToCar = INITIAL_CAMERA_POSITION_Y;
+        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
 
