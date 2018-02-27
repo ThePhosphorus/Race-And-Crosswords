@@ -26,7 +26,7 @@ describe("TrackEditorComponent", () => {
           {
             provide: ActivatedRoute,
             useValue: {
-              params: Observable.of({ })
+              params: Observable.create({ })
             }
           },
           {

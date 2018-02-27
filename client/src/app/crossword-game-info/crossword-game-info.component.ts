@@ -5,12 +5,12 @@ const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
-    selector: "app-playermode",
-    templateUrl: "./playermode.component.html",
-    styleUrls: ["./playermode.component.css"]
+    selector: "app-crossword-game-info",
+    templateUrl: "./crossword-game-info.component.html",
+    styleUrls: ["./crossword-game-info.component.css"]
 })
 
-export class PlayermodeComponent implements OnInit {
+export class CrosswordGameInfoComponent implements OnInit {
 
     public nbPlayers: number;
     public lvl: Difficulty;
