@@ -34,9 +34,9 @@ describe("InputGridComponent", () => {
     });
     it("grid only accepts letters", () => {
         const numberEntered: KeyboardEvent = new KeyboardEvent("keypress", { "key": "1" });
-        const pastCurrentLetter: number = component.currentLetter;
+        const pastCurrentLetter: number = component.gridState.currentLetter;
         component.writeChar(numberEntered);
-        expect(component.currentLetter).toBe(pastCurrentLetter);
+        expect(component.gridState.currentLetter).toBe(pastCurrentLetter);
     });
 
     it("should relink crossword Grid when using relinkLetters", () => {
@@ -53,7 +53,7 @@ describe("InputGridComponent", () => {
 
   });
 
-  it("should set hoverWord", () => {
+    it("should set hoverWord", () => {
       const word: Word = new Word();
       word.letters[0] = new Letter("h", 0);
       word.letters[1] = new Letter("e", 1);
@@ -63,7 +63,7 @@ describe("InputGridComponent", () => {
 
       component.setHoveredWord(word);
 
-      component.hoveredLetters.forEach((letter: number, index: number) => {
+      component.gridState.hoveredLetters.forEach((letter: number, index: number) => {
         expect(letter).toBe(index);
       });
 
