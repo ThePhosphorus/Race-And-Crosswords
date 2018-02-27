@@ -48,7 +48,7 @@ export class InputGridComponent implements OnInit {
         this._crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 
-    private relinkLetters(crosswordGrid: CrosswordGrid): void {
+    public relinkLetters(crosswordGrid: CrosswordGrid): void {
         crosswordGrid.words.forEach((word: Word) => {
             const linkedLetters: Letter[] = [];
             word.letters.forEach((letter: Letter) => {

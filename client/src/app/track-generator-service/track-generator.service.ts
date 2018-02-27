@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { ZoomLimit } from "../camera-manager-service/camera-container";
-import { CameraType } from "../global-constants/constants";
+import { CameraType, AMBIENT_LIGHT_OPACITY, WHITE, INITIAL_CAMERA_POSITION_Y } from "../global-constants/constants";
 
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;
@@ -139,8 +139,8 @@ export class TrackGenerator extends Renderer {
             new Color(C.GRID_SECONDARY_COLOR)
         );
         this.scene.add(this._gridHelper);
-        this.scene.add(new AmbientLight(C.WHITE, C.AMBIENT_LIGHT_OPACITY));
-        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
+        this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
+        this.cameraManager.cameraDistanceToCar = INITIAL_CAMERA_POSITION_Y;
         this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
 
