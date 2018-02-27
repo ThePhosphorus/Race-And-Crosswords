@@ -1,4 +1,5 @@
-import { Wheel, DEFAULT_WHEEL_MASS, DEFAULT_WHEEL_RADIUS, DEFAULT_FRICTION_COEFFICIENT } from "./wheel";
+import { DEFAULT_WHEEL_MASS, DEFAULT_WHEEL_RADIUS, DEFAULT_FRICTION_COEFFICIENT } from "../../race.constants";
+import { Wheel } from "./wheel";
 
 /* tslint:disable: no-magic-numbers */
 describe("Wheel", () => {
