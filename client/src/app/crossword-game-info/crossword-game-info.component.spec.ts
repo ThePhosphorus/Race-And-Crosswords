@@ -1,24 +1,24 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { HttpClientModule } from "@angular/common/http";
-import { PlayermodeComponent } from "./playermode.component";
+import { CrosswordGameInfoComponent } from "./crossword-game-info.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
 
-describe("PlayermodeComponent", () => {
-    let component: PlayermodeComponent;
-    let fixture: ComponentFixture<PlayermodeComponent>;
+describe("CrosswordGameInfoComponent", () => {
+    let component: CrosswordGameInfoComponent;
+    let fixture: ComponentFixture<CrosswordGameInfoComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            declarations: [PlayermodeComponent],
+            declarations: [CrosswordGameInfoComponent],
             providers: [CrosswordCommunicationService, CrosswordService]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(PlayermodeComponent);
+        fixture = TestBed.createComponent(CrosswordGameInfoComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -8,7 +8,7 @@ import { GameComponent } from "./game-component/game.component";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
-import { PlayermodeComponent } from "./playermode-component/playermode.component";
+import { CrosswordGameInfoComponent } from "./crossword-game-info/crossword-game-info.component";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { AdminComponent } from "./admin/admin.component";
 import { TrackListComponent } from "./track-list/track-list.component";
@@ -24,7 +24,7 @@ import { InputLetterComponent } from "./input-letter/input-letter.component";
         AppComponent,
         GameComponent,
         CrosswordsComponent,
-        PlayermodeComponent,
+        CrosswordGameInfoComponent,
         HomePageComponent,
         AdminComponent,
         TrackListComponent,
