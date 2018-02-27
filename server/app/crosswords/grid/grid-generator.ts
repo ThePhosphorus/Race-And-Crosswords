@@ -89,7 +89,7 @@ export class GridGenerator {
     private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<boolean> {
         if (receivedWord != null && this.isUnique(receivedWord) && receivedWord.defs != null) {
             this.setWord(receivedWord, word, difficulty);
-            // this.crossword.displayGrid();
+            this.setDefinition(receivedWord, word, difficulty);
 
             return true;
         }
@@ -113,12 +113,16 @@ export class GridGenerator {
             gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord.word[i] : gridWord.letters[i].char;
             gridWord.letters[i].count++;
         }
+
+        this.crossword.words.push(gridWord);
+    }
+
+    private setDefinition(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
         if (receivedWord.defs.length === 1 || difficulty === Difficulty.Easy) {
             gridWord.definitions.push(receivedWord.defs[0]);
         } else {
             gridWord.definitions.push(receivedWord.defs[1]);
         }
-        this.crossword.words.push(gridWord);
     }
 
     private async backtrack(currentWord: Word, difficulty: Difficulty): Promise<void> {
