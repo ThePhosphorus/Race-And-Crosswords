@@ -1,5 +1,5 @@
 import * as Request from "request-promise-native";
-import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+import { DatamuseWord, HARD_THRESHOLD } from "../../../../common/communication/datamuse-word";
 
 const HALF: number = 0.5;
 

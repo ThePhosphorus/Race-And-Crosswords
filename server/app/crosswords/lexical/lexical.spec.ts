@@ -1,6 +1,6 @@
-import { Datamuse, HARD_THRESHOLD } from "./datamuse";
+import { Datamuse} from "./datamuse";
 import * as assert from "assert";
-import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+import { DatamuseWord, HARD_THRESHOLD  } from "../../../../common/communication/datamuse-word";
 
 describe("Service Lexical", () => {
     const datamuse: Datamuse = new Datamuse();
@@ -87,17 +87,17 @@ describe("Service Lexical", () => {
             datamuse.getWord(testString, true).then((strResponse: string) => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive any word");
-                assert.ok(word.score > HARD_THRESHOLD);
+                assert.ok(word.score > HARD_THRESHOLD, word.word + " is a rare word");
                 done();
             });
         });
 
         it("should receive rare words", (done: MochaDone) => {
             const testString: string = "???e";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
+            datamuse.getWord(testString, false).then((strResponse: string) => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive any word");
-                assert.ok(word.score > HARD_THRESHOLD);
+                assert.ok(word.score < HARD_THRESHOLD,  word.word + " is a commun word");
                 done();
             });
         });
