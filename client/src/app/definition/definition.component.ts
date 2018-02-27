@@ -16,7 +16,6 @@ export class DefinitionComponent implements OnInit {
     @Output() public setHoveredWord: EventEmitter<Word> = new EventEmitter<Word>();
     @Output() public _cheatmode: boolean;
     private _wordGrid: Word[];
-    private _solvedWords: number[];
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
 
