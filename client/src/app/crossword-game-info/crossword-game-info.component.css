@@ -107,19 +107,7 @@ p {
     font-size: 200%;
     margin: 3vmin;
 }
-#closeBtn {
-    opacity:unset;
-    font-size: 100%;
-    padding: 2vmin;
-    display: inline-block;
-    width:30%;
-    align-self: center;
-    border-radius: 5%;
-    border: #212529 solid;
-    margin-bottom: 1vmin;
-    background-color: white;
 
-}
 
 .btn p {
     margin-top: 0%;
