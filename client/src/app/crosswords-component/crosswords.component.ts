@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
 
@@ -8,11 +8,7 @@ import { CrosswordService } from "../crossword-service/crossword.service";
     styleUrls: ["./crosswords.component.css"],
     providers: [CrosswordCommunicationService, CrosswordService]
 })
-export class CrosswordsComponent implements OnInit {
-
-    public ngOnInit(): void {
-    }
-
+export class CrosswordsComponent {
     public constructor() {
     }
 }
