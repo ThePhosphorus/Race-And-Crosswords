@@ -3,8 +3,8 @@ import { Vector3 } from "three";
 import { Track, Vector3Struct } from "../../../../../../common/communication/track";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
+import { BACKEND_URL } from "../../../global-constants/constants";
 
-const BACKEND_URL: string = "http://localhost:3000/";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
 class MongoObj {

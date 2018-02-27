@@ -1,6 +1,5 @@
 import { Vector3, GridHelper, Color, AmbientLight, Vector2, Mesh, Geometry, Line, Object3D } from "three";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
-import * as C from "./track.constantes";
 import { Renderer } from "../../renderer/renderer";
 import { ConstraintValidator } from "./constraint-validator/constraint-validator";
 import { Injectable } from "@angular/core";
@@ -8,6 +7,11 @@ import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { ZoomLimit } from "../../camera-manager-service/camera-container";
 import { CameraType, AMBIENT_LIGHT_OPACITY, WHITE } from "../../../global-constants/constants";
+import {
+    LINK_MINIMUM_POINTS, PointsSpan, ZOOM_FACTOR, GRID_DIMENSION, GRID_DIVISIONS,
+    GRID_PRIMARY_COLOR, GRID_SECONDARY_COLOR, STARTING_CAMERA_HEIGHT, WHITE_MATERIAL,
+    SPHERE_GEOMETRY, LINE_MATERIAL, POINT_SELECTION_PRECISION, LINE_MATERIAL_INVALID
+} from "../track-editor.constants";
 
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;
@@ -15,7 +19,6 @@ const MAX_ZOOM: number = 200;
 const LEFT_CLICK_CODE: number = 0;
 const MIDDLE_CLICK_CODE: number = 1;
 const RIGHT_CLICK_CODE: number = 2;
-export const LINK_MINIMUM_POINTS: number = 2;
 
 // Keycodes
 const ZOOM_IN_KEYCODE: number = 187; // +
@@ -25,7 +28,7 @@ const DELETE_KEY: number = 46;
 @Injectable()
 export class TrackGenerator extends Renderer {
     private _gridHelper: GridHelper;
-    private _dragPoints: C.PointsSpan;
+    private _dragPoints: PointsSpan;
     private onMouseMoveListner: EventListenerObject;
     private onMouseTranslateListner: EventListenerObject;
     private _translateStartingPosition: Vector3;
@@ -121,7 +124,7 @@ export class TrackGenerator extends Renderer {
     }
 
     public mouseWheelEvent(event: MouseWheelEvent): void {
-        this.cameraManager.scrollZoom(event.deltaY / C.ZOOM_FACTOR);
+        this.cameraManager.scrollZoom(event.deltaY / ZOOM_FACTOR);
     }
 
     // Rendering
@@ -133,14 +136,14 @@ export class TrackGenerator extends Renderer {
     protected onInit(): void {
         this.cameraManager.cameraType = CameraType.Orthographic;
         this._gridHelper = new GridHelper(
-            C.GRID_DIMENSION,
-            C.GRID_DIVISIONS,
-            new Color(C.GRID_PRIMARY_COLOR),
-            new Color(C.GRID_SECONDARY_COLOR)
+            GRID_DIMENSION,
+            GRID_DIVISIONS,
+            new Color(GRID_PRIMARY_COLOR),
+            new Color(GRID_SECONDARY_COLOR)
         );
         this.scene.add(this._gridHelper);
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
-        this.cameraManager.cameraDistanceToCar = C.STARTING_CAMERA_HEIGHT;
+        this.cameraManager.cameraDistanceToCar = STARTING_CAMERA_HEIGHT;
         this.cameraManager.zoomLimit = new ZoomLimit(MIN_ZOOM, MAX_ZOOM);
     }
 
@@ -152,7 +155,7 @@ export class TrackGenerator extends Renderer {
 
     // ThreeJs object handeling
     public createDot(pos: Vector2, topMesh: Vector3, pos3?: Vector3): Mesh {
-        const circle: Mesh = new Mesh(C.SPHERE_GEOMETRY, C.WHITE_MATERIAL);
+        const circle: Mesh = new Mesh(SPHERE_GEOMETRY, WHITE_MATERIAL);
         circle.position.copy((pos3) ? pos3 : this.getRelativePosition(pos));
         if (topMesh) { this.createLine(topMesh, circle.position, circle.id); }
         this.scene.add(circle);
@@ -196,7 +199,7 @@ export class TrackGenerator extends Renderer {
     private createLine(from: Vector3, to: Vector3, id: number): void {
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
-        const line: Line = new Line(lineG, C.LINE_MATERIAL);
+        const line: Line = new Line(lineG, LINE_MATERIAL);
         line.name = LINE_STR_PREFIX + id;
         this.scene.add(line);
     }
@@ -204,7 +207,7 @@ export class TrackGenerator extends Renderer {
     private findPointId(pos: Vector2): number {
         for (let i: number = this.points.length - 1; i >= 0; i--) {
             const diff: number = this.getClientPosition(this.points.point(i).position).sub(pos).length();
-            if (diff <= C.POINT_SELECTION_PRECISION) {
+            if (diff <= POINT_SELECTION_PRECISION) {
                 return i;
             }
         }
@@ -221,7 +224,7 @@ export class TrackGenerator extends Renderer {
         if ((pointId === this.points.length - 1 || pointId === 0) && this.points.top.position.equals(this.points.point(0).position)) {
             this.enableClosingDragMode();
         } else {
-            this._dragPoints = new C.PointsSpan(
+            this._dragPoints = new PointsSpan(
                 this.points.point(pointId),
                 (pointId === 0) ? null : this.points.point(pointId - 1),
                 (pointId === this.points.length - 1) ? null : this.points.point(pointId + 1),
@@ -231,7 +234,7 @@ export class TrackGenerator extends Renderer {
     }
 
     private enableClosingDragMode(): void {
-        this._dragPoints = new C.PointsSpan(
+        this._dragPoints = new PointsSpan(
             this.points.point(0),
             (this.points.length >= LINK_MINIMUM_POINTS) ? this.points.point(this.points.length - LINK_MINIMUM_POINTS) : null,
             (this.points.length > 1) ? this.points.point(1) : null,
@@ -255,9 +258,9 @@ export class TrackGenerator extends Renderer {
         for (let i: number = 0; i < this.points.points.length - 1; i++) {
             if (this.points.points[i + 1] !== null) {
                 if (this.constraintValidator.validateLine(this.points.points[i], this.points.points[i + 1])) {
-                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL;
+                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = LINE_MATERIAL;
                 } else {
-                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = C.LINE_MATERIAL_INVALID;
+                    (this.scene.getObjectByName(LINE_STR_PREFIX + this.points.point(i + 1).id) as Line).material = LINE_MATERIAL_INVALID;
                     valid = false;
                 }
             }

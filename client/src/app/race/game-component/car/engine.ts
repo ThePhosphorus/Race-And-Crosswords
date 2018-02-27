@@ -1,22 +1,13 @@
 import { MIN_TO_SEC } from "../../../global-constants/constants";
 import { InvalidArgumentError } from "../../../invalidArgumentError";
-
-export const DEFAULT_DRIVE_RATIO: number = 3.27;
-export const DEFAULT_DOWNSHIFT_RPM: number = 2500;
-export const DEFAULT_MINIMUM_RPM: number = 800;
-export const DEFAULT_SHIFT_RPM: number = 5500;
-export const DEFAULT_TRANSMISSION_EFFICIENCY: number = 0.7;
-export const DEFAULT_MAX_RPM: number = 7000;
-/* tslint:disable: no-magic-numbers */
-export const DEFAULT_GEAR_RATIOS: number[] = [
-    4.4,
-    2.59,
-    1.8,
-    1.34,
-    1,
-    0.75
-];
-/* tslint:enable: no-magic-numbers */
+import { DEFAULT_GEAR_RATIOS,
+    DEFAULT_DRIVE_RATIO,
+    DEFAULT_DOWNSHIFT_RPM,
+    DEFAULT_MINIMUM_RPM,
+    DEFAULT_SHIFT_RPM,
+    DEFAULT_TRANSMISSION_EFFICIENCY,
+    DEFAULT_MAX_RPM
+} from "../../race.constants";
 
 export class Engine {
     private _currentGear: number;

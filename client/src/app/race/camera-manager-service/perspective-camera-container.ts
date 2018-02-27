@@ -1,6 +1,7 @@
 import { PerspectiveCamera, Vector3, AudioListener, Camera } from "three";
 import { CameraContainer, ZoomLimit } from "./camera-container";
 import { TargetInfos } from "./camera-manager.service";
+import { PERS_CAMERA_ANGLE } from "../race.constants";
 import {
     CameraType,
     FAR_CLIPPING_PLANE,
@@ -12,7 +13,6 @@ import {
 } from "../../global-constants/constants";
 
 const FIELD_OF_VIEW: number = 70;
-export const PERS_CAMERA_ANGLE: number = 25;
 const MAX_RECOIL_DISTANCE: number = 8;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;

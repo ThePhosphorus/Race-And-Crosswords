@@ -9,10 +9,7 @@ import {
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
-
-export const DEFAULT_WHEELBASE: number = 2.78;
-export const DEFAULT_MASS: number = 1515;
-export const DEFAULT_DRAG_COEFFICIENT: number = 0.35;
+import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);

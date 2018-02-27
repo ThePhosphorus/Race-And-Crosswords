@@ -1,8 +1,8 @@
 
 import { AudioLoader, AudioBuffer, AudioListener, Audio } from "three";
+import { DEFAULT_VOLUME } from "../../../race.constants";
 
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
-export const DEFAULT_VOLUME: number = 0.5;
 
 export abstract class AbstractSoundFacade {
     private isLoop: boolean;

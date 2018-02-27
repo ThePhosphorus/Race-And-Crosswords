@@ -1,8 +1,8 @@
-import * as C from "../track.constantes";
 import { Mesh, Vector3 } from "three";
 import { TrackGenerator } from "../track-generator.service";
 import { EmptyArrayException } from "../../../../exceptions/EmptyArrayException";
 import { OutOfRangeException } from "../../../../exceptions/OutOfRangeException";
+import { WHITE_MATERIAL, SELECTION_MATERIAL, LINK_MINIMUM_POINTS, START_POINT_MATERIAL } from "../../track-editor.constants";
 
 export class PointsHandler {
     private _points: Array<Mesh>;
@@ -47,13 +47,13 @@ export class PointsHandler {
         }
 
         if ( this._selectedPoint > 0) {
-            this.point(this._selectedPoint).material = C.WHITE_MATERIAL;
+            this.point(this._selectedPoint).material = WHITE_MATERIAL;
         }
         if (pointId === 0 && !this.top.position.equals(this._points[0].position)) {
             this.closeLoop();
         }
-        if (this.length <= 2 || !this.top.position.equals(this._points[pointId].position)) {
-            this.point(pointId).material = C.SELECTION_MATERIAL;
+        if (this.length <= LINK_MINIMUM_POINTS || !this.top.position.equals(this._points[pointId].position)) {
+            this.point(pointId).material = SELECTION_MATERIAL;
         }
         this._selectedPoint = pointId;
     }
@@ -85,7 +85,7 @@ export class PointsHandler {
 
     public updateStartingPosition(): void {
         if (this._points[0]) {
-            this._points[0].material = C.START_POINT_MATERIAL;
+            this._points[0].material = START_POINT_MATERIAL;
         }
     }
 

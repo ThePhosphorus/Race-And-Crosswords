@@ -1,6 +1,4 @@
-export const DEFAULT_WHEEL_RADIUS: number = 0.3505; // 245/50R18
-export const DEFAULT_WHEEL_MASS: number = 15;
-export const DEFAULT_FRICTION_COEFFICIENT: number = 1.8;
+import { DEFAULT_WHEEL_MASS, DEFAULT_WHEEL_RADIUS, DEFAULT_FRICTION_COEFFICIENT } from "../../race.constants";
 
 export class Wheel {
     private _angularVelocity: number;

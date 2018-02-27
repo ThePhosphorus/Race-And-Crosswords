@@ -4,8 +4,8 @@ import { Vector3Struct, Track } from "../../../../../common/communication/track"
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
+import { BACKEND_URL } from "../../global-constants/constants";
 
-const BACKEND_URL: string = "http://localhost:3000/";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
 @Injectable()

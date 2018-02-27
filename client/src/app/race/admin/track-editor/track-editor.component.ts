@@ -1,11 +1,12 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from "@angular/core";
-import { TrackGenerator, LINK_MINIMUM_POINTS } from "../track-generator-service/track-generator.service";
+import { TrackGenerator } from "../track-generator-service/track-generator.service";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Track, Vector3Struct } from "../../../../../../common/communication/track";
 import { TrackSaverService } from "../track-saver/track-saver.service";
 import { Vector3 } from "three";
+import { LINK_MINIMUM_POINTS } from "../track-editor.constants";
 
 @Component({
     selector: "app-track-editor",
@@ -21,7 +22,7 @@ export class TrackEditorComponent implements AfterViewInit {
     public name: string;
 
     public constructor(
-        private trackGenerator: TrackGenerator,
+        public trackGenerator: TrackGenerator,
         private trackLoader: TrackLoaderService,
         private trackSaver: TrackSaverService,
         private route: ActivatedRoute,

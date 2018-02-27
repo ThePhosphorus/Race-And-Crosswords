@@ -1,3 +1,4 @@
+export const LINK_MINIMUM_POINTS: number = 2;
 import { Vector3, MeshBasicMaterial, SphereGeometry, LineBasicMaterial, Mesh } from "three";
 
 export const STARTING_CAMERA_HEIGHT: number = 60;

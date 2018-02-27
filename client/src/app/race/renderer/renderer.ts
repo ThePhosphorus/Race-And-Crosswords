@@ -1,8 +1,8 @@
 import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
 import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3 } from "three";
 import Stats = require("stats.js");
-import * as C from "../admin/track-generator-service/track.constantes";
 import {HALF, DOUBLE, AMBIENT_LIGHT_OPACITY, WHITE} from "../../global-constants/constants";
+import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } from "../admin/track-editor.constants";
 
 export abstract class Renderer {
     private _container: HTMLDivElement;
@@ -20,8 +20,8 @@ export abstract class Renderer {
 
     public init(container: HTMLDivElement): void {
         this._container = container;
-        this.cameraTargetDirection = C.CAMERA_STARTING_DIRECTION;
-        this.cameraTargetPosition = C.CAMERA_STARTING_POSITION;
+        this.cameraTargetDirection = CAMERA_STARTING_DIRECTION;
+        this.cameraTargetPosition = CAMERA_STARTING_POSITION;
 
         this.initStats();
         this.createScene();
@@ -130,7 +130,7 @@ export abstract class Renderer {
 
         return new Vector3(
             clientClickPos.x * cameraClientRatio.x,
-            C.LINE_Y_POSITION,
+            LINE_Y_POSITION,
             clientClickPos.y * cameraClientRatio.y
         );
      }
