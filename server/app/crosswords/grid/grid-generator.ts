@@ -4,7 +4,7 @@ import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 
-const MAX_TOTAL_ROLLBACKS: number = 50;
+const MAX_TOTAL_ROLLBACKS: number = 15;
 const CONSTRAINT_CHAR: string = "?";
 
 export class GridGenerator {
@@ -62,33 +62,40 @@ export class GridGenerator {
                 this.initialiseEmptyGrid(this.crossword.size);
                 this.rollbackCount = 0;
             }
-
-            await this.findWord(this.notPlacedWords.pop(), difficulty);
+            const word: Word = this.notPlacedWords.pop();
+            if (! await this.findWord(word, difficulty)) {
+                await this.backtrack(word, difficulty);
+            }
             this.sortWords();
         }
 
     }
 
-    private async findWord(word: Word, difficulty: Difficulty): Promise<void> {
+    private async findWord(word: Word, difficulty: Difficulty): Promise<boolean> {
         const constraint: string = this.getConstraints(word);
         if (constraint.indexOf(CONSTRAINT_CHAR) === -1) {
             const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
-            await this.addWord(receivedWord, word, difficulty);
+
+            return this.addWord(receivedWord, word, difficulty);
 
         } else {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
             const receivedWord: DatamuseWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
-            await this.addWord(receivedWord, word, difficulty);
+
+            return this.addWord(receivedWord, word, difficulty);
         }
     }
 
-    private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<void> {
+    private async addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): Promise<boolean> {
         if (receivedWord != null && this.isUnique(receivedWord) && receivedWord.defs != null) {
             this.setWord(receivedWord, word, difficulty);
-            this.crossword.displayGrid();
-        } else {
-            await this.backjump(word);
+            // this.crossword.displayGrid();
+
+            return true;
         }
+
+        return false;
+
     }
 
     private isUnique(word: DatamuseWord): boolean {
@@ -106,9 +113,6 @@ export class GridGenerator {
             gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord.word[i] : gridWord.letters[i].char;
             gridWord.letters[i].count++;
         }
-        if (receivedWord.word !== gridWord.toString()) {
-            console.error("Placed " + receivedWord.word + ", but have " + gridWord.toString());
-        }
         if (receivedWord.defs.length === 1 || difficulty === Difficulty.Easy) {
             gridWord.definitions.push(receivedWord.defs[0]);
         } else {
@@ -117,25 +121,52 @@ export class GridGenerator {
         this.crossword.words.push(gridWord);
     }
 
-    private async backjump(currentWord: Word): Promise<void> {
+    private async backtrack(currentWord: Word, difficulty: Difficulty): Promise<void> {
         this.rollbackCount++;
-        for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
-            if (this.doesIntersect(this.crossword.words[i], currentWord)) {
-                this.unsetWord(i);
+        let isFixed: boolean = false;
+        while (!isFixed) {
+            const removedWord: Word = this.backjump(currentWord);
+            if (removedWord === undefined) {
+                await this.findWord(currentWord, difficulty);
+                isFixed = true;
+            } else {
+                const removedWordString: string = removedWord.toString();
+                if (!await this.findWord(removedWord, difficulty)) {
+                    this.notPlacedWords.push(removedWord);
+                } else {
+                    if (removedWord.toString() !== removedWordString && await this.findWord(currentWord, difficulty)) {
+                        isFixed = true;
+                    } else {
+                        this.unsetWord(this.crossword.words.indexOf(removedWord));
+                        this.notPlacedWords.push(removedWord);
+                    }
+                }
             }
         }
-        await this.findWord(currentWord, Difficulty.Easy);
+    }
+    private backjump(currentWord: Word): Word {
+
+        for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
+            if (this.doesIntersect(this.crossword.words[i], currentWord)) {
+                return this.unsetWord(i);
+            }
+        }
+
+        return undefined;
+
     }
 
-    private unsetWord(index: number): void {
+    private unsetWord(index: number): Word {
         const word: Word = this.crossword.words[index];
-        this.notPlacedWords.push(word);
         for (const letter of word.letters) {
             if ((--letter.count) <= 0) {
                 letter.char = "";
             }
         }
         this.crossword.words.splice(index, 1);
+
+        return word;
+
     }
 
     private doesIntersect(word1: Word, word2: Word): boolean {
