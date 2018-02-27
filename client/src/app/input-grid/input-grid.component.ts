@@ -57,13 +57,16 @@ export class InputGridComponent implements OnInit {
     }
 
     public relinkLetters(crosswordGrid: CrosswordGrid): void {
-        crosswordGrid.words.forEach((word: Word) => {
-            const linkedLetters: Letter[] = [];
-            word.letters.forEach((letter: Letter) => {
-                linkedLetters.push(crosswordGrid.grid[letter.id]);
+        if (crosswordGrid) {
+
+            crosswordGrid.words.forEach((word: Word) => {
+                const linkedLetters: Letter[] = [];
+                word.letters.forEach((letter: Letter) => {
+                    linkedLetters.push(crosswordGrid.grid[letter.id]);
+                });
+                word.letters = linkedLetters;
             });
-            word.letters = linkedLetters;
-        });
+        }
     }
 
     private initializeEmptyGrid(): void {

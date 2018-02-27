@@ -52,7 +52,7 @@ export class DefinitionComponent implements OnInit {
     }
 
     public upperFirstLetter(str: string): string {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+        return str ? str.charAt(0).toUpperCase() + str.slice(1) : undefined;
     }
 
     public toogleCheatMode(): void {

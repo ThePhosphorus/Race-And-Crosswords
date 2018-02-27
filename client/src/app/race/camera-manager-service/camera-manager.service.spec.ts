@@ -59,6 +59,16 @@ describe("CameraManagerService", () => {
         expect(manager.cameraDistanceToCar).toBeGreaterThan(cameraDistance);
   }) );
 
+  it("should be at the right distance", inject([CameraManagerService], (manager: CameraManagerService) => {
+      const distance: number = 5;
+      manager.cameraDistanceToCar = distance;
+
+      manager.update(5);
+
+      expect(manager.cameraDistanceToCar).toBe(distance);
+
+  }));
+
   it("should be at the right distance from the Target using zommLimits", inject([CameraManagerService], (manager: CameraManagerService) => {
       manager.cameraType = CameraType.Perspective;
       const zoomLimit: ZoomLimit = new ZoomLimit(2, 200);

@@ -7,10 +7,8 @@ import { BACKEND_URL } from "../../../global-constants/constants";
 
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
-class MongoObj {
-    public constructor (
-        public n: number
-    ) {}
+interface MongoObj {
+    n: number;
 }
 
 @Injectable()
