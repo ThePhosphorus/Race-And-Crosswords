@@ -4,7 +4,7 @@ import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 
-const MAX_TOTAL_ROLLBACKS: number = 15;
+const MAX_TOTAL_ROLLBACKS: number = 30;
 const CONSTRAINT_CHAR: string = "?";
 
 export class GridGenerator {
