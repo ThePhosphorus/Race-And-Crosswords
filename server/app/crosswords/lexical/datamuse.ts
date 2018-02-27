@@ -1,5 +1,5 @@
 import * as Request from "request-promise-native";
-import { DatamuseWord, HARD_THRESHOLD } from "../../../../common/communication/datamuse-word";
+import { DatamuseWord} from "../../../../common/communication/datamuse-word";
 
 const HALF: number = 0.5;
 
@@ -13,7 +13,7 @@ export class Datamuse {
     public async getWord(constraint: string, isEasy: boolean): Promise<string> {
         let words: Array<DatamuseWord> = await this.makeRequest(constraint);
         words = words.filter((w: DatamuseWord) => this.isValidWord(w));
-        this.selectWordsFromDifficulty(words, isEasy);
+        words = this.selectWordsFromDifficulty(words, isEasy);
 
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
         if (word == null) { return undefined; }
@@ -21,9 +21,10 @@ export class Datamuse {
         return JSON.stringify(word);
     }
 
-    private selectWordsFromDifficulty(words: Array<DatamuseWord>, isEasy: boolean): void {
+    private selectWordsFromDifficulty(words: Array<DatamuseWord>, isEasy: boolean): Array<DatamuseWord> {
         words.sort((a: DatamuseWord, b: DatamuseWord) => b.score - a.score);
-        words = isEasy ? words.slice(Math.floor(words.length * HALF)) : words.slice(Math.floor(words.length * HALF), words.length);
+
+        return isEasy ? words.slice(0, Math.floor(words.length * HALF)) : words.slice(Math.floor(words.length * HALF), words.length);
     }
 
     private isValidWord(word: DatamuseWord): boolean {

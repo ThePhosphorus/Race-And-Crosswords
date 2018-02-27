@@ -3,7 +3,7 @@ import { Difficulty, Letter, Orientation, Word } from "../../../../common/commun
 import { GridGenerator } from "./grid-generator";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
-import { DatamuseWord, HARD_THRESHOLD } from "../../../../common/communication/datamuse-word";
+import { DatamuseWord} from "../../../../common/communication/datamuse-word";
 
 const gridGenerator: GridGenerator = new GridGenerator();
 const communication: ExternalCommunications = new ExternalCommunications();
@@ -98,7 +98,6 @@ describe("Grid generation", () => {
                 assert.equal(grid.words[0].definitions[0],
                              datamuseWord.defs[0],
                              grid.words[0].toString() + " does not use it's first definition");
-                assert.ok(datamuseWord.score > HARD_THRESHOLD, "Word : " + datamuseWord.word +  " has incorrect diffculty");
                 done();
             });
         });
@@ -116,7 +115,6 @@ describe("Grid generation", () => {
                                         datamuseWord.defs[0],
                                         mediumGrid.words[0].toString() + " uses it's first definition");
                     }
-                    assert.ok(datamuseWord.score > HARD_THRESHOLD, "Word : " + datamuseWord.word +  " has incorrect diffculty");
                     done();
                 });
             });
@@ -132,7 +130,6 @@ describe("Grid generation", () => {
                                         datamuseWord.defs[0],
                                         hardGrid.words[0].toString() + " uses it's first definition");
                     }
-                    assert.ok(datamuseWord.score < HARD_THRESHOLD, "Word : " + datamuseWord.word +  " has incorrect diffculty");
                     done();
                 });
             });

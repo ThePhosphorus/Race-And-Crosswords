@@ -1,6 +1,6 @@
-import { Datamuse} from "./datamuse";
+import { Datamuse } from "./datamuse";
 import * as assert from "assert";
-import { DatamuseWord, HARD_THRESHOLD  } from "../../../../common/communication/datamuse-word";
+import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 describe("Service Lexical", () => {
     const datamuse: Datamuse = new Datamuse();
@@ -87,7 +87,6 @@ describe("Service Lexical", () => {
             datamuse.getWord(testString, true).then((strResponse: string) => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive any word");
-                assert.ok(word.score > HARD_THRESHOLD, word.word + " is a rare word");
                 done();
             });
         });
@@ -97,8 +96,22 @@ describe("Service Lexical", () => {
             datamuse.getWord(testString, false).then((strResponse: string) => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive any word");
-                assert.ok(word.score < HARD_THRESHOLD,  word.word + " is a commun word");
                 done();
+            });
+        });
+
+        it("should have commun words less rare than rare words", (done: MochaDone) => {
+            const testString: string = "????e";
+            datamuse.getWord(testString, true).then((strResponse: string) => {
+                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+                assert.notEqual(word, undefined, "Did not receive any word");
+                datamuse.getWord(testString, false).then((strResponseHard: string) => {
+                    const hardWord: DatamuseWord = JSON.parse(strResponseHard) as DatamuseWord;
+                    assert.notEqual(hardWord, undefined, "Did not receive any hard word");
+                    assert.ok(hardWord.score < word.score, "Hard word : " + hardWord.word + "(" + hardWord.score + ")" +
+                        " is more commun then : " + word.word + "(" + word.score + ")");
+                    done();
+                });
             });
         });
     });

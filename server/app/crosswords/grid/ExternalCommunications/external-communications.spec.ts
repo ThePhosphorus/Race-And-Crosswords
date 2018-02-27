@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import { ExternalCommunications } from "./external-communications";
 import { Word, Letter } from "../../../../../common/communication/crossword-grid";
-import { DatamuseWord, HARD_THRESHOLD } from "../../../../../common/communication/datamuse-word";
+import { DatamuseWord} from "../../../../../common/communication/datamuse-word";
 
 const externalCommunication: ExternalCommunications = new ExternalCommunications();
 let testWord: string;
@@ -51,9 +51,7 @@ describe("External Communications", () => {
         }
 
         externalCommunication.getWordsFromServer(constraint, word, true).then((datamuseWord: DatamuseWord) => {
-            if (datamuseWord !== undefined) {
-                assert.ok(datamuseWord.score > HARD_THRESHOLD, datamuseWord.word + " is a hard word");
-            } else {
+            if (datamuseWord === undefined)  {
                 assert.fail("could not find easy word");
             }
             done();
@@ -70,9 +68,7 @@ describe("External Communications", () => {
         }
 
         externalCommunication.getWordsFromServer(constraint, word, false).then((datamuseWord: DatamuseWord) => {
-            if (datamuseWord !== undefined) {
-                assert.ok(datamuseWord.score < HARD_THRESHOLD, datamuseWord.word + " is an easy word");
-            } else {
+            if (datamuseWord === undefined) {
                 assert.fail("could not find hard word");
             }
             done();
