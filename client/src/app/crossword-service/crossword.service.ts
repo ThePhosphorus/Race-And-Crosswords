@@ -21,6 +21,7 @@ export class CrosswordService {
     private _solvedWords: number[];
     private _currentPlayer: number;
     private _currentPlayerSubject: Subject<number>;
+    private _solvedWordsSubject: Subject<number[]>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._diff = Difficulty.Easy;
@@ -30,15 +31,19 @@ export class CrosswordService {
         this._currentPlayer = 1;
         this._currentPlayerSubject = new Subject<number>();
         this._solvedWords = [];
+        this._solvedWordsSubject = new Subject<number[]>();
     }
 
     public get difficulty(): Difficulty { return this._diff; }
     public get gridSize(): number { return this._gridSize; }
     public get blackTileRatio(): number { return this._blackTilesRatio; }
-    public get solvedWords(): Observable<number[]> { return of(this._solvedWords); }
 
     public get currentPlayer(): Observable<number> {
         return this._currentPlayerSubject.asObservable();
+    }
+
+    public get solvedWords(): Observable<number[]> {
+        return this._solvedWordsSubject.asObservable();
     }
 
     public get grid(): Observable<CrosswordGrid> {
@@ -50,17 +55,20 @@ export class CrosswordService {
             this._diff = difficulty;
             this._gridSize = gridSize;
             this._blackTilesRatio = btRatio;
-            this._currentPlayer = 1;
             this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
                 this._gridSubject.next(crosswordGrid);
             });
         }
+        this._currentPlayer = 1;
         this._currentPlayerSubject.next(this._currentPlayer);
+        this._solvedWords = [];
+        this._solvedWordsSubject.next(this._solvedWords);
 
         return this.grid;
     }
 
     public addSolvedWord(index: number): void {
         this._solvedWords.push(index);
+        this._solvedWordsSubject.next(this._solvedWords);
     }
 }
