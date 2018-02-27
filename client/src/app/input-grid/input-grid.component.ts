@@ -91,7 +91,7 @@ export class InputGridComponent implements OnInit {
         if (this.gridState.disabledLetters.indexOf(index) === -1) {
             this.gridState.currentOrientation = (index === this.gridState.currentLetter) ?
                 (this.gridState.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
-                (this.gridState.currentOrientation = Orientation.Across);
+                Orientation.Across;
             let targetWord: Word;
             if ((targetWord = this.findWordFromLetter(index, this.gridState.currentOrientation, false)) === null) {
                 for (const ori of Object.keys(Orientation)) {
