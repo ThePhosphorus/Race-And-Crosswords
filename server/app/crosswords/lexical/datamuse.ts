@@ -30,6 +30,7 @@ export class Datamuse {
     private isValidWord(word: DatamuseWord): boolean {
         return  this.testHasDefinitions(word) &&
                 this.testRemoveDefsWithWord(word) &&
+                this.testHasDefinitions(word) &&
                 this.testDontContainBadChar(word);
     }
 
