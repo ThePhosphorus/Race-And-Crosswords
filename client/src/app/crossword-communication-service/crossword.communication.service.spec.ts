@@ -17,6 +17,7 @@ describe("CommunicationService", () => {
         expect(service).toBeTruthy();
      }));
 
+    // The following tests need the server to be ON
     it("should connect to server", inject( [CrosswordCommunicationService], (service: CrosswordCommunicationService) => {
         service.basicServerConnection().subscribe((res: string) => {
             expect(res).toBeDefined();
