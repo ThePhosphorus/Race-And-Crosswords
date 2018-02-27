@@ -11,24 +11,25 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
-
+    private _lvl: Difficulty;
     public nbPlayers: number;
-    public lvl: Difficulty;
     public isCollapsedPlayer: boolean = false;
     public isCollapsedLevel: boolean = false;
 
     public constructor(private _crosswordService: CrosswordService) {
-        this.lvl = Difficulty.Easy;
+        this._lvl = Difficulty.Easy;
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
     }
 
     public ngOnInit(): void {
         this.nbPlayers = 1;
-        this.lvl = Difficulty.Easy;
     }
+
+    public get lvl(): Difficulty { return this._lvl; }
+
     public changeLevel(lvl: Difficulty): void {
-        this.lvl = lvl;
-        this._crosswordService.newGame(this.lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
+        this._lvl = lvl;
+        this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 }
