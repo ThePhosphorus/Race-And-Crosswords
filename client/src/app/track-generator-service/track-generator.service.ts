@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { ZoomLimit } from "../camera-manager-service/camera-container";
-import { CameraType, AMBIENT_LIGHT_OPACITY, WHITE, INITIAL_CAMERA_POSITION_Y } from "../global-constants/constants";
+import { CameraType, AMBIENT_LIGHT_OPACITY, WHITE } from "../global-constants/constants";
 
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;
