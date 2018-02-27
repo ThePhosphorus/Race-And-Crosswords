@@ -5,6 +5,24 @@ const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
+export class GridState {
+    public currentOrientation: Orientation;
+    public currentLetter: number;
+    public highlightedLetters: number[];
+    public hoveredLetters: number[];
+    public disabledLetters: number[];
+    public currentPlayer: number;
+
+    public constructor() {
+        this.currentLetter = null;
+        this.highlightedLetters = [];
+        this.hoveredLetters = [];
+        this.disabledLetters = [];
+        this.currentOrientation = Orientation.Across;
+        this.currentPlayer = 1;
+    }
+}
+
 @Component({
     selector: "app-input-grid",
     templateUrl: "./input-grid.component.html",
@@ -13,26 +31,16 @@ const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 export class InputGridComponent implements OnInit {
     private _playerGrid: CrosswordGrid;
     private _solvedGrid: CrosswordGrid;
-    public currentOrientation: Orientation;
-    public currentLetter: number;
-    public highlightedLetters: number[];
-    public hoveredLetters: number[];
-    public disabledLetters: number[];
-    public currentPlayer: number;
+    public gridState: GridState;
 
     public constructor(private _crosswordService: CrosswordService) {
-        this.currentLetter = null;
-        this.highlightedLetters = [];
-        this.hoveredLetters = [];
-        this.disabledLetters = [];
-        this.currentOrientation = Orientation.Across;
-        this.currentPlayer = 1;
+        this.gridState = new GridState;
         this.initializeEmptyGrid();
     }
 
     public ngOnInit(): void {
         this._crosswordService.currentPlayer.subscribe((currentPlayer: number) => {
-            this.currentPlayer = currentPlayer;
+            this.gridState.currentPlayer = currentPlayer;
         });
         this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._solvedGrid = grid;
@@ -80,24 +88,24 @@ export class InputGridComponent implements OnInit {
     }
 
     public setSelectedLetter(index: number): void {
-        if (this.disabledLetters.indexOf(index) === -1) {
-            this.currentOrientation = (index === this.currentLetter) ?
-                (this.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
-                (this.currentOrientation = Orientation.Across);
+        if (this.gridState.disabledLetters.indexOf(index) === -1) {
+            this.gridState.currentOrientation = (index === this.gridState.currentLetter) ?
+                (this.gridState.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
+                (this.gridState.currentOrientation = Orientation.Across);
             let targetWord: Word;
-            if ((targetWord = this.findWordFromLetter(index, this.currentOrientation, false)) === null) {
+            if ((targetWord = this.findWordFromLetter(index, this.gridState.currentOrientation, false)) === null) {
                 for (const ori of Object.keys(Orientation)) {
-                    if (ori !== this.currentOrientation) {
-                        this.currentOrientation = ori as Orientation;
+                    if (ori !== this.gridState.currentOrientation) {
+                        this.gridState.currentOrientation = ori as Orientation;
                         targetWord = this.findWordFromLetter(index, ori, false);
                         break;
                     }
                 }
             }
             this.setSelectedWord(targetWord);
-            this.currentLetter = targetWord.letters[0].id;
-            if (this.disabledLetters.indexOf(this.currentLetter) > -1) {
-                this.currentLetter = this.findNextLetterIndex(true);
+            this.gridState.currentLetter = targetWord.letters[0].id;
+            if (this.gridState.disabledLetters.indexOf(this.gridState.currentLetter) > -1) {
+                this.gridState.currentLetter = this.findNextLetterIndex(true);
             }
         }
     }
@@ -120,26 +128,26 @@ export class InputGridComponent implements OnInit {
     public setSelectedWord(word: Word): void {
         let startingIndex: number = null;
         for (const letter of word.letters) {
-            if (this.disabledLetters.indexOf(letter.id) === -1) {
+            if (this.gridState.disabledLetters.indexOf(letter.id) === -1) {
                 startingIndex = letter.id;
                 break;
             }
         }
         if (startingIndex !== null) {
-            this.currentOrientation = word.orientation;
-            this.highlightedLetters = [];
+            this.gridState.currentOrientation = word.orientation;
+            this.gridState.highlightedLetters = [];
             for (const letter of word.letters) {
-                this.highlightedLetters.push(letter.id);
+                this.gridState.highlightedLetters.push(letter.id);
             }
-            this.currentLetter = startingIndex;
+            this.gridState.currentLetter = startingIndex;
         }
     }
 
     public setHoveredWord(word: Word): void {
-        this.hoveredLetters = [];
+        this.gridState.hoveredLetters = [];
         if (word !== null) {
             for (const letter of word.letters) {
-                this.hoveredLetters.push(letter.id);
+                this.gridState.hoveredLetters.push(letter.id);
             }
         }
     }
@@ -153,46 +161,47 @@ export class InputGridComponent implements OnInit {
             }
         });
         if (unselect) {
-            this.currentLetter = null;
-            this.highlightedLetters = [];
-            this.hoveredLetters = [];
-            this.currentOrientation = Orientation.Across;
+            this.gridState.currentLetter = null;
+            this.gridState.highlightedLetters = [];
+            this.gridState.hoveredLetters = [];
+            this.gridState.currentOrientation = Orientation.Across;
         }
     }
 
     @HostListener("window:keyup", ["$event"])
     public writeChar(event: KeyboardEvent): void {
-        if (this.currentLetter != null) {
+        if (this.gridState.currentLetter != null) {
             let nextLetterIndex: number;
             if (event.key.match(/^[a-z]$/i) !== null) {
-                this._playerGrid.grid[this.currentLetter].char = event.key;
+                this._playerGrid.grid[this.gridState.currentLetter].char = event.key;
                 this.verifyWords();
                 nextLetterIndex = this.findNextLetterIndex(true);
                 if (nextLetterIndex !== null) {
-                    this.currentLetter = this.highlightedLetters[nextLetterIndex];
+                    this.gridState.currentLetter = this.gridState.highlightedLetters[nextLetterIndex];
                 }
             } else if (event.key === "Backspace") {
-                if (this._playerGrid.grid[this.currentLetter].char === EMPTY_TILE_CHARACTER) {
+                if (this._playerGrid.grid[this.gridState.currentLetter].char === EMPTY_TILE_CHARACTER) {
                     nextLetterIndex = this.findNextLetterIndex(false);
                     if (nextLetterIndex !== null) {
-                        this.currentLetter = this.highlightedLetters[nextLetterIndex];
+                        this.gridState.currentLetter = this.gridState.highlightedLetters[nextLetterIndex];
                     }
                 }
-                this._playerGrid.grid[this.currentLetter].char = EMPTY_TILE_CHARACTER;
+                this._playerGrid.grid[this.gridState.currentLetter].char = EMPTY_TILE_CHARACTER;
             }
         }
     }
 
     private findNextLetterIndex(isForward: boolean): number {
         if (isForward) {
-            for (let i: number = this.highlightedLetters.indexOf(this.currentLetter) + 1; i < this.highlightedLetters.length; i++) {
-                if (this.disabledLetters.indexOf(this.highlightedLetters[i]) === -1) {
+            for (let i: number = this.gridState.highlightedLetters.indexOf(this.gridState.currentLetter) + 1;
+                                                        i < this.gridState.highlightedLetters.length; i++) {
+                if (this.gridState.disabledLetters.indexOf(this.gridState.highlightedLetters[i]) === -1) {
                     return i;
                 }
             }
         } else {
-            for (let i: number = this.highlightedLetters.indexOf(this.currentLetter) - 1; i >= 0; i--) {
-                if (this.disabledLetters.indexOf(this.highlightedLetters[i]) === -1) {
+            for (let i: number = this.gridState.highlightedLetters.indexOf(this.gridState.currentLetter) - 1; i >= 0; i--) {
+                if (this.gridState.disabledLetters.indexOf(this.gridState.highlightedLetters[i]) === -1) {
                     return i;
                 }
             }
@@ -203,17 +212,17 @@ export class InputGridComponent implements OnInit {
 
     private verifyWords(): void {
         for (const orientation of Object.keys(Orientation)) {
-            const playerWord: Word = this.findWordFromLetter(this.currentLetter, orientation, false);
-            const solvedWord: Word = this.findWordFromLetter(this.currentLetter, orientation, true);
+            const playerWord: Word = this.findWordFromLetter(this.gridState.currentLetter, orientation, false);
+            const solvedWord: Word = this.findWordFromLetter(this.gridState.currentLetter, orientation, true);
             if (playerWord !== null) {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     for (const letter of playerWord.letters) {
-                        this.disabledLetters.push(letter.id);
+                        this.gridState.disabledLetters.push(letter.id);
                     }
-                    if (orientation === this.currentOrientation) {
-                        this.currentLetter = null;
-                        this.highlightedLetters = [];
+                    if (orientation === this.gridState.currentOrientation) {
+                        this.gridState.currentLetter = null;
+                        this.gridState.highlightedLetters = [];
                         this._crosswordService.addSolvedWord(this._playerGrid.words.indexOf(playerWord));
                     }
                 }

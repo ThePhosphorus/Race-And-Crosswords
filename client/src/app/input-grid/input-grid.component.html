@@ -10,9 +10,8 @@
       <th scope="row">{{ row+1 }}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <app-input-letter [letter]="letter.char" [id]="(twoDimensionPlayerGrid.length*row)+col" [highlightedLetters]="highlightedLetters"
-            [hoveredLetters]="hoveredLetters" [currentLetter]="currentLetter" [disabledLetters]="disabledLetters" [currentPlayer]="currentPlayer"
-            (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
+          <app-input-letter [letter]="letter.char" [id]="(twoDimensionPlayerGrid.length*row)+col"
+            [gridState]="gridState" (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
         </span>
       </td>
     </tr>

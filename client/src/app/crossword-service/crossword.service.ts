@@ -7,7 +7,7 @@ import { Subject } from "rxjs/Subject";
 import { MOCK } from "../mock-crossword/mock-crossword";
 
 // Put true tu use mock grid instead of generated one
-const USE_MOCK_GRID: boolean = false;
+const USE_MOCK_GRID: boolean = true;
 
 const STARTING_GRID_SIZE: number = 4;
 const STARTING_BLACK_TILE_RATIO: number = 0.3;

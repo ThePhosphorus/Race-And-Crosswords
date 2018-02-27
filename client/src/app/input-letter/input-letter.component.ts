@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { GridState } from "../input-grid/input-grid.component";
 
 @Component({
     selector: "app-input-letter",
@@ -8,21 +9,13 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 export class InputLetterComponent implements OnInit {
     @Input() public letter: string;
     @Input() public id: number;
-    @Input() public currentLetter: number;
-    @Input() public highlightedLetters: number[];
-    @Input() public hoveredLetters: number[];
-    @Input() public disabledLetters: number[];
-    @Input() public currentPlayer: number;
+    @Input() public gridState: GridState;
     @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
 
     public constructor() {
         this.letter = "	 ";
-        this.currentLetter = null;
-        this.highlightedLetters = [];
-        this.hoveredLetters = [];
-        this.disabledLetters = [];
-        this.currentPlayer = 1;
         this.id = 1;
+        this.gridState = new GridState();
     }
 
     public ngOnInit(): void {
