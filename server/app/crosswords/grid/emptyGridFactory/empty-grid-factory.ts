@@ -1,10 +1,8 @@
 import { Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
 import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
+import {DEFAULT_BLACK_TILES} from "./default-black-tiles";
 
 const COMPLEXITY_THRESHOLD: number = 125;
-/* tslint:disable */
-const DEFAULT_BLACK_TILES: [number, number][] = [[1, 6], [2, 3], [3, 1], [3, 5], [4, 2], [4, 7], [4, 9], [5, 4], [6, 8], [7, 1], [7, 6], [8, 4], [9, 6]];
-/* tslint:enable */
 const MIN_SIZE_DEFAULT_BLACK_TILES: number = 10;
 
 export class EmptyGridFactory {
