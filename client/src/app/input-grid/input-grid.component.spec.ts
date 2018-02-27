@@ -8,30 +8,36 @@ import { CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import { MOCK } from "../mock-crossword/mock-crossword";
 
 describe("InputGridComponent", () => {
-  let component: InputGridComponent;
-  let fixture: ComponentFixture<InputGridComponent>;
+    let component: InputGridComponent;
+    let fixture: ComponentFixture<InputGridComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ InputGridComponent, InputLetterComponent ],
-      providers : [CrosswordService, CrosswordCommunicationService],
-      imports: [HttpClientModule],
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [InputGridComponent, InputLetterComponent],
+            providers: [CrosswordService, CrosswordCommunicationService],
+            imports: [HttpClientModule],
 
-    })
-    .compileComponents();
-  }));
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(InputGridComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(InputGridComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+    it("grid only accepts letters", () => {
+        const numberEntered: KeyboardEvent = new KeyboardEvent("keypress", { "key": "1" });
+        const pastCurrentLetter: number = component.currentLetter;
+        component.writeChar(numberEntered);
+        expect(component.currentLetter).toBe(pastCurrentLetter);
+    });
 
-  it("should relink crossword Grid when using relinkLetters", () => {
+    it("should relink crossword Grid when using relinkLetters", () => {
         // import mockGrid
         const grid: CrosswordGrid = MOCK;
         component.relinkLetters(grid);
