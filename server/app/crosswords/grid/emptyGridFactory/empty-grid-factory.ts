@@ -47,7 +47,6 @@ export class EmptyGridFactory {
             }
             tileCount++;
             complexity = this.getComplexity();
-            // console.log(complexity);
         } while (complexity > COMPLEXITY_THRESHOLD && tileCount < this.crossword.grid.length);
     }
 
