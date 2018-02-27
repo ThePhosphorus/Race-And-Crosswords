@@ -6,6 +6,7 @@ import { HttpClientModule } from "@angular/common/http/";
 import { TrackSaverService } from "../track-saver/track-saver.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/of";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 
