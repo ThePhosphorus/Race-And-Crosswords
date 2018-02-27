@@ -1,8 +1,11 @@
 import { TestBed, inject } from "@angular/core/testing";
 
-import { CameraManagerService } from "./camera-manager.service";
-import { CameraType } from "../../global-constants/constants";
+import { CameraManagerService, TargetInfos } from "./camera-manager.service";
+import { CameraType, RAD_TO_DEG } from "../../global-constants/constants";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
+import { ZoomLimit } from "./camera-container";
+import { Vector3 } from "three";
+import { PERS_CAMERA_ANGLE } from "../race.constants";
 
 // tslint:disable:no-magic-numbers
 
@@ -55,4 +58,35 @@ describe("CameraManagerService", () => {
         manager.update(1);
         expect(manager.cameraDistanceToCar).toBeGreaterThan(cameraDistance);
   }) );
+
+  it("should be at the right distance from the Target using zommLimits", inject([CameraManagerService], (manager: CameraManagerService) => {
+      manager.cameraType = CameraType.Perspective;
+      const zoomLimit: ZoomLimit = new ZoomLimit(2, 200);
+      manager.zoomLimit = zoomLimit;
+
+      manager.zoomIn();
+      for (let i: number = 0 ; i < 10000; i++ ) {
+          manager.update(0.16); // wait 10000 frames to zoom in
+      }
+      manager.zoomRelease();
+
+      expect(manager.cameraDistanceToCar).toBeCloseTo(zoomLimit.min, 1);
+
+      manager.zoomOut();
+      for (let i: number = 0 ; i < 10000; i++ ) {
+        manager.update(0.16); // wait 10000 to zoom out
+    }
+      manager.zoomRelease();
+
+      expect(manager.cameraDistanceToCar).toBeCloseTo(zoomLimit.max, 1);
+  }));
+
+  it("should be at the right angle", inject([CameraManagerService], (manager: CameraManagerService) => {
+      const target: TargetInfos = new TargetInfos(new Vector3(10, 0, 10), new Vector3(1, 0, 0));
+      manager.cameraType = CameraType.Perspective;
+      manager.updateTargetInfos(target);
+
+      manager.update(10);
+      expect(target.position.clone().sub(manager.position).angleTo(target.direction) * RAD_TO_DEG).toBeCloseTo(PERS_CAMERA_ANGLE, 1);
+  }));
 });
