@@ -32,9 +32,6 @@ export class DefinitionComponent implements OnInit {
             this.downDefinitions = this._wordGrid.filter((w: Word) => w.orientation === Orientation.Down)
                 .map((w: Word) => this.wordToDefinition(w));
         });
-        this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
-            this._solvedWords = solvedWords;
-        });
     }
 
     private wordToDefinition(word: Word): DisplayedDefinition {
