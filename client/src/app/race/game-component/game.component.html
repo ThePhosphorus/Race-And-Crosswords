@@ -1,0 +1,11 @@
+<div class="row mt-5">
+  <div class="col mt-3" id="game-wrapper">
+    <div #container id="container">
+        <ul>
+            <li>Speed: {{this.carInfos.speed * 3.6 | number :'2.2-2'}} km/h</li>
+            <li>Gear: {{this.carInfos.gear + 1}}</li>
+            <li>RPM: {{this.carInfos.rpm | number:'2.0-0'}}</li>
+        </ul>
+    </div>
+  </div>
+</div>
