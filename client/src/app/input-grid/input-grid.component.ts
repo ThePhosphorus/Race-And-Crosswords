@@ -105,7 +105,7 @@ export class InputGridComponent implements OnInit {
             this.setSelectedWord(targetWord);
             this.gridState.currentLetter = targetWord.letters[0].id;
             if (this.gridState.disabledLetters.indexOf(this.gridState.currentLetter) > -1) {
-                this.gridState.currentLetter = this.findNextLetterIndex(true);
+                this.gridState.currentLetter = this.findNextLetterId(true);
             }
         }
     }
@@ -171,19 +171,19 @@ export class InputGridComponent implements OnInit {
     @HostListener("window:keyup", ["$event"])
     public writeChar(event: KeyboardEvent): void {
         if (this.gridState.currentLetter != null) {
-            let nextLetterIndex: number;
+            let nextLetterId: number;
             if (event.key.match(/^[a-z]$/i) != null) {
                 this._playerGrid.grid[this.gridState.currentLetter].char = event.key;
                 this.verifyWords();
-                nextLetterIndex = this.findNextLetterIndex(true);
-                if (nextLetterIndex != null) {
-                    this.gridState.currentLetter = this.gridState.highlightedLetters[nextLetterIndex];
+                nextLetterId = this.findNextLetterId(true);
+                if (nextLetterId != null) {
+                    this.gridState.currentLetter = nextLetterId;
                 }
             } else if (event.key === "Backspace") {
                 if (this._playerGrid.grid[this.gridState.currentLetter].char === EMPTY_TILE_CHARACTER) {
-                    nextLetterIndex = this.findNextLetterIndex(false);
-                    if (nextLetterIndex != null) {
-                        this.gridState.currentLetter = this.gridState.highlightedLetters[nextLetterIndex];
+                    nextLetterId = this.findNextLetterId(false);
+                    if (nextLetterId != null) {
+                        this.gridState.currentLetter = nextLetterId;
                     }
                 }
                 this._playerGrid.grid[this.gridState.currentLetter].char = EMPTY_TILE_CHARACTER;
@@ -191,7 +191,7 @@ export class InputGridComponent implements OnInit {
         }
     }
 
-    private findNextLetterIndex(isForward: boolean): number {
+    private findNextLetterId(isForward: boolean): number {
         if (isForward) {
             for (let i: number = this.gridState.highlightedLetters.indexOf(this.gridState.currentLetter) + 1;
                                                         i < this.gridState.highlightedLetters.length; i++) {
