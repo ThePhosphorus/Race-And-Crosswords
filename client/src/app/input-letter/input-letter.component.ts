@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { GridState } from "../input-grid/input-grid.component";
 
 @Component({
@@ -6,7 +6,7 @@ import { GridState } from "../input-grid/input-grid.component";
     templateUrl: "./input-letter.component.html",
     styleUrls: ["./input-letter.component.css"]
 })
-export class InputLetterComponent implements OnInit {
+export class InputLetterComponent {
     @Input() public letter: string;
     @Input() public id: number;
     @Input() public gridState: GridState;
@@ -16,10 +16,6 @@ export class InputLetterComponent implements OnInit {
         this.letter = "	 ";
         this.id = 1;
         this.gridState = new GridState();
-    }
-
-    public ngOnInit(): void {
-
     }
 
     public select(): void {
