@@ -51,7 +51,7 @@ export class DefinitionComponent implements OnInit {
                                        this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), id);
     }
 
-    private upperFirstLetter(str: string): string {
+    public upperFirstLetter(str: string): string {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
