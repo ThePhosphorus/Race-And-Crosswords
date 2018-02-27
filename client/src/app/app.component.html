@@ -1,14 +1,16 @@
 <div class="container-fluid">
-  <ul class="nav justify-content-end fixed-top">
+  <ul class="nav fixed-top">
     <li class="nav-item">
-      <a class="nav-link active" href="#" routerLink="/crosswords" routerLinkActive="tab-open">Crossword</a>
+      <a class="nav-link" href="#" routerLink="/home-page" id="home">Home</a>
+    </li>
+    <li class="nav-item ml-2">
+      <a class="nav-link " href="#" routerLink="/crosswords" routerLinkActive="tab-open">Crossword</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="#" routerLink="/race" routerLinkActive="tab-open">Race</a>
     </li>
-
-    <li class="nav-item">
-      <a class="nav-link"  href="#" routerLink="/home-page" id="home">Home</a>
+    <li class="nav-item ml-auto">
+      <a class="nav-link " href="#" routerLink="/admin" routerLinkActive="tab-open" id="AdminBtn">Admin</a>
     </li>
   </ul>
   <router-outlet></router-outlet>

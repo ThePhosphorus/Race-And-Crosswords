@@ -1,7 +1,7 @@
-export const MIN_WORD_LENGTH: number = 2;
+export const MIN_WORD_LENGTH: number = 3;
 
 export enum Difficulty {
-    Easy = 1,
+    Easy,
     Medium,
     Hard,
 }
@@ -39,6 +39,15 @@ export class Word {
         this.id = -1;
         this.letters = new Array<Letter>();
         this.definitions = new Array<string>();
+    }
+
+    public toString(): string {
+        let wordString: string = "";
+        this.letters.forEach((letter: Letter) => {
+            wordString += letter.char;
+        });
+
+        return wordString;
     }
 }
 

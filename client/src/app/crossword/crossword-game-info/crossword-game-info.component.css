@@ -1,0 +1,158 @@
+.easy {
+    color: #328132;
+}
+
+.medium {
+    color: #dbdb1f;
+}
+
+.hard {
+    color: rgb(126, 0, 0);
+}
+
+.container .col {
+    font-size: 100%;
+    font-weight: lighter;
+}
+
+.container {
+    vertical-align: bottom;
+    text-align: match-parent;
+}
+
+#info .btn {
+    border: solid darkgrey;
+    background-color: transparent;
+    box-shadow: transparent;
+    font-weight: lighter;
+    padding-top: unset;
+}
+
+#info .btn:hover {
+    color: steelblue;
+}
+
+p {
+    margin-top: 0.2vmax;
+    margin-bottom: 0%
+}
+
+#player1 {
+    background-color: #b6cee2;
+}
+
+#player2 {
+    background-color: #dbb1a3;
+}
+
+#info .btn:hover {
+    background-color: transparent;
+    box-shadow: transparent;
+}
+
+#info .btn:active {
+    background-color: transparent;
+    box-shadow: transparent;
+}
+
+#info .btn:focus {
+    background-color: transparent;
+    box-shadow: unset;
+}
+
+.card th {
+    font-weight: lighter;
+}
+
+#player {
+    text-align: left;
+}
+
+#difficultySelector {
+    border: none;
+    font-size: 10vmin
+}
+
+#result {
+    text-align: right;
+}
+
+#easyBtn {
+    background-color: #61b446;
+    border: #61b446 solid;
+}
+
+#mediumBtn {
+    background-color: #b4b446;
+    border: #b4b446 solid;
+}
+
+#hardBtn {
+    background-color: #b44646;
+    border: #b44646;
+}
+
+#level {
+    text-align: center;
+}
+
+#levelMod .modal-content {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    border: #212529 solid 2vmin;
+    background-color: lightgrey;
+}
+
+#levelMod.show {
+    display: block;
+}
+
+#modalLabel {
+    font-size: 200%;
+    margin: 3vmin;
+}
+
+.btn p {
+    margin-top: 0%;
+}
+
+#difficultySelector .btn-secondary:focus {
+    box-shadow: none;
+}
+
+#difficultySelector .btn-secondary:hover {
+    box-shadow: none;
+}
+
+#difficultySelector .active {
+    text-decoration-line: underline;
+    border: inset #212529;
+}
+
+table td, table th {
+    border-top: none;
+}
+
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+}
+
+#info {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    border: solid #212529;
+    border-radius: 0.5vmax;
+    background-color: darkgrey;
+    padding-right: 0.5vmax;
+}
+
+#nbPlayers {
+    border-right: solid #212529 0.2vmax;
+}
+
+.table {
+    border: solid #212529 0.2vmax;
+}
+
+@font-face {
+    font-family: "Button Font";
+    src: url("/assets/fonts/atwriter.ttf") format("truetype")
+}

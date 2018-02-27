@@ -8,6 +8,7 @@ import { Race } from "./race/race";
 import { Lexical } from "./crosswords/lexical/lexical";
 import { Grid } from "./crosswords/grid/grid";
 import { GridGenerator } from "./crosswords/grid/grid-generator";
+import { TrackSaver } from "./race/trackSaver/trackSaver";
 
 const container: Container = new Container();
 
@@ -19,5 +20,6 @@ container.bind(Types.Race).to(Race);
 container.bind(Types.Lexical).to(Lexical);
 container.bind(Types.Grid).to(Grid);
 container.bind(Types.GridGenerator).to(GridGenerator);
+container.bind(Types.TrackSaver).to(TrackSaver);
 
 export { container };

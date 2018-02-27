@@ -7,7 +7,6 @@ import {Difficulty, CrosswordGrid} from "../../../../common/communication/crossw
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
 const DEFAULT_GRID_SIZE: number = 10;
-const DEFAULT_BLACK_TILES_RATIO: number = 0.3;
 
 @injectable()
 export class Grid extends WebService {
@@ -25,12 +24,12 @@ export class Grid extends WebService {
             const difficulty: Difficulty = (req.query.difficulty !== undefined && Number(req.query.difficulty))
                                             ? Math.floor(Math.max(Difficulty.Easy, Math.min(Difficulty.Hard, Number(req.query.difficulty))))
                                             : Difficulty.Easy;
-            const blackTiles: number = (req.query.tiles !== undefined && Number(req.query.tiles))
-                                            ? Math.max(0, Math.min(1, Number(req.query.tiles))) : DEFAULT_BLACK_TILES_RATIO;
             const size: number = (req.query.size !== undefined && Number(req.query.size))
                                             ? Math.max(MIN_GRID_SIZE, Math.min(MAX_GRID_SIZE, Number(req.query.size)))
                                             : DEFAULT_GRID_SIZE;
-            this.gridGenerator.getNewGrid(difficulty, size, blackTiles).then((crossword: CrosswordGrid) => res.send(crossword));
+
+            res.setHeader("Content-Type", "application/json");
+            this.gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
         });
     }
 }
