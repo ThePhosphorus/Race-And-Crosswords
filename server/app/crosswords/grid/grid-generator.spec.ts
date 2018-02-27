@@ -15,7 +15,7 @@ describe("Grid generation", () => {
 
     let grid: ExtendedCrosswordGrid;
 
-    before(() => {
+    beforeEach(() => {
         return gridGenerator.getNewGrid(difficulty, gridSize).then((g: ExtendedCrosswordGrid) => grid = g);
     });
 
