@@ -1,5 +1,5 @@
 import { TestBed, inject } from "@angular/core/testing";
-import { RenderService } from "./render.service";
+import { GameManagerService } from "./game_manager.service";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
@@ -7,13 +7,13 @@ import { SoundManagerService } from "../sound-manager-service/sound-manager.serv
 describe("RenderService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [RenderService, CameraManagerService, InputManagerService, SoundManagerService]
+            providers: [GameManagerService, CameraManagerService, InputManagerService, SoundManagerService]
         });
     });
 
     it(
         "should be created",
-        inject([RenderService], (service: RenderService) => {
+        inject([GameManagerService], (service: GameManagerService) => {
             expect(service).toBeTruthy();
         })
     );
