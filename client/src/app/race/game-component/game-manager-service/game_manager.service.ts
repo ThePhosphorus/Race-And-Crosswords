@@ -27,7 +27,7 @@ const ZOOM_OUT_KEYCODE: number = 189; // -
 const FULLSCREEN_KEYCODE: number = 70; // F
 
 @Injectable()
-export class RenderService extends Renderer {
+export class GameManagerService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
 
