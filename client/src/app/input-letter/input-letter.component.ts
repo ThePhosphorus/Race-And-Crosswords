@@ -21,5 +21,4 @@ export class InputLetterComponent {
     public select(): void {
         this.setSelectedLetter.emit(this.id);
     }
-
 }

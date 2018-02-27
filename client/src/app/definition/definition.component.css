@@ -1,7 +1,3 @@
-#hints td:hover {
-    background-color: #e7e7e7;
-}
-
 #hints th {
     font-weight: lighter;
 }
@@ -22,4 +18,12 @@ label {
 @font-face {
     font-family: "Hints Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")
+}
+
+.disabled {
+    text-decoration-line: line-through;
+}
+
+.enabled:hover{
+    background-color: #e7e7e7;
 }
