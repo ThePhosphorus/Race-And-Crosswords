@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from "@angular/core";
-import { InputManagerService } from "./input-manager-service/input-manager.service";
+import { InputManagerService } from "./race/input-manager-service/input-manager.service";
 
 @Component({
     selector: "app-root",
