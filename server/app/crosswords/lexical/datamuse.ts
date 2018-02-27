@@ -1,7 +1,7 @@
 import * as Request from "request-promise-native";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
-export const HARD_THRESHOLD: number = 1000;
+const HALF: number = 0.5;
 
 export class Datamuse {
     public async makeRequest(constraint: string): Promise<Array<DatamuseWord>> {
@@ -12,7 +12,9 @@ export class Datamuse {
 
     public async getWord(constraint: string, isEasy: boolean): Promise<string> {
         let words: Array<DatamuseWord> = await this.makeRequest(constraint);
-        words = words.filter((w: DatamuseWord) => this.isValidWord(w, isEasy));
+        words = words.filter((w: DatamuseWord) => this.isValidWord(w))
+                        .sort((a: DatamuseWord, b: DatamuseWord) => b.score - a.score);
+        this.selectWordsFromDifficulty(words, isEasy);
 
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
         if (word == null) { return undefined; }
@@ -20,9 +22,16 @@ export class Datamuse {
         return JSON.stringify(word);
     }
 
-    private isValidWord(word: DatamuseWord, isEasy: boolean): boolean {
-        return this.testDifficulty(word, isEasy) &&
-                this.testHasDefinitions(word) &&
+    private selectWordsFromDifficulty(words: Array<DatamuseWord>, isEasy: boolean): void {
+        if (isEasy) {
+            words.slice(Math.floor(words.length * HALF), words.length);
+        } else {
+            words.slice(Math.floor(words.length * HALF));
+        }
+    }
+
+    private isValidWord(word: DatamuseWord): boolean {
+        return  this.testHasDefinitions(word) &&
                 this.testRemoveDefsWithWord(word) &&
                 this.testDontContainBadChar(word);
     }
@@ -36,10 +45,6 @@ export class Datamuse {
         });
 
         return word.defs.length > 0;
-    }
-
-    private testDifficulty(word: DatamuseWord, isEasy: boolean): boolean {
-        return isEasy ? word.score > HARD_THRESHOLD : word.score < HARD_THRESHOLD;
     }
 
     private testHasDefinitions(word: DatamuseWord): boolean {
