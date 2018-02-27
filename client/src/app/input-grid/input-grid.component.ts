@@ -133,7 +133,7 @@ export class InputGridComponent implements OnInit {
                 break;
             }
         }
-        if (startingIndex !== null) {
+        if (startingIndex != null) {
             this.gridState.currentOrientation = word.orientation;
             this.gridState.highlightedLetters = [];
             for (const letter of word.letters) {
@@ -145,7 +145,7 @@ export class InputGridComponent implements OnInit {
 
     public setHoveredWord(word: Word): void {
         this.gridState.hoveredLetters = [];
-        if (word !== null) {
+        if (word != null) {
             for (const letter of word.letters) {
                 this.gridState.hoveredLetters.push(letter.id);
             }
@@ -172,17 +172,17 @@ export class InputGridComponent implements OnInit {
     public writeChar(event: KeyboardEvent): void {
         if (this.gridState.currentLetter != null) {
             let nextLetterIndex: number;
-            if (event.key.match(/^[a-z]$/i) !== null) {
+            if (event.key.match(/^[a-z]$/i) != null) {
                 this._playerGrid.grid[this.gridState.currentLetter].char = event.key;
                 this.verifyWords();
                 nextLetterIndex = this.findNextLetterIndex(true);
-                if (nextLetterIndex !== null) {
+                if (nextLetterIndex != null) {
                     this.gridState.currentLetter = this.gridState.highlightedLetters[nextLetterIndex];
                 }
             } else if (event.key === "Backspace") {
                 if (this._playerGrid.grid[this.gridState.currentLetter].char === EMPTY_TILE_CHARACTER) {
                     nextLetterIndex = this.findNextLetterIndex(false);
-                    if (nextLetterIndex !== null) {
+                    if (nextLetterIndex != null) {
                         this.gridState.currentLetter = this.gridState.highlightedLetters[nextLetterIndex];
                     }
                 }
@@ -214,7 +214,7 @@ export class InputGridComponent implements OnInit {
         for (const orientation of Object.keys(Orientation)) {
             const playerWord: Word = this.findWordFromLetter(this.gridState.currentLetter, orientation, false);
             const solvedWord: Word = this.findWordFromLetter(this.gridState.currentLetter, orientation, true);
-            if (playerWord !== null) {
+            if (playerWord != null) {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     for (const letter of playerWord.letters) {
