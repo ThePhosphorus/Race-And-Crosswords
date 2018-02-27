@@ -196,13 +196,13 @@ export class InputGridComponent implements OnInit {
             for (let i: number = this.gridState.highlightedLetters.indexOf(this.gridState.currentLetter) + 1;
                                                         i < this.gridState.highlightedLetters.length; i++) {
                 if (this.gridState.disabledLetters.indexOf(this.gridState.highlightedLetters[i]) === -1) {
-                    return i;
+                    return this.gridState.highlightedLetters[i];
                 }
             }
         } else {
             for (let i: number = this.gridState.highlightedLetters.indexOf(this.gridState.currentLetter) - 1; i >= 0; i--) {
                 if (this.gridState.disabledLetters.indexOf(this.gridState.highlightedLetters[i]) === -1) {
-                    return i;
+                    return this.gridState.highlightedLetters[i];
                 }
             }
         }
