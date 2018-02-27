@@ -10,6 +10,11 @@ import { AppRoutingModule } from "./app-routing.module";
 import { CrosswordsComponent } from "./crosswords-component/crosswords.component";
 import { PlayermodeComponent } from "./playermode-component/playermode.component";
 import { HomePageComponent } from "./home-page/home-page.component";
+import { AdminComponent } from "./admin/admin.component";
+import { TrackListComponent } from "./track-list/track-list.component";
+import { TrackEditorComponent } from "./track-editor/track-editor.component";
+import { ReversePipe } from "./reverse-pipe/reverse.pipe";
+import { InputManagerService } from "./input-manager-service/input-manager.service";
 import { InputGridComponent } from "./input-grid/input-grid.component";
 import { DefinitionComponent } from "./definition/definition.component";
 import { InputLetterComponent } from "./input-letter/input-letter.component";
@@ -21,6 +26,11 @@ import { InputLetterComponent } from "./input-letter/input-letter.component";
         CrosswordsComponent,
         PlayermodeComponent,
         HomePageComponent,
+        AdminComponent,
+        TrackListComponent,
+        TrackEditorComponent,
+        ReversePipe,
+        HomePageComponent,
         InputGridComponent,
         DefinitionComponent,
         InputLetterComponent
@@ -31,7 +41,7 @@ import { InputLetterComponent } from "./input-letter/input-letter.component";
         AppRoutingModule,
         FormsModule
     ],
-    providers: [],
+    providers: [InputManagerService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

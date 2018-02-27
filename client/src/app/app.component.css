@@ -1,22 +1,31 @@
-.nav{
-	color:steelblue;
-    background-color:darkgray;
+.nav {
+    color: steelblue;
+    background-color: darkgray;
     font-family: "Home Font", Arial, Helvetica, sans-serif;
     font-size: 120%
 }
 
+#AdminBtn {
+    background-color: #a3293d;
+    ;
+    color: white;
+    font-family: "Home Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    border-bottom: null;
+}
+
 .tab-open {
-    background-color:lightgray;
+    background-color: white;
     border-bottom: none;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
+
 .nav-link {
     color: steelblue;
 }
 
 #home {
-    background-color:steelblue;
+    background-color: steelblue;
     color: white;
     font-family: "Home Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     border-bottom: null;
@@ -25,9 +34,9 @@
 @font-face {
     font-family: "Link Font";
     src: url("/assets/fonts/OstrichSans-Heavy.otf") format("opentype")
-  }
-  @font-face {
+}
+
+@font-face {
     font-family: "Home Font";
     src: url("/assets/fonts/MAKISUPA.TTF") format("truetype")
-  }
-
+}
