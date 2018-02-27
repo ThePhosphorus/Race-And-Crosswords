@@ -31,6 +31,8 @@ export class DefinitionComponent implements OnInit {
 
     public ngOnInit(): void {
         this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
+            this.acrossDefinitions = new Array<DisplayedDefinition>();
+            this.downDefinitions = new Array<DisplayedDefinition>();
             this._wordGrid = grid.words;
             for (let i: number = 0; i < this._wordGrid.length; i++) {
                 const definition: DisplayedDefinition = this.wordToDefinition(this._wordGrid[i], i);
