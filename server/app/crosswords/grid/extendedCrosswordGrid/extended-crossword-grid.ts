@@ -14,21 +14,21 @@ export class ExtendedCrosswordGrid extends CrosswordGrid {
     }
 
     public findWords(): Word[] {
-        const notPlacedWords: Word[] = new Array<Word>();
+        const unPlacedWords: Word[] = new Array<Word>();
         let acrossWord: Word = new Word();
         let downWord: Word = new Word();
         for (let i: number = 0; i < this.size; i++) {
             for (let j: number = 0; j < this.size; j++) {
-                acrossWord = this.initializeLetter(acrossWord, this.getPosition(i, j), Orientation.Across, notPlacedWords);
-                downWord = this.initializeLetter(downWord, this.getPosition(j, i), Orientation.Down, notPlacedWords);
+                acrossWord = this.initializeLetter(acrossWord, this.getPosition(i, j), Orientation.Across, unPlacedWords);
+                downWord = this.initializeLetter(downWord, this.getPosition(j, i), Orientation.Down, unPlacedWords);
             }
-            this.addWord(acrossWord, Orientation.Across, notPlacedWords);
-            this.addWord(downWord, Orientation.Down, notPlacedWords);
+            this.addWord(acrossWord, Orientation.Across, unPlacedWords);
+            this.addWord(downWord, Orientation.Down, unPlacedWords);
             acrossWord = new Word();
             downWord = new Word();
         }
 
-        return notPlacedWords.reverse();
+        return unPlacedWords.reverse();
     }
 
     private initializeLetter(word: Word, tilePosition: number, orientation: Orientation, wordList: Word[]): Word {
