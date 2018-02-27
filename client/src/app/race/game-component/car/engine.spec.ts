@@ -1,7 +1,8 @@
+import { Engine } from "./engine";
 import {
-    Engine, DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, DEFAULT_DOWNSHIFT_RPM,
+    DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, DEFAULT_DOWNSHIFT_RPM,
     DEFAULT_MINIMUM_RPM, DEFAULT_SHIFT_RPM, DEFAULT_MAX_RPM, DEFAULT_TRANSMISSION_EFFICIENCY
-} from "./engine";
+} from "../../race.constants";
 
 /* tslint:disable: no-magic-numbers */
 describe("Engine", () => {

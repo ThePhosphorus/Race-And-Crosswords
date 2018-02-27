@@ -1,9 +1,11 @@
-import { ConstraintValidator, TWICE_TRACK_WIDTH } from "./constraint-validator";
+import { ConstraintValidator } from "./constraint-validator";
 import { Vector3 } from "three";
+import { TWICE_TRACK_WIDTH } from "../../../race.constants";
+import { DOUBLE } from "../../../../global-constants/constants";
 
 /* tslint:disable:no-magic-numbers */
 
-const minTrackLength: number = TWICE_TRACK_WIDTH * 2;
+const minTrackLength: number = DOUBLE * TWICE_TRACK_WIDTH;
 describe("ConstraintValidatorService", () => {
     const service: ConstraintValidator = new ConstraintValidator();
 
