@@ -6,7 +6,8 @@ import { ConstraintValidator } from "./constraint-validator/constraint-validator
 import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
-import { ZoomLimit, CameraType } from "../camera-manager-service/camera-container";
+import { ZoomLimit } from "../camera-manager-service/camera-container";
+import { CameraType } from "../global-constants/constants";
 
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;

@@ -1,5 +1,6 @@
 import {Camera, Vector3, AudioListener } from "three";
 import { TargetInfos } from "./camera-manager.service";
+import {CameraType} from "../global-constants/constants";
 
 const DEFAULT_MINIMAL_ZOOM: number = 4;
 const DEFAULT_MAXIMAL_ZOOM: number = 25;
@@ -13,12 +14,6 @@ export class ZoomLimit {
         this.min = (min) ? min : DEFAULT_MINIMAL_ZOOM;
         this.max = (max) ? max : DEFAULT_MAXIMAL_ZOOM;
      }
- }
-
-// TODO put this in the constantes file
-export enum CameraType {
-    Perspective,
-    Orthographic
  }
 
 export abstract class CameraContainer {
