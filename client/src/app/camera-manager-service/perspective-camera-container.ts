@@ -1,19 +1,20 @@
 import { PerspectiveCamera, Vector3, AudioListener, Camera } from "three";
-import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
+import { CameraContainer, ZoomLimit } from "./camera-container";
 import { DEG_TO_RAD, MS_TO_SECONDS } from "../constants";
 import { TargetInfos } from "./camera-manager.service";
+import {
+    CameraType,
+    FAR_CLIPPING_PLANE,
+    NEAR_CLIPPING_PLANE,
+    INITIAL_CAMERA_POSITION_Y,
+    INITIAL_ASPECT_RATIO
+} from "../global-constants/constants";
 
-const FAR_CLIPPING_PLANE: number = 1000;
-const NEAR_CLIPPING_PLANE: number = 1;
 const FIELD_OF_VIEW: number = 70;
 export const PERS_CAMERA_ANGLE: number = 25;
 const MAX_RECOIL_DISTANCE: number = 8;
 const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
-const INITIAL_CAMERA_POSITION_Y: number = 10;
-const INITIAL_RATIO_WIDTH: number = 16;
-const INITIAL_RATIO_HEIGHT: number = 9;
-const INITIAL_ASPECT_RATIO: number = INITIAL_RATIO_WIDTH / INITIAL_RATIO_HEIGHT;
 
 export class PerspectiveCameraContainer extends CameraContainer {
     private thirdPersonPoint: Vector3;
@@ -30,23 +31,23 @@ export class PerspectiveCameraContainer extends CameraContainer {
             FAR_CLIPPING_PLANE
         );
         this.init();
-     }
+    }
 
     private init(): void {
         this._perspCamera.position.set(0, INITIAL_CAMERA_POSITION_Y, 0);
         this._perspCamera.lookAt(this._targetInfos.position);
-     }
+    }
 
     public fixUpdate(deltaTime: number): void {
         this.thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.perspCameraPhysicUpdate(deltaTime);
         this._perspCamera.lookAt(this._targetInfos.position);
-     }
+    }
 
     public onResize(aspectRatio: number): void {
         this._perspCamera.aspect = aspectRatio;
         this._perspCamera.updateProjectionMatrix();
-     }
+    }
 
     private calcPosPerspCamera(): Vector3 {
         const carDirection: Vector3 = this._targetInfos.direction;
@@ -59,7 +60,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
             this._targetInfos.position.y + (Math.sin(PERS_CAMERA_ANGLE * DEG_TO_RAD) * this.cameraDistance),
             this._targetInfos.position.z + (- carDirection.z * projectionXZ)
         );
-     }
+    }
 
     private perspCameraPhysicUpdate(deltaTime: number): void {
         if (this.effectModeisEnabled) {
@@ -69,30 +70,30 @@ export class PerspectiveCameraContainer extends CameraContainer {
             deltaPos.multiplyScalar(
                 PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
                 (
-                    (deltaPos.length() >= MAX_RECOIL_DISTANCE ) ?
-                    (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE)  + 1) : 1)
-                );
+                    (deltaPos.length() >= MAX_RECOIL_DISTANCE) ?
+                        (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE) + 1) : 1)
+            );
             this._perspCamera.position.add(deltaPos);
-         } else { this._perspCamera.position.copy(this.thirdPersonPoint); }
-     }
+        } else { this._perspCamera.position.copy(this.thirdPersonPoint); }
+    }
 
     public position(): Vector3 {
         return this.thirdPersonPoint;
-     }
+    }
 
     public get camera(): Camera {
         return this._perspCamera;
-     }
+    }
 
-    public toggleEffect (): void {
+    public toggleEffect(): void {
         this.effectModeEnabled = !this.effectModeEnabled;
-     }
+    }
 
     public get effectModeEnabled(): boolean {
         return this.effectModeisEnabled;
-     }
+    }
 
     public set effectModeEnabled(value: boolean) {
         this.effectModeisEnabled = value;
-     }
+    }
 }

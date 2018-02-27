@@ -1,12 +1,13 @@
 import { OrthographicCamera, Vector3, AudioListener, Camera } from "three";
-import { CameraContainer, ZoomLimit, CameraType } from "./camera-container";
+import { CameraContainer, ZoomLimit} from "./camera-container";
 import { TargetInfos } from "./camera-manager.service";
-const FAR_CLIPPING_PLANE: number = 1000;
-const NEAR_CLIPPING_PLANE: number = 1;
-const INITIAL_CAMERA_POSITION_Y: number = 10;
-const INITIAL_RATIO_WIDTH: number = 16;
-const INITIAL_RATIO_HEIGHT: number = 9;
-const INITIAL_ASPECT_RATIO: number = INITIAL_RATIO_WIDTH / INITIAL_RATIO_HEIGHT;
+import {
+    CameraType,
+    FAR_CLIPPING_PLANE,
+    NEAR_CLIPPING_PLANE,
+    INITIAL_CAMERA_POSITION_Y,
+    INITIAL_ASPECT_RATIO
+} from "../global-constants/constants";
 
 export class OrthographicCameraContainer extends CameraContainer {
     private _orthoCamera: OrthographicCamera;

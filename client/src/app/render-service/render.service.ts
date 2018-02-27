@@ -5,7 +5,7 @@ import { CameraManagerService, TargetInfos } from "../camera-manager-service/cam
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../renderer/renderer";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
-import { CameraType } from "../camera-manager-service/camera-container";
+import { CameraType } from "../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
