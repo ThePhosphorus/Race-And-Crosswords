@@ -95,19 +95,21 @@ p {
 #level {
     text-align: center;
 }
-#levelMod .modal-content{
+
+#levelMod .modal-content {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     border: #212529 solid 2vmin;
     background-color: lightgrey;
 }
-#levelMod.show{
+
+#levelMod.show {
     display: block;
 }
+
 #modalLabel {
     font-size: 200%;
     margin: 3vmin;
 }
-
 
 .btn p {
     margin-top: 0%;
@@ -154,5 +156,3 @@ table td, table th {
     font-family: "Button Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")
 }
-
-
