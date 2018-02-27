@@ -1,4 +1,4 @@
-import { MIN_TO_SEC } from "../../../constants";
+import { MIN_TO_SEC } from "../../../global-constants/constants";
 import { InvalidArgumentError } from "../../../invalidArgumentError";
 
 export const DEFAULT_DRIVE_RATIO: number = 3.27;
