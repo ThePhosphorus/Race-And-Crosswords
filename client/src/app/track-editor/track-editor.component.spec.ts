@@ -7,6 +7,7 @@ import { TrackSaverService } from "../track-saver/track-saver.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { InputManagerService } from "../input-manager-service/input-manager.service";
 
 describe("TrackEditorComponent", () => {
   let component: TrackEditorComponent;
@@ -20,6 +21,7 @@ describe("TrackEditorComponent", () => {
       providers: [
           TrackLoaderService,
           TrackSaverService,
+          InputManagerService,
           {
             provide: ActivatedRoute,
             useValue: {

@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, HostListener } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy} from "@angular/core";
 import { RenderService, CarInfos } from "../render-service/render.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 
 @Component({
     moduleId: module.id,
@@ -9,16 +10,17 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
     styleUrls: ["./game.component.css"],
     providers: [
         RenderService,
-        CameraManagerService
-    ]
+        CameraManagerService,
+        SoundManagerService
+            ]
 })
 
-export class GameComponent implements AfterViewInit {
+export class GameComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild("container")
     private containerRef: ElementRef;
 
-    public constructor(private renderService: RenderService) { }
+    public constructor(private renderService: RenderService, private soundManager: SoundManagerService) { }
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {
@@ -34,5 +36,9 @@ export class GameComponent implements AfterViewInit {
 
     public get carInfos(): CarInfos {
         return this.renderService.carInfos;
+    }
+    public ngOnDestroy(): void {
+
+        this.soundManager.stopAllSounds();
     }
 }
