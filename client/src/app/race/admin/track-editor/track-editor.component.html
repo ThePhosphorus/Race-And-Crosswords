@@ -19,7 +19,7 @@
       </div>
       <div class="card text-center" id="points">
         <ul class="list-group list-group-flush">
-          <li *ngFor="let point of trackRenderer.points.points; let i = index" class="list-group-item" [ngClass]="{'selected': i === trackRenderer.points.selectedPointId}"
+          <li *ngFor="let point of trackGenerator.points.points; let i = index" class="list-group-item" [ngClass]="{'selected': i === trackGenerator.points.selectedPointId}"
             (click)="selectPoint(i)">
             <span>[{{point.x | number : '1.1-1'}}, {{point.z | number : '1.1-1'}}]</span>
             <button type="button" class="ml-3 close" (click)="removePoint(i)">
