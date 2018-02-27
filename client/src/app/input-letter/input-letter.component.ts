@@ -10,12 +10,13 @@ export class InputLetterComponent {
     @Input() public letter: string;
     @Input() public id: number;
     @Input() public gridState: GridState;
-    @Output() public setSelectedLetter: EventEmitter<number> = new EventEmitter<number>();
+    @Output() public setSelectedLetter: EventEmitter<number>;
 
     public constructor() {
         this.letter = "	 ";
         this.id = 1;
         this.gridState = new GridState();
+        this.setSelectedLetter = new EventEmitter<number>();
     }
 
     public select(): void {
