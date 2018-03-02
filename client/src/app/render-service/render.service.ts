@@ -61,6 +61,7 @@ export class RenderService extends Renderer {
         this.inputManager.resetBindings();
         this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this._car.accelerate());
         this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this._car.brake());
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this.activateBrakeLights());
         this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._car.steerLeft());
         this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._car.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
@@ -71,6 +72,7 @@ export class RenderService extends Renderer {
 
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.disableBrakeLights());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteeringLeft());
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
@@ -204,6 +206,23 @@ export class RenderService extends Renderer {
         this.carlight.position.copy((this._car.getPosition().clone().add(this._car.direction).add(carlightoffSet)));
         this.carlight.target.position.copy((this._car.getPosition().clone().add(this._car.direction.multiplyScalar(10))));
         this.carlight.target.updateMatrixWorld(true);
+    }
+    private activateBrakeLights(): void {
+        const newIntensity: number = 2;
+        this.brakeLight.intensity = newIntensity * HALF;
+        this.brakeReflectionLeft.intensity = newIntensity;
+        this.brakeReflectionLeftExt.intensity = newIntensity;
+        this.brakeReflectionRight.intensity = newIntensity;
+        this.brakeReflectionRightExt.intensity = newIntensity;
+    }
+
+    private disableBrakeLights(): void {
+        const newIntensity: number = 0;
+        this.brakeLight.intensity = newIntensity;
+        this.brakeReflectionLeft.intensity = newIntensity;
+        this.brakeReflectionLeftExt.intensity = newIntensity;
+        this.brakeReflectionRight.intensity = newIntensity;
+        this.brakeReflectionRightExt.intensity = newIntensity;
     }
 
     private updateBrakelights(): void {
