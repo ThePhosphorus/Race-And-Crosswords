@@ -1,5 +1,5 @@
 import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
-import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3 } from "three";
+import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3, PCFSoftShadowMap } from "three";
 import Stats = require("stats.js");
 import {HALF, DOUBLE, AMBIENT_LIGHT_OPACITY, WHITE} from "../../global-constants/constants";
 import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } from "../admin/track-editor.constants";
@@ -42,6 +42,8 @@ export abstract class Renderer {
 
     public startRenderingLoop(): void {
         this._webGlRenderer = new WebGLRenderer();
+        this._webGlRenderer.shadowMapEnabled = true;
+        this._webGlRenderer.shadowMap.type = PCFSoftShadowMap;
         this.renderer.setPixelRatio(devicePixelRatio);
         this.renderer.setSize(
             this.container.clientWidth,
