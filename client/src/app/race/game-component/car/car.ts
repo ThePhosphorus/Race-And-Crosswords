@@ -4,8 +4,7 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    Quaternion,
-    Scene
+    Quaternion
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
@@ -13,7 +12,7 @@ import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
 import { SpotLightFacade } from "./lights/spotlight-facade";
 
-const MAXIMUM_STEERING_ANGLE: number = 0.25;
+const MAXIMUM_STEERING_ANGLE: number = 0.5;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
 const MINIMUM_SPEED: number = 0.05;
@@ -127,7 +126,7 @@ export class Car extends Object3D {
         this.initLights();
     }
     private initLights(): void {
-        const frontLight: SpotLightFacade = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
+        const frontLight: SpotLightFacade = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 1, 0.4);
         this.lights.push(frontLight);
         this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }

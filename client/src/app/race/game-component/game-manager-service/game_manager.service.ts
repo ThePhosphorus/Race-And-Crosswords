@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, PlaneGeometry, DoubleSide, MeshPhongMaterial } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
@@ -110,7 +110,7 @@ export class GameManagerService extends Renderer {
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(dimension * FLOOR_TEXTURE_RATIO, dimension * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(dimension, dimension), material);
         plane.rotateX(PI_OVER_2);
 

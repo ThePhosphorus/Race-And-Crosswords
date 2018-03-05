@@ -1,5 +1,6 @@
 import {SpotLight, Vector3} from "three";
 const TARGET_OFFSET: number = 10;
+const UP_VECTOR: Vector3 = new Vector3(0, 1, 0);
 export  class SpotLightFacade {
     private _light: SpotLight;
 
@@ -8,7 +9,7 @@ export  class SpotLightFacade {
         color: string | number,
         intensity: number,
         distance: number,
-        height: number,
+        private height: number,
         private sideTranslation: number,
         private transversalTranslation: number,
         penumbra: number,
@@ -16,13 +17,9 @@ export  class SpotLightFacade {
     ) {
         this._light = new SpotLight(color, intensity, distance, angle);
         this._light.penumbra = penumbra;
-        this.initHeight(height);
     }
 
-    private initHeight(height: number): void {
-        const yTranslation: Vector3 = new Vector3(0, height, 0);
-        this._light.position.add(yTranslation);
-    }
+
 
     public update(carPosition: Vector3, carDirection: Vector3): void {
         this.updatePosition(carPosition, carDirection);
@@ -32,11 +29,12 @@ export  class SpotLightFacade {
 
     private updatePosition(carPosition: Vector3, carDirection: Vector3): void {
         this.setAtCar(carPosition);
-        this.translateTransversal(carPosition, carDirection);
-        this.translateSideways(carDirection);
+        this.translateTransversal(carDirection);
+        // this.translateSideways(carDirection);
+        this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
-        this._light.target.position.copy((carPosition.clone().add(carDirection.multiplyScalar(TARGET_OFFSET))));
+        this._light.target.position.copy((carPosition.clone().add(carDirection).multiplyScalar(TARGET_OFFSET)));
         this._light.target.updateMatrixWorld(true);
     }
 
@@ -44,12 +42,17 @@ export  class SpotLightFacade {
         this._light.position.copy(carPosition.clone());
     }
 
-    private translateTransversal(carPosition: Vector3, carDirection: Vector3): void {
+    private translateTransversal(carDirection: Vector3): void {
         this._light.position.add(carDirection.multiplyScalar(this.transversalTranslation));
     }
 
     private translateSideways(carDirection: Vector3): void {
-        this._light.position.add(this._light.up.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
+        this._light.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
+    }
+
+    private addHeight(): void {
+        const yTranslation: Vector3 = new Vector3(0, this.height, 0);
+        this._light.position.add(yTranslation);
     }
 
     public get light(): SpotLight {
