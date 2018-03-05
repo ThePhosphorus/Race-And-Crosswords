@@ -1,6 +1,6 @@
-import {SpotLight, Vector3} from "three";
+import {SpotLight, Vector3, Object3D} from "three";
 const TARGET_OFFSET: number = 10;
-export  class SpotLightFacade {
+export  class SpotLightFacade extends Object3D {
     private light: SpotLight;
 
     public constructor
@@ -14,6 +14,7 @@ export  class SpotLightFacade {
         penumbra: number,
         angle?: number
     ) {
+        super();
         this.light = new SpotLight(color, intensity, distance, angle);
         this.light.penumbra = penumbra;
         this.light.angle = angle;

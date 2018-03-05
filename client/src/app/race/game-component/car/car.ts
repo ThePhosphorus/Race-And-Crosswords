@@ -103,7 +103,7 @@ export class Car extends Object3D {
         this._speed = new Vector3(0, 0, 0);
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
-        this.lights = new Array<SpotLightFacade>;
+        this.lights = new Array<SpotLightFacade>();
         this.initLights(); // IL MANQUE LE THIS.SCENE.ADD
     }
 
@@ -126,8 +126,9 @@ export class Car extends Object3D {
         this.add(this.mesh);
     }
     private initLights(): void {
-        let frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
+        const frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
         this.lights.push(frontLight);
+        this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
