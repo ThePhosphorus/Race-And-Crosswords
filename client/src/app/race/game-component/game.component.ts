@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy} from "@angular/core";
+import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy } from "@angular/core";
 import { GameManagerService, CarInfos } from "./game-manager-service/game_manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "./sound-manager-service/sound-manager.service";
+import { CollisionDetectorService } from "./collision/collision-detector.service";
 
 @Component({
     moduleId: module.id,
@@ -11,8 +12,9 @@ import { SoundManagerService } from "./sound-manager-service/sound-manager.servi
     providers: [
         GameManagerService,
         CameraManagerService,
-        SoundManagerService
-            ]
+        SoundManagerService,
+        CollisionDetectorService
+    ]
 })
 
 export class GameComponent implements AfterViewInit, OnDestroy {
