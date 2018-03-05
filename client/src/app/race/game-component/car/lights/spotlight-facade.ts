@@ -7,7 +7,7 @@ export  class SpotLightFacade {
     public constructor
     (
         color: string | number,
-        intensity: number,
+        private intensity: number,
         distance: number,
         private height: number,
         private sideTranslation: number,
@@ -15,7 +15,7 @@ export  class SpotLightFacade {
         penumbra: number,
         angle?: number
     ) {
-        this._light = new SpotLight(color, intensity, distance, angle);
+        this._light = new SpotLight(color, 0, distance, angle);
         this._light.penumbra = penumbra;
     }
 
@@ -30,7 +30,7 @@ export  class SpotLightFacade {
     private updatePosition(carPosition: Vector3, carDirection: Vector3): void {
         this.setAtCar(carPosition);
         this.translateTransversal(carDirection);
-        // this.translateSideways(carDirection);
+        this.translateSideways(carDirection);
         this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
@@ -47,7 +47,9 @@ export  class SpotLightFacade {
     }
 
     private translateSideways(carDirection: Vector3): void {
-        this._light.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
+        if (this.sideTranslation !== 0) {
+            this._light.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
+        }
     }
 
     private addHeight(): void {
@@ -59,4 +61,11 @@ export  class SpotLightFacade {
         return this._light;
     }
 
+    public disable(): void {
+        this.light.intensity = 0;
+    }
+
+    public enable(): void {
+        this.light.intensity = this.intensity;
+    }
 }

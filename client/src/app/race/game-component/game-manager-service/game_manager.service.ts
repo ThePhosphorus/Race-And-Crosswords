@@ -25,6 +25,7 @@ const CHANGE_CAMERA_KEYCODE: number = 67; // c
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const FULLSCREEN_KEYCODE: number = 70; // F
+const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
 
 @Injectable()
 export class GameManagerService extends Renderer {
@@ -53,13 +54,17 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-
+        this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteeringLeft());
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
+    }
+    private toggleNightMode(): void {
+        this._car.toggleNightLights();
+        // TODO: change skybox and ambient light
     }
 
     private fullscreen(): void {

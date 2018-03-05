@@ -31,7 +31,8 @@ export class Car extends Object3D {
     private readonly wheelbase: number;
     private readonly dragCoefficient: number;
 
-    private lights: Array<SpotLightFacade>;
+    private frontLight: SpotLightFacade;
+    private brakeLights: Array<SpotLightFacade>;
     private _speed: Vector3;
     private isBraking: boolean;
     private mesh: Object3D;
@@ -103,7 +104,7 @@ export class Car extends Object3D {
         this._speed = new Vector3(0, 0, 0);
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
-        this.lights = new Array<SpotLightFacade>();
+        this.brakeLights = new Array<SpotLightFacade>();
     }
 
     // TODO: move loading code outside of car class.
@@ -126,9 +127,19 @@ export class Car extends Object3D {
         this.initLights();
     }
     private initLights(): void {
-        const frontLight: SpotLightFacade = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 1, 0.4);
-        this.lights.push(frontLight);
-        this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
+       this.initFrontLight();
+       this.initBrakeLights();
+
+    }
+    private initFrontLight(): void{
+        this.frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 1, 0.4);
+        this.add(this.frontLight.light);
+    }
+
+    private initBrakeLights(): void {
+        const brakeLightCenter: SpotLightFacade = new SpotLightFacade(0xFF0000, 1, 15, 1, 0, -0.7, 1,  0.6);
+        this.brakeLights.push(brakeLightCenter);
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
@@ -151,6 +162,7 @@ export class Car extends Object3D {
 
     public brake (): void {
         this.isBraking = true;
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.enable());
     }
 
     public releaseSteeringLeft (): void {
@@ -163,6 +175,7 @@ export class Car extends Object3D {
 
     public releaseBrakes (): void {
         this.isBraking = false;
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.disable());
     }
 
     public releaseAccelerator (): void {
@@ -181,7 +194,7 @@ export class Car extends Object3D {
 
         // Physics calculations
         this.physicsUpdate(deltaTime);
-        this.lights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
+        this.lightUpdate();
 
         // Move back to world coordinates
         this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
@@ -207,7 +220,10 @@ export class Car extends Object3D {
         this.mesh.position.add(this.getDeltaPosition(deltaTime));
         this.rearWheel.update(this._speed.length());
     }
-
+    private lightUpdate(): void {
+        this.frontLight.update(this.mesh.position, this.direction);
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
+    }
     private getWeightDistribution(): number {
         const acceleration: number = this.getAcceleration().length();
         /* tslint:disable:no-magic-numbers */
@@ -335,6 +351,10 @@ export class Car extends Object3D {
 
     public getPosition(): Vector3 {
         return this.mesh.position;
+    }
+
+    public toggleNightLights(): void {
+        this.frontLight.light.intensity === 0 ? this.frontLight.enable() : this.frontLight.disable();
     }
 
 }
