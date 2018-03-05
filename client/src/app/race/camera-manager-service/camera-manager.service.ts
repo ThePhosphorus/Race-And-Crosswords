@@ -35,7 +35,6 @@ export class CameraManagerService {
 
     public init(): void {
         this.initMembers();
-        this.inputManager.resetBindings();
         this.initCameraArray();
         this.initAudioListener();
     }
