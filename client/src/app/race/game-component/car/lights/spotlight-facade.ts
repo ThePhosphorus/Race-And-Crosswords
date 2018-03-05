@@ -1,4 +1,5 @@
 import {SpotLight, Vector3} from "three";
+const TARGET_OFFSET: number = 10;
 export  class SpotLightFacade {
     private light: SpotLight;
 
@@ -9,7 +10,8 @@ export  class SpotLightFacade {
         distance: number,
         angle: number,
         height: number,
-        private sideTranslation: number
+        private sideTranslation: number,
+        private transversalTranslation: number
     ) {
         this.light = new SpotLight(color, intensity, distance, angle);
         this.initHeight(height);
@@ -21,28 +23,29 @@ export  class SpotLightFacade {
 
     public update(carPosition: Vector3, carDirection: Vector3): void {
         this.updatePosition(carPosition, carDirection);
-        this.updateDirection(carDirection);
+        this.updateDirection(carPosition, carDirection);
 
     }
 
     private updatePosition(carPosition: Vector3, carDirection: Vector3): void {
         this.setAtCar(carPosition);
-        this.translateBack(carPosition, carDirection);
-        this.translateSideways();
+        this.translateTransversal(carPosition, carDirection);
+        this.translateSideways(carDirection);
     }
-    private updateDirection(carDirection: Vector3): void {
-
+    private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
+        this.light.target.position.copy((carPosition.clone().add(carDirection.multiplyScalar(TARGET_OFFSET))));
+        this.light.target.updateMatrixWorld(true);
     }
 
     private setAtCar(carPosition: Vector3): void {
         this.light.position.copy(carPosition.clone());
     }
 
-    private translateBack(carPosition: Vector3, carDirection: Vector3): void {
-        this.light.position.copy((carPosition.clone().sub(carDirection.multiplyScalar(0.7))));
+    private translateTransversal(carPosition: Vector3, carDirection: Vector3): void {
+        this.light.position.add(carDirection.multiplyScalar(this.transversalTranslation));
     }
 
-    private translateSideways(): void {
-        // this.light.position.
+    private translateSideways(carDirection: Vector3): void {
+        this.light.position.add(this.light.up.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
     }
 }
