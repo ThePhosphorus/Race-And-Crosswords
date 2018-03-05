@@ -78,7 +78,7 @@ export class TrackEditorComponent implements AfterViewInit {
             this.name = track.name;
             this.previousName = track.name;
             this.description = track.description;
-            this.trackGenerator.loadTrack(track.points.map((value: Vector3Struct) => this.trackLoader.toVector(value)));
+            this.trackGenerator.loadTrack(track.points.map((value: Vector3Struct) => TrackLoaderService.toVector(value)));
         });
     }
 

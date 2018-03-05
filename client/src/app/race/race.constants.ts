@@ -2,7 +2,7 @@ import { DOUBLE } from "../global-constants/constants";
 
 // tslint:disable:no-magic-numbers
 
-export const TRACK_WIDTH: number = 3;
+export const TRACK_WIDTH: number = 12;
 export const TWICE_TRACK_WIDTH: number = DOUBLE * TRACK_WIDTH;
 export const PERS_CAMERA_ANGLE: number = 25;
 

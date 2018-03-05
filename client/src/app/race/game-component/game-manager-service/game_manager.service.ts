@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
+import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide, Vector3 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { CameraType, HALF } from "../../../global-constants/constants";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -127,6 +128,8 @@ export class GameManagerService extends Renderer {
                 "posz.png",
                 "negz.png"
             ]);
+
+        this.scene.add(TrackLoaderService.getRoad(new Vector3(0, 0.11, 0), new Vector3(-50, 0.11, 0)));
     }
 
     protected update(timeSinceLastFrame: number): void {
