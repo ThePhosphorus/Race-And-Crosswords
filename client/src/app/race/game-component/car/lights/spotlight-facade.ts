@@ -8,12 +8,15 @@ export  class SpotLightFacade {
         color: string | number,
         intensity: number,
         distance: number,
-        angle: number,
         height: number,
         private sideTranslation: number,
-        private transversalTranslation: number
+        private transversalTranslation: number,
+        penumbra: number,
+        angle?: number
     ) {
         this.light = new SpotLight(color, intensity, distance, angle);
+        this.light.penumbra = penumbra;
+        this.light.angle = angle;
         this.initHeight(height);
     }
 

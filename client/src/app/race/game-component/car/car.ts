@@ -10,6 +10,7 @@ import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
+import { SpotLightFacade } from "./lights/spotlight-facade";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
@@ -30,6 +31,7 @@ export class Car extends Object3D {
     private readonly wheelbase: number;
     private readonly dragCoefficient: number;
 
+    private lights: Array<SpotLightFacade>;
     private _speed: Vector3;
     private isBraking: boolean;
     private mesh: Object3D;
@@ -95,14 +97,14 @@ export class Car extends Object3D {
         this.wheelbase = wheelbase;
         this.mass = mass;
         this.dragCoefficient = dragCoefficient;
-
         this.isBraking = false;
         this.steeringWheelDirection = 0;
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
         this._speed = new Vector3(0, 0, 0);
-
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
+        this.lights = new Array<SpotLightFacade>;
+        this.initLights(); // IL MANQUE LE THIS.SCENE.ADD
     }
 
     // TODO: move loading code outside of car class.
@@ -123,7 +125,10 @@ export class Car extends Object3D {
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.add(this.mesh);
     }
-
+    private initLights(): void {
+        let frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
+        this.lights.push(frontLight);
+    }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
         this.steeringWheelDirection = steeringState *
@@ -199,6 +204,7 @@ export class Car extends Object3D {
         );
         this.mesh.position.add(this.getDeltaPosition(deltaTime));
         this.rearWheel.update(this._speed.length());
+        this.lights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
     }
 
     private getWeightDistribution(): number {
