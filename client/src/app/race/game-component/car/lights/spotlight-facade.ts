@@ -2,23 +2,15 @@ import {SpotLight, Vector3} from "three";
 const TARGET_OFFSET: number = 10;
 const UP_VECTOR: Vector3 = new Vector3(0, 1, 0);
 export  class SpotLightFacade {
-    private _light: SpotLight;
 
     public constructor
     (
+        private _light: SpotLight,
         private isFacingFront: boolean,
-        color: string | number,
-        private intensity: number,
-        distance: number,
         private height: number,
         private sideTranslation: number,
         private transversalTranslation: number,
-        penumbra: number,
-        angle?: number
-    ) {
-        this._light = new SpotLight(color, 0, distance, angle);
-        this._light.penumbra = penumbra;
-    }
+    ) {}
 
 
 
@@ -52,7 +44,7 @@ export  class SpotLightFacade {
 
     private translateSideways(carDirection: Vector3): void {
         if (this.sideTranslation !== 0) {
-            this._light.position.add(UP_VECTOR.clone().cross(carDirection.clone()).multiplyScalar(this.sideTranslation));
+            this._light.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
         }
     }
 
@@ -70,6 +62,6 @@ export  class SpotLightFacade {
     }
 
     public enable(): void {
-        this.light.intensity = this.intensity;
+        this.light.intensity = 1;
     }
 }
