@@ -131,13 +131,13 @@ export class Car extends Object3D {
        this.initBrakeLights();
 
     }
-    private initFrontLight(): void{
-        this.frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 1, 0.4);
+    private initFrontLight(): void {
+        this.frontLight = new SpotLightFacade(true, 0xFFE6CC, 1, 15, 1, 0, 1, 0.4);
         this.add(this.frontLight.light);
     }
 
     private initBrakeLights(): void {
-        const brakeLightCenter: SpotLightFacade = new SpotLightFacade(0xFF0000, 1, 15, 1, 0, -0.7, 1,  0.6);
+        const brakeLightCenter: SpotLightFacade = new SpotLightFacade(false, 0xFF0000, 1, 15, 0.75, 0, -0.1, 1,  0.6);
         this.brakeLights.push(brakeLightCenter);
         this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }
@@ -222,7 +222,7 @@ export class Car extends Object3D {
     }
     private lightUpdate(): void {
         this.frontLight.update(this.mesh.position, this.direction);
-        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction.negate()));
     }
     private getWeightDistribution(): number {
         const acceleration: number = this.getAcceleration().length();

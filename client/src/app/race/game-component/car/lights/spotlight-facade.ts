@@ -6,6 +6,7 @@ export  class SpotLightFacade {
 
     public constructor
     (
+        private isFacingFront: boolean,
         color: string | number,
         private intensity: number,
         distance: number,
@@ -34,7 +35,10 @@ export  class SpotLightFacade {
         this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
-        this._light.target.position.copy((carPosition.clone().add(carDirection.multiplyScalar(TARGET_OFFSET))));
+        this.isFacingFront ?
+        this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))))
+        :
+        this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
         this._light.target.updateMatrixWorld(true);
     }
 
@@ -48,7 +52,7 @@ export  class SpotLightFacade {
 
     private translateSideways(carDirection: Vector3): void {
         if (this.sideTranslation !== 0) {
-            this._light.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
+            this._light.position.add(UP_VECTOR.clone().cross(carDirection.clone()).multiplyScalar(this.sideTranslation));
         }
     }
 
