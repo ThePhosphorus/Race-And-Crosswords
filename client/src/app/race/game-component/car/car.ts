@@ -124,7 +124,7 @@ export class Car extends Object3D {
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.add(this.mesh);
-        this.add(new BoxCollider);
+        this.add(new BoxCollider(1, 1, new Vector3(0, 0, 0)));
     }
 
     private updateSteering(): void {

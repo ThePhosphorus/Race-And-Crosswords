@@ -9,7 +9,8 @@ export class CollisionDetectorService {
 
     public detectCollisions(scene: Scene): void {
         // Fetch all colliders
-        const collidables: Array<Object3D> = scene.children.reduce((prev, curr) => [...prev, ...curr.children.filter((f) => f instanceof Collider)], new Array<Object3D>());
+        const collidables: Array<Collider> = scene.children.reduce((prev, curr) => [...prev, ...curr.children
+                .filter((f) => f instanceof Collider)], new Array<Object3D>()) as Collider[];
         for (let i: number = 0; i < collidables.length; i++) {
             for (let j: number = i; j < collidables.length; j++) {
                 if (this.broadDetection(collidables[i], collidables[j])) {
@@ -30,6 +31,6 @@ export class CollisionDetectorService {
     }
 
     private resolveCollision(coll1: Collider, coll2: Collider): void {
-        // Resolve collision
+        console.log("COLLISION");
     }
 }
