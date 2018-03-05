@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Scene, Object3D } from "three";
+import { Scene } from "three";
 
 @Injectable()
 export class CollisionDetectorService {

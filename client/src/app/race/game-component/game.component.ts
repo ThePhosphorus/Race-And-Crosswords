@@ -38,13 +38,13 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         this.inputManager.resetBindings();
         this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
         this.gameManagerService
-            .initialize(this.containerRef.nativeElement)
+            .start(this.containerRef.nativeElement)
             .then(/* do nothing */)
             .catch((err) => console.error(err));
     }
 
     public get carInfos(): CarInfos {
-        return this.gameManagerService.carInfos;
+        return this.gameManagerService.playerInfos;
     }
 
     public ngOnDestroy(): void {

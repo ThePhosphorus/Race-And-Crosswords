@@ -1,5 +1,15 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
+import {
+    CubeTextureLoader,
+    Mesh,
+    Texture,
+    TextureLoader,
+    RepeatWrapping,
+    MeshLambertMaterial,
+    PlaneGeometry,
+    DoubleSide,
+    Vector3
+} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
@@ -15,6 +25,8 @@ const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
+const N_AI_CONTROLLED_CARS: number = 5;
+const SPACE_BETWEEN_CARS: number = 4;
 
 // Keycodes
 const ACCELERATE_KEYCODE: number = 87; // w
@@ -26,69 +38,113 @@ const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 
+export class CarInfos {
+    public constructor(
+        public speed: number,
+        public gear: number,
+        public rpm: number
+    ) { }
+}
+
 @Injectable()
 export class GameManagerService extends Renderer {
-    private _car: Car;
-    private _carInfos: CarInfos;
+    private player: Car;
+    private aiControlledCars: Array<Car>;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService) {
         super(cameraManager, false);
-        this._car = new Car();
-        this._carInfos = new CarInfos(0, 0, 0);
+        this.player = new Car();
+        this.aiControlledCars = new Array<Car>();
+        for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
+            this.aiControlledCars.push(new Car());
+        }
     }
 
-    public get carInfos(): CarInfos {
-        return this._carInfos;
+    public get playerInfos(): CarInfos {
+        return new CarInfos(this.player.speed.length(),
+                            this.player.currentGear,
+                            this.player.rpm);
     }
 
-    private setupKeyBindings(): void {
-        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this._car.accelerate());
-        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this._car.brake());
-        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._car.steerLeft());
-        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._car.steerRight());
+    public async start(container: HTMLDivElement): Promise<void> {
+        this.init(container);
+        await this.initCars();
+        this.initKeyBindings();
+        this.initSoundManager();
+        this.initCameraManager();
+        this.initSkybox();
+        this.initScene();
+        this.startRenderingLoop();
+    }
+
+    protected update(timeSinceLastFrame: number): void {
+        this.player.update(timeSinceLastFrame);
+        this.cameraTargetDirection = this.player.direction;
+        this.cameraTargetPosition = this.player.getPosition();
+        this.soundManager.updateCarRpm(this.player.id, this.player.rpm);
+    }
+
+    private async initCars(): Promise<void> {
+        await this.player.init(new Vector3(0, 0, 0));
+        for (let i: number = 0; i < this.aiControlledCars.length; i++) {
+            await this.aiControlledCars[i].init(new Vector3(0, 0, (i + 1) * SPACE_BETWEEN_CARS));
+        }
+    }
+
+    private initKeyBindings(): void {
+        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this.player.accelerate());
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this.player.brake());
+        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this.player.steerLeft());
+        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this.player.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
         this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
 
-        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
-        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
-        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteeringLeft());
-        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
+        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.releaseAccelerator());
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.releaseBrakes());
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.releaseSteeringLeft());
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this.player.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
     }
 
-    public async initialize(container: HTMLDivElement): Promise<void> {
-        this.init(container);
-        await this._car.init();
-        this.setupKeyBindings();
-        this.initSoundManager();
-        this.initCameraManager();
-        this.initScene();
-        this.startRenderingLoop();
+    private initSkybox(): void {
+        this.scene.background = new CubeTextureLoader()
+            .setPath(BACKGROUND_PATH)
+            .load([
+                "posx.png",
+                "negx.png",
+                "posy.png",
+                "negy.png",
+                "posz.png",
+                "negz.png"
+            ]);
     }
+
     private initSoundManager(): void {
         this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
-        this.soundManager.addCarSound(this._car);
-
+        this.soundManager.addCarSound(this.player);
     }
+
     private initCameraManager(): void {
         this.cameraManager.cameraType = CameraType.Perspective;
         this.cameraManager.updateTargetInfos(new TargetInfos(
-            this._car.getPosition(),
-            this._car.direction
+            this.player.getPosition(),
+            this.player.direction
         ));
-
     }
+
     private initScene(): void {
-        this.scene.add(this._car);
         this.scene.add(this.getFloor());
         this.scene.add(this.getTrack());
+        this.scene.add(this.player);
+        this.aiControlledCars.forEach((car) => this.scene.add(car));
     }
+
     private getFloor(): Mesh {
         const plane: Mesh = this.setTexture(FLOOR_DIMENSION, OFF_ROAD_PATH);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
@@ -111,38 +167,4 @@ export class GameManagerService extends Renderer {
 
         return plane;
     }
-    protected onInit(): void {
-        this.scene.background = new CubeTextureLoader()
-            .setPath(BACKGROUND_PATH)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
-    }
-
-    protected update(timeSinceLastFrame: number): void {
-        this._car.update(timeSinceLastFrame);
-        this.cameraTargetDirection = this._car.direction;
-        this.cameraTargetPosition = this._car.getPosition();
-        this.updateCarInfos();
-        this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
-    }
-
-    private updateCarInfos(): void {
-        this._carInfos.speed = this._car.speed.length();
-        this._carInfos.gear = this._car.currentGear;
-        this._carInfos.rpm = this._car.rpm;
-    }
-}
-
-export class CarInfos {
-    public constructor(
-        public speed: number,
-        public gear: number,
-        public rpm: number
-    ) { }
 }
