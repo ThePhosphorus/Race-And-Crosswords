@@ -25,7 +25,7 @@ const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
-const N_AI_CONTROLLED_CARS: number = 5;
+const N_AI_CONTROLLED_CARS: number = 1;
 const SPACE_BETWEEN_CARS: number = 4;
 
 // Keycodes
@@ -79,8 +79,9 @@ export class GameManagerService extends Renderer {
         this.startRenderingLoop();
     }
 
-    protected update(timeSinceLastFrame: number): void {
-        this.player.update(timeSinceLastFrame);
+    protected update(deltaTime: number): void {
+        this.player.update(deltaTime);
+        this.aiControlledCars.forEach((car) => car.update(deltaTime));
         this.cameraTargetDirection = this.player.direction;
         this.cameraTargetPosition = this.player.getPosition();
         this.soundManager.updateCarRpm(this.player.id, this.player.rpm);
@@ -128,6 +129,7 @@ export class GameManagerService extends Renderer {
         this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
         this.soundManager.addCarSound(this.player);
+        this.aiControlledCars.forEach((car) => this.soundManager.addCarSound(car));
     }
 
     private initCameraManager(): void {
