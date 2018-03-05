@@ -4,7 +4,8 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    Quaternion
+    Quaternion,
+    Scene
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
@@ -104,7 +105,6 @@ export class Car extends Object3D {
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
         this.lights = new Array<SpotLightFacade>();
-        this.initLights(); // IL MANQUE LE THIS.SCENE.ADD
     }
 
     // TODO: move loading code outside of car class.
@@ -120,15 +120,16 @@ export class Car extends Object3D {
         });
     }
 
-    public async init(): Promise<void> {
+    public async init(scene: Scene): Promise<void> {
         this.mesh = await this.load();
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.add(this.mesh);
+        this.initLights(scene);
     }
-    private initLights(): void {
+    private initLights(scene: Scene): void {
         const frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
         this.lights.push(frontLight);
-        this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight));
+        this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
@@ -181,6 +182,7 @@ export class Car extends Object3D {
 
         // Physics calculations
         this.physicsUpdate(deltaTime);
+        this.lights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
 
         // Move back to world coordinates
         this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
@@ -205,7 +207,6 @@ export class Car extends Object3D {
         );
         this.mesh.position.add(this.getDeltaPosition(deltaTime));
         this.rearWheel.update(this._speed.length());
-        this.lights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
     }
 
     private getWeightDistribution(): number {

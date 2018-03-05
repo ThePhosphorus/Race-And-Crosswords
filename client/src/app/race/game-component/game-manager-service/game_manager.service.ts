@@ -69,7 +69,7 @@ export class GameManagerService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        await this._car.init();
+        await this._car.init(this.scene);
         this.initSoundManager();
         this.initCameraManager();
         this.initScene();

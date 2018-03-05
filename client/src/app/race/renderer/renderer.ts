@@ -85,7 +85,6 @@ export abstract class Renderer {
 
     private createScene(): void {
         this._scene = new Scene();
-
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
         this._cameraManager.onResize(this.getAspectRatio());
      }
