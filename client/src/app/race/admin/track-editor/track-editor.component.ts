@@ -20,6 +20,7 @@ export class TrackEditorComponent implements AfterViewInit {
     public id: string;
     public description: string;
     public name: string;
+    private previousName: string;
 
     public constructor(
         public trackGenerator: TrackGenerator,
@@ -75,6 +76,7 @@ export class TrackEditorComponent implements AfterViewInit {
     private getTrack(id: string): void {
         this.trackLoader.loadOne(id).subscribe((track: Track) => {
             this.name = track.name;
+            this.previousName = track.name;
             this.description = track.description;
             this.trackGenerator.loadTrack(track.points.map((value: Vector3Struct) => this.trackLoader.toVector(value)));
         });
@@ -83,8 +85,10 @@ export class TrackEditorComponent implements AfterViewInit {
     public saveTrack(): void {
         const points: Vector3[] = this.trackGenerator.saveTrack();
         if (this.testTrack(points)) {
-            this.trackSaver.save(this.id, this.name, this.description, points)
-                .subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/tracks"]); } });
+            this.trackSaver.save(
+                (this.previousName && this.name === this.previousName) ? this.id : null,
+                this.name, this.description, points
+                ).subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/tracks"]); } });
         }
     }
 
