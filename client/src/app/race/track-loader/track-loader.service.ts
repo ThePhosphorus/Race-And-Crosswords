@@ -19,7 +19,14 @@ export class TrackLoaderService {
     }
 
     public static getTrackMeshs(track: Track): Mesh[] {
-        return [];
+        const meshs: Array<Mesh> = new Array<Mesh>();
+        for (let i: number = 0; i < track.points.length - 1; i++) {
+            meshs.push(TrackLoaderService.getRoad(
+                TrackLoaderService.toVector(track.points[i]),
+                TrackLoaderService.toVector(track.points[i])));
+        }
+
+        return meshs;
     }
 
     public static getRoad(pointA: Vector3, pointB: Vector3): Mesh {
