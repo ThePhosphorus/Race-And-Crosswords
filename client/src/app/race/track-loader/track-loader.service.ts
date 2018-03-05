@@ -4,7 +4,7 @@ import { Vector3Struct, Track } from "../../../../../common/communication/track"
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
-import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE } from "../../global-constants/constants";
+import { BACKEND_URL, HALF, PI_OVER_2 } from "../../global-constants/constants";
 import { TRACK_WIDTH } from "../race.constants";
 import { WHITE_MATERIAL } from "../admin/track-editor.constants";
 
