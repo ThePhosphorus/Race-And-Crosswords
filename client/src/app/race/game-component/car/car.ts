@@ -120,16 +120,16 @@ export class Car extends Object3D {
         });
     }
 
-    public async init(scene: Scene): Promise<void> {
+    public async init(): Promise<void> {
         this.mesh = await this.load();
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.add(this.mesh);
-        this.initLights(scene);
+        this.initLights();
     }
-    private initLights(scene: Scene): void {
+    private initLights(): void {
         const frontLight: SpotLightFacade = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
         this.lights.push(frontLight);
-        this.lights.forEach((spotlight: SpotLightFacade) => scene.add(spotlight.light));
+        this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
