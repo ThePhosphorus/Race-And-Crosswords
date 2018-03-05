@@ -34,7 +34,7 @@ export  class SpotLightFacade {
         this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
-        this._light.target.position.copy((carPosition.clone().add(carDirection).multiplyScalar(TARGET_OFFSET)));
+        this._light.target.position.copy((carPosition.clone().add(carDirection.multiplyScalar(TARGET_OFFSET))));
         this._light.target.updateMatrixWorld(true);
     }
 
