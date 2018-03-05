@@ -10,6 +10,7 @@ import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
+import { BoxCollider } from "../collision/colliders/box-collider";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
@@ -123,6 +124,7 @@ export class Car extends Object3D {
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.add(this.mesh);
+        this.add(new BoxCollider);
     }
 
     private updateSteering(): void {

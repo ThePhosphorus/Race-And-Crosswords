@@ -1,6 +1,6 @@
-import { Object3D } from "three";
+import { Collider } from "./collider";
 
-export class LineCollider extends Object3D {
+export class LineCollider extends Collider {
     public constructor() {
         super();
     }

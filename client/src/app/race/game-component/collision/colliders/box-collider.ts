@@ -1,9 +1,7 @@
-import { Object3D } from "three";
-import { COLLIDER_NAME } from "../../../../global-constants/constants";
+import { Collider } from "./collider";
 
-export class BoxCollider extends Object3D {
+export class BoxCollider extends Collider {
     public constructor() {
         super();
-        this.name = COLLIDER_NAME;
     }
 }

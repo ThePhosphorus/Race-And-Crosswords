@@ -25,4 +25,6 @@ export const GRAVITY: number = -9.81;
 export const RAD_TO_DEG: number = STRAIGHT_ANGLE_DEG / Math.PI;
 export const PI_OVER_2: number = Math.PI / 2;
 
+export const COLLIDER_NAME: string = "collider";
+
 export const BACKEND_URL: string = "http://localhost:3000/";

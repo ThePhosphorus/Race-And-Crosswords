@@ -16,6 +16,7 @@ import { SoundManagerService } from "../sound-manager-service/sound-manager.serv
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { CameraType, HALF } from "../../../global-constants/constants";
+import { CollisionDetectorService } from "../collision/collision-detector.service";
 
 const FLOOR_DIMENSION: number = 10000;
 const SPAWN_DIMENSION: number = 100;
@@ -53,7 +54,8 @@ export class GameManagerService extends Renderer {
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
-                       private soundManager: SoundManagerService) {
+                       private soundManager: SoundManagerService,
+                       private collisionDetector: CollisionDetectorService) {
         super(cameraManager, false);
         this.player = new Car();
         this.aiControlledCars = new Array<Car>();
@@ -77,6 +79,7 @@ export class GameManagerService extends Renderer {
         this.initSkybox();
         this.initScene();
         this.startRenderingLoop();
+        this.collisionDetector.detectCollisions(this.scene);
     }
 
     protected update(deltaTime: number): void {
