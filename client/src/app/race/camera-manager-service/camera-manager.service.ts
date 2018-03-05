@@ -3,11 +3,9 @@ import { Vector3, Camera, AudioListener } from "three";
 import { CameraContainer, ZoomLimit } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
-import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraType } from "../../global-constants/constants";
 
 const INITIAL_CAMERA_DISTANCE: number = 10;
-const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 
 export class TargetInfos {
     public constructor(
@@ -29,11 +27,7 @@ export class CameraManagerService {
     private targetInfos: TargetInfos;
     private _audioListener: AudioListener;
 
-    public constructor(private inputManager: InputManagerService) {
-        this.init();
-    }
-
-    public init(): void {
+    public constructor() {
         this.initMembers();
         this.initCameraArray();
         this.initAudioListener();
@@ -49,7 +43,6 @@ export class CameraManagerService {
     private initCameraArray(): void {
         const perspContainer: PerspectiveCameraContainer =
             new PerspectiveCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
-        this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => perspContainer.toggleEffect());
 
         const orthoContainer: OrthographicCameraContainer =
             new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
@@ -107,6 +100,10 @@ export class CameraManagerService {
         this.selectedCameraIndex += 1;
         this.selectedCameraIndex %= this._cameraArray.length;
         this.selectedCamera.addAudioListener();
+    }
+
+    public toggleCameraEffect(): void {
+        this.selectedCamera.toggleEffectMode();
     }
 
     public zoomIn(): void {

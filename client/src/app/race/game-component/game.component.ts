@@ -26,7 +26,8 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
     public constructor(private gameManagerService: GameManagerService,
                        private soundManager: SoundManagerService,
-                       private inputManager: InputManagerService) { }
+                       private inputManager: InputManagerService) {
+    }
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {

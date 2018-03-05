@@ -22,6 +22,7 @@ const LEFT_KEYCODE: number = 65; // a
 const BRAKE_KEYCODE: number = 83; // s
 const RIGHT_KEYCODE: number = 68; // d
 const CHANGE_CAMERA_KEYCODE: number = 67; // c
+const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 
@@ -36,7 +37,6 @@ export class GameManagerService extends Renderer {
         super(cameraManager, false);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
-        this.setupKeyBindings();
     }
 
     public get carInfos(): CarInfos {
@@ -49,6 +49,7 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._car.steerLeft());
         this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._car.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
+        this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
 
@@ -63,6 +64,7 @@ export class GameManagerService extends Renderer {
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
         await this._car.init();
+        this.setupKeyBindings();
         this.initSoundManager();
         this.initCameraManager();
         this.initScene();

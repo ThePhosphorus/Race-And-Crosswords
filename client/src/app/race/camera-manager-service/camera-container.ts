@@ -89,4 +89,5 @@ export abstract class CameraContainer {
     public abstract position(): Vector3;
     public abstract onResize(aspectRatio: number): void;
     protected abstract fixUpdate(deltaTime: number): void;
+    public abstract toggleEffectMode(): void;
  }
