@@ -20,7 +20,8 @@ export  class SpotLightFacade {
     }
 
     private initHeight(height: number): void {
-        this._light.translateY(height);
+        const yTranslation: Vector3 = new Vector3(0, height, 0);
+        this._light.position.add(yTranslation);
     }
 
     public update(carPosition: Vector3, carDirection: Vector3): void {
