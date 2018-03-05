@@ -16,7 +16,6 @@ export  class SpotLightFacade {
     ) {
         this._light = new SpotLight(color, intensity, distance, angle);
         this._light.penumbra = penumbra;
-        this._light.angle = angle;
         this.initHeight(height);
     }
 

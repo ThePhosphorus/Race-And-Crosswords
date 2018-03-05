@@ -127,9 +127,9 @@ export class Car extends Object3D {
         this.initLights(scene);
     }
     private initLights(scene: Scene): void {
-        const frontLight = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
+        const frontLight: SpotLightFacade = new SpotLightFacade(0xFFE6CC, 1, 15, 1, 0, 0, 0.4);
         this.lights.push(frontLight);
-        this.lights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
+        this.lights.forEach((spotlight: SpotLightFacade) => scene.add(spotlight.light));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
