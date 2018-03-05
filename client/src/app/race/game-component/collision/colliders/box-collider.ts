@@ -17,11 +17,11 @@ export class BoxCollider extends Collider {
         this.radius = this.pythagore(this.width * HALF, this.height * HALF);
     }
 
-    public get broadRadius(): number {
+    public getBroadRadius(): number {
         return this.radius;
     }
 
-    public get position(): Vector3 {
+    public getAbsolutePosition(): Vector3 {
         return this.parent.position.clone().add(this.offset);
     }
 

@@ -4,7 +4,8 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    Quaternion
+    Quaternion,
+    Box3
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
@@ -123,8 +124,10 @@ export class Car extends Object3D {
         this.mesh = await this.load();
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
+
+        const box: Box3 = new Box3().setFromObject(this.mesh);
+        this.mesh.add(new BoxCollider(box.getSize().z, box.getSize().x, new Vector3(0, 0, 0)));
         this.add(this.mesh);
-        this.add(new BoxCollider(1, 1, new Vector3(0, 0, 0)));
     }
 
     private updateSteering(): void {

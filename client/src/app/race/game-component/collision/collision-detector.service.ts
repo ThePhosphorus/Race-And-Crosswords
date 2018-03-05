@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Scene, Object3D } from "three";
+import { Scene } from "three";
 import { Collider } from "./colliders/collider";
 
 @Injectable()
@@ -9,21 +9,31 @@ export class CollisionDetectorService {
 
     public detectCollisions(scene: Scene): void {
         // Fetch all colliders
-        const collidables: Array<Collider> = scene.children.reduce((prev, curr) => [...prev, ...curr.children
-                .filter((f) => f instanceof Collider)], new Array<Object3D>()) as Collider[];
-        for (let i: number = 0; i < collidables.length; i++) {
-            for (let j: number = i; j < collidables.length; j++) {
-                if (this.broadDetection(collidables[i], collidables[j])) {
-                    if (this.narrowDetection(collidables[i], collidables[j])) {
-                        this.resolveCollision(collidables[i], collidables[j]);
+        const colliders: Array<Collider> = this.getColliders(scene);
+        for (let i: number = 0; i < colliders.length; i++) {
+            for (let j: number = i + 1; j < colliders.length; j++) {
+                if (this.broadDetection(colliders[i], colliders[j])) {
+                    if (this.narrowDetection(colliders[i], colliders[j])) {
+                        this.resolveCollision(colliders[i], colliders[j]);
                     }
                 }
             }
         }
     }
 
+    private getColliders(scene: Scene): Array<Collider> {
+        const colliders: Array<Collider> = new Array<Collider>();
+        scene.traverse((obj) => {
+            if (obj instanceof Collider) {
+                colliders.push(obj);
+            }
+        })
+
+        return colliders;
+    }
+
     private broadDetection(coll1: Collider, coll2: Collider): boolean {
-        return true;
+        return coll2.getAbsolutePosition().clone().sub(coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
 
     private narrowDetection(coll1: Collider, coll2: Collider): boolean {

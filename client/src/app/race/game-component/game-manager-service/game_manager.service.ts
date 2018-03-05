@@ -56,7 +56,7 @@ export class GameManagerService extends Renderer {
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
                        private collisionDetector: CollisionDetectorService) {
-        super(cameraManager, false);
+        super(cameraManager, true);
         this.player = new Car();
         this.aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
@@ -79,7 +79,6 @@ export class GameManagerService extends Renderer {
         this.initSkybox();
         this.initScene();
         this.startRenderingLoop();
-        this.collisionDetector.detectCollisions(this.scene);
     }
 
     protected update(deltaTime: number): void {
@@ -88,6 +87,7 @@ export class GameManagerService extends Renderer {
         this.cameraTargetDirection = this.player.direction;
         this.cameraTargetPosition = this.player.getPosition();
         this.soundManager.updateCarRpm(this.player.id, this.player.rpm);
+        this.collisionDetector.detectCollisions(this.scene);
     }
 
     private async initCars(): Promise<void> {

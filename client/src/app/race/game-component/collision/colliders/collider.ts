@@ -7,6 +7,6 @@ export abstract class Collider extends Object3D {
         this.name = COLLIDER_NAME;
     }
 
-    public abstract get broadRadius(): number;
-    public abstract get position(): Vector3;
+    public abstract getBroadRadius(): number;
+    public abstract getAbsolutePosition(): Vector3;
 }
