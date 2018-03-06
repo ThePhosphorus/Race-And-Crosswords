@@ -27,7 +27,6 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public get lvl(): Difficulty { return this._lvl; }
-
     public changeLevel(lvl: Difficulty): void {
         this._lvl = lvl;
         this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
