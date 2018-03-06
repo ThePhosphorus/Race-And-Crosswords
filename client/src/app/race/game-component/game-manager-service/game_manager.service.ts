@@ -63,7 +63,7 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
     }
     private toggleNightMode(): void {
-        this._car.toggleNightLights();
+        this._car.toggleNightLight();
         // TODO: change skybox and ambient light
     }
 

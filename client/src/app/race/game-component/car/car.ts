@@ -133,16 +133,18 @@ export class Car extends Object3D {
 
     }
     private initFrontLight(): void {
-        const frontLight: SpotLight = new SpotLight(0xFFE6CC, 0, 15 );
+        const frontLight: SpotLight = new SpotLight(0xFFE6CC, 1, 15 );
         frontLight.penumbra = 0.4;
-        this.frontLightFacade = new SpotLightFacade(frontLight, true, 1, 0, 1);
+        this.frontLightFacade = new SpotLightFacade(frontLight, 1, 0, 1);
         this.add(this.frontLightFacade.light);
     }
 
     private initBrakeLights(): void {
-        // const brakeLightCenter: SpotLightFacade = new SpotLightFacade(false, 0xFF0000, 1, 15, 0.75, 0, -0.1, 1,  0.6);
-        // this.brakeLights.push(brakeLightCenter);
-        // this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
+         const brakeLightCenter: SpotLight = new SpotLight(0xFF0000, 0, 15, 0.6);
+         brakeLightCenter.penumbra = 0.6;
+         const brakeLightCenterFacade: SpotLightFacade = new SpotLightFacade(brakeLightCenter, 0.75, 0, -0.7);
+         this.brakeLights.push(brakeLightCenterFacade);
+         this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
@@ -165,7 +167,7 @@ export class Car extends Object3D {
 
     public brake (): void {
         this.isBraking = true;
-        // this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.enable());
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.enable());
     }
 
     public releaseSteeringLeft (): void {
@@ -178,7 +180,7 @@ export class Car extends Object3D {
 
     public releaseBrakes (): void {
         this.isBraking = false;
-        // this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.disable());
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.disable());
     }
 
     public releaseAccelerator (): void {
@@ -225,7 +227,7 @@ export class Car extends Object3D {
     }
     private lightUpdate(): void {
         this.frontLightFacade.update(this.mesh.position, this.direction);
-        // this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction.negate()));
+        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
     }
     private getWeightDistribution(): number {
         const acceleration: number = this.getAcceleration().length();
@@ -356,7 +358,7 @@ export class Car extends Object3D {
         return this.mesh.position;
     }
 
-    public toggleNightLights(): void {
+    public toggleNightLight(): void {
         this.frontLightFacade.toggle();
     }
 }

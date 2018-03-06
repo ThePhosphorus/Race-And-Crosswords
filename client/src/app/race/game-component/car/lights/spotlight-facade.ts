@@ -6,13 +6,10 @@ export  class SpotLightFacade {
     public constructor
     (
         private _light: SpotLight,
-        private isFacingFront: boolean,
         private height: number,
         private sideTranslation: number,
         private transversalTranslation: number,
     ) {}
-
-
 
     public update(carPosition: Vector3, carDirection: Vector3): void {
         this.updatePosition(carPosition, carDirection);
@@ -27,10 +24,10 @@ export  class SpotLightFacade {
         this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
-        this.isFacingFront ?
-        this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))))
-        :
-        this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
+        // this.isFacingFront ?
+        this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
+        // :
+        // this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
         this._light.target.updateMatrixWorld(true);
     }
 
@@ -57,11 +54,15 @@ export  class SpotLightFacade {
         return this._light;
     }
 
-    public disable(): void {
-        this.light.intensity = 0;
+    public toggle(): void {
+        this._light.intensity = (this.light.intensity === 0 ? 1 : 0);
     }
 
     public enable(): void {
         this.light.intensity = 1;
+    }
+
+    public disable(): void {
+        this.light.intensity = 0;
     }
 }
