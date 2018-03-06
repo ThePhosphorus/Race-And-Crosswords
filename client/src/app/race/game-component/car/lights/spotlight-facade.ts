@@ -30,6 +30,7 @@ export  class SpotLightManager {
         this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))))
         :
         this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
+        this._light.target.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
         this._light.target.updateMatrixWorld(true);
     }
 

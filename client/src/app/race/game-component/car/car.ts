@@ -13,7 +13,7 @@ import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
 import { SpotLightManager } from "./lights/spotlight-facade";
 
-const MAXIMUM_STEERING_ANGLE: number = 0.5;
+const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
 const MINIMUM_SPEED: number = 0.05;
@@ -145,16 +145,16 @@ export class Car extends Object3D {
          const brakeLightCenterFacade: SpotLightManager = new SpotLightManager(brakeLightCenter, 0.75, 0, -0.7, false);
 
          const brakeLightLeft: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightLeftFacade: SpotLightManager = new SpotLightManager(brakeLightLeft, 0.63, 0.29, -2, true, 10);
+         const brakeLightLeftFacade: SpotLightManager = new SpotLightManager(brakeLightLeft, 0.63, 0.27, -2, true, 10);
 
          const brakeLightLeftExt: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightLeftExtFacade: SpotLightManager = new SpotLightManager(brakeLightLeftExt, 0.63, 0.47, -2, true, 10);
+         const brakeLightLeftExtFacade: SpotLightManager = new SpotLightManager(brakeLightLeftExt, 0.63, 0.45, -2, true, 10);
 
          const brakeLightRight: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightRightFacade: SpotLightManager = new SpotLightManager(brakeLightRight, 0.63, -0.29, -2, true, 10);
+         const brakeLightRightFacade: SpotLightManager = new SpotLightManager(brakeLightRight, 0.63, -0.27, -2, true, 10);
 
          const brakeLightRightExt: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightRightExtFacade: SpotLightManager = new SpotLightManager(brakeLightRightExt, 0.63, -0.47, -2, true, 10);
+         const brakeLightRightExtFacade: SpotLightManager = new SpotLightManager(brakeLightRightExt, 0.63, -0.45, -2, true, 10);
 
          this.brakeLights.push(brakeLightCenterFacade);
          this.brakeLights.push(brakeLightLeftFacade);
