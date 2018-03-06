@@ -129,83 +129,74 @@ export class Car extends Object3D {
         this.initLights();
     }
     private initLights(): void {
-       this.initFrontLight();
-       this.initBrakeLights();
+        this.initFrontLight();
+        this.initBrakeLights();
 
     }
     private initFrontLight(): void {
-        const frontLight: SpotLight = new SpotLight(L.FRONT_LIGHT_COLOR, L.FRONT_LIGHT_INTENSITY, L.FAR_LIGHT_DISTANCE );
+        const frontLight: SpotLight = new SpotLight(L.FRONT_LIGHT_COLOR, L.FRONT_LIGHT_INTENSITY, L.FAR_LIGHT_DISTANCE);
         frontLight.penumbra = L.FRONT_LIGHT_PENUMBRA;
         this.frontLightManager = new SpotLightManager(frontLight, L.FRONT_LIGHT_HEIGHT, L.FRONT_LIGHT_LATERAL_OFFSET, L.FRONT_LIGHT_OFFSET, true);
         this.add(this.frontLightManager.light);
     }
 
     private initBrakeLights(): void {
-         const brakeLightCenter: SpotLight = new SpotLight(L.RED, 0, L.FAR_LIGHT_DISTANCE, L.FRONT_LIGHT_ANGLE);
-         brakeLightCenter.penumbra = L.BACK_LIGHT_PENUMBRA;
-         const brakeLightCenterManager: SpotLightManager = new SpotLightManager(brakeLightCenter, L.BACK_LIGHT_HEIGHT, L.BACK_LIGHT_LATERAL_OFFSET, L.BACK_LIGHT_OFFSET, false);
+        const brakeLightCenter: SpotLight = new SpotLight(L.RED, 0, L.FAR_LIGHT_DISTANCE, L.FRONT_LIGHT_ANGLE);
+        brakeLightCenter.penumbra = L.BACK_LIGHT_PENUMBRA;
+        const brakeLightCenterManager: SpotLightManager = new SpotLightManager(brakeLightCenter, L.BACK_LIGHT_HEIGHT, L.BACK_LIGHT_LATERAL_OFFSET, L.BACK_LIGHT_OFFSET, false);
 
-         const brakeLightLeft: SpotLight = new SpotLight(L.RED, 0, L.NEAR_LIGHT_DISTANCE, L.SMALL_LIGHT_ANGLE);
-         const brakeLightLeftManager: SpotLightManager = new SpotLightManager(brakeLightLeft, 0.63, 0.27, -2, true, 10);
+        this.brakeLights.push(brakeLightCenterManager);
+        this.brakeLights.push(this.createSmallLight(L.SMALL_LATERAL_OFFSET));
+        this.brakeLights.push(this.createSmallLight(L.BIG_LATERAL_OFFSET));
+        this.brakeLights.push(this.createSmallLight(-L.BIG_LATERAL_OFFSET));
+        this.brakeLights.push(this.createSmallLight(-L.SMALL_LATERAL_OFFSET));
 
-         const brakeLightLeftExt: SpotLight = new SpotLight(L.RED, 0, L.NEAR_LIGHT_DISTANCE, 0.1);
-         const brakeLightLeftExtManager: SpotLightManager = new SpotLightManager(brakeLightLeftExt, 0.63, 0.45, -2, true, 10);
-
-         const brakeLightRight: SpotLight = new SpotLight(L.RED, 0, L.NEAR_LIGHT_DISTANCE, 0.1);
-         const brakeLightRightManager: SpotLightManager = new SpotLightManager(brakeLightRight, 0.63, -0.27, -2, true, 10);
-
-         const brakeLightRightExt: SpotLight = new SpotLight(L.RED, 0, L.NEAR_LIGHT_DISTANCE, 0.1);
-         const brakeLightRightExtManager: SpotLightManager = new SpotLightManager(brakeLightRightExt, 0.63, -0.45, -2, true, 10);
-
-         this.brakeLights.push(brakeLightCenterManager);
-         this.brakeLights.push(brakeLightLeftManager);
-         this.brakeLights.push(brakeLightLeftExtManager);
-         this.brakeLights.push(brakeLightRightManager);
-         this.brakeLights.push(brakeLightRightExtManager);
-         this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
+        this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
     }
-    // private createSmallLight(): SpotLightManager
-    // {
 
-    // }
+    private createSmallLight(lateralTranslation: number ): SpotLightManager {
+        const smallLight: SpotLight = new SpotLight(L.RED, 0, L.NEAR_LIGHT_DISTANCE, L.SMALL_LIGHT_ANGLE);
+
+        return new SpotLightManager(smallLight, L.SMALL_LIGHT_HEIGHT, lateralTranslation, L.SMALL_LIGHT_OFFSET, true, L.SMALL_LIGHT_INTENSITY);
+    }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
         this.steeringWheelDirection = steeringState *
-        MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
+            MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     // Input manager callback methods
-    public accelerate (): void {
+    public accelerate(): void {
         this.isAcceleratorPressed = true;
     }
 
-    public steerLeft (): void {
+    public steerLeft(): void {
         this.isSteeringLeft = true;
     }
 
-    public steerRight (): void {
+    public steerRight(): void {
         this.isSteeringRight = true;
     }
 
-    public brake (): void {
+    public brake(): void {
         this.isBraking = true;
         this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.enable());
     }
 
-    public releaseSteeringLeft (): void {
+    public releaseSteeringLeft(): void {
         this.isSteeringLeft = false;
     }
 
-    public releaseSteeringRight (): void {
+    public releaseSteeringRight(): void {
         this.isSteeringRight = false;
     }
 
-    public releaseBrakes (): void {
+    public releaseBrakes(): void {
         this.isBraking = false;
         this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.disable());
     }
 
-    public releaseAccelerator (): void {
+    public releaseAccelerator(): void {
         this.isAcceleratorPressed = false;
     }
 
@@ -289,10 +280,10 @@ export class Car extends Object3D {
         // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
             1 / tirePressure *
-                (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
+            (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
         if (this.isGoingForward()) {
-        return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
+            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
         }
 
         return this.direction.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.mass * GRAVITY);
@@ -304,10 +295,10 @@ export class Car extends Object3D {
         const resistance: Vector3 = this.direction;
         resistance.multiplyScalar(
             airDensity *
-                carSurface *
-                -this.dragCoefficient *
-                this.speed.length() *
-                this.speed.length()
+            carSurface *
+            -this.dragCoefficient *
+            this.speed.length() *
+            this.speed.length()
         );
 
         return resistance;
