@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Vector3, Mesh, PlaneGeometry, TextureLoader, Texture, RepeatWrapping, MeshLambertMaterial, DoubleSide, CircleGeometry } from "three";
+import { Vector3, Mesh, PlaneGeometry, TextureLoader,
+    Texture, RepeatWrapping, MeshLambertMaterial, DoubleSide, CircleGeometry
+} from "three";
 import { Vector3Struct, Track } from "../../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
@@ -11,6 +13,7 @@ const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.0001;
+const CORNER_NB_SEGMENTS: number = 20;
 
 @Injectable()
 export class TrackLoaderService {
@@ -50,7 +53,7 @@ export class TrackLoaderService {
     }
 
     public static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
-        const circleGeo: CircleGeometry =  new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, 20);
+        const circleGeo: CircleGeometry =  new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, CORNER_NB_SEGMENTS);
         circleGeo.rotateX( - PI_OVER_2);
         const circleMesh: Mesh = new Mesh( circleGeo, TrackLoaderService.getTrackMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
         circleMesh.position.copy(new Vector3(center.x, center.y + DOUBLE * Y_OFFSET, center.z));
