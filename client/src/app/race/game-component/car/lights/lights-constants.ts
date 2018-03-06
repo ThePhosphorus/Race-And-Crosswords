@@ -1,0 +1,19 @@
+// tslint:disable:no-magic-numbers
+export const RED: number = 0xFF0000;
+export const FAR_LIGHT_DISTANCE: number = 15;
+export const NEAR_LIGHT_DISTANCE: number = 2;
+export const FRONT_LIGHT_PENUMBRA: number = 0.4;
+
+export const FRONT_LIGHT_COLOR: number = 0xFFE6CC;
+export const FRONT_LIGHT_ANGLE: number = 0.6;
+export const FRONT_LIGHT_HEIGHT: number = 1;
+export const FRONT_LIGHT_OFFSET: number = 1;
+export const FRONT_LIGHT_LATERAL_OFFSET: number = 0;
+export const FRONT_LIGHT_INTENSITY: number = 1;
+
+export const BACK_LIGHT_PENUMBRA: number = 0.6;
+export const BACK_LIGHT_HEIGHT: number = 0.75;
+export const BACK_LIGHT_LATERAL_OFFSET: number = 0;
+export const BACK_LIGHT_OFFSET: number = -0.7;
+
+export const SMALL_LIGHT_ANGLE: number = 0.1;
