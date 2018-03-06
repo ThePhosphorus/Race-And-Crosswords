@@ -8,6 +8,45 @@
     height: 100%;
 }
 
+#track-list {
+    position: absolute;
+    top: 50px;
+	left: 75px;
+	right: 75px;
+	padding: 50px 40px 30px 40px;
+	text-align: center;
+	line-height: 175px;
+	background-color: steelblue;
+    animation: pulse 4s infinite;
+	border-radius: 15px;
+}
+
+.track-button {
+    outline: none;
+    position: relative;
+    border: none;
+	border-radius: 5px;
+    background-color: rgb(236, 236, 236);
+    box-shadow: 0 5px 0 2px rgb(161, 161, 161);
+    top: 0px;
+    width: 250px;
+    margin: 10px;
+}
+
+.track-button:active {
+	box-shadow: none;
+	top: 8px;
+	background-color: #e0e0e0;
+}
+
+.track-button:hover {
+	background-color: #d0d0d0;
+}
+
+.hidden {
+    display: none;
+}
+
 ul {
     position: absolute;
     z-index: 10;
