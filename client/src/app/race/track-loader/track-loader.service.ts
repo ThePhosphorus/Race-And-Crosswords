@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Vector3, Mesh, PlaneGeometry, TextureLoader, Texture, RepeatWrapping, MeshLambertMaterial, DoubleSide } from "three";
+import { Vector3, Mesh, PlaneGeometry, TextureLoader, Texture, RepeatWrapping, MeshLambertMaterial, DoubleSide, CircleGeometry } from "three";
 import { Vector3Struct, Track } from "../../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
@@ -25,6 +25,12 @@ export class TrackLoaderService {
             meshs.push(TrackLoaderService.getRoad(
                 TrackLoaderService.toVector(track.points[i]),
                 TrackLoaderService.toVector(track.points[i + 1])));
+
+            meshs.push(TrackLoaderService.getCornerAprox(
+                TrackLoaderService.toVector(track.points[i]),
+                TrackLoaderService.toVector(track.points[(i === 0) ? track.points.length - 1 : i - 1]),
+                TrackLoaderService.toVector(track.points[(i === track.points.length - 1) ? 0 : i + 1])
+            ));
         }
 
         return meshs;
@@ -39,10 +45,19 @@ export class TrackLoaderService {
         return new MeshLambertMaterial({ map: texture, side: DoubleSide });
     }
 
+    public static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
+        const circleGeo: CircleGeometry =  new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, 20);
+        circleGeo.rotateX( - PI_OVER_2);
+        const circleMesh: Mesh = new Mesh( circleGeo, TrackLoaderService.getTrackMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
+        circleMesh.position.copy(new Vector3(center.x, center.y + 0.001, center.z));
+
+        return circleMesh;
+    }
+
     public static getRoad(pointA: Vector3, pointB: Vector3, width?: number): Mesh {
         const trackWidth: number = width ? width : DEFAULT_TRACK_WIDTH;
         const vecAB: Vector3 = pointB.clone().sub(pointA);
-        const distanceAB: number =  vecAB.length() + DEFAULT_TRACK_WIDTH;
+        const distanceAB: number =  vecAB.length();
         const geo: PlaneGeometry = new PlaneGeometry(trackWidth, distanceAB);
         geo.rotateX( - PI_OVER_2);
 
