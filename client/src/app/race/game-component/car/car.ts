@@ -239,8 +239,7 @@ export class Car extends Object3D {
 
         // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
-            1 / tirePressure *
-                (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
+            1 / tirePressure * (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
         if (this.isGoingForward()) {
         return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
