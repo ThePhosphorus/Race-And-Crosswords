@@ -1,27 +1,10 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordGrid, Letter, Word, Orientation } from "../../../../../common/communication/crossword-grid";
+import { DisplayService, GridState } from "../display-service/display.service";
 const INITIAL_GRID_SIZE: number = 10;
 // const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
-
-export class GridState {
-    public currentOrientation: Orientation;
-    public currentLetter: number;
-    public highlightedLetters: number[];
-    public hoveredLetters: number[];
-    public disabledLetters: number[];
-    public currentPlayer: number;
-
-    public constructor() {
-        this.currentLetter = null;
-        this.highlightedLetters = [];
-        this.hoveredLetters = [];
-        this.disabledLetters = [];
-        this.currentOrientation = Orientation.Across;
-        this.currentPlayer = 1;
-    }
-}
 
 @Component({
     selector: "app-input-grid",
@@ -33,14 +16,14 @@ export class InputGridComponent implements OnInit {
     private _solvedGrid: CrosswordGrid;
     public gridState: GridState;
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService, private _displayService: DisplayService) {
         this.gridState = new GridState;
         this.initializeEmptyGrid();
     }
 
     public ngOnInit(): void {
-        this._crosswordService.currentPlayer.subscribe((currentPlayer: number) => {
-            this.gridState.currentPlayer = currentPlayer;
+        this._displayService.gridState.subscribe((gridState: GridState) => {
+            this.gridState = gridState;
         });
         this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
             this._solvedGrid = grid;
@@ -53,12 +36,10 @@ export class InputGridComponent implements OnInit {
                 }
             });
         });
-        // this._crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 
     public relinkLetters(crosswordGrid: CrosswordGrid): void {
         if (crosswordGrid) {
-
             crosswordGrid.words.forEach((word: Word) => {
                 const linkedLetters: Letter[] = [];
                 word.letters.forEach((letter: Letter) => {
@@ -129,30 +110,11 @@ export class InputGridComponent implements OnInit {
     }
 
     public setSelectedWord(word: Word): void {
-        let startingIndex: number = null;
-        for (const letter of word.letters) {
-            if (this.gridState.disabledLetters.indexOf(letter.id) === -1) {
-                startingIndex = letter.id;
-                break;
-            }
-        }
-        if (startingIndex != null) {
-            this.gridState.currentOrientation = word.orientation;
-            this.gridState.highlightedLetters = [];
-            for (const letter of word.letters) {
-                this.gridState.highlightedLetters.push(letter.id);
-            }
-            this.gridState.currentLetter = startingIndex;
-        }
+        this._displayService.setSelectedWord(word);
     }
 
     public setHoveredWord(word: Word): void {
-        this.gridState.hoveredLetters = [];
-        if (word != null) {
-            for (const letter of word.letters) {
-                this.gridState.hoveredLetters.push(letter.id);
-            }
-        }
+        this._displayService.setHoveredWord(word);
     }
 
     // tslint:disable-next-line:no-any (the MouseEvent type has an invalid prototype)

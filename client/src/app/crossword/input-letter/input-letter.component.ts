@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { GridState } from "../input-grid/input-grid.component";
+import { GridState } from "../display-service/display.service";
 
 @Component({
     selector: "app-input-letter",
