@@ -13,8 +13,8 @@ class DisplayedDefinition {
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-    @Output() public _cheatmode: boolean;
     private _wordGrid: Word[];
+    private _cheatmode: boolean;
     public solvedWords: number[];
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
