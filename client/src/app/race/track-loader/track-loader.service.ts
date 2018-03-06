@@ -24,7 +24,7 @@ export class TrackLoaderService {
         for (let i: number = 0; i < track.points.length - 1; i++) {
             meshs.push(TrackLoaderService.getRoad(
                 TrackLoaderService.toVector(track.points[i]),
-                TrackLoaderService.toVector(track.points[i])));
+                TrackLoaderService.toVector(track.points[i + 1])));
         }
 
         return meshs;

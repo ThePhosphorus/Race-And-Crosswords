@@ -8,7 +8,6 @@ import {
     MeshLambertMaterial,
     PlaneGeometry,
     DoubleSide,
-    Vector3
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
@@ -16,7 +15,6 @@ import { SoundManagerService } from "../sound-manager-service/sound-manager.serv
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { CameraType, PI_OVER_2 } from "../../../global-constants/constants";
-import { TrackLoaderService } from "../../track-loader/track-loader.service";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
@@ -46,6 +44,10 @@ export class GameManagerService extends Renderer {
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
         this.setupKeyBindings();
+    }
+
+    public importTrack(meshs: Mesh[]): void {
+        meshs.forEach((m: Mesh) => this.scene.add(m));
     }
 
     public get carInfos(): CarInfos {
@@ -100,7 +102,6 @@ export class GameManagerService extends Renderer {
     private initScene(): void {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
-        this.scene.add(TrackLoaderService.getRoad(new Vector3(0, 0.11, 0), new Vector3(-50, 0.11, 0)));
     }
 
     private getFloor(): Mesh {
