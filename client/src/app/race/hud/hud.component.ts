@@ -18,14 +18,12 @@ export class HudComponent implements OnInit {
     }
 
     private initNumbers(): void {
-        this.setAtZero(this.tick);
-        this.setAtZero(this.centiseconds);
-        this.setAtZero(this.seconds);
-        this.setAtZero(this.minutes);
+        this.tick = 0;
+        this.centiseconds = 0;
+        this.seconds = 0;
+        this.minutes = 0;
     }
-    private setAtZero(n: number): void {
-        n = 0;
-    }
+
 
     public ngOnInit(): void {
         this.start_chron();
