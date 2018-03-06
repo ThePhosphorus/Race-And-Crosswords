@@ -11,7 +11,7 @@ import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
-import { SpotLightFacade } from "./lights/spotlight-facade";
+import { SpotLightManager } from "./lights/spotlight-facade";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.5;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
@@ -32,8 +32,8 @@ export class Car extends Object3D {
     private readonly wheelbase: number;
     private readonly dragCoefficient: number;
 
-    private frontLightFacade: SpotLightFacade;
-    private brakeLights: Array<SpotLightFacade>;
+    private frontLightFacade: SpotLightManager;
+    private brakeLights: Array<SpotLightManager>;
     private _speed: Vector3;
     private isBraking: boolean;
     private mesh: Object3D;
@@ -105,7 +105,7 @@ export class Car extends Object3D {
         this._speed = new Vector3(0, 0, 0);
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
-        this.brakeLights = new Array<SpotLightFacade>();
+        this.brakeLights = new Array<SpotLightManager>();
     }
 
     // TODO: move loading code outside of car class.
@@ -135,32 +135,33 @@ export class Car extends Object3D {
     private initFrontLight(): void {
         const frontLight: SpotLight = new SpotLight(0xFFE6CC, 1, 15 );
         frontLight.penumbra = 0.4;
-        this.frontLightFacade = new SpotLightFacade(frontLight, 1, 0, 1, true);
+        this.frontLightFacade = new SpotLightManager(frontLight, 1, 0, 1, true);
         this.add(this.frontLightFacade.light);
     }
 
     private initBrakeLights(): void {
          const brakeLightCenter: SpotLight = new SpotLight(0xFF0000, 0, 15, 0.6);
          brakeLightCenter.penumbra = 0.6;
-         const brakeLightCenterFacade: SpotLightFacade = new SpotLightFacade(brakeLightCenter, 0.75, 0, -0.7, false);
+         const brakeLightCenterFacade: SpotLightManager = new SpotLightManager(brakeLightCenter, 0.75, 0, -0.7, false);
 
          const brakeLightLeft: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightLeftFacade: SpotLightFacade = new SpotLightFacade(brakeLightLeft, 0.63, 0.29, -2, true, 10);
+         const brakeLightLeftFacade: SpotLightManager = new SpotLightManager(brakeLightLeft, 0.63, 0.29, -2, true, 10);
 
          const brakeLightLeftExt: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightLeftExtFacade: SpotLightFacade = new SpotLightFacade(brakeLightLeftExt, 0.63, 0.47, -2, true, 10);
+         const brakeLightLeftExtFacade: SpotLightManager = new SpotLightManager(brakeLightLeftExt, 0.63, 0.47, -2, true, 10);
 
          const brakeLightRight: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightRightFacade: SpotLightFacade = new SpotLightFacade(brakeLightRight, 0.63, -0.29, -2, true, 10);
+         const brakeLightRightFacade: SpotLightManager = new SpotLightManager(brakeLightRight, 0.63, -0.29, -2, true, 10);
 
          const brakeLightRightExt: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
-         const brakeLightRightExtFacade: SpotLightFacade = new SpotLightFacade(brakeLightRightExt, 0.63, -0.47, -2, true, 10);
+         const brakeLightRightExtFacade: SpotLightManager = new SpotLightManager(brakeLightRightExt, 0.63, -0.47, -2, true, 10);
+
          this.brakeLights.push(brakeLightCenterFacade);
          this.brakeLights.push(brakeLightLeftFacade);
          this.brakeLights.push(brakeLightLeftExtFacade);
          this.brakeLights.push(brakeLightRightFacade);
          this.brakeLights.push(brakeLightRightExtFacade);
-         this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
+         this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
     }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
@@ -183,7 +184,7 @@ export class Car extends Object3D {
 
     public brake (): void {
         this.isBraking = true;
-        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.enable());
+        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.enable());
     }
 
     public releaseSteeringLeft (): void {
@@ -196,7 +197,7 @@ export class Car extends Object3D {
 
     public releaseBrakes (): void {
         this.isBraking = false;
-        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.disable());
+        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.disable());
     }
 
     public releaseAccelerator (): void {
@@ -242,7 +243,7 @@ export class Car extends Object3D {
     }
     private lightUpdate(): void {
         this.frontLightFacade.update(this.mesh.position, this.direction);
-        this.brakeLights.forEach((spotlight: SpotLightFacade) => spotlight.update(this.mesh.position, this.direction));
+        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.update(this.mesh.position, this.direction));
     }
     private getWeightDistribution(): number {
         const acceleration: number = this.getAcceleration().length();

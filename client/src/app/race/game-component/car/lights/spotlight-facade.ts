@@ -1,7 +1,7 @@
 import {SpotLight, Vector3} from "three";
 const TARGET_OFFSET: number = 10;
 const UP_VECTOR: Vector3 = new Vector3(0, 1, 0);
-export  class SpotLightFacade {
+export  class SpotLightManager {
 
     public constructor
     (
