@@ -22,4 +22,16 @@ export class InputLetterComponent {
     public select(): void {
         this.setSelectedLetter.emit(this.id);
     }
+
+    public isDisabled(): boolean {
+        return this.gridState.disabledLetters.indexOf(this.id) > -1;
+    }
+
+    public isHovered(): boolean {
+        return this.gridState.hoveredLetters.indexOf(this.id) > -1;
+    }
+
+    public isHighlighted(): boolean {
+        return this.gridState.highlightedLetters.indexOf(this.id) > -1;
+    }
 }
