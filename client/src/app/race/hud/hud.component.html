@@ -3,7 +3,7 @@
     <p id="nbLap">nbre Lap!</p>
     <span id="hor">Timer:</span>
     <div class="well">
-      <div class=" display text-center">
+      <div class=" display" id="timerStart">
           <span *ngIf="(minutes<10)">0</span><span id="hor">{{minutes}}</span>:
           <span *ngIf="(seconds<10)">0</span><span id="min">{{seconds}}</span>:
         <span id="seg">{{centiseconds}}</span>

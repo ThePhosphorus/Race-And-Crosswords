@@ -3,12 +3,13 @@
     z-index: 10;
     position: absolute;
 }
-#currentLap{
+#timerStart{
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
+    font-size: 120%;
 }
 
 @font-face {
     font-family: "Timer Font";
-    src: url("/assets/fonts/DS-DIGI.TTF") format("truetype")
+    src: url("/assets/fonts/DS-DIGIB.TTF") format("truetype")
   }
