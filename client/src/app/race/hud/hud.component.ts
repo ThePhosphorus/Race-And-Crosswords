@@ -14,13 +14,20 @@ export class HudComponent implements OnInit {
     public centiseconds: number;
     private subscription: Subscription;
     public constructor() {
-        this.tick = 0;
-        this.centiseconds = 0;
-        this.minutes = 0;
-        this.seconds = 0;
+        this.initNumbers();
     }
 
-    public ngOnInit() {
+    private initNumbers(): void {
+        this.setAtZero(this.tick);
+        this.setAtZero(this.centiseconds);
+        this.setAtZero(this.seconds);
+        this.setAtZero(this.minutes);
+    }
+    private setAtZero(n: number): void {
+        n = 0;
+    }
+
+    public ngOnInit(): void {
         this.start_chron();
     }
 
