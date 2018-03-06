@@ -63,4 +63,12 @@ export class DisplayService {
         }
         this._gridStateSubject.next(this._gridState);
     }
+
+    public unselectWord(): void {
+        this._gridState.currentLetter = null;
+        this._gridState.highlightedLetters = [];
+        this._gridState.hoveredLetters = [];
+        this._gridState.currentOrientation = Orientation.Across;
+        this._gridStateSubject.next(this._gridState);
+    }
 }

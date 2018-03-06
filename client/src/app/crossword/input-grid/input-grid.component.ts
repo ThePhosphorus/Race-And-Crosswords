@@ -18,6 +18,8 @@ export class InputGridComponent implements OnInit {
 
     public constructor(private _crosswordService: CrosswordService, private _displayService: DisplayService) {
         this.gridState = new GridState;
+        this._solvedGrid = new CrosswordGrid();
+        this._playerGrid = new CrosswordGrid();
         this.initializeEmptyGrid();
     }
 
@@ -51,8 +53,6 @@ export class InputGridComponent implements OnInit {
     }
 
     private initializeEmptyGrid(): void {
-        this._solvedGrid = new CrosswordGrid();
-        this._playerGrid = new CrosswordGrid();
         this._playerGrid.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._playerGrid.size * this._playerGrid.size); i++) {
             this._playerGrid.grid.push(new Letter(EMPTY_TILE_CHARACTER));
@@ -126,10 +126,7 @@ export class InputGridComponent implements OnInit {
             }
         });
         if (unselect) {
-            this.gridState.currentLetter = null;
-            this.gridState.highlightedLetters = [];
-            this.gridState.hoveredLetters = [];
-            this.gridState.currentOrientation = Orientation.Across;
+            this._displayService.unselectWord();
         }
     }
 
@@ -186,8 +183,7 @@ export class InputGridComponent implements OnInit {
                         this.gridState.disabledLetters.push(letter.id);
                     }
                     if (orientation === this.gridState.currentOrientation) {
-                        this.gridState.currentLetter = null;
-                        this.gridState.highlightedLetters = [];
+                        this._displayService.unselectWord();
                         this._crosswordService.addSolvedWord(this._playerGrid.words.indexOf(playerWord));
                     }
                 }
