@@ -16,7 +16,7 @@ import { CrosswordGameInfoComponent } from "./crossword/crossword-game-info/cros
 import { InputGridComponent } from "./crossword/input-grid/input-grid.component";
 import { DefinitionComponent } from "./crossword/definition/definition.component";
 import { InputLetterComponent } from "./crossword/input-letter/input-letter.component";
-import { HudComponent } from './hud/hud.component';
+import { HudComponent } from "./race/hud/hud.component";
 
 @NgModule({
     declarations: [
