@@ -135,14 +135,14 @@ export class Car extends Object3D {
     private initFrontLight(): void {
         const frontLight: SpotLight = new SpotLight(0xFFE6CC, 1, 15 );
         frontLight.penumbra = 0.4;
-        this.frontLightFacade = new SpotLightFacade(frontLight, 1, 0, 1);
+        this.frontLightFacade = new SpotLightFacade(frontLight, 1, 0, 1, true);
         this.add(this.frontLightFacade.light);
     }
 
     private initBrakeLights(): void {
          const brakeLightCenter: SpotLight = new SpotLight(0xFF0000, 0, 15, 0.6);
          brakeLightCenter.penumbra = 0.6;
-         const brakeLightCenterFacade: SpotLightFacade = new SpotLightFacade(brakeLightCenter, 0.75, 0, -0.7);
+         const brakeLightCenterFacade: SpotLightFacade = new SpotLightFacade(brakeLightCenter, 0.75, 0, -0.7, false);
          this.brakeLights.push(brakeLightCenterFacade);
          this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }

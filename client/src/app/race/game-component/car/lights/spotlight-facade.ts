@@ -9,6 +9,7 @@ export  class SpotLightFacade {
         private height: number,
         private sideTranslation: number,
         private transversalTranslation: number,
+        private isFacingFront: boolean
     ) {}
 
     public update(carPosition: Vector3, carDirection: Vector3): void {
@@ -24,10 +25,10 @@ export  class SpotLightFacade {
         this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
-        // this.isFacingFront ?
-        this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
-        // :
-        // this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
+        this.isFacingFront ?
+        this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))))
+        :
+        this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
         this._light.target.updateMatrixWorld(true);
     }
 
@@ -36,7 +37,13 @@ export  class SpotLightFacade {
     }
 
     private translateTransversal(carDirection: Vector3): void {
-        this._light.position.add(carDirection.multiplyScalar(this.transversalTranslation));
+        if (this.transversalTranslation > 0) {
+            this._light.position.add(carDirection.multiplyScalar(this.transversalTranslation));
+        }
+        else {
+            this._light.position.sub(carDirection.multiplyScalar(Math.abs(this.transversalTranslation)));
+        }
+
     }
 
     private translateSideways(carDirection: Vector3): void {
