@@ -4,8 +4,8 @@
     <span id="hor">Timer:</span>
     <div class="well">
       <div class=" display" id="timerStart">
-          <span *ngIf="(minutes<10)">0</span><span id="hor">{{globalTimer.minutes}}</span>:
-          <span *ngIf="(seconds<10)">0</span><span id="min">{{globalTimer.seconds}}</span>:
+          <span *ngIf="(globalTimer.minutes<10)">0</span><span id="hor">{{globalTimer.minutes}}</span>:
+          <span *ngIf="(globalTimer.seconds<10)">0</span><span id="min">{{globalTimer.seconds}}</span>:
         <span id="seg">{{globalTimer.centiseconds}}</span>
       </div>
     </div>
