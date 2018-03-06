@@ -4,12 +4,13 @@ import { Vector3Struct, Track } from "../../../../../common/communication/track"
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
-import { BACKEND_URL, HALF, PI_OVER_2 } from "../../global-constants/constants";
+import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE } from "../../global-constants/constants";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
+const Y_OFFSET: number = 0.0001;
 
 @Injectable()
 export class TrackLoaderService {
@@ -22,9 +23,12 @@ export class TrackLoaderService {
     public static getTrackMeshs(track: Track): Mesh[] {
         const meshs: Array<Mesh> = new Array<Mesh>();
         for (let i: number = 0; i < track.points.length - 1; i++) {
-            meshs.push(TrackLoaderService.getRoad(
+            const roadMesh: Mesh = TrackLoaderService.getRoad(
                 TrackLoaderService.toVector(track.points[i]),
-                TrackLoaderService.toVector(track.points[i + 1])));
+                TrackLoaderService.toVector(track.points[i + 1]));
+
+            if (i % DOUBLE) { roadMesh.position.add(new Vector3(0, Y_OFFSET, 0)); }
+            meshs.push(roadMesh);
 
             meshs.push(TrackLoaderService.getCornerAprox(
                 TrackLoaderService.toVector(track.points[i]),
@@ -49,7 +53,7 @@ export class TrackLoaderService {
         const circleGeo: CircleGeometry =  new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, 20);
         circleGeo.rotateX( - PI_OVER_2);
         const circleMesh: Mesh = new Mesh( circleGeo, TrackLoaderService.getTrackMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
-        circleMesh.position.copy(new Vector3(center.x, center.y + 0.001, center.z));
+        circleMesh.position.copy(new Vector3(center.x, center.y + DOUBLE * Y_OFFSET, center.z));
 
         return circleMesh;
     }
