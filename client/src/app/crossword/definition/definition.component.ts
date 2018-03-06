@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
 import { DisplayService } from "../display-service/display.service";
@@ -15,14 +15,14 @@ class DisplayedDefinition {
 export class DefinitionComponent implements OnInit {
     private _wordGrid: Word[];
     private _cheatmode: boolean;
-    public solvedWords: number[];
+    private _solvedWords: number[];
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
 
     public constructor(private _crosswordService: CrosswordService, private _displayService: DisplayService) {
         this._cheatmode = false;
         this._wordGrid = null;
-        this.solvedWords = [];
+        this._solvedWords = [];
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
     }
@@ -42,7 +42,7 @@ export class DefinitionComponent implements OnInit {
             }
         });
         this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
-            this.solvedWords = solvedWords;
+            this._solvedWords = solvedWords;
         });
     }
 
@@ -59,8 +59,10 @@ export class DefinitionComponent implements OnInit {
         this._cheatmode = !this._cheatmode;
     }
 
-    public get cheatMode(): boolean {
-        return this._cheatmode;
+    public get cheatMode(): boolean { return this._cheatmode; }
+
+    public isWordSolved(id: number): boolean {
+        return this._solvedWords.indexOf(id) > -1;
     }
 
     public select(index: number, orientation: string): void {
