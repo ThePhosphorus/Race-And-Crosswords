@@ -126,7 +126,7 @@ export class Car extends Object3D {
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
 
         const box: Box3 = new Box3().setFromObject(this.mesh);
-        this.mesh.add(new BoxCollider(box.getSize().z, box.getSize().x, new Vector3(0, 0, 0)));
+        this.mesh.add(new BoxCollider(box.getSize().z, box.getSize().x, box.getSize().y, new Vector3(0, 0, 0)));
         this.add(this.mesh);
     }
 

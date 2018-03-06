@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Scene } from "three";
+import { Scene, Vector3, Raycaster, Intersection, Ray, Box3 } from "three";
 import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
@@ -35,7 +35,7 @@ export class CollisionDetectorService {
     }
 
     private broadDetection(coll1: Collider, coll2: Collider): boolean {
-        return !(coll1 instanceof LineCollider && coll2 instanceof LineCollider) ||
+        return !(coll1 instanceof LineCollider && coll2 instanceof LineCollider) &&
             coll2.getAbsolutePosition().clone().sub(
                 coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
@@ -53,7 +53,18 @@ export class CollisionDetectorService {
     }
 
     private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): boolean {
-        return true;
+
+        for (const vertex of coll1.getVertexes()) {
+            const globalVertex: Vector3 = vertex.clone().applyMatrix4(coll1.parent.matrix);
+            const directionVector: Vector3 = globalVertex.clone().sub(coll1.getAbsolutePosition());
+            const ray: Ray = new Ray(coll1.getAbsolutePosition(), directionVector.clone().normalize());
+            const collisionResults: Boolean = ray.intersectsBox(new Box3().setFromObject(coll2.parent));
+            if (collisionResults) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boxLineDetection(box: BoxCollider, line: LineCollider): boolean {
@@ -61,6 +72,6 @@ export class CollisionDetectorService {
     }
 
     private resolveCollision(coll1: Collider, coll2: Collider): void {
-        console.log("COLLISION");
+
     }
 }
