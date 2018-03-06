@@ -9,7 +9,8 @@ export  class SpotLightFacade {
         private height: number,
         private sideTranslation: number,
         private transversalTranslation: number,
-        private isFacingFront: boolean
+        private isFacingFront: boolean,
+        private intensity?: number
     ) {}
 
     public update(carPosition: Vector3, carDirection: Vector3): void {
@@ -38,10 +39,9 @@ export  class SpotLightFacade {
 
     private translateTransversal(carDirection: Vector3): void {
         if (this.transversalTranslation > 0) {
-            this._light.position.add(carDirection.multiplyScalar(this.transversalTranslation));
-        }
-        else {
-            this._light.position.sub(carDirection.multiplyScalar(Math.abs(this.transversalTranslation)));
+            this._light.position.add(carDirection.clone().multiplyScalar(this.transversalTranslation));
+        } else {
+            this._light.position.sub(carDirection.clone().multiplyScalar(Math.abs(this.transversalTranslation)));
         }
 
     }
@@ -66,7 +66,11 @@ export  class SpotLightFacade {
     }
 
     public enable(): void {
-        this.light.intensity = 1;
+        if (this.intensity !== undefined) {
+            this.light.intensity = this.intensity;
+        } else {
+            this._light.intensity = 1;
+        }
     }
 
     public disable(): void {

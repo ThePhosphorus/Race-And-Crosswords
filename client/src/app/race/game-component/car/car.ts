@@ -143,7 +143,23 @@ export class Car extends Object3D {
          const brakeLightCenter: SpotLight = new SpotLight(0xFF0000, 0, 15, 0.6);
          brakeLightCenter.penumbra = 0.6;
          const brakeLightCenterFacade: SpotLightFacade = new SpotLightFacade(brakeLightCenter, 0.75, 0, -0.7, false);
+
+         const brakeLightLeft: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
+         const brakeLightLeftFacade: SpotLightFacade = new SpotLightFacade(brakeLightLeft, 0.63, 0.29, -2, true, 10);
+
+         const brakeLightLeftExt: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
+         const brakeLightLeftExtFacade: SpotLightFacade = new SpotLightFacade(brakeLightLeftExt, 0.63, 0.47, -2, true, 10);
+
+         const brakeLightRight: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
+         const brakeLightRightFacade: SpotLightFacade = new SpotLightFacade(brakeLightRight, 0.63, -0.29, -2, true, 10);
+
+         const brakeLightRightExt: SpotLight = new SpotLight(0xFF0000, 0, 2, 0.1);
+         const brakeLightRightExtFacade: SpotLightFacade = new SpotLightFacade(brakeLightRightExt, 0.63, -0.47, -2, true, 10);
          this.brakeLights.push(brakeLightCenterFacade);
+         this.brakeLights.push(brakeLightLeftFacade);
+         this.brakeLights.push(brakeLightLeftExtFacade);
+         this.brakeLights.push(brakeLightRightFacade);
+         this.brakeLights.push(brakeLightRightExtFacade);
          this.brakeLights.forEach((spotlight: SpotLightFacade) => this.add(spotlight.light));
     }
     private updateSteering(): void {
@@ -200,7 +216,6 @@ export class Car extends Object3D {
         // Physics calculations
         this.physicsUpdate(deltaTime);
         this.lightUpdate();
-
         // Move back to world coordinates
         this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
 
