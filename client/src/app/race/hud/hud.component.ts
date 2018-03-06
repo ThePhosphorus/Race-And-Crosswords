@@ -52,5 +52,6 @@ export class HudComponent implements OnInit {
     }
 
     private divideTime(): void {
+    }
 
     }
