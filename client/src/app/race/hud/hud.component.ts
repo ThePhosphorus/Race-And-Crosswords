@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { TimerObservable } from "rxjs/observable/TimerObservable";
 import { Subscription } from "rxjs/Subscription";
+import { Timer } from "./timer";
 
 @Component({
     selector: "app-hud",
@@ -9,19 +10,19 @@ import { Subscription } from "rxjs/Subscription";
 })
 export class HudComponent implements OnInit {
     public tick: number;
-    public minutes: number;
-    public seconds: number;
-    public centiseconds: number;
+    private globalTimer: Timer;
+    private lapTimer: Timer;
+
     private subscription: Subscription;
     public constructor() {
-        this.initNumbers();
+        this.initTick();
+        this.globalTimer = new Timer();
+        this.lapTimer = new Timer();
+
     }
 
-    private initNumbers(): void {
+    private initTick(): void {
         this.tick = 0;
-        this.centiseconds = 0;
-        this.seconds = 0;
-        this.minutes = 0;
     }
 
 
@@ -35,16 +36,9 @@ export class HudComponent implements OnInit {
         const timer = TimerObservable.create(2000, 10);
         this.subscription = timer.subscribe((t) => {
             this.tick = t;
-            this.centiseconds++;
-            if (this.centiseconds >= 100) {
-                this.centiseconds = 0;
-                this.seconds++;
-                if (this.seconds >= 60) {
-                    this.seconds = 0;
-                    this.minutes++;
-                }
+            this.lapTimer.update();
+            this.globalTimer.update();
 
-            }
         });
 
     }
