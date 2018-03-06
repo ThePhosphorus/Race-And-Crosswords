@@ -7,10 +7,8 @@ export class Track {
     ){}
 }
 
-export class Vector3Struct {
-    public constructor(
-        public x: number,
-        public y: number,
-        public z: number
-    ) {}
+export interface Vector3Struct {
+    x: number;
+    y: number;
+    z: number;
 }

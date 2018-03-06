@@ -1,8 +1,8 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGrid, Letter, Difficulty, Word, Orientation } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Letter, Word, Orientation } from "../../../../../common/communication/crossword-grid";
 const INITIAL_GRID_SIZE: number = 10;
-const INITIAL_BLACK_TILES_RATIO: number = 0.4;
+// const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
 export class GridState {
@@ -53,7 +53,7 @@ export class InputGridComponent implements OnInit {
                 }
             });
         });
-        this._crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
+        // this._crosswordService.newGame(Difficulty.Easy, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
 
     public relinkLetters(crosswordGrid: CrosswordGrid): void {

@@ -1,19 +1,25 @@
 import { Injectable } from "@angular/core";
-import { CubeTextureLoader, Mesh, Texture, TextureLoader, RepeatWrapping, MeshLambertMaterial, PlaneGeometry, DoubleSide } from "three";
+import {
+    CubeTextureLoader,
+    Mesh,
+    Texture,
+    TextureLoader,
+    RepeatWrapping,
+    MeshLambertMaterial,
+    PlaneGeometry,
+    DoubleSide,
+} from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
-import { CameraType, HALF } from "../../../global-constants/constants";
+import { CameraType, PI_OVER_2 } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
-const SPAWN_DIMENSION: number = 100;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
-const TRACK_PATH: string = "../../assets/textures/floor.jpg";
-const PI_OVER_2: number = Math.PI * HALF;
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 
 // Keycodes
@@ -38,6 +44,10 @@ export class GameManagerService extends Renderer {
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
         this.setupKeyBindings();
+    }
+
+    public importTrack(meshs: Mesh[]): void {
+        meshs.forEach((m: Mesh) => this.scene.add(m));
     }
 
     public get carInfos(): CarInfos {
@@ -92,30 +102,21 @@ export class GameManagerService extends Renderer {
     private initScene(): void {
         this.scene.add(this._car);
         this.scene.add(this.getFloor());
-        this.scene.add(this.getTrack());
     }
+
     private getFloor(): Mesh {
-        const plane: Mesh = this.setTexture(FLOOR_DIMENSION, OFF_ROAD_PATH);
+        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
+        texture.wrapS = RepeatWrapping;
+        texture.wrapT = RepeatWrapping;
+        texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
+        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
+        plane.rotateX(PI_OVER_2);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
 
         return plane;
     }
 
-    private getTrack(): Mesh {
-        return this.setTexture(SPAWN_DIMENSION, TRACK_PATH);
-    }
-
-    private setTexture(dimension: number, path: string): Mesh {
-        const texture: Texture = new TextureLoader().load(path);
-        texture.wrapS = RepeatWrapping;
-        texture.wrapT = RepeatWrapping;
-        texture.repeat.set(dimension * FLOOR_TEXTURE_RATIO, dimension * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
-        const plane: Mesh = new Mesh(new PlaneGeometry(dimension, dimension), material);
-        plane.rotateX(PI_OVER_2);
-
-        return plane;
-    }
     protected onInit(): void {
         this.scene.background = new CubeTextureLoader()
             .setPath(BACKGROUND_PATH)

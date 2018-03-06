@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: "" , redirectTo: "/home-page", pathMatch: "full" },
   { path : "home-page", component: HomePageComponent},
   { path: "race", component: GameComponent },
+  { path: "race/:id", component: GameComponent },
   { path: "crosswords", component: CrosswordsComponent },
   { path: "admin", component: AdminComponent,
     children: [
