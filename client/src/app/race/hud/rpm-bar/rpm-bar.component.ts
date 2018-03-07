@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GameManagerService, CarInfos } from '../../game-component/game-manager-service/game_manager.service';
+import { GameManagerService } from '../../game-component/game-manager-service/game_manager.service';
 
 @Component({
   selector: 'app-rpm-bar',
