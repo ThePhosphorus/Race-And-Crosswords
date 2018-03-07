@@ -48,6 +48,8 @@ export class GameManagerService extends Renderer {
 
     public importTrack(meshs: Mesh[]): void {
         meshs.forEach((m: Mesh) => this.scene.add(m));
+        this._car.carMesh.position.copy(meshs[0].position);
+        this._car.carMesh.lookAt(meshs[1].position);
     }
 
     public get carInfos(): CarInfos {
