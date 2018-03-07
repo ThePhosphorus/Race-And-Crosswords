@@ -6,9 +6,25 @@
 #timerStart{
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
-    font-size: 120%;
+    font-size: 300%;
+    color: yellow;
 }
-
+#cent{
+    font-family: "Timer Font",'Times New Roman', Times, serif;
+    margin: 0%;
+    font-size: 75%;
+}
+#chron{
+    white-space: nowrap;
+}
+#Display{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 200%;
+    line-height: 0.5;
+}
+#currentLap{
+    line-height: 1;
+}
 @font-face {
     font-family: "Timer Font";
     src: url("/assets/fonts/DS-DIGIB.TTF") format("truetype")
