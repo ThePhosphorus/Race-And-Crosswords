@@ -15,12 +15,20 @@ import { CameraManagerService, TargetInfos } from "../../camera-manager-service/
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
-import { CameraType, PI_OVER_2, WHITE, AMBIENT_LIGHT_OPACITY, AMBIENT_NIGHT_LIGHT_OPACITY } from "../../../global-constants/constants";
+import {
+    CameraType,
+    PI_OVER_2,
+    WHITE,
+    SUNSET,
+    AMBIENT_LIGHT_OPACITY,
+    AMBIENT_NIGHT_LIGHT_OPACITY
+ } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
+const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 
 // Keycodes
@@ -38,8 +46,9 @@ const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
 export class GameManagerService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
-    private _ambientLightArray: Array<AmbientLight>;
-    private _selectedLightIndex: number;
+    private isNightMode: boolean;
+    private _dayAmbientLight: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+    private _nightAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
 
 
 
@@ -50,16 +59,6 @@ export class GameManagerService extends Renderer {
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
         this.setupKeyBindings();
-        this.initAmbientLights();
-    }
-
-    private initAmbientLights(): void {
-        const _dayAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY);
-        const _nightAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
-        this._ambientLightArray = new Array<AmbientLight>();
-        this._ambientLightArray.push(_dayAmbientLight);
-        this._ambientLightArray.push(_nightAmbientLight);
-        this._selectedLightIndex = 0;
     }
 
     public importTrack(meshs: Mesh[]): void {
@@ -89,12 +88,43 @@ export class GameManagerService extends Renderer {
     }
     private toggleNightMode(): void {
         this._car.toggleNightLight();
-        this.scene.remove(this._ambientLightArray[this._selectedLightIndex]);
-        this._selectedLightIndex += 1;
-        this._selectedLightIndex %= this._ambientLightArray.length;
-        this.scene.add(this._ambientLightArray[this._selectedLightIndex]);
+        if (this.isNightMode) {
+            this.scene.remove(this._nightAmbientLight);
+            this.scene.add(this._dayAmbientLight);
+            this.loadDaySkybox();
+            this.isNightMode = false;
+        } else {
+            this.scene.remove(this._dayAmbientLight);
+            this.scene.add(this._nightAmbientLight);
+            this.loadNightSkybox();
+            this.isNightMode = true;
+        }
+    }
 
-        // TODO: change skybox and ambient light
+    private loadDaySkybox(): void {
+        this.scene.background = new CubeTextureLoader()
+        .setPath(BACKGROUND_PATH)
+        .load([
+            "posx.png",
+            "negx.png",
+            "posy.png",
+            "negy.png",
+            "posz.png",
+            "negz.png"
+        ]);
+    }
+
+    private loadNightSkybox(): void {
+        this.scene.background = new CubeTextureLoader()
+        .setPath(NIGHT_BACKGROUND_PATH)
+        .load([
+            "posx.png",
+            "negx.png",
+            "posy.png",
+            "negy.png",
+            "posz.png",
+            "negz.png"
+        ]);
     }
 
     private fullscreen(): void {
@@ -109,7 +139,7 @@ export class GameManagerService extends Renderer {
         this.initCameraManager();
         this.initScene();
         this.startRenderingLoop();
-        this.scene.add(this._ambientLightArray[0]);
+        this.scene.add(this._dayAmbientLight);
     }
     private initSoundManager(): void {
         this.soundManager.init(this.cameraManager.audioListener);
@@ -144,16 +174,7 @@ export class GameManagerService extends Renderer {
     }
 
     protected onInit(): void {
-        this.scene.background = new CubeTextureLoader()
-            .setPath(BACKGROUND_PATH)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
+        this.loadDaySkybox();
     }
 
     protected update(timeSinceLastFrame: number): void {
