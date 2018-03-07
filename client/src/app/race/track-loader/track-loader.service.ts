@@ -11,6 +11,7 @@ import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
+const TRACK_SAVER_INCPLAY_URL: string = TRACK_SAVER_URL + "play/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.0001;
 const CORNER_NB_SEGMENTS: number = 20;
@@ -83,5 +84,9 @@ export class TrackLoaderService {
 
     public loadOne(id: string): Observable<Track> {
         return this.http.get<Track>(TRACK_SAVER_URL + id);
+    }
+
+    public playTrack(id: string): Observable<void> {
+        return this.http.put<void>(TRACK_SAVER_INCPLAY_URL + id, null);
     }
 }

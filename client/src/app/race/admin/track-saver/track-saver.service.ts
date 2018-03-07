@@ -37,7 +37,8 @@ export class TrackSaverService {
             id,
             name,
             description,
-            new Array<Vector3Struct>()
+            new Array<Vector3Struct>(),
+            0
         );
 
         points.forEach((point: Vector3) => {

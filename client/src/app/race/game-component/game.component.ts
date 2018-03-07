@@ -56,5 +56,6 @@ export class GameComponent implements OnDestroy {
     private loadTrack(id: string): void {
         this.trackLoader.loadOne(id).subscribe((track: Track) =>
             this.gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track)));
+        this.trackLoader.playTrack(id).subscribe();
     }
 }

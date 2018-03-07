@@ -3,7 +3,8 @@ export class Track {
         public _id: string,
         public name: string,
         public description: string,
-        public points: Vector3Struct[]
+        public points: Vector3Struct[],
+        public nbPlayed: number
     ){}
 }
 
