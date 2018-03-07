@@ -70,7 +70,7 @@ export  class SpotLightManager {
         if (this.intensity !== undefined) {
             this.light.intensity = this.intensity;
         } else {
-            this._light.intensity = 1;
+            this._light.intensity = 0;
         }
     }
 

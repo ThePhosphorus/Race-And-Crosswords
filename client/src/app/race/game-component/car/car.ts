@@ -134,7 +134,7 @@ export class Car extends Object3D {
 
     }
     private initFrontLight(): void {
-        const frontLight: SpotLight = new SpotLight(L.FRONT_LIGHT_COLOR, L.FRONT_LIGHT_INTENSITY, L.FAR_LIGHT_DISTANCE);
+        const frontLight: SpotLight = new SpotLight(L.FRONT_LIGHT_COLOR, 0, L.FAR_LIGHT_DISTANCE);
         frontLight.penumbra = L.FRONT_LIGHT_PENUMBRA;
         this.frontLightManager = new SpotLightManager(frontLight, L.FRONT_LIGHT_HEIGHT, L.FRONT_LIGHT_LATERAL_OFFSET, L.FRONT_LIGHT_OFFSET, true);
         this.add(this.frontLightManager.light);
@@ -143,7 +143,7 @@ export class Car extends Object3D {
     private initBrakeLights(): void {
         const brakeLightCenter: SpotLight = new SpotLight(L.RED, 0, L.FAR_LIGHT_DISTANCE, L.FRONT_LIGHT_ANGLE);
         brakeLightCenter.penumbra = L.BACK_LIGHT_PENUMBRA;
-        const brakeLightCenterManager: SpotLightManager = new SpotLightManager(brakeLightCenter, L.BACK_LIGHT_HEIGHT, L.BACK_LIGHT_LATERAL_OFFSET, L.BACK_LIGHT_OFFSET, false);
+        const brakeLightCenterManager: SpotLightManager = new SpotLightManager(brakeLightCenter, L.BACK_LIGHT_HEIGHT, L.BACK_LIGHT_LATERAL_OFFSET, L.BACK_LIGHT_OFFSET, false, L.BACK_LIGHT_INTENSITY);
 
         this.brakeLights.push(brakeLightCenterManager);
         this.brakeLights.push(this.createSmallLight(L.SMALL_LATERAL_OFFSET));

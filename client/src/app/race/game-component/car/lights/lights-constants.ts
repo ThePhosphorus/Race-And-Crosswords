@@ -14,7 +14,8 @@ export const FRONT_LIGHT_INTENSITY: number = 1;
 export const BACK_LIGHT_PENUMBRA: number = 0.6;
 export const BACK_LIGHT_HEIGHT: number = 0.75;
 export const BACK_LIGHT_LATERAL_OFFSET: number = 0;
-export const BACK_LIGHT_OFFSET: number = -0.7;
+export const BACK_LIGHT_OFFSET: number = -1.3;
+export const BACK_LIGHT_INTENSITY: number = 0.2;
 
 export const SMALL_LIGHT_ANGLE: number = 0.1;
 export const SMALL_LATERAL_OFFSET: number = 0.27;

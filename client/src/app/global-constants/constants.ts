@@ -3,6 +3,7 @@
 export const HALF: number = 0.5;
 export const DOUBLE: number = 2;
 export const AMBIENT_LIGHT_OPACITY: number = 0.85;
+export const AMBIENT_NIGHT_LIGHT_OPACITY: number = 0.30;
 export const WHITE: number = 0xFFFFFF;
 
 // camera constants

@@ -8,13 +8,14 @@ import {
     MeshPhongMaterial,
     PlaneGeometry,
     DoubleSide,
+    AmbientLight,
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
-import { CameraType, PI_OVER_2 } from "../../../global-constants/constants";
+import { CameraType, PI_OVER_2, WHITE, AMBIENT_LIGHT_OPACITY, AMBIENT_NIGHT_LIGHT_OPACITY } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
@@ -37,6 +38,10 @@ const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
 export class GameManagerService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
+    private _ambientLightArray: Array<AmbientLight>;
+    private _selectedLightIndex: number;
+
+
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -45,6 +50,16 @@ export class GameManagerService extends Renderer {
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
         this.setupKeyBindings();
+        this.initAmbientLights();
+    }
+
+    private initAmbientLights(): void {
+        const _dayAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY);
+        const _nightAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
+        this._ambientLightArray = new Array<AmbientLight>();
+        this._ambientLightArray.push(_dayAmbientLight);
+        this._ambientLightArray.push(_nightAmbientLight);
+        this._selectedLightIndex = 0;
     }
 
     public importTrack(meshs: Mesh[]): void {
@@ -74,6 +89,11 @@ export class GameManagerService extends Renderer {
     }
     private toggleNightMode(): void {
         this._car.toggleNightLight();
+        this.scene.remove(this._ambientLightArray[this._selectedLightIndex]);
+        this._selectedLightIndex += 1;
+        this._selectedLightIndex %= this._ambientLightArray.length;
+        this.scene.add(this._ambientLightArray[this._selectedLightIndex]);
+
         // TODO: change skybox and ambient light
     }
 
@@ -89,6 +109,7 @@ export class GameManagerService extends Renderer {
         this.initCameraManager();
         this.initScene();
         this.startRenderingLoop();
+        this.scene.add(this._ambientLightArray[0]);
     }
     private initSoundManager(): void {
         this.soundManager.init(this.cameraManager.audioListener);
