@@ -9,7 +9,8 @@
           <span id="lap">LAP:  </span><span *ngIf="(globalTimer.minutes<10)">0</span><span id="chron">{{globalTimer.minutes}}</span>:<span *ngIf="(globalTimer.seconds<10)">0</span><span id="chron">{{globalTimer.seconds}}</span>:<span id = "cent" *ngIf="(globalTimer.centiseconds<10)">0</span><span id="cent">{{globalTimer.centiseconds}}</span>
       </div>
     </div>
-    <div class="col-block col-7 pl-5 pt-3"></div>
-    <div class="col-block col-5 " id="timers"><app-rpm-bar></app-rpm-bar></div>
+    <div class="col-block col-7 pl-5"></div>
+    <div class="col-block col-5 pl-5 fixed-bottom pb-5 mb-5" id="timers"><app-rpm-bar></app-rpm-bar></div>
   </div>
+
 
