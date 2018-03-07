@@ -2,11 +2,13 @@ import { Component, OnInit } from "@angular/core";
 import { TimerObservable } from "rxjs/observable/TimerObservable";
 import { Subscription } from "rxjs/Subscription";
 import { Timer } from "./timer";
+import { GameManagerService, CarInfos } from "../game-component/game-manager-service/game_manager.service";
 
 @Component({
     selector: "app-hud",
     templateUrl: "./hud.component.html",
-    styleUrls: ["./hud.component.css"]
+    styleUrls: ["./hud.component.css"],
+    providers: [GameManagerService]
 })
 export class HudComponent implements OnInit {
     public tick: number;
@@ -14,7 +16,7 @@ export class HudComponent implements OnInit {
     private lapTimer: Timer;
 
     private subscription: Subscription;
-    public constructor() {
+    public constructor(private gameManagerService: GameManagerService) {
         this.initTick();
         this.globalTimer = new Timer();
         this.lapTimer = new Timer();
@@ -25,9 +27,12 @@ export class HudComponent implements OnInit {
         this.tick = 0;
     }
 
-
     public ngOnInit(): void {
         this.start_chron();
+    }
+
+    public get carInfos(): CarInfos {
+        return this.gameManagerService.carInfos;
     }
 
     private start_chron(): void {
