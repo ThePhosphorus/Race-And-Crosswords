@@ -7,7 +7,13 @@
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 300%;
-    color: yellow;
+    color: yellow
+}
+#timerLap{
+    font-family: "Timer Font",'Times New Roman', Times, serif;
+    margin: 0%;
+    font-size: 200%;
+    color: orangered;
 }
 #cent{
     font-family: "Timer Font",'Times New Roman', Times, serif;
@@ -17,9 +23,9 @@
 #chron{
     white-space: nowrap;
 }
-#Display{
+#display{
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 200%;
+    font-size: 50%;
     line-height: 0.5;
 }
 #currentLap{
