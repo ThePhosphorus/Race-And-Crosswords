@@ -1,15 +1,15 @@
-<div id = "speed">55 km/h</div>
-<span id = "greenBar"></span>
-<span id = "greenBar"></span>
-<span id = "greenBar"></span>
-<span id = "greenBar"></span>
-<span id = "greenBar"></span>
-<span id = "yellowBar"></span>
-<span id = "yellowBar"></span>
-<span id = "yellowBar"></span>
-<span id = "yellowBar"></span>
-<span id = "yellowBar"></span>
-<span id = "redBar"></span>
-<span id = "redBar"></span>
-<span id = "redBar"></span>
-<span id = "redBar"></span>
+<div id = "speed"><span>{{speed}}</span><span > km/h</span></div>
+<span *ngIf = "rpm > 500"id = "greenBar"></span>
+<span *ngIf = "rpm > 1000"id = "greenBar"></span>
+<span *ngIf = "rpm > 1500"id = "greenBar"></span>
+<span *ngIf = "rpm > 2000"id = "greenBar"></span>
+<span *ngIf = "rpm > 2500"id = "greenBar"></span>
+<span *ngIf = "rpm > 3000"id = "yellowBar"></span>
+<span *ngIf = "rpm > 3500"id = "yellowBar"></span>
+<span *ngIf = "rpm > 4000"id = "yellowBar"></span>
+<span *ngIf = "rpm > 4500"id = "yellowBar"></span>
+<span *ngIf = "rpm > 5000"id = "yellowBar"></span>
+<span *ngIf = "rpm > 5500"id = "redBar"></span>
+<span *ngIf = "rpm > 6000"id = "redBar"></span>
+<span *ngIf = "rpm > 6500"id = "redBar"></span>
+<span *ngIf = "rpm > 7000"id = "redBar"></span>

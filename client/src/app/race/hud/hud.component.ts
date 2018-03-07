@@ -7,8 +7,7 @@ import { GameManagerService, CarInfos } from "../game-component/game-manager-ser
 @Component({
     selector: "app-hud",
     templateUrl: "./hud.component.html",
-    styleUrls: ["./hud.component.css"],
-    providers: [GameManagerService]
+    styleUrls: ["./hud.component.css"]
 })
 export class HudComponent implements OnInit {
     public tick: number;
