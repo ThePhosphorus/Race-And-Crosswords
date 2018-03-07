@@ -1,5 +1,5 @@
 span{
-    border: solid black 2vmin;
+    border-left: solid black 1vmin;
     height: 3vmin;
-    margin: 0%;
+    margin-right: 1%;
 }
