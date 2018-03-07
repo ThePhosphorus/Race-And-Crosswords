@@ -9,12 +9,14 @@
 }
 
 #track-list {
+    display: inline-flex;
+    justify-content: center;
     position: absolute;
     top: 50px;
 	left: 75px;
 	right: 75px;
 	padding: 50px 40px 30px 40px;
-	text-align: center;
+	/* text-align: center; */
 	line-height: 175px;
 	background-color: steelblue;
     animation: pulse 4s infinite;
@@ -29,8 +31,18 @@
     background-color: rgb(236, 236, 236);
     box-shadow: 0 5px 0 2px rgb(161, 161, 161);
     top: 0px;
+    height: 250px;
     width: 250px;
     margin: 10px;
+    line-height: 2rem;
+}
+
+.track-button .title {
+    font-size: 2rem;
+}
+
+.track-button .desription {
+    font-size: 1rem;
 }
 
 .track-button:active {

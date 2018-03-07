@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy } from "@angular/core";
+import { Component, ElementRef, ViewChild, HostListener, OnDestroy } from "@angular/core";
 import { GameManagerService, CarInfos } from "./game-manager-service/game_manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "./sound-manager-service/sound-manager.service";
-import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/communication/track";
 
@@ -23,17 +22,14 @@ export class GameComponent implements OnDestroy {
 
     @ViewChild("container")
     private containerRef: ElementRef;
+    public tracks: Track[];
+    public isInitialized: boolean = false;
 
     public constructor(
         private gameManagerService: GameManagerService,
         private soundManager: SoundManagerService,
-        private trackLoader: TrackLoaderService,
-        private route: ActivatedRoute) {
-            this.route.params.map((p) => p.id).subscribe((id: string) => {
-                if (id) {
-                    this.loadTrack(id);
-                }
-            });
+        private trackLoader: TrackLoaderService) {
+            this.trackLoader.loadAll().subscribe((ts: Track[]) => this.tracks = ts);
         }
 
     @HostListener("window:resize", ["$event"])
@@ -41,12 +37,13 @@ export class GameComponent implements OnDestroy {
         this.gameManagerService.onResize();
     }
 
-    // public ngAfterViewInit(): void {
-    //     this.gameManagerService
-    //         .initialize(this.containerRef.nativeElement)
-    //         .then(/* do nothing */)
-    //         .catch((err) => console.error(err));
-    // }
+    public init(id: string): void {
+        this.isInitialized = true;
+        this.gameManagerService
+            .initialize(this.containerRef.nativeElement)
+            .then(() => this.loadTrack(id))
+            .catch((err) => console.error(err));
+    }
 
     public get carInfos(): CarInfos {
         return this.gameManagerService.carInfos;

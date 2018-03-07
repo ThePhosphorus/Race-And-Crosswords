@@ -6,46 +6,16 @@
             <li>Gear: {{this.carInfos.gear + 1}}</li>
             <li>RPM: {{this.carInfos.rpm | number:'2.0-0'}}</li>
         </ul>
-        <div id="track-list">
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
-          </button>
-          <button class="track-button">
-            <img src="" alt="">
-            <span>Title</span>
+        <div id="track-list" *ngIf="!isInitialized" >
+          <button *ngFor="let track of tracks"
+                    class="track-button"
+                    (click)="init(track._id)">
+            <div class="title">
+              <span>{{ track.name }}</span>
+            </div>
+            <div class="description">
+              <span>{{ track.description }}</span>
+            </div>
           </button>
         </div>
     </div>
