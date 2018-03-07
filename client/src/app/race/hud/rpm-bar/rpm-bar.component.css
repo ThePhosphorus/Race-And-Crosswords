@@ -3,3 +3,21 @@ span{
     height: 3vmin;
     margin-right: 0.5vmin;
 }
+
+#greenBar{
+    border-left: solid chartreuse 1vmin;
+    height: 3vmin;
+    margin-right: 0.5vmin;
+}
+
+#yellowBar{
+    border-left: solid gold 1vmin;
+    height: 3vmin;
+    margin-right: 0.5vmin;
+}
+
+#redBar{
+    border-left: solid red 1vmin;
+    height: 3vmin;
+    margin-right: 0.5vmin;
+}
