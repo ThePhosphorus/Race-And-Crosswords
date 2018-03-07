@@ -9,16 +9,18 @@
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 300%;
-    color: yellow
+    color: crimson;
+    text-shadow: 0px 0px 1vmin black;
 }
 #timerLap{
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 200%;
-    color: orangered;
+    color: whitesmoke;
+    text-shadow: 0px 0px 1vmin black;
 }
 #timers{
-    padding-top: 5%;
+    padding-top: 1%;
     padding-left: 8%;
 }
 #cent{
@@ -35,6 +37,8 @@
 }
 #currentLap{
     font-size: 200%;
+    color: black;
+    text-shadow: 0px 0px 1vmin crimson;
 }
 
 @font-face {
