@@ -30,3 +30,6 @@ export const BACKEND_URL: string = "http://localhost:3000/";
 // timer constants
 export const CENTISECOND: number = 10;
 export const TWO_SECONDS: number = 2000;
+
+// physics constants
+export const METER_TO_KM_SPEED_CONVERSION: number = 3.6;

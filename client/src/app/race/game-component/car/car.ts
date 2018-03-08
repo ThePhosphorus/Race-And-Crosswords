@@ -7,7 +7,7 @@ import {
     Quaternion
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG, METER_TO_KM_SPEED_CONVERSION } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
 
@@ -18,7 +18,7 @@ const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
 const APPROX_MAXIMUM_SPEED: number = 300;
-const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
+
 const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
 
 export class Car extends Object3D {

@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { GameManagerService } from "../../game-component/game-manager-service/game_manager.service";
+import { METER_TO_KM_SPEED_CONVERSION } from "../../../global-constants/constants";
 
 @Component({
   selector: "app-rpm-bar",
@@ -11,7 +12,7 @@ export class RpmBarComponent {
   public constructor(private _gameManagerService: GameManagerService) { }
 
   public get speed(): number {
-    return Math.round(this._gameManagerService.carInfos.speed * 3.6);
+    return Math.round(this._gameManagerService.carInfos.speed * METER_TO_KM_SPEED_CONVERSION);
   }
 
   public get rpm(): number {
