@@ -1,5 +1,4 @@
 // tslint:disable:no-magic-numbers
-export const RED: number = 0xFF0000;
 export const FAR_LIGHT_DISTANCE: number = 15;
 export const NEAR_LIGHT_DISTANCE: number = 2;
 export const FRONT_LIGHT_PENUMBRA: number = 0.4;
