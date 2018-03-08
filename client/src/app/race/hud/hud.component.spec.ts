@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { HudComponent } from './hud.component';
+import { HudComponent } from "./hud.component";
 
-describe('HudComponent', () => {
+describe("HudComponent", () => {
   let component: HudComponent;
   let fixture: ComponentFixture<HudComponent>;
 
@@ -19,7 +19,7 @@ describe('HudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
