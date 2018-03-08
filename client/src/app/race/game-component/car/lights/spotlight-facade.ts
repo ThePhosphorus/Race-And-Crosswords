@@ -26,10 +26,13 @@ export  class SpotLightManager {
         this.addHeight();
     }
     private updateDirection(carPosition: Vector3, carDirection: Vector3): void {
-        this.isFacingFront ?
-        this._light.target.position.copy((carPosition.clone().add(carDirection.clone().multiplyScalar(TARGET_OFFSET))))
-        :
-        this._light.target.position.copy((carPosition.clone().sub(carDirection.clone().multiplyScalar(TARGET_OFFSET))));
+        this._light.target.position.copy((carPosition.clone()));
+        if (this.isFacingFront) {
+            this._light.target.position.add(carDirection.clone().multiplyScalar(TARGET_OFFSET));
+        } else {
+            this._light.target.position.sub(carDirection.clone().multiplyScalar(TARGET_OFFSET));
+        }
+
         this._light.target.position.add(UP_VECTOR.clone().cross(carDirection).multiplyScalar(this.sideTranslation));
         this._light.target.updateMatrixWorld(true);
     }
