@@ -5,21 +5,30 @@ import {
     Texture,
     TextureLoader,
     RepeatWrapping,
-    MeshLambertMaterial,
+    MeshPhongMaterial,
     PlaneGeometry,
     DoubleSide,
+    AmbientLight,
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
-import { CameraType, PI_OVER_2 } from "../../../global-constants/constants";
+import {
+    CameraType,
+    PI_OVER_2,
+    WHITE,
+    SUNSET,
+    AMBIENT_LIGHT_OPACITY,
+    AMBIENT_NIGHT_LIGHT_OPACITY
+ } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
+const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 
 // Keycodes
@@ -31,11 +40,17 @@ const CHANGE_CAMERA_KEYCODE: number = 67; // c
 const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const FULLSCREEN_KEYCODE: number = 70; // F
+const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
 
 @Injectable()
 export class GameManagerService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
+    private isNightMode: boolean;
+    private _dayAmbientLight: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+    private _nightAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
+
+
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -63,13 +78,53 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-
+        this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._car.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._car.releaseBrakes());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._car.releaseSteeringLeft());
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
+    }
+    private toggleNightMode(): void {
+        this._car.toggleNightLight();
+        if (this.isNightMode) {
+            this.scene.remove(this._nightAmbientLight);
+            this.scene.add(this._dayAmbientLight);
+            this.loadDaySkybox();
+            this.isNightMode = false;
+        } else {
+            this.scene.remove(this._dayAmbientLight);
+            this.scene.add(this._nightAmbientLight);
+            this.loadNightSkybox();
+            this.isNightMode = true;
+        }
+    }
+
+    private loadDaySkybox(): void {
+        this.scene.background = new CubeTextureLoader()
+        .setPath(BACKGROUND_PATH)
+        .load([
+            "posx.png",
+            "negx.png",
+            "posy.png",
+            "negy.png",
+            "posz.png",
+            "negz.png"
+        ]);
+    }
+
+    private loadNightSkybox(): void {
+        this.scene.background = new CubeTextureLoader()
+        .setPath(NIGHT_BACKGROUND_PATH)
+        .load([
+            "posx.png",
+            "negx.png",
+            "posy.png",
+            "negy.png",
+            "posz.png",
+            "negz.png"
+        ]);
     }
 
     private fullscreen(): void {
@@ -84,6 +139,7 @@ export class GameManagerService extends Renderer {
         this.initCameraManager();
         this.initScene();
         this.startRenderingLoop();
+        this.scene.add(this._dayAmbientLight);
     }
     private initSoundManager(): void {
         this.soundManager.init(this.cameraManager.audioListener);
@@ -109,7 +165,7 @@ export class GameManagerService extends Renderer {
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
-        const material: MeshLambertMaterial = new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
         plane.rotateX(PI_OVER_2);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
@@ -118,16 +174,7 @@ export class GameManagerService extends Renderer {
     }
 
     protected onInit(): void {
-        this.scene.background = new CubeTextureLoader()
-            .setPath(BACKGROUND_PATH)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
+        this.loadDaySkybox();
     }
 
     protected update(timeSinceLastFrame: number): void {
