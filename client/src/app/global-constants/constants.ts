@@ -26,3 +26,7 @@ export const RAD_TO_DEG: number = STRAIGHT_ANGLE_DEG / Math.PI;
 export const PI_OVER_2: number = Math.PI / 2;
 
 export const BACKEND_URL: string = "http://localhost:3000/";
+
+// timer constants
+export const CENTISECOND: number = 10;
+export const TWO_SECONDS: number = 2000;

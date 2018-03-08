@@ -3,6 +3,7 @@ import { TimerObservable } from "rxjs/observable/TimerObservable";
 import { Subscription } from "rxjs/Subscription";
 import { Timer } from "./timer";
 import { GameManagerService, CarInfos } from "../game-component/game-manager-service/game_manager.service";
+import { TWO_SECONDS, CENTISECOND } from "../../global-constants/constants";
 
 @Component({
     selector: "app-hud",
@@ -37,7 +38,7 @@ export class HudComponent implements OnInit {
     private start_chron(): void {
         // tslint:disable-next-line:no-magic-numbers
         // tslint:disable-next-line:typedef
-        const timer = TimerObservable.create(2000, 10);
+        const timer = TimerObservable.create(TWO_SECONDS, CENTISECOND);
         this.subscription = timer.subscribe((t) => {
             this.tick = t;
             this.lapTimer.update();

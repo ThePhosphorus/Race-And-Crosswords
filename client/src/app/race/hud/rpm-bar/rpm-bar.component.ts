@@ -1,17 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { GameManagerService } from '../../game-component/game-manager-service/game_manager.service';
+import { Component } from "@angular/core";
+import { GameManagerService } from "../../game-component/game-manager-service/game_manager.service";
 
 @Component({
-  selector: 'app-rpm-bar',
-  templateUrl: './rpm-bar.component.html',
-  styleUrls: ['./rpm-bar.component.css']
+  selector: "app-rpm-bar",
+  templateUrl: "./rpm-bar.component.html",
+  styleUrls: ["./rpm-bar.component.css"]
 })
-export class RpmBarComponent implements OnInit {
+export class RpmBarComponent {
 
-  constructor(private _gameManagerService: GameManagerService) { }
-
-  ngOnInit() {
-  }
+  public constructor(private _gameManagerService: GameManagerService) { }
 
   public get speed(): number {
     return Math.round(this._gameManagerService.carInfos.speed * 3.6);
