@@ -5,7 +5,7 @@ import { DisplayService, GridState } from "../display-service/display.service";
 @Component({
     selector: "app-input-grid",
     templateUrl: "./input-grid.component.html",
-    styleUrls: ["./input-grid.component.css"],
+    styleUrls: ["./input-grid.component.css"]
 })
 export class InputGridComponent implements OnInit {
     private _playerGrid: CrosswordGrid;
