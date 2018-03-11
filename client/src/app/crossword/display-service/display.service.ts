@@ -158,25 +158,24 @@ export class DisplayService {
     }
 
     public writeChar(key: string): void {
-        if (this._gridState.currentLetter != null) {
-            let nextLetterId: number;
-            if (key.match(/^[a-z]$/i) != null) {
-                this._playerGrid.grid[this._gridState.currentLetter].char = key;
-                this.verifyWords();
-                nextLetterId = this.findNextLetterId(true);
-                if (nextLetterId != null) {
-                    this._gridState.currentLetter = nextLetterId;
-                }
-            } else if (key === "Backspace") {
-                if (this._playerGrid.grid[this._gridState.currentLetter].char === EMPTY_TILE_CHARACTER) {
-                    nextLetterId = this.findNextLetterId(false);
-                    if (nextLetterId != null) {
-                        this._gridState.currentLetter = nextLetterId;
-                    }
-                }
-                this._playerGrid.grid[this._gridState.currentLetter].char = EMPTY_TILE_CHARACTER;
+        let nextLetterId: number;
+        this._playerGrid.grid[this._gridState.currentLetter].char = key;
+        this.verifyWords();
+        nextLetterId = this.findNextLetterId(true);
+        if (nextLetterId != null) {
+            this._gridState.currentLetter = nextLetterId;
+        }
+    }
+
+    public eraseChar(): void {
+        let nextLetterId: number;
+        if (this._playerGrid.grid[this._gridState.currentLetter].char === EMPTY_TILE_CHARACTER) {
+            nextLetterId = this.findNextLetterId(false);
+            if (nextLetterId != null) {
+                this._gridState.currentLetter = nextLetterId;
             }
         }
+        this._playerGrid.grid[this._gridState.currentLetter].char = EMPTY_TILE_CHARACTER;
     }
 
     private findNextLetterId(isForward: boolean): number {

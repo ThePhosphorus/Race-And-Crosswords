@@ -65,6 +65,12 @@ export class InputGridComponent implements OnInit {
 
     @HostListener("window:keyup", ["$event"])
     public writeChar(event: KeyboardEvent): void {
-        this._displayService.writeChar(event.key);
+        if (this.gridState.currentLetter != null) {
+            if (event.key.match(/^[a-z]$/i) != null) {
+                this._displayService.writeChar(event.key);
+            } else if (event.key === "Backspace") {
+                this._displayService.eraseChar();
+            }
+        }
     }
 }
