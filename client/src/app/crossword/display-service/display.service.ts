@@ -28,7 +28,7 @@ export class DisplayService {
 
     public constructor() {
         this._gridState = new GridState;
-        this._gridStateSubject = new Subject<GridState>;
+        this._gridStateSubject = new Subject<GridState>();
     }
 
     public get gridState(): Observable<GridState> {
