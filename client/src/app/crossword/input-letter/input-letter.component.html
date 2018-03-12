@@ -1,5 +1,5 @@
 <button type="button" (click)="select()"[ngClass]="{'disabled': isDisabled(),
-'hovered': isHovered() && !isDisabled(), 'current': gridState.currentLetter === id,
-'highlight-player-1': isHighlighted() && gridState.currentPlayer === 1,
-'highlight-player-2': isHighlighted() && gridState.currentPlayer === 2}">
+'hovered': isHovered() && !isDisabled(), 'current': isCurrentLetter(),
+'highlight-player-1': isHighlighted() && isPlayer1(),
+'highlight-player-2': isHighlighted() && isPlayer2()}">
 {{ letter | uppercase }}</button>

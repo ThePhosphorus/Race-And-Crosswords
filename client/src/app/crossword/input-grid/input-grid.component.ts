@@ -38,10 +38,6 @@ export class InputGridComponent implements OnInit {
         }
     }
 
-    public setSelectedLetter(index: number): void {
-        this._displayService.setSelectedLetter(index);
-    }
-
     public setSelectedWord(word: Word): void {
         this._displayService.setSelectedWord(word);
     }
