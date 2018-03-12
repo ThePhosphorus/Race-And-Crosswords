@@ -136,8 +136,22 @@ table td, table th {
 .card {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     background-color: transparent;
+    border: none;
+}
+#AvailableTable{
+    border:solid darkgray;
 }
 
+#listAvailable .btn{
+    border-radius: 0%;
+    border: none;
+    background-color:whitesmoke;
+    color: #212529;
+}
+#listAvailable .btn:hover{
+    border-radius: 0%;
+    background-color: lightgrey;
+}
 #info {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     border: solid #212529;
