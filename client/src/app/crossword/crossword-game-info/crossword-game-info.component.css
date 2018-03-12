@@ -70,7 +70,8 @@ p {
 
 #difficultySelector {
     border: none;
-    font-size: 10vmin
+    font-size: 10vmin;
+    background-color: transparent;
 }
 
 #result {
@@ -134,6 +135,7 @@ table td, table th {
 
 .card {
     font-family: "Button Font", 'Times New Roman', Times, serif;
+    background-color: transparent;
 }
 
 #info {

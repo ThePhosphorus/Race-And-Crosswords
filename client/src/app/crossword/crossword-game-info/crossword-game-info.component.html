@@ -11,11 +11,12 @@
       </button>
     </div>
     <div class="col-lg-5 w-100 " id="level">
-      <button type="button" data-toogle="modal" data-target="#levelMod" class="btn pb-0 w-100" (click)="showLevel =!showLevel " *ngIf="lvl" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':true}">NEW GAME</button>
+      <button type="button" data-toogle="modal" data-target="#levelMod" class="btn pb-0 w-100" (click)="showLevel =!showLevel "
+        *ngIf="lvl" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':true}">NEW GAME</button>
     </div>
   </div>
 
-  <div id="levelMod" class="modal fade" tabindex="-1"   [class.show]="!showLevel">
+  <div id="levelMod" class="modal fade" tabindex="-1" [class.show]="!showLevel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <h5 class="modal-title" id="modalLabel">Difficulty Level</h5>
@@ -32,6 +33,48 @@
                 HARD
               </button>
             </div>
+            <div id="playerSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
+              <button class="btn btn-secondary w-100 m-0">
+                SINGLE
+              </button>
+              <button (click)="isCollapsedAvailablePlayer =!isCollapsedAvailablePlayer" class="btn btn-secondary w-100 m-0">
+                MULTIPLAYER
+              </button>
+            </div>
+            <div id="listAvailable" [class.collapse]="!isCollapsedAvailablePlayer">
+              <div class="card card-block mt-2 w-100">
+                <table class="table table-sm mb-0">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" id="player"> AVAILABLE PLAYERS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <button class="btn btn-secondary btn-ligth w-100 m-0">
+                        player
+                      </button>
+                    </tr>
+                    <tr>
+                      <button class="btn btn-secondary btn-ligth w-100 m-0">
+                        player
+                      </button>
+                    </tr>
+                    <tr>
+                      <button class="btn btn-secondary btn-ligth w-100 m-0">
+                        player
+                      </button>
+                    </tr>
+                    <tr>
+                      <button class="btn btn-secondary w-100 m-0">
+                        CREATE A GAME
+                      </button>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
