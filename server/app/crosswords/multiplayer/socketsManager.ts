@@ -1,8 +1,8 @@
 import * as SockerIO from "socket.io";
 import * as http from "http";
+import { injectable } from "inversify";
 
-const LISTEN_PATH: string = "/socket";
-
+@injectable()
 export class SocketsManager {
     private io: SocketIO.Server ;
 
@@ -11,7 +11,7 @@ export class SocketsManager {
     }
 
     public launch(server: http.Server): void {
-        this.io = SockerIO(server, {path : LISTEN_PATH});
+        this.io = SockerIO(server);
         this.setUpbasicEvents();
     }
 

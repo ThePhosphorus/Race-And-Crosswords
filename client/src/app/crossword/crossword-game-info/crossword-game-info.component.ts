@@ -33,4 +33,8 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._lvl = lvl;
         this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
     }
+
+    public socketToServer(): void {
+        this._crosswordService["commService"].createSocket();
+    }
 }

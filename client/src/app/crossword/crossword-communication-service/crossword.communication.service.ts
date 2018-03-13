@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { CrosswordGrid, Difficulty } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
+import {connect} from "socket.io-client";
 
 @Injectable()
 export class CrosswordCommunicationService {
@@ -18,6 +19,11 @@ export class CrosswordCommunicationService {
 
   public basicServerConnection(): Observable<string> {
     return this.http.get<string>( BACKEND_URL + "/");
+  }
+
+  public createSocket(): void {
+    console.log("Emmitted");
+    console.log(connect(BACKEND_URL));
   }
 
 }

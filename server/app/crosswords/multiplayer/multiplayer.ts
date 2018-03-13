@@ -1,6 +1,8 @@
 import { WebService } from "../../webServices";
 import { Request, Response, NextFunction } from "express";
+import { injectable } from "inversify";
 
+@injectable()
 export class Multiplayer extends WebService {
 
     public constructor() {
