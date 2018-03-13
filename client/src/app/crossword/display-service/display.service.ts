@@ -94,9 +94,12 @@ export class DisplayService {
 
     public setSelectedLetter(index: number): void {
         if (this._gridState.disabledLetters.indexOf(index) === -1) {
-            this._gridState.currentOrientation = (index === this._gridState.currentLetter) ?
-                (this._gridState.currentOrientation === Orientation.Across ? Orientation.Down : Orientation.Across) :
-                Orientation.Across;
+            if (index === this._gridState.currentLetter) {
+                this._gridState.currentOrientation = this._gridState.currentOrientation === Orientation.Across ?
+                                                    Orientation.Down : Orientation.Across;
+            } else {
+                this._gridState.currentOrientation = Orientation.Across;
+            }
             let targetWord: Word;
             if ((targetWord = this.findWordFromLetter(index, this._gridState.currentOrientation, false)) === null) {
                 for (const ori of Object.keys(Orientation)) {
