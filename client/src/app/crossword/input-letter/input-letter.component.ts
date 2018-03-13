@@ -48,6 +48,7 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isPlayer2(): boolean {
+        // tslint:disable-next-line:no-magic-numbers
         return this._gridState.currentPlayer === 2;
     }
 }

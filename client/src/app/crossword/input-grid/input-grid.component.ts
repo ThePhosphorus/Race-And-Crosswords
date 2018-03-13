@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, Output, EventEmitter } from "@angular/core";
 import { CrosswordGrid, Letter, Word } from "../../../../../common/communication/crossword-grid";
 import { DisplayService, GridState } from "../display-service/display.service";
 
@@ -8,6 +8,7 @@ import { DisplayService, GridState } from "../display-service/display.service";
     styleUrls: ["./input-grid.component.css"]
 })
 export class InputGridComponent implements OnInit {
+    @Output() public hideLoading: EventEmitter<boolean>;
     private _playerGrid: CrosswordGrid;
     public gridState: GridState;
     public twoDimensionGrid: Letter[][];
@@ -16,6 +17,7 @@ export class InputGridComponent implements OnInit {
         this.gridState = new GridState;
         this._playerGrid = new CrosswordGrid();
         this.twoDimensionGrid = new Array<Array<Letter>>();
+        this.hideLoading = new EventEmitter<boolean>();
     }
 
     public ngOnInit(): void {
@@ -26,6 +28,7 @@ export class InputGridComponent implements OnInit {
         this._displayService.gridState.subscribe((gridState: GridState) => {
             this.gridState = gridState;
         });
+        this.hideLoading.emit(true);
     }
 
     private makeTwoDimensionGrid(): void {
@@ -36,6 +39,7 @@ export class InputGridComponent implements OnInit {
                 this.twoDimensionGrid[i].push(this._playerGrid.grid[(i * this._playerGrid.size) + j]);
             }
         }
+        this.hideLoading.emit(false);
     }
 
     public setSelectedWord(word: Word): void {

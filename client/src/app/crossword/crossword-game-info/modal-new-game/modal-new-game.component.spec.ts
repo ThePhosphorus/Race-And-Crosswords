@@ -1,8 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ModalNewGameComponent } from './modal-new-game.component';
+import { ModalNewGameComponent } from "./modal-new-game.component";
+import { Difficulty } from "../../../../../../common/communication/crossword-grid";
 
-describe('ModalNewGameComponent', () => {
+describe("ModalNewGameComponent", () => {
   let component: ModalNewGameComponent;
   let fixture: ComponentFixture<ModalNewGameComponent>;
 
@@ -19,7 +20,13 @@ describe('ModalNewGameComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
+
+  it("should change level", () => {
+    const diff: Difficulty = Difficulty.Easy;
+    component.changeLevel(diff);
+    expect(component.lvl).toBe(diff);
+});
 });

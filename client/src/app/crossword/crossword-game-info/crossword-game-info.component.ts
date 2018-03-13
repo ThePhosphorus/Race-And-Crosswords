@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../common/communication/crossword-grid";
 
@@ -9,6 +9,7 @@ import { Difficulty } from "../../../../../common/communication/crossword-grid";
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
+    @Output() public newGameLoad: EventEmitter<boolean>;
     public isDiffSelected: boolean;
     private _lvl: Difficulty;
     public nbPlayers: number;
@@ -22,6 +23,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.isCollapsedLevel = false;
         this.showLevel = false;
         this.isDiffSelected = false;
+        this.newGameLoad = new EventEmitter<boolean>();
     }
     public get lvl(): Difficulty {
         return this._lvl;
@@ -32,6 +34,10 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._crosswordService.difficulty.subscribe((difficulty: Difficulty) => {
             this._lvl = difficulty;
         });
+    }
+
+    private loadNewGame(isNewGame: boolean): void {
+        this.newGameLoad.emit(isNewGame);
     }
 
 }

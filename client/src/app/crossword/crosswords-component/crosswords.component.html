@@ -1,11 +1,12 @@
 <div class="row text-center mt-5" (click)="grid.unselectWord($event)">
+    <div *ngIf="loading" id="overlay" ></div>
   <div class="col-7 mt-3">
     <p id="title">CrossWords + Chill</p>
     <app-definition></app-definition>
   </div>
 
   <div class="col-5 mt-3 align-items-center ">
-    <app-crossword-game-info></app-crossword-game-info>
-    <app-input-grid #grid></app-input-grid>
+    <app-crossword-game-info (newGameLoad)="loading=($event)"></app-crossword-game-info>
+    <app-input-grid #grid (hideLoading)="loading=($event)"></app-input-grid>
   </div>
 </div>

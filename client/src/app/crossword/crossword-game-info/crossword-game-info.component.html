@@ -11,8 +11,8 @@
       </button>
     </div>
     <div class="col-lg-5 w-100 " id="level">
-      <button type="button" data-toogle="modal" data-target="#levelMod" class="btn pb-0 w-100" (click)="showLevel =!showLevel "
-        *ngIf="lvl" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':true}">NEW GAME</button>
+      <button type="button" data-toogle="modal" data-target="#levelMod" class="btn pb-0 w-100" (click)="showLevel =!showLevel; loadNewGame(true) "
+         [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':'true'}">NEW GAME</button>
     </div>
   </div>
 
@@ -22,11 +22,11 @@
         <h5 class="modal-title" id="modalLabel">Difficulty Level</h5>
         <div class="modal-body">
             <div class="card card-block w-100">
-          <app-modal-new-game></app-modal-new-game>
+          <app-modal-new-game (isDiffSelected)="isDiffSelected=($event)"></app-modal-new-game>
             </div>
             <div class="modal-footer m-0">
-                <button type="button" [disabled]="isDiffSelected" (click)="showLevel =!showLevel "class="btn btn-primary">Play</button>
-                <button type="button"(click)="showLevel =!showLevel " class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" id="playBtn" [disabled]="!isDiffSelected" (click)="showLevel =!showLevel; isDiffSelected=false  "class="btn btn-primary">Play</button>
+                <button id="cancelBtn" type="button"(click)="showLevel =!showLevel;newGameLoad(false) " class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
       </div>

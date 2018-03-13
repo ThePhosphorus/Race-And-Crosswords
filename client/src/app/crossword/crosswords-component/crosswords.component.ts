@@ -10,6 +10,9 @@ import { DisplayService } from "../display-service/display.service";
     providers: [CrosswordCommunicationService, CrosswordService, DisplayService]
 })
 export class CrosswordsComponent {
+    public loading: boolean;
+
     public constructor() {
+        this.loading = true;
     }
 }
