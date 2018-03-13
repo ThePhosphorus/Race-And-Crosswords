@@ -14,17 +14,14 @@ export enum Orientation {
 export class Letter {
     char: string;
     isBlackTile: boolean;
-    count: number =0;
+    count: number;
     id: number;
 
     constructor(char?:string, id?:number) {
-        if(char !== undefined) {
-            this.char = char;
-        }
-        if(id !== undefined) {
-            this.id = id;
-        }
+        this.char = char?char:"";
+        this.id = id?id:-1;
         this.isBlackTile = false;
+        this.count = 0;
     }
 }
 
@@ -33,12 +30,12 @@ export class Word {
     public letters: Letter[];
     public definitions: string[];
     public orientation: Orientation;
-    public rollbackCount: number = 0 ;
 
     constructor() {
         this.id = -1;
         this.letters = new Array<Letter>();
         this.definitions = new Array<string>();
+        this.orientation = null;
     }
 
     public toString(): string {
