@@ -1,5 +1,9 @@
-<div class="row text-center mt-5" (click)="grid.unselectWord($event)">
-    <div *ngIf="loading" id="overlay" ></div>
+<div class="row  row justify-content-center align-items-center" *ngIf="loading" id="overlay">
+    <div class="col-4 align-items-center w-100">
+  <p id="text">LOADING</p>
+    </div>
+</div>
+<div class="row text-center  mt-5" (click)="grid.unselectWord($event)">
   <div class="col-7 mt-3">
     <p id="title">CrossWords + Chill</p>
     <app-definition></app-definition>
