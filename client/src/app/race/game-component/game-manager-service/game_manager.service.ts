@@ -91,19 +91,19 @@ export class GameManagerService extends Renderer {
         if (this.isNightMode) {
             this.scene.remove(this._nightAmbientLight);
             this.scene.add(this._dayAmbientLight);
-            this.loadDaySkybox();
+            this.loadSkybox(BACKGROUND_PATH);
             this.isNightMode = false;
         } else {
             this.scene.remove(this._dayAmbientLight);
             this.scene.add(this._nightAmbientLight);
-            this.loadNightSkybox();
+            this.loadSkybox(NIGHT_BACKGROUND_PATH);
             this.isNightMode = true;
         }
     }
 
-    private loadDaySkybox(): void {
+    private loadSkybox(path: string): void {
         this.scene.background = new CubeTextureLoader()
-        .setPath(BACKGROUND_PATH)
+        .setPath(path)
         .load([
             "posx.png",
             "negx.png",
@@ -114,18 +114,6 @@ export class GameManagerService extends Renderer {
         ]);
     }
 
-    private loadNightSkybox(): void {
-        this.scene.background = new CubeTextureLoader()
-        .setPath(NIGHT_BACKGROUND_PATH)
-        .load([
-            "posx.png",
-            "negx.png",
-            "posy.png",
-            "negy.png",
-            "posz.png",
-            "negz.png"
-        ]);
-    }
 
     private fullscreen(): void {
         this.container.webkitRequestFullscreen();
@@ -174,7 +162,7 @@ export class GameManagerService extends Renderer {
     }
 
     protected onInit(): void {
-        this.loadDaySkybox();
+        this.loadSkybox(BACKGROUND_PATH);
     }
 
     protected update(timeSinceLastFrame: number): void {
