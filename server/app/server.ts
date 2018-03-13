@@ -3,6 +3,7 @@ import * as http from "http";
 import Types from "./types";
 import { injectable, inject } from "inversify";
 import { IServerAddress } from "./iserver.address";
+import { SocketsManager } from "./crosswords/multiplayer/socketsManager";
 
 @injectable()
 export class Server {
@@ -11,7 +12,9 @@ export class Server {
     private readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(@inject(Types.Application) private application: Application) { }
+    constructor(
+        @inject(Types.Application) private application: Application,
+        @inject(Types.SocketsManager) private socketsManager: SocketsManager) { }
 
     public init(): void {
         this.application.app.set("port", this.appPort);

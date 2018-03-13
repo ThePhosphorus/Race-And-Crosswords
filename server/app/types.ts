@@ -7,5 +7,7 @@ export default  {
         Lexical: Symbol("Lexical"),
         Grid: Symbol("Grid"),
         GridGenerator: Symbol("GridGenerator"),
-        TrackSaver: Symbol("TrackSaver")
+        TrackSaver: Symbol("TrackSaver"),
+        Multiplayer: Symbol("Multiplayer"),
+        SocketsManager: Symbol("SocketManager")
 };
