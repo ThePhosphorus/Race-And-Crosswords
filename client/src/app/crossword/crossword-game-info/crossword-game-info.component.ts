@@ -1,8 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../common/communication/crossword-grid";
-const INITIAL_GRID_SIZE: number = 10;
-const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
     selector: "app-crossword-game-info",
@@ -11,32 +9,29 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
+    public isDiffSelected: boolean;
     private _lvl: Difficulty;
     public nbPlayers: number;
     public isCollapsedPlayer: boolean = false;
-    public showLevelGame: boolean = false;
-    public isCollapsedAvailablePlayer: boolean = false;
     public isCollapsedLevel: boolean = false;
+    public showLevel: boolean;
 
     public constructor(private _crosswordService: CrosswordService) {
-        this._lvl = Difficulty.Easy;
+        this._lvl = null;
         this.isCollapsedPlayer = false;
-        this.showLevelGame = false;
-        this.isCollapsedAvailablePlayer = false;
         this.isCollapsedLevel = false;
+        this.showLevel = false;
+        this.isDiffSelected = false;
+    }
+    public get lvl(): Difficulty {
+        return this._lvl;
     }
 
     public ngOnInit(): void {
         this.nbPlayers = 1;
+        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) => {
+            this._lvl = difficulty;
+        });
     }
 
-    public get lvl(): Difficulty { return this._lvl; }
-    public changeLevel(lvl: Difficulty): void {
-        this._lvl = lvl;
-        this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
-    }
-
-    public socketToServer(): void {
-        this._crosswordService["commService"].createSocket();
-    }
 }

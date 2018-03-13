@@ -1,0 +1,57 @@
+#difficultySelector {
+    border: none;
+    font-size: 10vmin;
+    background-color: transparent;
+}
+#listAvailable #newGame {
+    background-color: #61b446;
+    border-radius: 1vmin;
+}
+
+
+#difficultySelector .btn-secondary:focus {
+    box-shadow: none;
+}
+
+#difficultySelector .btn-secondary:hover {
+    box-shadow: none;
+}
+
+#difficultySelector .active {
+    text-decoration-line: underline;
+    border: inset #212529;
+}
+
+#AvailableTable{
+    border:none;
+}
+
+#listAvailable .btn{
+    border-radius: 0%;
+    border:solid darkgrey;
+    background-color:whitesmoke;
+    color: #212529;
+}
+#listAvailable .btn:hover{
+    border-radius: 0%;
+    background-color: lightgrey;
+}
+#easyBtn {
+    background-color: #61b446;
+    border: #61b446 solid;
+}
+
+#mediumBtn {
+    background-color: #b4b446;
+    border: #b4b446 solid;
+}
+
+#hardBtn {
+    background-color: #b44646;
+    border: #b44646;
+}
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    background-color: transparent;
+    border: none;
+}

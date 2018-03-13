@@ -22,6 +22,7 @@ export class CrosswordService {
     private _currentPlayer: number;
     private _currentPlayerSubject: Subject<number>;
     private _solvedWordsSubject: Subject<number[]>;
+    private _diffSubject: Subject<Difficulty>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._diff = Difficulty.Easy;
@@ -32,15 +33,17 @@ export class CrosswordService {
         this._currentPlayerSubject = new Subject<number>();
         this._solvedWords = [];
         this._solvedWordsSubject = new Subject<number[]>();
+        this._diffSubject =  new Subject<Difficulty>();
     }
 
-    public get difficulty(): Difficulty { return this._diff; }
     public get gridSize(): number { return this._gridSize; }
     public get blackTileRatio(): number { return this._blackTilesRatio; }
 
     public get currentPlayer(): Observable<number> {
         return this._currentPlayerSubject.asObservable();
     }
+    public get difficulty(): Observable<Difficulty> {
+        return this._diffSubject.asObservable(); }
 
     public get solvedWords(): Observable<number[]> {
         return this._solvedWordsSubject.asObservable();
@@ -53,6 +56,7 @@ export class CrosswordService {
     public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
         if (!USE_MOCK_GRID) {
             this._diff = difficulty;
+            this._diffSubject.next(this._diff);
             this._gridSize = gridSize;
             this._blackTilesRatio = btRatio;
             this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
