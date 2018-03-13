@@ -14,12 +14,14 @@ export class CrosswordGameInfoComponent implements OnInit {
     private _lvl: Difficulty;
     public nbPlayers: number;
     public isCollapsedPlayer: boolean = false;
+    public showLevelGame: boolean = false;
     public isCollapsedAvailablePlayer: boolean = false;
     public isCollapsedLevel: boolean = false;
 
     public constructor(private _crosswordService: CrosswordService) {
         this._lvl = Difficulty.Easy;
         this.isCollapsedPlayer = false;
+        this.showLevelGame = false;
         this.isCollapsedAvailablePlayer = false;
         this.isCollapsedLevel = false;
     }

@@ -73,6 +73,10 @@ p {
     font-size: 10vmin;
     background-color: transparent;
 }
+#listAvailable #newGame {
+    background-color: #61b446;
+    border-radius: 1vmin;
+}
 
 #result {
     text-align: right;
@@ -139,12 +143,12 @@ table td, table th {
     border: none;
 }
 #AvailableTable{
-    border:solid darkgray;
+    border:none;
 }
 
 #listAvailable .btn{
     border-radius: 0%;
-    border: none;
+    border:solid darkgrey;
     background-color:whitesmoke;
     color: #212529;
 }
