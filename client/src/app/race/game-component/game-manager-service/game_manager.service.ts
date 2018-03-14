@@ -32,10 +32,11 @@ const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
-const DAYLIGHT_COLOR: number = 0xFFE382;
 const D_LIGHT: number = 200;
 const QUARTER: number = 0.25;
-
+const DIRECTIONAL_LIGHT_OFFSET: number = 5;
+const SHADOW_BIAS: number = 0.0001;
+const SUNLIGHT_INTENSITY: number = 0.2;
 // Keycodes
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
@@ -73,7 +74,7 @@ export class GameManagerService extends Renderer {
     }
 
     private loadSunlight(): void {
-        this._directionalLight = new DirectionalLight(DAYLIGHT_COLOR, 0.4);
+        this._directionalLight = new DirectionalLight(SUNSET, SUNLIGHT_INTENSITY);
         this._directionalLight.castShadow = true;
         this._directionalLight.shadow.camera.bottom = -D_LIGHT * QUARTER;
         this._directionalLight.shadow.camera.top = D_LIGHT * QUARTER;
@@ -83,6 +84,7 @@ export class GameManagerService extends Renderer {
         this._directionalLight.shadow.camera.far = D_LIGHT;
         this._directionalLight.shadow.mapSize.x = 2048;
         this._directionalLight.shadow.mapSize.y = 2048;
+        this._directionalLight.shadowBias = SHADOW_BIAS;
     }
 
     public importTrack(meshs: Mesh[]): void {
@@ -150,7 +152,7 @@ export class GameManagerService extends Renderer {
         if (this.scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
             this.scene.remove(this._directionalLight);
             this._isShadowMode = false;
-        } else {
+        } else if (!this._isNightMode) {
             this.scene.add(this._directionalLight);
             this._isShadowMode = true;
         }
@@ -217,7 +219,7 @@ export class GameManagerService extends Renderer {
     }
 
     private updateSunlight(): void {
-        const sunlightoffSet: Vector3 = new Vector3(-5, 5, -5);
+        const sunlightoffSet: Vector3 = new Vector3(-DIRECTIONAL_LIGHT_OFFSET, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET);
         this._directionalLight.target = this._car["mesh"];
         this._directionalLight.position.copy((this._car.getPosition().clone().add(sunlightoffSet)));
     }

@@ -43,6 +43,7 @@ const NUMBER_WHEELS: number = 4;
 const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
+const CAR_Y_OFFSET: number = -1;
 
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
@@ -145,6 +146,7 @@ export class Car extends Object3D {
     public async init(): Promise<void> {
         this.mesh = await this.load();
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
+        this.mesh.translateY(CAR_Y_OFFSET);
         this.add(this.mesh);
         this.initLights();
     }
