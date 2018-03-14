@@ -116,6 +116,20 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
     }
+
+    private loadSkybox(path: string): void {
+        this.scene.background = new CubeTextureLoader()
+        .setPath(path)
+        .load([
+            "posx.png",
+            "negx.png",
+            "posy.png",
+            "negy.png",
+            "posz.png",
+            "negz.png"
+        ]);
+    }
+
     private toggleNightMode(): void {
 
         this._car.toggleNightLight();
@@ -136,19 +150,6 @@ export class GameManagerService extends Renderer {
                 this.scene.remove(this._directionalLight);
             }
         }
-    }
-
-    private loadSkybox(path: string): void {
-        this.scene.background = new CubeTextureLoader()
-        .setPath(path)
-        .load([
-            "posx.png",
-            "negx.png",
-            "posy.png",
-            "negy.png",
-            "posz.png",
-            "negz.png"
-        ]);
     }
 
     private toggleSunlight(): void {
