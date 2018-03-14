@@ -9,6 +9,8 @@ import {
     PlaneGeometry,
     DoubleSide,
     AmbientLight,
+    DirectionalLight,
+    Vector3,
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
@@ -30,6 +32,8 @@ const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
+const D_LIGHT: number = 200;
+const QUARTER: number = 0.25;
 
 // Keycodes
 const ACCELERATE_KEYCODE: number = 87; // w
@@ -46,19 +50,35 @@ const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
 export class GameManagerService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
-    private isNightMode: boolean;
-    private _dayAmbientLight: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
-    private _nightAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
-
-
+    private _isNightMode: boolean;
+    private _sunlight: DirectionalLight;
+    private _dayAmbientLight: AmbientLight;
+    private _nightAmbientLight: AmbientLight;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService) {
         super(cameraManager, false);
+        this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+        this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
+        this._isNightMode = false;
+        this.loadSunlight();
         this.setupKeyBindings();
+    }
+
+    private loadSunlight(): void {
+        this._sunlight = new DirectionalLight(0xffe382, 0.7);
+        this._sunlight.castShadow = true;
+        this._sunlight.shadow.camera.bottom = -D_LIGHT * QUARTER;
+        this._sunlight.shadow.camera.top = D_LIGHT * QUARTER;
+        this._sunlight.shadow.camera.left = -D_LIGHT * QUARTER;
+        this._sunlight.shadow.camera.right = D_LIGHT * QUARTER;
+        this._sunlight.shadow.camera.near = D_LIGHT / 30;
+        this._sunlight.shadow.camera.far = D_LIGHT;
+        this._sunlight.shadow.mapSize.x = 2048;
+        this._sunlight.shadow.mapSize.y = 2048;
     }
 
     public importTrack(meshs: Mesh[]): void {
@@ -88,16 +108,18 @@ export class GameManagerService extends Renderer {
     }
     private toggleNightMode(): void {
         this._car.toggleNightLight();
-        if (this.isNightMode) {
+        if (this._isNightMode) {
             this.scene.remove(this._nightAmbientLight);
             this.scene.add(this._dayAmbientLight);
+            this.scene.add(this._sunlight);
             this.loadSkybox(BACKGROUND_PATH);
-            this.isNightMode = false;
+            this._isNightMode = false;
         } else {
             this.scene.remove(this._dayAmbientLight);
             this.scene.add(this._nightAmbientLight);
             this.loadSkybox(NIGHT_BACKGROUND_PATH);
-            this.isNightMode = true;
+            this.scene.remove(this._sunlight);
+            this._isNightMode = true;
         }
     }
 
@@ -126,6 +148,7 @@ export class GameManagerService extends Renderer {
         this.initSoundManager();
         this.initCameraManager();
         this.initScene();
+        this.scene.add(this._sunlight);
         this.startRenderingLoop();
         this.scene.add(this._dayAmbientLight);
     }
@@ -157,6 +180,7 @@ export class GameManagerService extends Renderer {
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
         plane.rotateX(PI_OVER_2);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
+        plane.receiveShadow = true;
 
         return plane;
     }
@@ -170,7 +194,14 @@ export class GameManagerService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
+        this.updateSunlight();
         this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
+    }
+
+    private updateSunlight(): void {
+        const sunlightoffSet: Vector3 = new Vector3(-5, 5, -5);
+        this._sunlight.target = this._car["mesh"];
+        this._sunlight.position.copy((this._car.getPosition().clone().add(sunlightoffSet)));
     }
 
     private updateCarInfos(): void {
