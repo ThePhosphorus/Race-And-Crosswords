@@ -23,7 +23,10 @@ import {
     WHITE,
     SUNSET,
     AMBIENT_LIGHT_OPACITY,
-    AMBIENT_NIGHT_LIGHT_OPACITY
+    AMBIENT_NIGHT_LIGHT_OPACITY,
+    QUARTER,
+    SHADOWMAP_SIZE,
+    SHADOW_CAMERA_PLANE_RATIO
  } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
@@ -32,8 +35,8 @@ const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
-const D_LIGHT: number = 200;
-const QUARTER: number = 0.25;
+const D_LIGHT_PLANE_SIZE: number = 200;
+
 const DIRECTIONAL_LIGHT_OFFSET: number = 5;
 const SHADOW_BIAS: number = 0.0001;
 const SUNLIGHT_INTENSITY: number = 0.2;
@@ -76,14 +79,14 @@ export class GameManagerService extends Renderer {
     private loadSunlight(): void {
         this._directionalLight = new DirectionalLight(SUNSET, SUNLIGHT_INTENSITY);
         this._directionalLight.castShadow = true;
-        this._directionalLight.shadow.camera.bottom = -D_LIGHT * QUARTER;
-        this._directionalLight.shadow.camera.top = D_LIGHT * QUARTER;
-        this._directionalLight.shadow.camera.left = -D_LIGHT * QUARTER;
-        this._directionalLight.shadow.camera.right = D_LIGHT * QUARTER;
-        this._directionalLight.shadow.camera.near = D_LIGHT / 30;
-        this._directionalLight.shadow.camera.far = D_LIGHT;
-        this._directionalLight.shadow.mapSize.x = 2048;
-        this._directionalLight.shadow.mapSize.y = 2048;
+        this._directionalLight.shadow.camera.bottom = -D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.top = D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.left = -D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.right = D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.near = D_LIGHT_PLANE_SIZE * SHADOW_CAMERA_PLANE_RATIO;
+        this._directionalLight.shadow.camera.far = D_LIGHT_PLANE_SIZE;
+        this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
+        this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
         this._directionalLight.shadowBias = SHADOW_BIAS;
     }
 
