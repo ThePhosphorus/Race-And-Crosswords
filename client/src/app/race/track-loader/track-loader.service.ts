@@ -1,18 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Mesh, PlaneGeometry, TextureLoader,
-    Texture, RepeatWrapping, MeshLambertMaterial, DoubleSide, CircleGeometry
+    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial
 } from "three";
 import { Vector3Struct, Track } from "../../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
-import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE } from "../../global-constants/constants";
+import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-constants/constants";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
 const TRACK_PATH: string = "../../assets/textures/floor.jpg";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
-const Y_OFFSET: number = 0.0001;
+const Y_OFFSET: number = 0.00001;
 const CORNER_NB_SEGMENTS: number = 20;
 
 @Injectable()
@@ -30,7 +30,8 @@ export class TrackLoaderService {
                 TrackLoaderService.toVector(track.points[i]),
                 TrackLoaderService.toVector(track.points[i + 1]));
 
-            if (i % DOUBLE) { roadMesh.position.add(new Vector3(0, Y_OFFSET, 0)); }
+            if (i === 0) { roadMesh.position.add(new Vector3(0, DOUBLE * Y_OFFSET, 0));
+            } else if (i % DOUBLE) { roadMesh.position.add(new Vector3(0, Y_OFFSET, 0)); }
             meshs.push(roadMesh);
 
             meshs.push(TrackLoaderService.getCornerAprox(
@@ -43,20 +44,21 @@ export class TrackLoaderService {
         return meshs;
     }
 
-    public static getTrackMaterial(width: number, length: number): MeshLambertMaterial {
+    public static getTrackMaterial(width: number, length: number): MeshPhongMaterial {
         const texture: Texture = new TextureLoader().load(TRACK_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(width * FLOOR_RATIO, length * FLOOR_RATIO);
 
-        return new MeshLambertMaterial({ map: texture, side: DoubleSide });
+        return new MeshPhongMaterial({ map: texture, side: DoubleSide });
     }
 
     public static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
         const circleGeo: CircleGeometry =  new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, CORNER_NB_SEGMENTS);
         circleGeo.rotateX( - PI_OVER_2);
         const circleMesh: Mesh = new Mesh( circleGeo, TrackLoaderService.getTrackMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
-        circleMesh.position.copy(new Vector3(center.x, center.y + DOUBLE * Y_OFFSET, center.z));
+        circleMesh.position.copy(new Vector3(center.x, center.y + TRIPLE * Y_OFFSET, center.z));
+        circleMesh.receiveShadow = true;
 
         return circleMesh;
     }
@@ -72,7 +74,10 @@ export class TrackLoaderService {
         const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
 
         mesh.position.copy(positionOfTheRoad);
+        mesh.position.setY(0);
         mesh.lookAt(pointB);
+
+        mesh.receiveShadow = true;
 
         return mesh;
     }
