@@ -9,6 +9,8 @@ import {
     PlaneGeometry,
     DoubleSide,
     AmbientLight,
+    DirectionalLight,
+    Vector3
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
@@ -21,7 +23,10 @@ import {
     WHITE,
     SUNSET,
     AMBIENT_LIGHT_OPACITY,
-    AMBIENT_NIGHT_LIGHT_OPACITY
+    AMBIENT_NIGHT_LIGHT_OPACITY,
+    QUARTER,
+    SHADOWMAP_SIZE,
+    SHADOW_CAMERA_PLANE_RATIO
  } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
@@ -30,7 +35,11 @@ const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
+const D_LIGHT_PLANE_SIZE: number = 200;
 
+const DIRECTIONAL_LIGHT_OFFSET: number = 5;
+const SHADOW_BIAS: number = 0.0001;
+const SUNLIGHT_INTENSITY: number = 0.2;
 // Keycodes
 const ACCELERATE_KEYCODE: number = 87; // w
 const LEFT_KEYCODE: number = 65; // a
@@ -41,24 +50,44 @@ const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const FULLSCREEN_KEYCODE: number = 70; // F
 const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
+const TOGGLE_SUNLIGHT_KEYCODE: number = 77; // m
 
 @Injectable()
 export class GameManagerService extends Renderer {
     private _car: Car;
     private _carInfos: CarInfos;
-    private isNightMode: boolean;
-    private _dayAmbientLight: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
-    private _nightAmbientLight: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
-
-
+    private _isShadowMode: boolean;
+    private _isNightMode: boolean;
+    private _directionalLight: DirectionalLight;
+    private _dayAmbientLight: AmbientLight;
+    private _nightAmbientLight: AmbientLight;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService) {
         super(cameraManager, false);
+        this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+        this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
         this._car = new Car();
         this._carInfos = new CarInfos(0, 0, 0);
+        this._isNightMode = false;
+        this._isShadowMode = false;
+        this.loadSunlight();
         this.setupKeyBindings();
+    }
+
+    private loadSunlight(): void {
+        this._directionalLight = new DirectionalLight(SUNSET, SUNLIGHT_INTENSITY);
+        this._directionalLight.castShadow = true;
+        this._directionalLight.shadow.camera.bottom = -D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.top = D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.left = -D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.right = D_LIGHT_PLANE_SIZE * QUARTER;
+        this._directionalLight.shadow.camera.near = D_LIGHT_PLANE_SIZE * SHADOW_CAMERA_PLANE_RATIO;
+        this._directionalLight.shadow.camera.far = D_LIGHT_PLANE_SIZE;
+        this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
+        this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
+        this._directionalLight.shadowBias = SHADOW_BIAS;
     }
 
     public importTrack(meshs: Mesh[]): void {
@@ -85,46 +114,52 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._car.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
+        this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
     }
+
+    private loadSkybox(path: string): void {
+        this.scene.background = new CubeTextureLoader()
+        .setPath(path)
+        .load([
+            "posx.png",
+            "negx.png",
+            "posy.png",
+            "negy.png",
+            "posz.png",
+            "negz.png"
+        ]);
+    }
+
     private toggleNightMode(): void {
+
         this._car.toggleNightLight();
-        if (this.isNightMode) {
+        if (this._isNightMode) {
             this.scene.remove(this._nightAmbientLight);
             this.scene.add(this._dayAmbientLight);
-            this.loadDaySkybox();
-            this.isNightMode = false;
+            this.loadSkybox(BACKGROUND_PATH);
+            this._isNightMode = false;
+            if (this._isShadowMode) {
+                this.scene.add(this._directionalLight);
+            }
         } else {
             this.scene.remove(this._dayAmbientLight);
             this.scene.add(this._nightAmbientLight);
-            this.loadNightSkybox();
-            this.isNightMode = true;
+            this.loadSkybox(NIGHT_BACKGROUND_PATH);
+            this._isNightMode = true;
+            if (this._isShadowMode) {
+                this.scene.remove(this._directionalLight);
+            }
         }
     }
 
-    private loadDaySkybox(): void {
-        this.scene.background = new CubeTextureLoader()
-        .setPath(BACKGROUND_PATH)
-        .load([
-            "posx.png",
-            "negx.png",
-            "posy.png",
-            "negy.png",
-            "posz.png",
-            "negz.png"
-        ]);
-    }
-
-    private loadNightSkybox(): void {
-        this.scene.background = new CubeTextureLoader()
-        .setPath(NIGHT_BACKGROUND_PATH)
-        .load([
-            "posx.png",
-            "negx.png",
-            "posy.png",
-            "negy.png",
-            "posz.png",
-            "negz.png"
-        ]);
+    private toggleSunlight(): void {
+        if (this.scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
+            this.scene.remove(this._directionalLight);
+            this._isShadowMode = false;
+        } else if (!this._isNightMode) {
+            this.scene.add(this._directionalLight);
+            this._isShadowMode = true;
+        }
     }
 
     private fullscreen(): void {
@@ -169,12 +204,13 @@ export class GameManagerService extends Renderer {
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
         plane.rotateX(PI_OVER_2);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);
+        plane.receiveShadow = true;
 
         return plane;
     }
 
     protected onInit(): void {
-        this.loadDaySkybox();
+        this.loadSkybox(BACKGROUND_PATH);
     }
 
     protected update(timeSinceLastFrame: number): void {
@@ -182,7 +218,14 @@ export class GameManagerService extends Renderer {
         this.cameraTargetDirection = this._car.direction;
         this.cameraTargetPosition = this._car.getPosition();
         this.updateCarInfos();
+        this.updateSunlight();
         this.soundManager.updateCarRpm(this._car.id, this._car.rpm);
+    }
+
+    private updateSunlight(): void {
+        const sunlightoffSet: Vector3 = new Vector3(-DIRECTIONAL_LIGHT_OFFSET, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET);
+        this._directionalLight.target = this._car["mesh"];
+        this._directionalLight.position.copy((this._car.getPosition().clone().add(sunlightoffSet)));
     }
 
     private updateCarInfos(): void {
