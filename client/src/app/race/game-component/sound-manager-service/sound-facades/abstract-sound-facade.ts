@@ -1,13 +1,13 @@
 
 import { AudioLoader, AudioBuffer, AudioListener, Audio } from "three";
-import { DEFAULT_VOLUME } from "../../../race.constants";
 
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 
 export abstract class AbstractSoundFacade {
     private isLoop: boolean;
     protected sound: Audio;
-    public constructor(soundListener: AudioListener, isLoop: boolean) {
+    public constructor(soundListener: AudioListener, isLoop: boolean, private volume: number) {
+
         this.instanciateSound(soundListener);
         this.isLoop = isLoop;
     }
@@ -32,7 +32,7 @@ export abstract class AbstractSoundFacade {
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(this.isLoop);
-        this.sound.setVolume(DEFAULT_VOLUME);
+        this.sound.setVolume(this.volume);
     }
 
     public setVolume(volume: number): void {

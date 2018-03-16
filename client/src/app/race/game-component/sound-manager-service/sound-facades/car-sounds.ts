@@ -11,7 +11,7 @@ export class CarSounds {
     public engine: PositionalSoundFacade;
 
     public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
-        this.engine = new PositionalSoundFacade(soundEmittingObject, soundListener, true);
+        this.engine = new PositionalSoundFacade(soundEmittingObject, soundListener, true, 1);
         this.engine.init(FILE_NAME, sourcePath).then(() => this.engine.play());
     }
     public updateRPM(rpm: number): void {
