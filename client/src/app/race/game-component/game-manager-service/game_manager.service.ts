@@ -36,6 +36,7 @@ const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const D_LIGHT_PLANE_SIZE: number = 200;
+const COLOR: string = "blue";
 
 const DIRECTIONAL_LIGHT_OFFSET: number = 5;
 const SHADOW_BIAS: number = 0.0001;
@@ -169,7 +170,7 @@ export class GameManagerService extends Renderer {
 
     public async initialize(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        await this._car.init();
+        await this._car.init(COLOR);
         this.initSoundManager();
         this.initCameraManager();
         this.initScene();
