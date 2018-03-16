@@ -3,29 +3,36 @@ import { HttpClient } from "@angular/common/http";
 import { CrosswordGrid, Difficulty } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
-import {connect} from "socket.io-client";
+import { connect, Socket } from "socket.io-client";
+import socketMsg from "../../../../../common/communication/socketTypes";
 
 @Injectable()
 export class CrosswordCommunicationService {
 
-  public constructor(private http: HttpClient) { }
+    private socket: Socket;
 
-  public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
-    return this.http.get<CrosswordGrid>(
-        BACKEND_URL + "crosswords/grid?" +
-        "difficulty=" + difficulty +
-        "&size=" + size );
-  }
-  public getMatches(): Observable<Array<string>> {
-    return this.http.get<Array<string>>(BACKEND_URL + "crosswords/multiplayer/matchs");
-  }
-  public basicServerConnection(): Observable<string> {
-    return this.http.get<string>( BACKEND_URL + "/");
-  }
+    public constructor(private http: HttpClient) {
+        this.createSocket();
+    }
 
-  public createSocket(): void {
-    console.log("Emmitted");
-    console.log(connect(BACKEND_URL));
-  }
+    public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
+        return this.http.get<CrosswordGrid>(
+            BACKEND_URL + "crosswords/grid?" +
+            "difficulty=" + difficulty +
+            "&size=" + size);
+    }
+    public getMatches(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(BACKEND_URL + "crosswords/multiplayer/matchs");
+    }
+    public basicServerConnection(): Observable<string> {
+        return this.http.get<string>(BACKEND_URL + "/");
+    }
 
+    public createSocket(): void {
+        this.socket = connect(BACKEND_URL);
+    }
+    public createMatch(): void {
+        this.socket.emit(socketMsg.createMatch);
+
+    }
 }

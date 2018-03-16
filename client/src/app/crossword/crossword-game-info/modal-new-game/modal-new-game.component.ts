@@ -32,7 +32,8 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public get matches(): Array<string> {
-        return this._matchesAvailable; }
+        return this._matchesAvailable;
+    }
     public get lvl(): Difficulty { return this._lvl; }
     public changeLevel(lvl: Difficulty): void {
         this._lvl = lvl;
@@ -42,5 +43,6 @@ export class ModalNewGameComponent implements OnInit {
 
     public socketToServer(): void {
         this._crosswordService["commService"].createSocket();
+
     }
 }
