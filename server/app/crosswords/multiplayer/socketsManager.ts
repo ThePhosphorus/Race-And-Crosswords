@@ -33,6 +33,16 @@ export class SocketsManager {
                 m.addPlayer(socket);
             }
         });
+    }
 
+    public getNames(): Array<string> {
+        const names: Array<string> = new Array<string>();
+        this._matchs.forEach((m: MatchManager) => {
+            if (m.PlayerOne != null) {
+                names.push(m.PlayerOne);
+            }
+        });
+
+        return names;
     }
 }

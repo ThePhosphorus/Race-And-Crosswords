@@ -1,6 +1,5 @@
-import * as SockerIO from "socket.io";
-
 type Socket = SocketIO.Socket;
+
 class Player {
     public constructor (
     public id: number,
@@ -32,18 +31,24 @@ export class MatchManager {
     }
 
     private receiveName(data: {id: number, name: string}): void {
-        this.getPlayerById(data.id).name = data.name;
+        const player: Player = this.getPlayerById(data.id);
+        if (player != null) {
+            player.name = data.name;
+        }
     }
 
     public getPlayerById(id: number): Player {
         // Check if it's at the right place
+        let player: Player = null;
         if (this._players[id].id === id) {
-            return this._players[id];
+            player = this._players[id];
         } else {
             this._players.forEach((p: Player) => {
-                if (p.id === id) { return p; }
+                if (p.id === id) { player = p; }
             });
         }
+
+        return player;
     }
 
     private registerActions(socket: Socket): void {
