@@ -16,7 +16,9 @@ export class CrosswordCommunicationService {
         "difficulty=" + difficulty +
         "&size=" + size );
   }
-
+  public getMatches(): Observable<Array<string>> {
+    return this.http.get<Array<string>>(BACKEND_URL + "crosswords/multiplayer/matchs");
+  }
   public basicServerConnection(): Observable<string> {
     return this.http.get<string>( BACKEND_URL + "/");
   }

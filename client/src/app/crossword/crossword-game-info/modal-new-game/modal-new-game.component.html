@@ -12,21 +12,11 @@
       <table class="table table-sm mb-0" id="AvailableTable">
 
         <tbody>
-          <tr>
-            <button class="btn btn-secondary  w-100 m-0">
-              player
-            </button>
-          </tr>
-          <tr>
-            <button class="btn btn-secondary  w-100 m-0">
-              player
-            </button>
-          </tr>
-          <tr>
-            <button class="btn btn-secondary  w-100 m-0">
-              player
-            </button>
-          </tr>
+            <tr *ngFor="let match of matches; let col = index" [ngClass]="{'black': letter.isBlackTile}">
+                <button class="btn btn-secondary  w-100 m-0">
+                    {{match.name}}
+                  </button>
+            </tr>
           <tr>
             <button id="newGame" (click)="socketToServer(); isCollapsedAvailablePlayer =false; showLevelGame =!showLevelGame " class="btn btn-secondary  m-2 w-75 m-0">
               CREATE A GAME
