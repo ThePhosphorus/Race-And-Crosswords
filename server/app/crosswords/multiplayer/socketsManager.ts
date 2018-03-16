@@ -20,7 +20,7 @@ export class SocketsManager {
 
     private setUpbasicEvents(): void {
         this.io.on("createMatch", this.createMatch);
-        this.io.on("joinMatch", this.joinMatch);
+        this.io.on(, this.joinMatch);
     }
 
     private createMatch(socket: SocketIO.Socket): void {
