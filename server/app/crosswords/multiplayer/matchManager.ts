@@ -1,6 +1,9 @@
+import { IPlayer } from "../../../../common/communication/Player";
+import msg from "../../../../common/communication/socketTypes";
+
 type Socket = SocketIO.Socket;
 
-class Player {
+class Player implements IPlayer {
     public constructor (
     public id: number,
     public socket: Socket,
@@ -27,7 +30,7 @@ export class MatchManager {
     }
 
     private askForName(player: Player): void {
-        player.socket.emit("AskForName", player.id); // TODO: Mettre des symboles
+        player.socket.emit(msg.askForName, player.id); // TODO: Mettre des symboles
     }
 
     private receiveName(data: {id: number, name: string}): void {
@@ -52,6 +55,8 @@ export class MatchManager {
     }
 
     private registerActions(socket: Socket): void {
-        socket.on("recieveName", this.receiveName);
+        socket.on(msg.receiveName, this.receiveName);
     }
+
+    public get Players (): 
 }

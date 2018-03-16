@@ -2,6 +2,7 @@ import * as SockerIO from "socket.io";
 import * as http from "http";
 import { injectable } from "inversify";
 import { MatchManager } from "./matchManager";
+import msg from "../../../../common/communication/socketTypes";
 
 @injectable()
 export class SocketsManager {
@@ -19,8 +20,8 @@ export class SocketsManager {
     }
 
     private setUpbasicEvents(): void {
-        this.io.on("createMatch", this.createMatch);
-        this.io.on("joinMatch", this.joinMatch);
+        this.io.on(msg.createMatch.toString(), this.createMatch);
+        this.io.on(msg.joinMatch.toString(), this.joinMatch);
     }
 
     private createMatch(socket: SocketIO.Socket): void {
