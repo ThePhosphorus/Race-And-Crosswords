@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Scene, Vector3, Raycaster, Intersection, Ray, Box3 } from "three";
+import { Scene, Vector3, Ray, Box3 } from "three";
 import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
@@ -64,6 +64,8 @@ export class CollisionDetectorService {
                 return intersection;
             }
         }
+
+        return null;
     }
 
     private boxLineDetection(box: BoxCollider, line: LineCollider): Vector3 {

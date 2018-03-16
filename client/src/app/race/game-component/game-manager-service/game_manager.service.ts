@@ -5,7 +5,6 @@ import {
     Texture,
     TextureLoader,
     RepeatWrapping,
-    MeshLambertMaterial,
     PlaneGeometry,
     DoubleSide,
     MeshPhongMaterial,
@@ -20,7 +19,6 @@ import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { CollisionDetectorService } from "../collision/collision-detector.service";
 import {
-    HALF,
     CameraType,
     PI_OVER_2,
     WHITE,
@@ -240,7 +238,6 @@ export class GameManagerService extends Renderer {
 
     private initScene(): void {
         this.scene.add(this.getFloor());
-        this.scene.add(this.getTrack());
         this.scene.add(this.player);
         this.aiControlledCars.forEach((car) => this.scene.add(car));
     }
@@ -259,13 +256,9 @@ export class GameManagerService extends Renderer {
         return plane;
     }
 
-    private getTrack(): Mesh {
-        return this.setTexture(SPAWN_DIMENSION, TRACK_PATH);
-    }
-
     private updateSunlight(): void {
         const sunlightoffSet: Vector3 = new Vector3(-DIRECTIONAL_LIGHT_OFFSET, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET);
-        this._directionalLight.target = this._car["mesh"];
-        this._directionalLight.position.copy((this._car.getPosition().clone().add(sunlightoffSet)));
+        this._directionalLight.target = this.player["mesh"];
+        this._directionalLight.position.copy((this.player.getPosition().clone().add(sunlightoffSet)));
     }
 }
