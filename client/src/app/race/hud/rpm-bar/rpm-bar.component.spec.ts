@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RpmBarComponent } from './rpm-bar.component';
+import { RpmBarComponent } from "./rpm-bar.component";
 
-describe('RpmBarComponent', () => {
+describe("RpmBarComponent", () => {
   let component: RpmBarComponent;
   let fixture: ComponentFixture<RpmBarComponent>;
 
@@ -19,7 +19,7 @@ describe('RpmBarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
