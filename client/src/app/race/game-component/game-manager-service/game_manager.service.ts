@@ -83,7 +83,6 @@ export class GameManagerService extends Renderer {
         this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
         this._isNightMode = false;
         this._isShadowMode = false;
-        this.loadSunlight();
 
         this.player = new Car();
         this.aiControlledCars = new Array<Car>();
@@ -106,6 +105,7 @@ export class GameManagerService extends Renderer {
         this.initCameraManager();
         this.initSkybox();
         this.initScene();
+        this.loadSunlight();
         this.startRenderingLoop();
     }
 
@@ -239,6 +239,7 @@ export class GameManagerService extends Renderer {
     private initScene(): void {
         this.scene.add(this.getFloor());
         this.scene.add(this.player);
+        this.scene.add(this._dayAmbientLight);
         this.aiControlledCars.forEach((car) => this.scene.add(car));
     }
 
