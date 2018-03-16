@@ -19,13 +19,37 @@
     vertical-align: bottom;
     text-align: match-parent;
 }
-
+#cancelBtn{
+    background-color: #b44646;
+    border: #813232;
+}
+#playBtn{
+    background-color: steelblue;
+    border: rgb(47, 90, 124);
+}
 #info .btn {
     border: solid darkgrey;
     background-color: transparent;
     box-shadow: transparent;
     font-weight: lighter;
     padding-top: unset;
+}
+#levelMod .modal-content {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    border: #212529 solid 2vmin;
+    background-color: lightgrey;
+}
+#modalLabel {
+    font-size: 200%;
+    margin: 3vmin;
+}
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    background-color: transparent;
+    border: none;
+}
+.modal-footer{
+    border: none;
 }
 
 #info .btn:hover {
@@ -68,90 +92,26 @@ p {
     text-align: left;
 }
 
-#difficultySelector {
-    border: none;
-    font-size: 10vmin;
-    background-color: transparent;
-}
-
 #result {
     text-align: right;
 }
 
-#easyBtn {
-    background-color: #61b446;
-    border: #61b446 solid;
-}
-
-#mediumBtn {
-    background-color: #b4b446;
-    border: #b4b446 solid;
-}
-
-#hardBtn {
-    background-color: #b44646;
-    border: #b44646;
-}
 
 #level {
     text-align: center;
 }
-
-#levelMod .modal-content {
-    font-family: "Button Font", 'Times New Roman', Times, serif;
-    border: #212529 solid 2vmin;
-    background-color: lightgrey;
-}
-
 #levelMod.show {
     display: block;
-}
-
-#modalLabel {
-    font-size: 200%;
-    margin: 3vmin;
 }
 
 .btn p {
     margin-top: 0%;
 }
 
-#difficultySelector .btn-secondary:focus {
-    box-shadow: none;
-}
-
-#difficultySelector .btn-secondary:hover {
-    box-shadow: none;
-}
-
-#difficultySelector .active {
-    text-decoration-line: underline;
-    border: inset #212529;
-}
-
 table td, table th {
     border-top: none;
 }
 
-.card {
-    font-family: "Button Font", 'Times New Roman', Times, serif;
-    background-color: transparent;
-    border: none;
-}
-#AvailableTable{
-    border:solid darkgray;
-}
-
-#listAvailable .btn{
-    border-radius: 0%;
-    border: none;
-    background-color:whitesmoke;
-    color: #212529;
-}
-#listAvailable .btn:hover{
-    border-radius: 0%;
-    background-color: lightgrey;
-}
 #info {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     border: solid #212529;

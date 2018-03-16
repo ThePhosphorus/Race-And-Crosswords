@@ -1,0 +1,55 @@
+
+  <div id="playerSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
+    <button class="btn btn-secondary w-100 m-0" (click)="isCollapsedAvailablePlayer =false; showLevelGame =true ">
+      SINGLE
+    </button>
+    <button (click)="isCollapsedAvailablePlayer =!isCollapsedAvailablePlayer;showLevelGame = false  " class="btn btn-secondary w-100 m-0">
+      MULTIPLAYER
+    </button>
+  </div>
+  <div id="listAvailable" [class.collapse]="!isCollapsedAvailablePlayer">
+    <div class="card card-block pr-2 pl-2  w-100">
+      <table class="table table-sm mb-0" id="AvailableTable">
+
+        <tbody>
+          <tr>
+            <button class="btn btn-secondary  w-100 m-0">
+              player
+            </button>
+          </tr>
+          <tr>
+            <button class="btn btn-secondary  w-100 m-0">
+              player
+            </button>
+          </tr>
+          <tr>
+            <button class="btn btn-secondary  w-100 m-0">
+              player
+            </button>
+          </tr>
+          <tr>
+            <button id="newGame" (click)="socketToServer(); isCollapsedAvailablePlayer =false; showLevelGame =!showLevelGame " class="btn btn-secondary  m-2 w-75 m-0">
+              CREATE A GAME
+            </button>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="difficultySelector" [class.collapse]="!showLevelGame">
+    <div class="card card-block pr-2 pl-2 mt-2  w-100">
+      <div class="btn-group btn-group-block w-100 " data-toggle="buttons">
+        <button class="btn btn-secondary w-100 m-0" [class.active]="lvl == 'Difficulty.Easy'" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
+          EASY
+        </button>
+        <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="lvl == 'Difficulty.Medium'" (click)="changeLevel('Difficulty.Medium')">
+          MEDIUM
+        </button>
+        <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="lvl == 'Difficulty.Hard'" (click)="changeLevel('Difficulty.Hard')">
+          HARD
+        </button>
+      </div>
+    </div>
+  </div>
+
