@@ -1,8 +1,15 @@
 import { Injectable } from "@angular/core";
-import { Scene, Vector3, Ray, Box3 } from "three";
+import { Scene, Vector2 } from "three";
 import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
+
+class MinMax {
+    public minProj: number;
+    public maxProj: number;
+    public minIndex: number;
+    public maxIndex: number;
+}
 
 @Injectable()
 export class CollisionDetectorService {
@@ -15,7 +22,7 @@ export class CollisionDetectorService {
         for (let i: number = 0; i < colliders.length; i++) {
             for (let j: number = i + 1; j < colliders.length; j++) {
                 if (this.broadDetection(colliders[i], colliders[j])) {
-                    const intersection: Vector3 = this.narrowDetection(colliders[i], colliders[j]);
+                    const intersection: boolean = this.narrowDetection(colliders[i], colliders[j]);
                     if (intersection) {
                         this.resolveCollision(colliders[i], colliders[j], intersection);
                     }
@@ -41,7 +48,7 @@ export class CollisionDetectorService {
                 coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
 
-    private narrowDetection(coll1: Collider, coll2: Collider): Vector3 {
+    private narrowDetection(coll1: Collider, coll2: Collider): boolean {
         if (coll1 instanceof LineCollider && coll2 instanceof BoxCollider) {
             return this.boxLineDetection(coll2, coll1);
         } else if (coll2 instanceof LineCollider && coll1 instanceof BoxCollider) {
@@ -53,26 +60,58 @@ export class CollisionDetectorService {
         return null;
     }
 
-    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): Vector3 {
+    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): boolean {
+        const normals1: Array<Vector2> = coll1.getNormals();
+        const normals2: Array<Vector2> = coll2.getNormals();
+        const vertexes1: Array<Vector2> = coll1.getAbsoluteVertexes2D();
+        const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
 
-        for (const vertex of coll1.getVertexes()) {
-            const globalVertex: Vector3 = vertex.clone().applyMatrix4(coll1.parent.matrix);
-            const directionVector: Vector3 = globalVertex.clone().sub(coll1.getAbsolutePosition());
-            const ray: Ray = new Ray(coll1.getAbsolutePosition(), directionVector.clone().normalize());
-            const intersection: Vector3 = ray.intersectBox(new Box3().setFromObject(coll2.parent));
-            if (intersection) {
-                return intersection;
+        for (const normal of normals1) {
+            const minMax1: MinMax = this.getMinMax(vertexes1, normal);
+            const minMax2: MinMax = this.getMinMax(vertexes2, normal);
+            if (minMax1.maxProj < minMax2.minProj || minMax2.maxProj < minMax1.minProj) {
+                return false;
             }
         }
 
-        return null;
+        for (const normal of normals2) {
+            const minMax1: MinMax = this.getMinMax(vertexes1, normal);
+            const minMax2: MinMax = this.getMinMax(vertexes2, normal);
+            if (minMax1.maxProj < minMax2.minProj || minMax2.maxProj < minMax1.minProj) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    private boxLineDetection(box: BoxCollider, line: LineCollider): Vector3 {
-        return null;
+    private getMinMax(vertexes: Array<Vector2>, axis: Vector2): MinMax {
+        const minMax: MinMax = new MinMax();
+        minMax.minProj = vertexes[0].dot(axis);
+        minMax.maxProj = vertexes[0].dot(axis);
+        minMax.minIndex = 0;
+        minMax.maxIndex = 0;
+
+        for (let i: number = 1; i < vertexes.length; i++) {
+            const currProj: number = vertexes[i].dot(axis);
+            if (minMax.minProj > currProj) {
+                minMax.minProj = currProj;
+                minMax.minIndex = i;
+            }
+            if (currProj > minMax.maxProj) {
+                minMax.maxProj = currProj;
+                minMax.maxIndex = i;
+            }
+        }
+
+        return minMax;
     }
 
-    private resolveCollision(coll1: Collider, coll2: Collider, intersection: Vector3): void {
+    private boxLineDetection(box: BoxCollider, line: LineCollider): boolean {
+        return false;
+    }
+
+    private resolveCollision(coll1: Collider, coll2: Collider, intersection: boolean): void {
         console.log("collision");
 
     }
