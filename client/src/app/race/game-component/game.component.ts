@@ -4,6 +4,9 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
 import { SoundManagerService } from "./sound-manager-service/sound-manager.service";
 import { CollisionDetectorService } from "./collision/collision-detector.service";
 import { InputManagerService } from "../input-manager-service/input-manager.service";
+import { ActivatedRoute } from "@angular/router";
+import { TrackLoaderService } from "../track-loader/track-loader.service";
+import { Track } from "../../../../../common/communication/track";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
 
@@ -16,7 +19,8 @@ const FULLSCREEN_KEYCODE: number = 70; // F
         GameManagerService,
         CameraManagerService,
         SoundManagerService,
-        CollisionDetectorService
+        CollisionDetectorService,
+        TrackLoaderService
     ]
 })
 export class GameComponent implements AfterViewInit, OnDestroy {
@@ -24,10 +28,18 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     @ViewChild("container")
     private containerRef: ElementRef;
 
-    public constructor(private gameManagerService: GameManagerService,
-                       private soundManager: SoundManagerService,
-                       private inputManager: InputManagerService) {
-    }
+    public constructor(
+        private gameManagerService: GameManagerService,
+        private soundManager: SoundManagerService,
+        private trackLoader: TrackLoaderService,
+        private route: ActivatedRoute,
+        private inputManager: InputManagerService) {
+            this.route.params.map((p) => p.id).subscribe((id: string) => {
+                if (id) {
+                    this.loadTrack(id);
+                }
+            });
+        }
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {
@@ -54,5 +66,10 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     private fullscreen(): void {
         this.containerRef.nativeElement.webkitRequestFullscreen();
         this.onResize();
+    }
+
+    private loadTrack(id: string): void {
+        this.trackLoader.loadOne(id).subscribe((track: Track) =>
+            this.gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track)));
     }
 }

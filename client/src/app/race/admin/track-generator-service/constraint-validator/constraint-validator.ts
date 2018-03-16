@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import { TWICE_TRACK_WIDTH, TRACK_WIDTH } from "../../../race.constants";
+import { TWICE_TRACK_WIDTH, DEFAULT_TRACK_WIDTH } from "../../../race.constants";
 
 const MINIMUM_ANGLE: number = 2.35619;
 const LAST_POINT_INDEX: number = 2;
@@ -99,7 +99,7 @@ export class ConstraintValidator {
     private validatePointLineDistance(l1: Vector3, l2: Vector3): boolean {
         for (const p of this._points) {
             if (!p.equals(l1) && !p.equals(l2)) {
-                const isTooClose: boolean = this.pointLineDistance(l1, l2, p) < TRACK_WIDTH;
+                const isTooClose: boolean = this.pointLineDistance(l1, l2, p) < DEFAULT_TRACK_WIDTH;
                 if (isTooClose) {
                     return false;
                 }
@@ -114,8 +114,8 @@ export class ConstraintValidator {
             const p3: Vector3 = this._points[i];
             const p4: Vector3 = this._points[i + 1];
             if (this.areDifferentPoints(p1, p2, p3, p4)) {
-                const firstLineInvalid: boolean = this.pointLineDistance(p3, p4, p1) < TRACK_WIDTH;
-                const secondLineInvalid: boolean = this.pointLineDistance(p3, p4, p2) < TRACK_WIDTH;
+                const firstLineInvalid: boolean = this.pointLineDistance(p3, p4, p1) < DEFAULT_TRACK_WIDTH;
+                const secondLineInvalid: boolean = this.pointLineDistance(p3, p4, p2) < DEFAULT_TRACK_WIDTH;
                 if (firstLineInvalid || secondLineInvalid) {
                     return false;
                 }
