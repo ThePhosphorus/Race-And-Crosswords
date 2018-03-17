@@ -1,5 +1,7 @@
 import { Vector2, Object3D, Vector3 } from "three";
 
+const MINIMUM_SPEED: number = 0.05;
+
 export class RigidBody extends Object3D {
 
     private fixed: boolean;
@@ -53,11 +55,14 @@ export class RigidBody extends Object3D {
         this._velocity.add(this.getDeltaVelocity(deltaTime));
         this._angularVelocity += this.getDeltaAngularVelocity(deltaTime);
 
+        this._velocity.setLength(this._velocity.length() <= MINIMUM_SPEED ? 0 : this._velocity.length());
+        this._angularVelocity = this._angularVelocity <= MINIMUM_SPEED ? 0 : this._angularVelocity;
+
         const deltaPosition: Vector2 = this._velocity.clone().multiplyScalar(deltaTime);
         this.parent.position.add(new Vector3(deltaPosition.x, 0, deltaPosition.y));
 
         const deltaAngle: number = this._angularVelocity * deltaTime;
-        this.parent.rotateOnAxis(new Vector3(0, 1, 0), deltaAngle);
+        this.parent.rotateY(deltaAngle);
 
         this.forces = new Vector2(0, 0);
         this.torque = 0;
