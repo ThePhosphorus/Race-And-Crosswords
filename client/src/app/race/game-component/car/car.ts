@@ -182,16 +182,24 @@ export class Car extends Object3D {
         this.engine.update(this.speed, this.rearWheel.radius);
 
         this.rigidBody.addForce(this.getLongitudinalForce());
-        // this.rigidBody.addTorque();
+        this.rigidBody.addForce(this.getPerpendicularForce());
         this.rigidBody.update(deltaTime);
 
         this.updateSteering();
-        // Angular rotation of the car
+
         const R: number =
             DEFAULT_WHEELBASE /
             Math.sin(this.steeringWheelDirection * deltaTime);
         const omega: number = this.speed / R;
         this.mesh.rotateY(omega);
+    }
+
+    private getPerpendicularForce(): Vector2 {
+        const direction: Vector2 = this.direction2D;
+        const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
+        const perpSpeed: number = this.rigidBody.velocity.clone().dot(perpDirection);
+
+        return perpDirection.multiplyScalar(-perpSpeed * 10000);
     }
 
     private getLongitudinalForce(): Vector2 {
