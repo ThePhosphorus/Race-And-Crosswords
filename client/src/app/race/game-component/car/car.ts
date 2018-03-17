@@ -16,9 +16,8 @@ import { BoxCollider } from "../collision/colliders/box-collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
 
-const MAXIMUM_STEERING_ANGLE: number = 0.25;
+const MAXIMUM_STEERING_ANGLE: number = 0.22;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
-const WEIGHT_DISTRIBUTION: number = 1;
 const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
@@ -26,6 +25,8 @@ const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
+const DEFAULT_FRICTION_COEFICIENT: number = 50000;
+
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
 
@@ -199,7 +200,7 @@ export class Car extends Object3D {
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeed: number = this.rigidBody.velocity.clone().dot(perpDirection);
 
-        return perpDirection.multiplyScalar(-perpSpeed * 10000);
+        return perpDirection.multiplyScalar(-perpSpeed * DEFAULT_FRICTION_COEFICIENT);
     }
 
     private getLongitudinalForce(): Vector2 {
@@ -259,7 +260,6 @@ export class Car extends Object3D {
             this.rearWheel.frictionCoefficient *
             this.rigidBody.mass *
             GRAVITY *
-            WEIGHT_DISTRIBUTION *
             NUMBER_REAR_WHEELS /
             NUMBER_WHEELS;
 
