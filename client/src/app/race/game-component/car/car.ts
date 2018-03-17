@@ -52,7 +52,6 @@ export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
 
     private readonly engine: Engine;
-    private readonly mass: number;
     private readonly rearWheel: Wheel;
     private readonly wheelbase: number;
     private readonly dragCoefficient: number;
@@ -120,10 +119,10 @@ export class Car extends Object3D {
             dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
         }
 
+        this.rigidBody = new RigidBody(mass); // TODO Change mass
         this.engine = engine;
         this.rearWheel = rearWheel;
         this.wheelbase = wheelbase;
-        this.mass = mass;
         this.dragCoefficient = dragCoefficient;
         this.isBraking = false;
         this.steeringWheelDirection = 0;
@@ -132,7 +131,6 @@ export class Car extends Object3D {
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
         this.brakeLights = new Array<SpotLightManager>();
-        this.rigidBody = new RigidBody(1); // TODO Change mass
     }
 
     // TODO: move loading code outside of car class.
@@ -246,7 +244,7 @@ export class Car extends Object3D {
         const acceleration: number = this.getAcceleration().length();
         /* tslint:disable:no-magic-numbers */
         const distribution: number =
-            this.mass + 1 / this.wheelbase * this.mass * acceleration / 2;
+            this.rigidBody.mass + 1 / this.wheelbase * this.rigidBody.mass * acceleration / 2;
 
         return Math.min(Math.max(0.25, distribution), 0.75);
         /* tslint:enable:no-magic-numbers */
@@ -282,10 +280,10 @@ export class Car extends Object3D {
             (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
 
         if (this.isGoingForward()) {
-            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
+            return this.direction.multiplyScalar(rollingCoefficient * this.rigidBody.mass * GRAVITY);
         }
 
-        return this.direction.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.mass * GRAVITY);
+        return this.direction.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.rigidBody.mass * GRAVITY);
     }
 
     private getDragForce(): Vector3 {
@@ -307,7 +305,7 @@ export class Car extends Object3D {
         const force: number = this.getEngineForce();
         const maxForce: number =
             this.rearWheel.frictionCoefficient *
-            this.mass *
+            this.rigidBody.mass *
             GRAVITY *
             this.weightRear *
             NUMBER_REAR_WHEELS /
@@ -325,7 +323,7 @@ export class Car extends Object3D {
 
     private getBrakeForce(): Vector3 {
         return this.direction.multiplyScalar(
-            this.rearWheel.frictionCoefficient * this.mass * GRAVITY
+            this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
         );
     }
 
@@ -349,7 +347,7 @@ export class Car extends Object3D {
     }
 
     private getAcceleration(): Vector3 {
-        return this.getLongitudinalForce().divideScalar(this.mass);
+        return this.getLongitudinalForce().divideScalar(this.rigidBody.mass);
     }
 
     private getDeltaSpeed(deltaTime: number): Vector3 {

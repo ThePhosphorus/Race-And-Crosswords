@@ -7,7 +7,11 @@ export class RigidBody extends Object3D {
     private velocity: Vector2;
     private angularVelocity: number;
     private fixed: boolean;
-    private mass: number;
+    private _mass: number;
+
+    public get mass(): number {
+        return this._mass;
+    }
 
     public constructor(mass: number, fixed?: boolean) {
         super();
@@ -16,7 +20,7 @@ export class RigidBody extends Object3D {
         this.forces = new Vector2();
         this.velocity = new Vector2();
         this.angularVelocity = 0;
-        this.mass = mass;
+        this._mass = mass;
     }
 
     public addForce(force: Vector2): void {
@@ -61,10 +65,10 @@ export class RigidBody extends Object3D {
     }
 
     private getAcceleration(): Vector2 {
-        return this.forces.divideScalar(this.mass);
+        return this.forces.divideScalar(this._mass);
     }
 
     private getAngularAcceleration(): number {
-        return this.torque / this.mass;
+        return this.torque / this._mass;
     }
 }
