@@ -6,7 +6,8 @@ import {
     Euler,
     Quaternion,
     Box3,
-    SpotLight
+    SpotLight,
+    Vector2
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG, RED } from "../../../global-constants/constants";
@@ -58,7 +59,6 @@ export class Car extends Object3D {
 
     private frontLightManager: SpotLightManager;
     private brakeLights: Array<SpotLightManager>;
-    private _speed: Vector3;
     private isBraking: boolean;
     private mesh: Object3D;
     private steeringWheelDirection: number;
@@ -69,9 +69,6 @@ export class Car extends Object3D {
 
     public get carMesh(): Object3D {
         return this.mesh;
-    }
-    public get speed(): Vector3 {
-        return this._speed.clone();
     }
 
     public get currentGear(): number {
@@ -94,6 +91,14 @@ export class Car extends Object3D {
         carDirection.applyMatrix4(rotationMatrix);
 
         return carDirection;
+    }
+
+    public get direction2D(): Vector2 {
+        return new Vector2(this.direction.x, this.direction.z);
+    }
+
+    public get speed(): number {
+        return this.rigidBody.velocity.length();
     }
 
     public constructor(
@@ -127,7 +132,6 @@ export class Car extends Object3D {
         this.isBraking = false;
         this.steeringWheelDirection = 0;
         this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
-        this._speed = new Vector3(0, 0, 0);
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
         this.brakeLights = new Array<SpotLightManager>();
@@ -162,7 +166,7 @@ export class Car extends Object3D {
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
         this.steeringWheelDirection = steeringState *
-            MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
+            MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     // Input manager callback methods

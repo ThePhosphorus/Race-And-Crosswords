@@ -93,7 +93,7 @@ export class GameManagerService extends Renderer {
     }
 
     public get playerInfos(): CarInfos {
-        return new CarInfos(this.player.speed.length(),
+        return new CarInfos(this.player.speed,
                             this.player.currentGear,
                             this.player.rpm);
     }

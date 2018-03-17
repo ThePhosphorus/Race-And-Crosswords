@@ -2,24 +2,28 @@ import { Vector2, Object3D, Vector3 } from "three";
 
 export class RigidBody extends Object3D {
 
+    private fixed: boolean;
     private forces: Vector2;
     private torque: number;
-    private velocity: Vector2;
-    private angularVelocity: number;
-    private fixed: boolean;
+    private _velocity: Vector2;
+    private _angularVelocity: number;
     private _mass: number;
 
     public get mass(): number {
         return this._mass;
     }
 
+    public get velocity(): Vector2 {
+        return this._velocity;
+    }
+
     public constructor(mass: number, fixed?: boolean) {
         super();
         this.fixed = fixed == null ? false : fixed;
         this.torque = 0;
-        this.forces = new Vector2();
-        this.velocity = new Vector2();
-        this.angularVelocity = 0;
+        this.forces = new Vector2(0, 0);
+        this._velocity = new Vector2(0, 0);
+        this._angularVelocity = 0;
         this._mass = mass;
     }
 
@@ -46,14 +50,17 @@ export class RigidBody extends Object3D {
             return;
         }
 
-        this.velocity.add(this.getDeltaVelocity(deltaTime));
-        this.angularVelocity += this.getDeltaAngularVelocity(deltaTime);
+        this._velocity.add(this.getDeltaVelocity(deltaTime));
+        this._angularVelocity += this.getDeltaAngularVelocity(deltaTime);
 
-        const deltaPosition: Vector2 = this.velocity.clone().multiplyScalar(deltaTime);
+        const deltaPosition: Vector2 = this._velocity.clone().multiplyScalar(deltaTime);
         this.parent.position.add(new Vector3(deltaPosition.x, 0, deltaPosition.y));
 
-        const deltaAngle: number = this.angularVelocity * deltaTime;
+        const deltaAngle: number = this._angularVelocity * deltaTime;
         this.parent.rotateOnAxis(new Vector3(0, 1, 0), deltaAngle);
+
+        this.forces = new Vector2(0, 0);
+        this.torque = 0;
     }
 
     private getDeltaVelocity(deltaTime: number): Vector2 {
