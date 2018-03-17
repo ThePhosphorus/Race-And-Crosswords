@@ -8,10 +8,12 @@ import msg from "../../../../common/communication/socketTypes";
 export class SocketsManager {
     private io: SocketIO.Server ;
     private _matchs: Array<MatchManager>;
+    private sockets: Array<SocketIO.Socket> ;
 
     public constructor() {
         this.io = null;
         this._matchs = new Array<MatchManager>();
+        this.sockets = new Array<SocketIO.Socket>();
     }
 
     public launch(server: http.Server): void {
@@ -20,6 +22,7 @@ export class SocketsManager {
     }
 
     private setUpbasicEvents(): void {
+        this.io.on("Connection", this.addSocket);
         this.io.on(msg.createMatch.toString(), this.createMatch);
         this.io.on(msg.joinMatch.toString(), this.joinMatch);
     }
@@ -37,6 +40,7 @@ export class SocketsManager {
     }
 
     public getNames(): Array<string> {
+        console.log(this._matchs);
         const names: Array<string> = new Array<string>();
         this._matchs.forEach((m: MatchManager) => {
             if (m.PlayerOne != null) {
@@ -45,5 +49,9 @@ export class SocketsManager {
         });
 
         return names;
+    }
+
+    public addSocket(socket: SocketIO.Socket): void {
+        this.sockets.push(socket);
     }
 }

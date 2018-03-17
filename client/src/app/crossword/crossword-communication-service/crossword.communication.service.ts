@@ -9,7 +9,7 @@ import socketMsg from "../../../../../common/communication/socketTypes";
 @Injectable()
 export class CrosswordCommunicationService {
 
-    private socket: Socket;
+    private socket: SocketIOClient.Socket;
 
     public constructor(private http: HttpClient) {
         this.createSocket();
@@ -32,7 +32,7 @@ export class CrosswordCommunicationService {
         this.socket = connect(BACKEND_URL);
     }
     public createMatch(): void {
-        this.socket.emit(socketMsg.createMatch);
+        this.socket.emit(socketMsg.createMatch.toString());
 
     }
 }

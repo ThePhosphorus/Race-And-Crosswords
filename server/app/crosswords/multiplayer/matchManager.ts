@@ -58,5 +58,7 @@ export class MatchManager {
         socket.on(msg.receiveName, this.receiveName);
     }
 
-    public get Players (): 
+    public get Players (): Array<Player> {
+        return this._players;
+    }
 }
