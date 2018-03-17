@@ -1,4 +1,4 @@
-import { Vector2, Object3D, Vector3, Mesh } from "three";
+import { Vector2, Object3D, Vector3 } from "three";
 
 export class RigidBody extends Object3D {
 
@@ -36,7 +36,7 @@ export class RigidBody extends Object3D {
     }
 
     public update(deltaTime: number): void {
-        if (!(this.parent instanceof Mesh)) {
+        if (!(this.parent instanceof Object3D)) {
             return;
         }
         if (this.fixed) {
