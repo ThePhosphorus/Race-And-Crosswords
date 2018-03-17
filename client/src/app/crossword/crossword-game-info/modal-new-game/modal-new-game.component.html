@@ -12,9 +12,9 @@
       <table class="table table-sm mb-0" id="AvailableTable">
 
         <tbody>
-            <tr *ngFor="let match of matches; let col = index" [ngClass]="{'black': letter.isBlackTile}">
+            <tr *ngFor="let match of matches; let col = index" [ngClass]="{'black': true}">
                 <button class="btn btn-secondary  w-100 m-0">
-                    {{match.name}}
+                    {{match}}
                   </button>
             </tr>
           <tr>

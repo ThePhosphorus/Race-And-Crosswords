@@ -28,6 +28,8 @@ export class ModalNewGameComponent implements OnInit {
     public ngOnInit(): void {
         this.commService.getMatches().subscribe((matches: Array<string>) => {
             this._matchesAvailable = matches;
+            console.log(matches);
+
         });
     }
 
@@ -42,9 +44,6 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public socketToServer(): void {
-        this._crosswordService["commService"].createMatch();
-        console.log("request Sent");
-
-
-    }
+        this.commService.createMatch();
+   }
 }

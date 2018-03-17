@@ -12,8 +12,6 @@ export class SocketsManager {
     private _matchs: Array<MatchManager>;
 
     public constructor() {
-        console.log("SOcket created");
-
         this.io = null;
         this._matchs = new Array<MatchManager>();
     }
@@ -40,7 +38,6 @@ export class SocketsManager {
     }
 
     public getNames(): Array<string> {
-        console.log(this._matchs);
         const names: Array<string> = new Array<string>();
         this._matchs.forEach((m: MatchManager) => {
             if (m.PlayerOne != null) {
@@ -52,8 +49,6 @@ export class SocketsManager {
     }
 
     private addSocket(socket: Socket): void {
-        console.log("Socket joined");
-
         socket.on(msg.createMatch, () => this.createMatch(socket) );
         socket.on(msg.joinMatch, (name: string) => this.joinMatch(socket, name));
     }
