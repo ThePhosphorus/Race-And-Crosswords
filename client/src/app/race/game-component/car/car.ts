@@ -18,7 +18,7 @@ import { CarLights } from "./carLights/carLights";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
-const WEIGHT_DISTRIBUTION: number = 0.5;
+const WEIGHT_DISTRIBUTION: number = 1;
 const MINIMUM_SPEED: number = 0.05;
 const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
