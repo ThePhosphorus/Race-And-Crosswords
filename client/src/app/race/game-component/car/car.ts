@@ -256,7 +256,7 @@ export class Car extends Object3D {
 
         // Physics calculations
         this.physicsUpdate(deltaTime);
-        this.lightUpdate();
+        // this.lightUpdate();
         // Move back to world coordinates
         this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
 
