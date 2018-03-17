@@ -73,7 +73,6 @@ export class CollisionDetectorService {
                 return false;
             }
         }
-
         for (const normal of normals2) {
             const minMax1: MinMax = this.getMinMax(vertexes1, normal);
             const minMax2: MinMax = this.getMinMax(vertexes2, normal);
@@ -97,14 +96,17 @@ export class CollisionDetectorService {
             if (minMax.minProj > currProj) {
                 minMax.minProj = currProj;
                 minMax.minIndex = i;
-            }
-            if (currProj > minMax.maxProj) {
+            } else if (currProj > minMax.maxProj) {
                 minMax.maxProj = currProj;
                 minMax.maxIndex = i;
             }
         }
 
         return minMax;
+    }
+
+    private getOverlap(projection1: MinMax, projection2: MinMax): number {
+        return Math.min(projection1.maxProj, projection2.maxProj) - Math.max(projection1.minProj, projection2.minProj);
     }
 
     private boxLineDetection(box: BoxCollider, line: LineCollider): boolean {
