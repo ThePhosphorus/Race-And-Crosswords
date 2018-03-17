@@ -20,7 +20,7 @@ export class SpotLightManager {
     }
 
     private updatePosition(carPosition: Vector3, carDirection: Vector3): void {
-        //  this.setAtCar(carPosition);
+         this.setAtCar(carPosition);
         this.translateTransversal(carDirection);
         this.translateSideways(carDirection);
         this.addHeight();
@@ -37,9 +37,9 @@ export class SpotLightManager {
         this._light.target.updateMatrixWorld(true);
     }
 
-    // private setAtCar(carPosition: Vector3): void {
-    //     this._light.position.copy(carPosition.clone());
-    // }
+    private setAtCar(carPosition: Vector3): void {
+        this._light.position.copy(carPosition.clone());
+    }
 
     private translateTransversal(carDirection: Vector3): void {
         if (this._transversalTranslation > 0) {

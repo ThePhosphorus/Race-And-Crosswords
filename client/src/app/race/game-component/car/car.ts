@@ -224,7 +224,7 @@ export class Car extends Object3D {
         this.mesh.rotateY(omega);
 
         this.rigidBody.update(deltaTime);
-        // this.lightUpdate();
+        this.lightUpdate();
     }
 
     private physicsUpdate(deltaTime: number): void {
@@ -373,7 +373,6 @@ export class Car extends Object3D {
     private initLights(): void {
         this.initFrontLight();
         this.initBrakeLights();
-        this.lightUpdate();
     }
 
     // TODO Remove light stuff from car
@@ -388,7 +387,7 @@ export class Car extends Object3D {
                 FRONT_LIGHT_OFFSET,
                 true
             );
-        this.mesh.add(this.frontLightManager.light);
+        this.add(this.frontLightManager.light);
     }
 
     private initBrakeLights(): void {
@@ -410,7 +409,7 @@ export class Car extends Object3D {
         this.brakeLights.push(this.createSmallLight(-BIG_LATERAL_OFFSET));
         this.brakeLights.push(this.createSmallLight(-SMALL_LATERAL_OFFSET));
 
-        this.brakeLights.forEach((spotlight: SpotLightManager) => this.mesh.add(spotlight.light));
+        this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
     }
 
     private createSmallLight(lateralTranslation: number ): SpotLightManager {
