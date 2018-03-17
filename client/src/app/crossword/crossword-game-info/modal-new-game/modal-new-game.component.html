@@ -3,7 +3,7 @@
     <button class="btn btn-secondary w-100 m-0" (click)="isCollapsedAvailablePlayer =false; showLevelGame =true ">
       SINGLE
     </button>
-    <button (click)="isCollapsedAvailablePlayer =!isCollapsedAvailablePlayer;showLevelGame = false  " class="btn btn-secondary w-100 m-0">
+    <button (click)="isCollapsedAvailablePlayer =!isCollapsedAvailablePlayer;showLevelGame = false; isMultiplayer=true  " class="btn btn-secondary w-100 m-0">
       MULTIPLAYER
     </button>
   </div>
@@ -21,6 +21,7 @@
             <button id="newGame" (click)="socketToServer(); isCollapsedAvailablePlayer =false; showLevelGame =!showLevelGame " class="btn btn-secondary  m-2 w-75 m-0">
               CREATE A GAME
             </button>
+
           </tr>
         </tbody>
       </table>
@@ -40,6 +41,10 @@
           HARD
         </button>
       </div>
+    </div>
+    <input type="text" class="form-control" [ngModel]=id="validationCustomUsername" placeholder="Username" aria-describedby="inputGroupPrepend" required>
+    <div class="invalid-feedback">
+      Please choose a username.
     </div>
   </div>
 
