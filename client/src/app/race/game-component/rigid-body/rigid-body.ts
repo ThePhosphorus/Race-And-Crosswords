@@ -62,7 +62,7 @@ export class RigidBody extends Object3D {
         this.parent.position.add(new Vector3(deltaPosition.x, 0, deltaPosition.y));
 
         const deltaAngle: number = this._angularVelocity * deltaTime;
-        this.parent.rotateOnAxis(new Vector3(0, 1, 0), deltaAngle);
+        this.parent.rotateY(deltaAngle);
 
         this.forces = new Vector2(0, 0);
         this.torque = 0;

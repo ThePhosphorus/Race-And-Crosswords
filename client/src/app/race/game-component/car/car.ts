@@ -183,28 +183,16 @@ export class Car extends Object3D {
         this.engine.update(this.speed, this.rearWheel.radius);
 
         this.rigidBody.addForce(this.getLongitudinalForce());
+        // this.rigidBody.addTorque();
         this.rigidBody.update(deltaTime);
 
-        // // Move to car coordinates
-        // const rotationMatrix: Matrix4 = new Matrix4();
-        // rotationMatrix.extractRotation(this.mesh.matrix);
-        // const rotationQuaternion: Quaternion = new Quaternion();
-        // rotationQuaternion.setFromRotationMatrix(rotationMatrix);
-        // this._speed.applyMatrix4(rotationMatrix);
-
-        // // Physics calculations
-        // this.physicsUpdate(deltaTime);
-        // // Move back to world coordinates
-        // this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
-
-        // this.updateSteering();
-        // // Angular rotation of the car
-        // const R: number =
-        //     DEFAULT_WHEELBASE /
-        //     Math.sin(this.steeringWheelDirection * deltaTime);
-        // const omega: number = this._speed.length() / R;
-        // this.mesh.rotateY(omega);
-
+        this.updateSteering();
+        // Angular rotation of the car
+        const R: number =
+            DEFAULT_WHEELBASE /
+            Math.sin(this.steeringWheelDirection * deltaTime);
+        const omega: number = this.speed / R;
+        this.mesh.rotateY(omega);
     }
 
     private getLongitudinalForce(): Vector2 {
@@ -280,63 +268,6 @@ export class Car extends Object3D {
     private getEngineForce(): number {
         return this.engine.getDriveTorque() / this.rearWheel.radius;
     }
-
-    // private physicsUpdate(deltaTime: number): void {
-    //     this.rearWheel.angularVelocity +=
-    //         this.getAngularAcceleration() * deltaTime;
-    //     this.engine.update(this._speed.length(), this.rearWheel.radius);
-    //     this.weightRear = this.getWeightDistribution();
-    //     this._speed.add(this.getDeltaSpeed(deltaTime));
-    //     this._speed.setLength(
-    //         this._speed.length() <= MINIMUM_SPEED ? 0 : this._speed.length()
-    //     );
-    //     this.mesh.position.add(this.getDeltaPosition(deltaTime));
-    //     this.rearWheel.update(this._speed.length());
-    // }
-
-    // private getWeightDistribution(): number {
-    //     const acceleration: number = this.getAcceleration().length();
-    //     /* tslint:disable:no-magic-numbers */
-    //     const distribution: number =
-    //         this.rigidBody.mass + 1 / this.wheelbase * this.rigidBody.mass * acceleration / 2;
-
-    //     return Math.min(Math.max(0.25, distribution), 0.75);
-    //     /* tslint:enable:no-magic-numbers */
-    // }
-
-    // private getAngularAcceleration(): number {
-    //     return (
-    //         this.getTotalTorque() /
-    //         (this.rearWheel.inertia * NUMBER_REAR_WHEELS)
-    //     );
-    // }
-
-    // private getBrakeTorque(): number {
-    //     return this.getBrakeForce().length() * this.rearWheel.radius;
-    // }
-
-    // private getTractionTorque(): number {
-    //     return this.getTractionForce() * this.rearWheel.radius;
-    // }
-
-    // private getTotalTorque(): number {
-    //     return (
-    //         this.getTractionTorque() * NUMBER_REAR_WHEELS +
-    //         this.getBrakeTorque()
-    //     );
-    // }
-
-    // private getAcceleration(): Vector3 {
-    //     return this.getLongitudinalForce().divideScalar(this.rigidBody.mass);
-    // }
-
-    // private getDeltaSpeed(deltaTime: number): Vector3 {
-    //     return this.getAcceleration().multiplyScalar(deltaTime);
-    // }
-
-    // private getDeltaPosition(deltaTime: number): Vector3 {
-    //     return this.speed.multiplyScalar(deltaTime);
-    // }
 
     private isGoingForward(): boolean {
         return this.speed > 0;
