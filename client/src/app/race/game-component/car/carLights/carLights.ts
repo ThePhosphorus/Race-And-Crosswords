@@ -5,7 +5,7 @@ const FRONT_LIGHT_POSITION: Vector3 = new Vector3(0, 0.8, -1.4);
 const FRONT_LIGHT_TARGET: Vector3 = new Vector3(0, 0.8, -10);
 
 const BACK_LIGHT_POSITION: Vector3 = new Vector3(0, 0.7, 1.4);
-const BACK_LIGHT_TARGET: Vector3 = new Vector3(0, -0.2, 10);
+const BACK_LIGHT_TARGET: Vector3 = new Vector3(0, 0, 7);
 export class CarLights extends Object3D {
     private frontLight: SpotLight;
     private brakeLights: Array<SpotLight>;
@@ -27,7 +27,7 @@ export class CarLights extends Object3D {
     }
 
     private initBrakeLights(): void {
-        const brakeLightCenter: SpotLight = new SpotLight(RED, 1, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
+        const brakeLightCenter: SpotLight = new SpotLight(RED, 0.3, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
         brakeLightCenter.penumbra = BACK_LIGHT_PENUMBRA;
         brakeLightCenter.position.copy(BACK_LIGHT_POSITION);
         brakeLightCenter.target.position.copy(BACK_LIGHT_TARGET);
