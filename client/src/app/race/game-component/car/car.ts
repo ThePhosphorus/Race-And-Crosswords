@@ -19,8 +19,7 @@ import { CarLights } from "./carLights/carLights";
 const MAXIMUM_STEERING_ANGLE: number = 0.22;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const MINIMUM_SPEED: number = 0.05;
-const NUMBER_REAR_WHEELS: number = 2;
-const NUMBER_WHEELS: number = 4;
+const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const CAR_Y_OFFSET: number = -0.1;
@@ -32,7 +31,6 @@ export class Car extends Object3D {
 
     private readonly engine: Engine;
     private readonly rearWheel: Wheel;
-    private readonly wheelbase: number;
     private readonly dragCoefficient: number;
 
     private isBraking: boolean;
@@ -103,7 +101,6 @@ export class Car extends Object3D {
         this.rigidBody = new RigidBody(mass);
         this.engine = engine;
         this.rearWheel = rearWheel;
-        this.wheelbase = wheelbase;
         this.dragCoefficient = dragCoefficient;
         this.isBraking = false;
         this.steeringWheelDirection = 0;
@@ -259,9 +256,8 @@ export class Car extends Object3D {
         const maxForce: number =
             this.rearWheel.frictionCoefficient *
             this.rigidBody.mass *
-            GRAVITY *
-            NUMBER_REAR_WHEELS /
-            NUMBER_WHEELS;
+            WHEEL_DISTRIBUTION *
+            GRAVITY;
 
         return -Math.min(force, maxForce);
     }
