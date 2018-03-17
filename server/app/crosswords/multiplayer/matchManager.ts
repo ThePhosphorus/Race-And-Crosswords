@@ -16,7 +16,7 @@ export class MatchManager {
 
     public constructor(player1: Socket) {
         this._players = new Array <Player>();
-        this._players.push(new Player(0, player1, "defaultName"));
+        this.addPlayer(player1);
     }
 
     public get PlayerOne(): string {
@@ -26,16 +26,19 @@ export class MatchManager {
     public addPlayer(socket: Socket): void {
         console.log("Player added");
 
-        this._players.push(new Player(this._players.length, socket, null));
+        this._players.push(new Player(this._players.length, socket, "defaultName"));
         this.askForName(this._players[this._players.length - 1]);
         this.registerActions( socket);
     }
 
     private askForName(player: Player): void {
         player.socket.emit(msg.askForName, player.id);
+        console.log("request name sent");
+
     }
 
     private receiveName(id: number, name: string): void {
+        console.log("received name is " + name);
         const player: Player = this.getPlayerById(id);
         if (player != null) {
             player.name = name;

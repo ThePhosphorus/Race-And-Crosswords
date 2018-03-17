@@ -30,9 +30,10 @@ export class SocketsManager {
     }
 
     public joinMatch(socket: Socket, joinName: string): void {
-        this._matchs.forEach((m: MatchManager) => {
+        this._matchs.forEach((m: MatchManager, index: number) => {
             if (m.PlayerOne === joinName) {
                 m.addPlayer(socket);
+                this._matchs.slice(index, 1);
             }
         });
     }
