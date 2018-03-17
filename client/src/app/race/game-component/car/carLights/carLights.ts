@@ -1,25 +1,29 @@
 import { SpotLight, Vector3, Object3D } from "three";
-import { FRONT_LIGHT_COLOR, FAR_LIGHT_DISTANCE, FRONT_LIGHT_PENUMBRA, BACK_LIGHT_PENUMBRA, FRONT_LIGHT_ANGLE, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE } from "./lights-constants";
 import { RED } from "../../../../global-constants/constants";
-const FRONT_LIGHT_POSITION: Vector3 = new Vector3(0, 0.8, -1.4);
-const FRONT_LIGHT_TARGET: Vector3 = new Vector3(0, 0.8, -10);
-
-const BACK_LIGHT_POSITION: Vector3 = new Vector3(0, 0.7, 1.4);
-const BACK_LIGHT_TARGET: Vector3 = new Vector3(0, 0, 7);
-
-const EXT_LEFT_LIGHT_POSITION: Vector3 = new Vector3(-0.47, 0.6, 2);
-const EXT_LEFT_LIGHT_TARGET: Vector3 = new Vector3(0.5, 0.8, -10 );
-
-const INT_LEFT_LIGHT_POSITION: Vector3 = new Vector3(-0.29, 0.6, 2);
-const INT_LEFT_LIGHT_TARGET: Vector3 = new Vector3(0.25, 0.8, -10 );
-
-const INT_RIGHT_LIGHT_POSITION: Vector3 = new Vector3(0.27, 0.6, 2);
-const INT_RIGHT_LIGHT_TARGET: Vector3 = new Vector3(0.25, 0.8, -10 );
-
-const EXT_RIGHT_LIGHT_POSITION: Vector3 = new Vector3(0.44, 0.6, 2);
-const EXT_RIGHT_LIGHT_TARGET: Vector3 = new Vector3(0.5, 0.8, -10 );
-
-
+import {
+    FRONT_LIGHT_COLOR,
+    FAR_LIGHT_DISTANCE,
+    FRONT_LIGHT_PENUMBRA,
+    NEAR_LIGHT_DISTANCE,
+    SMALL_LIGHT_ANGLE,
+    FRONT_LIGHT_ANGLE,
+    BACK_LIGHT_PENUMBRA,
+    BACK_LIGHT_INTENSITY,
+    SMALL_LIGHT_INTENSITY,
+    EXT_LEFT_LIGHT_POSITION,
+    EXT_LEFT_LIGHT_TARGET,
+    INT_LEFT_LIGHT_POSITION,
+    INT_LEFT_LIGHT_TARGET,
+    INT_RIGHT_LIGHT_POSITION,
+    INT_RIGHT_LIGHT_TARGET,
+    EXT_RIGHT_LIGHT_TARGET,
+    EXT_RIGHT_LIGHT_POSITION,
+    BACK_LIGHT_POSITION,
+    BACK_LIGHT_TARGET,
+    FRONT_LIGHT_TARGET,
+    FRONT_LIGHT_POSITION,
+    FRONT_LIGHT_INTENSITY
+} from "./lights-constants";
 
 export class CarLights extends Object3D {
     private frontLight: SpotLight;
@@ -32,7 +36,7 @@ export class CarLights extends Object3D {
     }
 
     private initFrontLight(): void {
-        this.frontLight = new SpotLight(FRONT_LIGHT_COLOR, 1, FAR_LIGHT_DISTANCE);
+        this.frontLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
         this.frontLight.penumbra = FRONT_LIGHT_PENUMBRA;
         this.frontLight.position.copy(FRONT_LIGHT_POSITION);
         this.frontLight.target.position.copy(FRONT_LIGHT_TARGET);
@@ -49,7 +53,7 @@ export class CarLights extends Object3D {
     }
 
     private initSmallLight(position: Vector3, target: Vector3): void {
-        const brakeLightLeft: SpotLight = new SpotLight(RED, 10, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE);
+        const brakeLightLeft: SpotLight = new SpotLight(RED, 0, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE);
         brakeLightLeft.position.copy(position);
         brakeLightLeft.target.position.copy(target);
         this.add(brakeLightLeft);
@@ -57,12 +61,27 @@ export class CarLights extends Object3D {
         this.brakeLights.push(brakeLightLeft);
     }
     private initCenterLight(): void {
-        const brakeLightCenter: SpotLight = new SpotLight(RED, 0.3, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
+        const brakeLightCenter: SpotLight = new SpotLight(RED, 0, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
         brakeLightCenter.penumbra = BACK_LIGHT_PENUMBRA;
         brakeLightCenter.position.copy(BACK_LIGHT_POSITION);
         brakeLightCenter.target.position.copy(BACK_LIGHT_TARGET);
         this.add(brakeLightCenter);
         this.add(brakeLightCenter.target);
         this.brakeLights.push(brakeLightCenter);
+    }
+    public toggleFrontLight(): void {
+        this.frontLight.intensity = (this.frontLight.intensity === 0 ? FRONT_LIGHT_INTENSITY : 0);
+    }
+
+    public brake(): void {
+        this.brakeLights.forEach((smallLight) => {
+            if (smallLight !== this.brakeLights[0]) {
+                smallLight.intensity = SMALL_LIGHT_INTENSITY;
+            }});
+        this.brakeLights[0].intensity = BACK_LIGHT_INTENSITY;
+    }
+
+    public releaseBrakes(): void {
+        this.brakeLights.forEach((brakeLight) => { brakeLight.intensity = 0; });
     }
 }
