@@ -16,7 +16,7 @@ export class MatchManager {
 
     public constructor(player1: Socket) {
         this._players = new Array <Player>();
-        this.addPlayer(player1);
+        this._players.push(new Player(0, player1, "D"));
     }
 
     public get PlayerOne(): string {

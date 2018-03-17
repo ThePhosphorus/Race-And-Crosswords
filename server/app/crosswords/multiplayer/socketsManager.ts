@@ -45,6 +45,7 @@ export class SocketsManager {
                 names.push(m.PlayerOne);
             }
         });
+        console.log(names);
 
         return names;
     }
