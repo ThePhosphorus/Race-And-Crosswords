@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { CrosswordGrid, Difficulty } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
-import { connect, Socket } from "socket.io-client";
+import { connect } from "socket.io-client";
 import socketMsg from "../../../../../common/communication/socketTypes";
 
 @Injectable()
@@ -25,14 +25,14 @@ export class CrosswordCommunicationService {
         return this.http.get<Array<string>>(BACKEND_URL + "crosswords/multiplayer/matchs");
     }
     public basicServerConnection(): Observable<string> {
-        return this.http.get<string>(BACKEND_URL + "/");
+        return this.http.get<string>(BACKEND_URL);
     }
 
     public createSocket(): void {
         this.socket = connect(BACKEND_URL);
     }
     public createMatch(): void {
-        this.socket.emit(socketMsg.createMatch.toString());
+        this.socket.emit(socketMsg.createMatch, {});
 
     }
 }

@@ -4,16 +4,18 @@ import { injectable } from "inversify";
 import { MatchManager } from "./matchManager";
 import msg from "../../../../common/communication/socketTypes";
 
+type Socket = SocketIO.Socket;
+
 @injectable()
 export class SocketsManager {
     private io: SocketIO.Server ;
     private _matchs: Array<MatchManager>;
-    private sockets: Array<SocketIO.Socket> ;
 
     public constructor() {
+        console.log("SOcket created");
+
         this.io = null;
         this._matchs = new Array<MatchManager>();
-        this.sockets = new Array<SocketIO.Socket>();
     }
 
     public launch(server: http.Server): void {
@@ -22,16 +24,14 @@ export class SocketsManager {
     }
 
     private setUpbasicEvents(): void {
-        this.io.on("Connection", this.addSocket);
-        this.io.on(msg.createMatch.toString(), this.createMatch);
-        this.io.on(msg.joinMatch.toString(), this.joinMatch);
+        this.io.on(msg.connection, (socket: Socket) => this.addSocket(socket));
     }
 
-    private createMatch(socket: SocketIO.Socket): void {
+    public createMatch(socket: Socket): void {
         this._matchs.push(new MatchManager(socket));
     }
 
-    private joinMatch(socket: SocketIO.Socket, joinName: string): void {
+    public joinMatch(socket: Socket, joinName: string): void {
         this._matchs.forEach((m: MatchManager) => {
             if (m.PlayerOne === joinName) {
                 m.addPlayer(socket);
@@ -51,7 +51,10 @@ export class SocketsManager {
         return names;
     }
 
-    public addSocket(socket: SocketIO.Socket): void {
-        this.sockets.push(socket);
+    private addSocket(socket: Socket): void {
+        console.log("Socket joined");
+
+        socket.on(msg.createMatch, () => this.createMatch(socket) );
+        socket.on(msg.joinMatch, (name: string) => this.joinMatch(socket, name));
     }
 }

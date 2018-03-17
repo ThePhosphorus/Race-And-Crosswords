@@ -42,7 +42,9 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public socketToServer(): void {
-        this._crosswordService["commService"].createSocket();
+        this._crosswordService["commService"].createMatch();
+        console.log("request Sent");
+
 
     }
 }

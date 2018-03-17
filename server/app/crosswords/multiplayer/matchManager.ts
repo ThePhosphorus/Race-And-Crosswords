@@ -15,6 +15,8 @@ export class MatchManager {
     private _players: Array<Player>;
 
     public constructor(player1: Socket) {
+        console.log("Match Created, fro realz");
+        
         this._players = new Array <Player>();
         this._players.push(new Player(0, player1, "defaultName"));
     }

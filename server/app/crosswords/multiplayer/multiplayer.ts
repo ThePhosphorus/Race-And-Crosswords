@@ -4,7 +4,6 @@ import { injectable, inject } from "inversify";
 import Types from "../../types";
 import { SocketsManager } from "./socketsManager";
 
-
 @injectable()
 export class Multiplayer extends WebService {
 

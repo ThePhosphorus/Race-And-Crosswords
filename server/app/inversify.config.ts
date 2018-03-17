@@ -24,6 +24,6 @@ container.bind(Types.Grid).to(Grid);
 container.bind(Types.GridGenerator).to(GridGenerator);
 container.bind(Types.TrackSaver).to(TrackSaver);
 container.bind(Types.Multiplayer).to(Multiplayer);
-container.bind(Types.SocketsManager).to(SocketsManager);
+container.bind(Types.SocketsManager).to(SocketsManager).inSingletonScope();
 
 export { container };
