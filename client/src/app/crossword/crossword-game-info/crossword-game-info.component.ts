@@ -10,7 +10,7 @@ import { Difficulty } from "../../../../../common/communication/crossword-grid";
 
 export class CrosswordGameInfoComponent implements OnInit {
     @Output() public newGameLoad: EventEmitter<boolean>;
-    public isDiffSelected: boolean;
+    public isReadytoPlay: boolean;
     private _lvl: Difficulty;
     public nbPlayers: number;
     public isCollapsedPlayer: boolean = false;
@@ -22,7 +22,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
         this.showLevel = false;
-        this.isDiffSelected = false;
+        this.isReadytoPlay = false;
         this.newGameLoad = new EventEmitter<boolean>();
     }
     public get lvl(): Difficulty {

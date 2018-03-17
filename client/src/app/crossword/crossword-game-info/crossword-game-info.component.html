@@ -22,10 +22,10 @@
         <h5 class="modal-title" id="modalLabel">Difficulty Level</h5>
         <div class="modal-body">
             <div class="card card-block w-100">
-          <app-modal-new-game (isDiffSelected)="isDiffSelected=($event)"></app-modal-new-game>
+          <app-modal-new-game (isReadytoPlay)="isReadytoPlays=($event)"></app-modal-new-game>
             </div>
             <div class="modal-footer m-0">
-                <button type="button" id="playBtn" [disabled]="!isDiffSelected" (click)="showLevel =!showLevel; isDiffSelected=false  "class="btn btn-primary">Play</button>
+                <button type="button" id="playBtn" [disabled]="!isReadytoPlay" (click)="showLevel =!showLevel; isDiffSelected=false  "class="btn btn-primary">Play</button>
                 <button id="cancelBtn" type="button"(click)="showLevel =!showLevel;newGameLoad(false) " class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>

@@ -14,7 +14,6 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 export class ModalNewGameComponent implements OnInit {
     public isCollapsedAvailablePlayer: boolean = false;
     public showLevelGame: boolean = false;
-    public isUsernameEntered: boolean = false;
     public isDiffSelected: boolean = false;
     public username: string;
     private _lvl: Difficulty;
@@ -25,8 +24,8 @@ export class ModalNewGameComponent implements OnInit {
     public constructor(private _crosswordService: CrosswordService, private commService: CrosswordCommunicationService) {
         this.isCollapsedAvailablePlayer = false;
         this.showLevelGame = false;
-        this.isUsernameEntered = false;
         this._lvl = Difficulty.Easy;
+        this.username = null;
         this.isReadytoPlay = new EventEmitter<boolean>();
         this._matchesAvailable = new Array<InWaitMatch>();
         this._isInWaitForCreateMatch = false;
@@ -44,7 +43,7 @@ export class ModalNewGameComponent implements OnInit {
     public get lvl(): Difficulty { return this._lvl; }
     public changeLevel(lvl: Difficulty): void {
         this._lvl = lvl;
-        this.isReadytoPlay.emit(this.isDiffSelected && this.isUsernameEntered);
+        this.isReadytoPlay.emit(this.isDiffSelected && (this.username !== null));
         this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
 
         if ( this._isInWaitForCreateMatch ) {
@@ -52,10 +51,7 @@ export class ModalNewGameComponent implements OnInit {
         }
     }
     public sendUsername(): void {
-        if (this.username !== null) {
-            this.isUsernameEntered = true;
-        }
-        this.isReadytoPlay.emit(this.isDiffSelected && this.isUsernameEntered);
+        this.isReadytoPlay.emit(this.isDiffSelected && (this.username !== null));
     }
 
     public socketToServer(): void {
