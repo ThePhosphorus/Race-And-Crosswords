@@ -13,7 +13,7 @@ import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG, RED } from "../../../glo
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
 import { BoxCollider } from "../collision/colliders/box-collider";
-import { SpotLightManager } from "./lights/spotlight-facade";
+import { SpotLightManager } from "./carLights/spotlight-facade";
 import {
     FRONT_LIGHT_COLOR,
     FAR_LIGHT_DISTANCE,
@@ -34,7 +34,7 @@ import {
     SMALL_LIGHT_HEIGHT,
     SMALL_LIGHT_OFFSET,
     SMALL_LIGHT_INTENSITY
-} from "./lights/lights-constants";
+} from "./carLights/lights-constants";
 import { RigidBody } from "../rigid-body/rigid-body";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.25;
@@ -224,7 +224,7 @@ export class Car extends Object3D {
         this.mesh.rotateY(omega);
 
         this.rigidBody.update(deltaTime);
-        this.lightUpdate();
+        // this.lightUpdate();
     }
 
     private physicsUpdate(deltaTime: number): void {
@@ -373,6 +373,7 @@ export class Car extends Object3D {
     private initLights(): void {
         this.initFrontLight();
         this.initBrakeLights();
+        this.lightUpdate();
     }
 
     // TODO Remove light stuff from car
@@ -387,7 +388,7 @@ export class Car extends Object3D {
                 FRONT_LIGHT_OFFSET,
                 true
             );
-        this.add(this.frontLightManager.light);
+        this.mesh.add(this.frontLightManager.light);
     }
 
     private initBrakeLights(): void {
@@ -409,7 +410,7 @@ export class Car extends Object3D {
         this.brakeLights.push(this.createSmallLight(-BIG_LATERAL_OFFSET));
         this.brakeLights.push(this.createSmallLight(-SMALL_LATERAL_OFFSET));
 
-        this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
+        this.brakeLights.forEach((spotlight: SpotLightManager) => this.mesh.add(spotlight.light));
     }
 
     private createSmallLight(lateralTranslation: number ): SpotLightManager {
