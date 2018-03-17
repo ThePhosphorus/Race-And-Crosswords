@@ -47,7 +47,7 @@ const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
 const CAR_Y_OFFSET: number = -0.1;
-
+const CAR_FILE: string = "../../assets/camero/";
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
 
@@ -134,11 +134,11 @@ export class Car extends Object3D {
     }
 
     // TODO: move loading code outside of car class.
-    private async load(): Promise<Object3D> {
+    private async load(color: string): Promise<Object3D> {
         return new Promise<Object3D>((resolve, reject) => {
             const loader: ObjectLoader = new ObjectLoader();
             loader.load(
-                "../../assets/camero/camero-2010-low-poly.json",
+                CAR_FILE + color + ".json",
                 (object) => {
                     resolve(object);
                 }
@@ -146,8 +146,8 @@ export class Car extends Object3D {
         });
     }
 
-    public async init(position: Vector3): Promise<void> {
-        this.mesh = await this.load();
+    public async init(position: Vector3, color: string): Promise<void> {
+        this.mesh = await this.load(color);
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.mesh.translateY(CAR_Y_OFFSET);
