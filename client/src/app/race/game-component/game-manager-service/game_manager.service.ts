@@ -55,6 +55,7 @@ const ZOOM_IN_KEYCODE: number = 187; // +
 const ZOOM_OUT_KEYCODE: number = 189; // -
 const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
 const TOGGLE_SUNLIGHT_KEYCODE: number = 77; // m
+const HANDBRAKE_KEYCODE: number = 32; // spacebar
 
 export class CarInfos {
     public constructor(
@@ -148,6 +149,8 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
+        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.handBrake());
+        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.releaseHandBrake());
     }
 
     private loadSunlight(): void {

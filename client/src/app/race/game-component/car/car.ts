@@ -16,7 +16,7 @@ import { BoxCollider } from "../collision/colliders/box-collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
 
-const MAXIMUM_STEERING_ANGLE: number = 0.22;
+const DEFAULT_STEERING_ANGLE: number = 0.22;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const MINIMUM_SPEED: number = 0.05;
 const WHEEL_DISTRIBUTION: number = 0.6;
@@ -32,7 +32,8 @@ export class Car extends Object3D {
     private readonly engine: Engine;
     private readonly rearWheel: Wheel;
     private readonly dragCoefficient: number;
-
+    private frictionCoefficient: number;
+    private steeringAngle: number;
     private isBraking: boolean;
     private mesh: Object3D;
     private steeringWheelDirection: number;
@@ -106,6 +107,8 @@ export class Car extends Object3D {
         this.steeringWheelDirection = 0;
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
+        this.frictionCoefficient = DEFAULT_FRICTION_COEFICIENT;
+        this.steeringAngle = DEFAULT_STEERING_ANGLE;
     }
 
     // TODO: move loading code outside of car class.
@@ -137,7 +140,7 @@ export class Car extends Object3D {
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
         this.steeringWheelDirection = steeringState *
-            MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
+            DEFAULT_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     // Input manager callback methods
@@ -160,6 +163,16 @@ export class Car extends Object3D {
 
     public releaseSteeringLeft(): void {
         this.isSteeringLeft = false;
+    }
+
+    public handBrake(): void {
+        this.frictionCoefficient = DEFAULT_FRICTION_COEFICIENT/10;
+        this.steeringAngle = DEFAULT_STEERING_ANGLE*2;
+    }
+
+    public releaseHandBrake(): void {
+        this.frictionCoefficient = DEFAULT_FRICTION_COEFICIENT;
+        this.steeringAngle = DEFAULT_STEERING_ANGLE;
     }
 
     public releaseSteeringRight(): void {
@@ -197,7 +210,7 @@ export class Car extends Object3D {
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeed: number = this.rigidBody.velocity.clone().dot(perpDirection);
 
-        return perpDirection.multiplyScalar(-perpSpeed * DEFAULT_FRICTION_COEFICIENT);
+        return perpDirection.multiplyScalar(-perpSpeed * this.frictionCoefficient);
     }
 
     private getLongitudinalForce(): Vector2 {
