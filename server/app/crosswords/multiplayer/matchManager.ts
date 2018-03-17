@@ -1,5 +1,6 @@
 import { IPlayer } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
+import { CrosswordGrid, Difficulty } from "../../../../common/communication/crossword-grid";
 
 type Socket = SocketIO.Socket;
 
@@ -13,10 +14,13 @@ class Player implements IPlayer {
 
 export class MatchManager {
     private _players: Array<Player>;
+    private grid: CrosswordGrid;
+    private _difficulty: Difficulty;
 
-    public constructor(player1: Socket) {
+    public constructor(player1: Socket, difficulty: Difficulty) {
         this._players = new Array <Player>();
         this.addPlayer(player1);
+        this._difficulty = difficulty;
     }
 
     public get PlayerOne(): string {
@@ -24,21 +28,20 @@ export class MatchManager {
     }
 
     public addPlayer(socket: Socket): void {
-        console.log("Player added");
-
         this._players.push(new Player(this._players.length, socket, "defaultName"));
         this.askForName(this._players[this._players.length - 1]);
         this.registerActions( socket);
     }
 
+    public get difficulty(): Difficulty {
+        return this._difficulty;
+    }
+
     private askForName(player: Player): void {
         player.socket.emit(msg.askForName, player.id);
-        console.log("request name sent");
-
     }
 
     private receiveName(id: number, name: string): void {
-        console.log("received name is " + name);
         const player: Player = this.getPlayerById(id);
         if (player != null) {
             player.name = name;

@@ -5,6 +5,7 @@ import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
 import { connect } from "socket.io-client";
 import socketMsg from "../../../../../common/communication/socketTypes";
+import { InWaitMatch } from "../../../../../common/communication/Match";
 
 @Injectable()
 export class CrosswordCommunicationService {
@@ -21,8 +22,8 @@ export class CrosswordCommunicationService {
             "difficulty=" + difficulty +
             "&size=" + size);
     }
-    public getMatches(): Observable<Array<string>> {
-        return this.http.get<Array<string>>(BACKEND_URL + "crosswords/multiplayer/matchs");
+    public getMatches(): Observable<Array<InWaitMatch>> {
+        return this.http.get<Array<InWaitMatch>>(BACKEND_URL + "crosswords/multiplayer/matchs");
     }
     public basicServerConnection(): Observable<string> {
         return this.http.get<string>(BACKEND_URL);
@@ -33,8 +34,8 @@ export class CrosswordCommunicationService {
         this.socket.on(socketMsg.askForName, (id: number) => this.socketReturnName(id));
     }
 
-    public createMatch(): void {
-        this.socket.emit(socketMsg.createMatch);
+    public createMatch(difficulty: Difficulty): void {
+        this.socket.emit(socketMsg.createMatch, difficulty);
     }
 
     public joinMatch(matchName: string): void {
@@ -42,8 +43,6 @@ export class CrosswordCommunicationService {
     }
 
     private socketReturnName(id: number): void {
-        console.log("Returned name");
-
         this.socket.emit(socketMsg.receiveName, id, "Return Name");
     }
 }

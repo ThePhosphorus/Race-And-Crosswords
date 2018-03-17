@@ -3,17 +3,19 @@ import * as http from "http";
 import { injectable } from "inversify";
 import { MatchManager } from "./matchManager";
 import msg from "../../../../common/communication/socketTypes";
+import { Difficulty } from "../../../../common/communication/crossword-grid";
+import { InWaitMatch } from "../../../../common/communication/Match";
 
 type Socket = SocketIO.Socket;
 
 @injectable()
 export class SocketsManager {
     private io: SocketIO.Server ;
-    private _matchs: Array<MatchManager>;
+    private _inWaitMatchs: Array<MatchManager>;
 
     public constructor() {
         this.io = null;
-        this._matchs = new Array<MatchManager>();
+        this._inWaitMatchs = new Array<MatchManager>();
     }
 
     public launch(server: http.Server): void {
@@ -25,24 +27,24 @@ export class SocketsManager {
         this.io.on(msg.connection, (socket: Socket) => this.addSocket(socket));
     }
 
-    public createMatch(socket: Socket): void {
-        this._matchs.push(new MatchManager(socket));
+    public createMatch(socket: Socket, diff: Difficulty): void {
+        this._inWaitMatchs.push(new MatchManager(socket, diff));
     }
 
     public joinMatch(socket: Socket, joinName: string): void {
-        this._matchs.forEach((m: MatchManager, index: number) => {
+        this._inWaitMatchs.forEach((m: MatchManager, index: number) => {
             if (m.PlayerOne === joinName) {
                 m.addPlayer(socket);
-                this._matchs.slice(index, 1);
+                this._inWaitMatchs.slice(index, 1);
             }
         });
     }
 
-    public getNames(): Array<string> {
-        const names: Array<string> = new Array<string>();
-        this._matchs.forEach((m: MatchManager) => {
+    public getInWaitMatches(): Array<InWaitMatch> {
+        const names: Array<InWaitMatch> = new Array<InWaitMatch>();
+        this._inWaitMatchs.forEach((m: MatchManager) => {
             if (m.PlayerOne != null) {
-                names.push(m.PlayerOne);
+                names.push(new InWaitMatch(m.PlayerOne, m.difficulty));
             }
         });
 
@@ -50,7 +52,7 @@ export class SocketsManager {
     }
 
     private addSocket(socket: Socket): void {
-        socket.on(msg.createMatch, () => this.createMatch(socket) );
+        socket.on(msg.createMatch, (diff: Difficulty) => this.createMatch(socket, diff) );
         socket.on(msg.joinMatch, (name: string) => this.joinMatch(socket, name));
     }
 }

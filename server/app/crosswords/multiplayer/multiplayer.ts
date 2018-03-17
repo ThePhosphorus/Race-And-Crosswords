@@ -15,7 +15,7 @@ export class Multiplayer extends WebService {
     protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("Multiplayer End point!"));
 
-        this._router.get("/matchs", (req: Request, res: Response, next: NextFunction) => res.send(this.socketManager.getNames()));
+        this._router.get("/matchs", (req: Request, res: Response, next: NextFunction) => res.send(this.socketManager.getInWaitMatches()));
 
     }
 }
