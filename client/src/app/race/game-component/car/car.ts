@@ -24,7 +24,6 @@ const NUMBER_REAR_WHEELS: number = 2;
 const NUMBER_WHEELS: number = 4;
 const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
-const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 export class Car extends Object3D {
