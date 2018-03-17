@@ -35,6 +35,7 @@ import {
     SMALL_LIGHT_OFFSET,
     SMALL_LIGHT_INTENSITY
 } from "./lights/lights-constants";
+import { RigidBody } from "../rigid-body/rigid-body";
 
 const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
@@ -65,6 +66,7 @@ export class Car extends Object3D {
     private weightRear: number;
     private isSteeringLeft: boolean;
     private isSteeringRight: boolean;
+    private rigidBody: RigidBody;
 
     public get carMesh(): Object3D {
         return this.mesh;
@@ -130,6 +132,7 @@ export class Car extends Object3D {
         this.isSteeringLeft = false;
         this.isSteeringRight = false;
         this.brakeLights = new Array<SpotLightManager>();
+        this.rigidBody = new RigidBody(1); // TODO Change mass
     }
 
     // TODO: move loading code outside of car class.
@@ -149,16 +152,17 @@ export class Car extends Object3D {
         this.mesh = await this.load();
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
+        this.mesh.translateY(CAR_Y_OFFSET);
+
         const box: Box3 = new Box3().setFromObject(this.mesh);
         this.mesh.add(new BoxCollider(box.getSize().z, box.getSize().x, box.getSize().y, new Vector3(0, 0, 0)));
-        this.mesh.translateY(CAR_Y_OFFSET);
+        this.mesh.add(this.rigidBody);
         this.add(this.mesh);
         this.initLights();
     }
     private initLights(): void {
         this.initFrontLight();
         this.initBrakeLights();
-
     }
     private initFrontLight(): void {
         const frontLight: SpotLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
@@ -272,6 +276,8 @@ export class Car extends Object3D {
             Math.sin(this.steeringWheelDirection * deltaTime);
         const omega: number = this._speed.length() / R;
         this.mesh.rotateY(omega);
+
+        this.rigidBody.update(deltaTime);
     }
 
     private physicsUpdate(deltaTime: number): void {
@@ -325,8 +331,6 @@ export class Car extends Object3D {
     private getRollingResistance(): Vector3 {
         const tirePressure: number = 1;
         // formula taken from: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
-
-        // tslint:disable-next-line:no-magic-numbers
         const rollingCoefficient: number =
             1 / tirePressure *
             (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
@@ -411,7 +415,6 @@ export class Car extends Object3D {
     }
 
     private isGoingForward(): boolean {
-        // tslint:disable-next-line:no-magic-numbers
         return this.speed.normalize().dot(this.direction) > MINIMUM_SPEED;
     }
 

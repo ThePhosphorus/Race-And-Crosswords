@@ -1,6 +1,6 @@
-import { Vector2 } from "three";
+import { Vector2, Object3D } from "three";
 
-export class RigidBody {
+export class RigidBody extends Object3D {
 
     private forces: Vector2;
     private angularForces: Vector2;
@@ -10,6 +10,7 @@ export class RigidBody {
     private mass: number;
 
     public constructor(mass: number, fixed?: boolean) {
+        super();
         this.fixed = fixed == null ? false : fixed;
         this.angularForces = new Vector2();
         this.forces = new Vector2();
@@ -32,8 +33,8 @@ export class RigidBody {
 
     public update(deltaTime: number): void {
         if (this.fixed) {
-            this.forces = new Vector2;
-            this.angularForces = new Vector2;
+            this.forces = new Vector2();
+            this.angularForces = new Vector2();
 
             return;
         }
