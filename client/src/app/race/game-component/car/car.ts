@@ -74,7 +74,7 @@ export class Car extends Object3D {
     }
 
     public get speed(): number {
-        return this.rigidBody.velocity.length();
+        return this.mesh == null ? 0 : this.rigidBody.velocity.clone().dot(this.direction2D);
     }
 
     public constructor(
@@ -180,8 +180,11 @@ export class Car extends Object3D {
 
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
+        this.engine.update(this.speed, this.rearWheel.radius);
+
         this.rigidBody.addForce(this.getLongitudinalForce());
         this.rigidBody.update(deltaTime);
+
         // // Move to car coordinates
         // const rotationMatrix: Matrix4 = new Matrix4();
         // rotationMatrix.extractRotation(this.mesh.matrix);
@@ -209,9 +212,11 @@ export class Car extends Object3D {
 
         if (this.speed >= MINIMUM_SPEED) {
             const dragForce: Vector2 = this.getDragForce();
-            const rollingResistance: Vector2 = this.getRollingResistance();
-            resultingForce.add(dragForce).add(rollingResistance);
+            resultingForce.add(dragForce);
         }
+
+        const rollingResistance: Vector2 = this.getRollingResistance();
+        resultingForce.add(rollingResistance);
 
         if (this.isAcceleratorPressed) {
             const tractionForce: number = this.getTractionForce();
@@ -234,11 +239,7 @@ export class Car extends Object3D {
             (Math.pow(this.speed * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
         /* tslint:enable:no-magic-numbers */
 
-        if (this.isGoingForward()) {
-            return this.direction2D.multiplyScalar(rollingCoefficient * this.rigidBody.mass * GRAVITY);
-        }
-
-        return this.direction2D.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.rigidBody.mass * GRAVITY);
+        return this.direction2D.multiplyScalar(Math.sign(this.speed) * rollingCoefficient * this.rigidBody.mass * GRAVITY);
     }
 
     private getDragForce(): Vector2 {
@@ -246,6 +247,7 @@ export class Car extends Object3D {
         const airDensity: number = 1.2;
         const resistance: Vector2 = this.direction2D;
         resistance.multiplyScalar(
+            Math.sign(this.speed) *
             airDensity *
             carSurface *
             -this.dragCoefficient *
@@ -271,7 +273,7 @@ export class Car extends Object3D {
 
     private getBrakeForce(): Vector2 {
         return this.direction2D.multiplyScalar(
-            this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
+            Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
         );
     }
 
@@ -337,7 +339,7 @@ export class Car extends Object3D {
     // }
 
     private isGoingForward(): boolean {
-        return this.rigidBody.velocity.clone().normalize().dot(this.direction2D) > MINIMUM_SPEED;
+        return this.speed > 0;
     }
 
     public getPosition(): Vector3 {
