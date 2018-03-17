@@ -31,8 +31,12 @@ export class CrosswordCommunicationService {
     public createSocket(): void {
         this.socket = connect(BACKEND_URL);
     }
-    public createMatch(): void {
-        this.socket.emit(socketMsg.createMatch, {});
 
+    public createMatch(): void {
+        this.socket.emit(socketMsg.createMatch);
+    }
+
+    public joinMatch(matchName: string): void {
+        this.socket.emit(socketMsg.joinMatch, matchName);
     }
 }

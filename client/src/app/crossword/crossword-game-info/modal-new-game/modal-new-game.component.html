@@ -13,7 +13,7 @@
 
         <tbody>
             <tr *ngFor="let match of matches; let col = index" [ngClass]="{'black': true}">
-                <button class="btn btn-secondary  w-100 m-0">
+                <button class="btn btn-secondary  w-100 m-0" (click)="joinMatch(match)">
                     {{match}}
                   </button>
             </tr>
