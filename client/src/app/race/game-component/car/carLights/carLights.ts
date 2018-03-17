@@ -1,14 +1,20 @@
 import { SpotLight, Vector3, Object3D } from "three";
-import { FRONT_LIGHT_COLOR, FAR_LIGHT_DISTANCE, FRONT_LIGHT_PENUMBRA } from "./lights-constants";
-const FRONT_LIGHT_POSITION: Vector3 = new Vector3(0, 1, -1);
-const FRONT_LIGHT_TARGET: Vector3 = new Vector3(0, -0.1, -10);
+import { FRONT_LIGHT_COLOR, FAR_LIGHT_DISTANCE, FRONT_LIGHT_PENUMBRA, BACK_LIGHT_PENUMBRA, FRONT_LIGHT_ANGLE } from "./lights-constants";
+import { RED } from "../../../../global-constants/constants";
+const FRONT_LIGHT_POSITION: Vector3 = new Vector3(0, 0.8, -1.4);
+const FRONT_LIGHT_TARGET: Vector3 = new Vector3(0, 0.8, -10);
+
+const BACK_LIGHT_POSITION: Vector3 = new Vector3(0, 0.7, 1.4);
+const BACK_LIGHT_TARGET: Vector3 = new Vector3(0, -0.2, 10);
 export class CarLights extends Object3D {
     private frontLight: SpotLight;
+    private brakeLights: Array<SpotLight>;
     // private brakeLights: Array<SpotLight>;
     public constructor() {
         super();
-        // this.brakeLights = new Array<SpotLight>();
+        this.brakeLights = new Array<SpotLight>();
         this.initFrontLight();
+        this.initBrakeLights();
     }
 
     private initFrontLight(): void {
@@ -19,4 +25,15 @@ export class CarLights extends Object3D {
         this.add(this.frontLight);
         this.add(this.frontLight.target);
     }
+
+    private initBrakeLights(): void {
+        const brakeLightCenter: SpotLight = new SpotLight(RED, 1, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
+        brakeLightCenter.penumbra = BACK_LIGHT_PENUMBRA;
+        brakeLightCenter.position.copy(BACK_LIGHT_POSITION);
+        brakeLightCenter.target.position.copy(BACK_LIGHT_TARGET);
+        this.add(brakeLightCenter);
+        this.add(brakeLightCenter.target);
+        this.brakeLights.push(brakeLightCenter);
+    }
+
 }
