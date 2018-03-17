@@ -160,58 +160,7 @@ export class Car extends Object3D {
         this.add(this.mesh);
         this.initLights();
     }
-    private initLights(): void {
-        this.initFrontLight();
-        this.initBrakeLights();
-    }
-    private initFrontLight(): void {
-        const frontLight: SpotLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
-        frontLight.penumbra = FRONT_LIGHT_PENUMBRA;
-        this.frontLightManager =
-            new SpotLightManager(
-                frontLight,
-                FRONT_LIGHT_HEIGHT,
-                FRONT_LIGHT_LATERAL_OFFSET,
-                FRONT_LIGHT_OFFSET,
-                true
-            );
-        this.add(this.frontLightManager.light);
-    }
 
-    private initBrakeLights(): void {
-        const brakeLightCenter: SpotLight = new SpotLight(RED, 0, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
-        brakeLightCenter.penumbra = BACK_LIGHT_PENUMBRA;
-        const brakeLightCenterManager: SpotLightManager =
-            new SpotLightManager(
-                brakeLightCenter,
-                BACK_LIGHT_HEIGHT,
-                BACK_LIGHT_LATERAL_OFFSET,
-                BACK_LIGHT_OFFSET,
-                false,
-                BACK_LIGHT_INTENSITY
-            );
-
-        this.brakeLights.push(brakeLightCenterManager);
-        this.brakeLights.push(this.createSmallLight(SMALL_LATERAL_OFFSET));
-        this.brakeLights.push(this.createSmallLight(BIG_LATERAL_OFFSET));
-        this.brakeLights.push(this.createSmallLight(-BIG_LATERAL_OFFSET));
-        this.brakeLights.push(this.createSmallLight(-SMALL_LATERAL_OFFSET));
-
-        this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
-    }
-
-    private createSmallLight(lateralTranslation: number ): SpotLightManager {
-        const smallLight: SpotLight = new SpotLight(RED, 0, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE);
-
-        return new SpotLightManager(
-            smallLight,
-            SMALL_LIGHT_HEIGHT,
-            lateralTranslation,
-            SMALL_LIGHT_OFFSET,
-            true,
-            SMALL_LIGHT_INTENSITY
-        );
-    }
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
         this.steeringWheelDirection = steeringState *
@@ -265,7 +214,6 @@ export class Car extends Object3D {
 
         // Physics calculations
         this.physicsUpdate(deltaTime);
-        this.lightUpdate();
         // Move back to world coordinates
         this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
 
@@ -278,6 +226,7 @@ export class Car extends Object3D {
         this.mesh.rotateY(omega);
 
         this.rigidBody.update(deltaTime);
+        this.lightUpdate();
     }
 
     private physicsUpdate(deltaTime: number): void {
@@ -292,10 +241,7 @@ export class Car extends Object3D {
         this.mesh.position.add(this.getDeltaPosition(deltaTime));
         this.rearWheel.update(this._speed.length());
     }
-    private lightUpdate(): void {
-        this.frontLightManager.update(this.mesh.position, this.direction);
-        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.update(this.mesh.position, this.direction));
-    }
+
     private getWeightDistribution(): number {
         const acceleration: number = this.getAcceleration().length();
         /* tslint:disable:no-magic-numbers */
@@ -424,5 +370,65 @@ export class Car extends Object3D {
 
     public toggleNightLight(): void {
         this.frontLightManager.toggle();
+    }
+
+    private initLights(): void {
+        this.initFrontLight();
+        this.initBrakeLights();
+    }
+
+    // TODO Remove light stuff from car
+    private initFrontLight(): void {
+        const frontLight: SpotLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
+        frontLight.penumbra = FRONT_LIGHT_PENUMBRA;
+        this.frontLightManager =
+            new SpotLightManager(
+                frontLight,
+                FRONT_LIGHT_HEIGHT,
+                FRONT_LIGHT_LATERAL_OFFSET,
+                FRONT_LIGHT_OFFSET,
+                true
+            );
+        this.add(this.frontLightManager.light);
+    }
+
+    private initBrakeLights(): void {
+        const brakeLightCenter: SpotLight = new SpotLight(RED, 0, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
+        brakeLightCenter.penumbra = BACK_LIGHT_PENUMBRA;
+        const brakeLightCenterManager: SpotLightManager =
+            new SpotLightManager(
+                brakeLightCenter,
+                BACK_LIGHT_HEIGHT,
+                BACK_LIGHT_LATERAL_OFFSET,
+                BACK_LIGHT_OFFSET,
+                false,
+                BACK_LIGHT_INTENSITY
+            );
+
+        this.brakeLights.push(brakeLightCenterManager);
+        this.brakeLights.push(this.createSmallLight(SMALL_LATERAL_OFFSET));
+        this.brakeLights.push(this.createSmallLight(BIG_LATERAL_OFFSET));
+        this.brakeLights.push(this.createSmallLight(-BIG_LATERAL_OFFSET));
+        this.brakeLights.push(this.createSmallLight(-SMALL_LATERAL_OFFSET));
+
+        this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
+    }
+
+    private createSmallLight(lateralTranslation: number ): SpotLightManager {
+        const smallLight: SpotLight = new SpotLight(RED, 0, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE);
+
+        return new SpotLightManager(
+            smallLight,
+            SMALL_LIGHT_HEIGHT,
+            lateralTranslation,
+            SMALL_LIGHT_OFFSET,
+            true,
+            SMALL_LIGHT_INTENSITY
+        );
+    }
+
+    private lightUpdate(): void {
+        this.frontLightManager.update(this.mesh.position, this.direction);
+        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.update(this.mesh.position, this.direction));
     }
 }
