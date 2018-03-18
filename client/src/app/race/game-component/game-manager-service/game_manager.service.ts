@@ -116,7 +116,6 @@ export class GameManagerService extends Renderer {
         this.aiControlledCars.forEach((car) => car.update(deltaTime));
         this.cameraTargetDirection = this.player.direction;
         this.cameraTargetPosition = this.player.getPosition();
-        this.soundManager.updateCarRpm(this.player.id, this.player.rpm);
         this.collisionDetector.detectCollisions(this.scene);
         this.updateSunlight();
     }
@@ -143,7 +142,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
         this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.carControl.handBrake());
-        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.soundManager.startDrift(this.player));
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.carControl.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.carControl.releaseBrakes());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.carControl.releaseSteeringLeft());
