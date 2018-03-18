@@ -118,8 +118,8 @@ export class CollisionDetectorService {
             const v1: Vector2 = rb1.velocity.clone();
             const v2: Vector2 = rb2.velocity.clone();
 
-            const antiOverlap1: Vector2 = rb1.velocity.normalize().multiplyScalar(collision.overlap / 2);
-            const antiOverlap2: Vector2 = rb2.velocity.normalize().multiplyScalar(collision.overlap / 2);
+            const antiOverlap1: Vector2 = rb1.velocity.clone().normalize().multiplyScalar(collision.overlap / 2);
+            const antiOverlap2: Vector2 = rb2.velocity.clone().normalize().multiplyScalar(collision.overlap / 2);
             rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
             rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 
