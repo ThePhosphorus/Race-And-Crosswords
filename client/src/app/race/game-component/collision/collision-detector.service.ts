@@ -57,18 +57,12 @@ export class CollisionDetectorService {
     private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): boolean {
         const vertexes1: Array<Vector2> = coll1.getAbsoluteVertexes2D();
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
+        const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
 
-        for (const normal of coll1.getNormals()) {
+        for (const normal of axises) {
             const projected1: Projected = new Projected(vertexes1, normal);
             const projected2: Projected = new Projected(vertexes2, normal);
             if (projected1.isDisjoint(projected2)) {
-                return false;
-            }
-        }
-        for (const normal of coll2.getNormals()) {
-            const projected1: Projected = new Projected(vertexes1, normal);
-            const projected2: Projected = new Projected(vertexes2, normal);
-            if (projected2.isDisjoint(projected1)) {
                 return false;
             }
         }
