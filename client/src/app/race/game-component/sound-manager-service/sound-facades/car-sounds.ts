@@ -2,7 +2,7 @@ import {AudioListener, Object3D} from "three";
 import { PositionalSoundFacade } from "./positional-sound-facade";
 
 const ENGINE_FILE_NAME: string = "./engine/idle.ogg";
-const DRIFT_FILE_NAME: string = "./drift/drift2.ogg";
+const DRIFT_FILE_NAME: string = "./drift/drift1.ogg";
 const MAX_RPM: number = 5500;
 const MIN_RPM: number = 800;
 const PLAYBACK_SPEED_FACTOR: number = 2;

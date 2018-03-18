@@ -4,12 +4,11 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    // Quaternion,
     Box3,
     Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG, HALF } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { BoxCollider } from "../collision/colliders/box-collider";
