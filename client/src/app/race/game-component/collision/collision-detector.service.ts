@@ -4,6 +4,7 @@ import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
 import { Projected } from "./projection";
+import { Collision } from "./collision";
 
 @Injectable()
 export class CollisionDetectorService {
@@ -16,9 +17,9 @@ export class CollisionDetectorService {
         for (let i: number = 0; i < colliders.length; i++) {
             for (let j: number = i + 1; j < colliders.length; j++) {
                 if (this.broadDetection(colliders[i], colliders[j])) {
-                    const intersection: boolean = this.narrowDetection(colliders[i], colliders[j]);
-                    if (intersection) {
-                        this.resolveCollision(colliders[i], colliders[j], intersection);
+                    const collision: Collision = this.narrowDetection(colliders[i], colliders[j]);
+                    if (collision != null) {
+                        this.resolveCollision(collision);
                     }
                 }
             }
@@ -42,19 +43,15 @@ export class CollisionDetectorService {
                 coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
 
-    private narrowDetection(coll1: Collider, coll2: Collider): boolean {
-        if (coll1 instanceof LineCollider && coll2 instanceof BoxCollider) {
-            return this.boxLineDetection(coll2, coll1);
-        } else if (coll2 instanceof LineCollider && coll1 instanceof BoxCollider) {
-            return this.boxLineDetection(coll1, coll2);
-        } else if (coll1 instanceof BoxCollider && coll2 instanceof BoxCollider) {
+    private narrowDetection(coll1: Collider, coll2: Collider): Collision {
+        if (coll1 instanceof BoxCollider && coll2 instanceof BoxCollider) {
             return this.boxBoxDetection(coll1, coll2);
         }
 
         return null;
     }
 
-    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): boolean {
+    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): Collision {
         const vertexes1: Array<Vector2> = coll1.getAbsoluteVertexes2D();
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
         const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
@@ -66,7 +63,7 @@ export class CollisionDetectorService {
             const projected2: Projected = new Projected(vertexes2, normal);
             const distance: number = projected1.distance(projected2);
             if (distance > 0) {
-                return false;
+                return null;
             }
             if (Math.abs(distance) < minDistance) {
                 minDistance = Math.abs(distance);
@@ -74,14 +71,10 @@ export class CollisionDetectorService {
             }
         }
 
-        return true;
+        return new Collision(coll1, new Vector2(), coll2, new Vector2());
     }
 
-    private boxLineDetection(box: BoxCollider, line: LineCollider): boolean {
-        return false;
-    }
-
-    private resolveCollision(coll1: Collider, coll2: Collider, intersection: boolean): void {
+    private resolveCollision(collision: Collision): void {
         console.log("collision");
     }
 }

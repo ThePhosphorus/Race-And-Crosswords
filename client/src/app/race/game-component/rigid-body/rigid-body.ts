@@ -1,4 +1,5 @@
 import { Vector2, Object3D, Vector3 } from "three";
+import { Collision } from "../collision/collision";
 
 const MINIMUM_SPEED: number = 0.05;
 
@@ -37,7 +38,7 @@ export class RigidBody extends Object3D {
         this.torque += torque;
     }
 
-    public addForceAtPosition(force: Vector2, position: Vector2): void {
+    public applyCollision(collision: Collision): void {
         // TODO
     }
 
@@ -55,6 +56,7 @@ export class RigidBody extends Object3D {
         this._velocity.add(this.getDeltaVelocity(deltaTime));
         this._angularVelocity += this.getDeltaAngularVelocity(deltaTime);
 
+        // Round down to 0 if speed is too small
         this._velocity.setLength(this._velocity.length() <= MINIMUM_SPEED ? 0 : this._velocity.length());
         this._angularVelocity = this._angularVelocity <= MINIMUM_SPEED ? 0 : this._angularVelocity;
 
