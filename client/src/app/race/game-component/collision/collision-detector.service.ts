@@ -104,12 +104,16 @@ export class CollisionDetectorService {
     private resolveCollision(collision: Collision): void {
         const rb1: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
         const rb2: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
-        if (rb1 != null) {
-            rb1.applyCollision(collision, rb2);
-        }
 
-        if (rb2 != null) {
-            rb2.applyCollision(collision, rb1);
+        if (rb1 != null && rb2 != null) {
+            const m1: number = rb1.mass;
+            const m2: number = rb2.mass;
+
+            const v1: Vector2 = rb1.velocity;
+            const v2: Vector2 = rb2.velocity;
+
+            rb1.applyCollision(collision.collidingPoint1, m2, v2);
+            rb2.applyCollision(collision.collidingPoint2, m1, v1);
         }
     }
 }

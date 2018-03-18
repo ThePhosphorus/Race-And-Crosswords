@@ -1,6 +1,4 @@
 import { Vector2, Object3D, Vector3 } from "three";
-import { Collision } from "../collision/collision";
-import { Collider } from "../collision/colliders/collider";
 
 const MINIMUM_SPEED: number = 0.05;
 
@@ -39,8 +37,9 @@ export class RigidBody extends Object3D {
         this.torque += torque;
     }
 
-    public applyCollision(collision: Collision, other: RigidBody): void {
-        // TODO
+    public applyCollision(collidingPoint: Vector2, otherMass: number, otherVelocity: Vector2): void {
+        this.velocity.setLength((this.velocity.length() * (otherMass - this.mass) + (otherMass * otherVelocity.length() * 2))
+            / (this.mass + otherMass));
     }
 
     public update(deltaTime: number): void {
