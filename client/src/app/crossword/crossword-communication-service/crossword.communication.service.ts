@@ -31,7 +31,7 @@ export class CrosswordCommunicationService {
 
     public createSocket(): void {
         this.socket = connect(BACKEND_URL);
-        this.socket.on(socketMsg.askForName, (id: number) => this.socketReturnName(id));
+        this.socket.on(socketMsg.requestName, (id: number) => this.socketReturnName(id));
     }
 
     public createMatch(difficulty: Difficulty): void {
@@ -43,6 +43,6 @@ export class CrosswordCommunicationService {
     }
 
     private socketReturnName(id: number): void {
-        this.socket.emit(socketMsg.receiveName, id, "Return Name");
+        this.socket.emit(socketMsg.requestName, "Return Name");
     }
 }

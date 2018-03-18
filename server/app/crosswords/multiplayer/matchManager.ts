@@ -13,8 +13,8 @@ class Player implements IPlayer {
 }
 
 export class MatchManager {
+    public grid: CrosswordGrid;
     private _players: Array<Player>;
-    private grid: CrosswordGrid;
     private _difficulty: Difficulty;
 
     public constructor(player1: Socket, difficulty: Difficulty) {
@@ -29,7 +29,7 @@ export class MatchManager {
 
     public addPlayer(socket: Socket): void {
         const id: number = this._players.length;
-        this._players.push(new Player(id, socket, "defaultName"));
+        this._players.push(new Player(id, socket, "Jonh Doe"));
         this.askForName(this._players[id]);
         this.registerActions( socket, id );
     }
@@ -39,7 +39,7 @@ export class MatchManager {
     }
 
     private askForName(player: Player): void {
-        player.socket.emit(msg.askForName, player.id);
+        player.socket.emit(msg.requestName);
     }
 
     private receiveName(id: number, name: string): void {
@@ -64,11 +64,13 @@ export class MatchManager {
     }
 
     private registerActions(socket: Socket, id: number): void {
-        socket.on(msg.receiveName, (name: string) =>
+        socket.on(msg.requestName, (name: string) =>
             this.receiveName(id, name));
 
         socket.on(msg.playerSelectTile, (letterId: number, orientation: Orientation) =>
             this.recieveSelect(id, letterId, orientation));
+
+        socket.on(msg.disconnect, () => this.playerLeave(id));
     }
 
     public get Players (): Array<Player> {
@@ -81,6 +83,14 @@ export class MatchManager {
                 p.socket.emit(msg.playerSelectTile, letterId, orientation);
             }
         });
+    }
+
+    public playerLeave(id: number): void {
+        for (let i: number = id + 1; i < this._players.length; i++) {
+            this._players[i].id--;
+        }
+
+        this._players.splice(id, 1);
     }
 
 }

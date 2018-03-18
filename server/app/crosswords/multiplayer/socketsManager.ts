@@ -3,10 +3,13 @@ import * as http from "http";
 import { injectable } from "inversify";
 import { MatchManager } from "./matchManager";
 import msg from "../../../../common/communication/socketTypes";
-import { Difficulty } from "../../../../common/communication/crossword-grid";
+import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import { InWaitMatch } from "../../../../common/communication/Match";
+import { GRID_GENERATION_SERVICE_URL } from "../../constants";
+import * as Request from "request-promise-native";
 
 type Socket = SocketIO.Socket;
+const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
 
 @injectable()
 export class SocketsManager {
@@ -27,14 +30,21 @@ export class SocketsManager {
         this.io.on(msg.connection, (socket: Socket) => this.addSocket(socket));
     }
 
-    public createMatch(socket: Socket, diff: Difficulty): void {
-        this._inWaitMatchs.push(new MatchManager(socket, diff));
+    public async createMatch(socket: Socket, diff: Difficulty): Promise<void> {
+        const newMatch: MatchManager = new MatchManager(socket, diff);
+        const link: string = GET_10X10_GRID_LINK + "&difficulty=" + diff;
+
+        await Request(link, (res: CrosswordGrid) => newMatch.grid = res);
+
+        this._inWaitMatchs.push(newMatch);
+        socket.emit(msg.getGrid, newMatch.grid);
     }
 
     public joinMatch(socket: Socket, joinName: string): void {
         this._inWaitMatchs.forEach((m: MatchManager, index: number) => {
             if (m.PlayerOne === joinName) {
                 m.addPlayer(socket);
+                socket.emit(msg.getGrid, m.grid);
                 this._inWaitMatchs.slice(index, 1);
             }
         });

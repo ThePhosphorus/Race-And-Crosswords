@@ -1,8 +1,8 @@
 import { Word } from "../../../../../common/communication/crossword-grid";
 import { DatamuseWord } from "../../../../../common/communication/datamuse-word";
 import * as Request from "request-promise-native";
+import { LEXICAL_SERVICE_URL } from "../../../constants";
 
-const LEXICAL_SERVICE_URL: string = "http://localhost:3000/crosswords/lexical";
 const LEXICAL_REQUEST_WORDS: string = "/query-word";
 const LEXICAL_TEST_WORD: string = "/query-definitions";
 
