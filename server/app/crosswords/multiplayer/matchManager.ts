@@ -49,7 +49,7 @@ export class MatchManager {
         }
     }
 
-    public getPlayerById(id: number): Player {
+    private getPlayerById(id: number): Player {
         // Check if it's at the right place
         let player: Player = null;
         if (this._players[id].id === id) {
@@ -73,8 +73,8 @@ export class MatchManager {
         socket.on(msg.disconnect, () => this.playerLeave(id));
     }
 
-    public get Players (): Array<Player> {
-        return this._players;
+    public get Players (): Array<IPlayer> {
+        return this._players.map((p: Player) => p as IPlayer);
     }
 
     public recieveSelect(playerId: number, letterId: number, orientation: Orientation ): void {
@@ -86,11 +86,14 @@ export class MatchManager {
     }
 
     public playerLeave(id: number): void {
-        for (let i: number = id + 1; i < this._players.length; i++) {
-            this._players[i].id--;
-        }
-
         this._players.splice(id, 1);
+        this._players.forEach((p: Player, index: number) => {
+            if (index !== p.id) {
+                p.id = index;
+            }
+            p.socket.emit(msg.getPlayers, this.Players);
+        });
+
     }
 
 }
