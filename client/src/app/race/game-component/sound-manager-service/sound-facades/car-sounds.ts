@@ -9,14 +9,14 @@ const PLAYBACK_SPEED_FACTOR: number = 2;
 
 export class CarSounds {
 
-    public engine: PositionalSoundFacade;
-    public _drift: PositionalSoundFacade;
+    private engine: PositionalSoundFacade;
+    private _drift: PositionalSoundFacade;
 
     public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
         this.engine = new PositionalSoundFacade(soundEmittingObject, soundListener, true);
-        // this._drift = new PositionalSoundFacade(soundEmittingObject, soundListener, false);
+        this._drift = new PositionalSoundFacade(soundEmittingObject, soundListener, false);
         this.engine.init(ENGINE_FILE_NAME, sourcePath).then(() => this.engine.play());
-        // this._drift.init(DRIFT_FILE_NAME, sourcePath).then(() => this._drift.setVolume(2));
+        this._drift.init(DRIFT_FILE_NAME, sourcePath).then(() => this._drift.setVolume(2));
     }
     public updateRPM(rpm: number): void {
         this.engine.setPlaybackRate(this.getPlaybackRate(rpm));
@@ -28,13 +28,19 @@ export class CarSounds {
         this.engine.stop();
     }
 
-    public drift(): void {
+    public startDrift(): void {
         if (!this._drift.isPlaying()) {
             this._drift.play();
         }
     }
 
+    public get drift(): PositionalSoundFacade {
+        return this._drift;
+    }
+
     public releaseDrift(): void {
-        this._drift.stop();
+        if (this._drift != null) {
+            this._drift.stop();
+        }
     }
 }

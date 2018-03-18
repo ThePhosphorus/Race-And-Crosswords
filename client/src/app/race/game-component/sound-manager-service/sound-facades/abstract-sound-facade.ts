@@ -52,6 +52,8 @@ export abstract class AbstractSoundFacade {
     }
 
     public stop(): void {
-        this.sound.stop();
+        if (this.sound != null) {
+            this.sound.stop();
+        }
     }
 }

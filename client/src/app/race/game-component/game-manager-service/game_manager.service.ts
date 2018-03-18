@@ -13,7 +13,7 @@ import {
     Vector3
 } from "three";
 import { Car } from "../car/car";
-import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
