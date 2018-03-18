@@ -35,7 +35,7 @@ export class BoxCollider extends Collider {
         return normals;
     }
     public getAbsoluteVertexes2D(): Vector2[] {
-        const vertexes: Vector2[] = new Array<Vector2>();
+        const vertexes: Array<Vector2> = new Array<Vector2>();
         for (const vertex of this.relativeVertexes) {
             const absoluteVertex3D: Vector3 = vertex.clone().applyMatrix4(this.parent.matrix);
             vertexes.push(new Vector2(absoluteVertex3D.x, absoluteVertex3D.z));
