@@ -7,7 +7,7 @@ export const AMBIENT_LIGHT_OPACITY: number = 0.65;
 export const AMBIENT_NIGHT_LIGHT_OPACITY: number = 0.3;
 export const WHITE: number = 0xFFFFFF;
 export const RED: number = 0xFF0000;
-export const SUNSET: number = 0xFFAAAA;
+export const SUNSET: number = 0xFFEAAA;
 
 // camera constants
 export const FAR_CLIPPING_PLANE: number = 1000;
