@@ -3,13 +3,9 @@ import { Scene, Vector2 } from "three";
 import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
+import { Projected } from "./projection";
 
-class MinMax {
-    public minProj: number;
-    public maxProj: number;
-    public minIndex: number;
-    public maxIndex: number;
-}
+
 
 @Injectable()
 export class CollisionDetectorService {
@@ -67,46 +63,21 @@ export class CollisionDetectorService {
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
 
         for (const normal of normals1) {
-            const minMax1: MinMax = this.getMinMax(vertexes1, normal);
-            const minMax2: MinMax = this.getMinMax(vertexes2, normal);
-            if (minMax1.maxProj < minMax2.minProj || minMax2.maxProj < minMax1.minProj) {
+            const projected1: Projected = new Projected(vertexes1, normal);
+            const projected2: Projected = new Projected(vertexes2, normal);
+            if (projected1.isDisjoint(projected2)) {
                 return false;
             }
         }
         for (const normal of normals2) {
-            const minMax1: MinMax = this.getMinMax(vertexes1, normal);
-            const minMax2: MinMax = this.getMinMax(vertexes2, normal);
-            if (minMax1.maxProj < minMax2.minProj || minMax2.maxProj < minMax1.minProj) {
+            const projected1: Projected = new Projected(vertexes1, normal);
+            const projected2: Projected = new Projected(vertexes2, normal);
+            if (projected2.isDisjoint(projected1)) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    private getMinMax(vertexes: Array<Vector2>, axis: Vector2): MinMax {
-        const minMax: MinMax = new MinMax();
-        minMax.minProj = vertexes[0].dot(axis);
-        minMax.maxProj = vertexes[0].dot(axis);
-        minMax.minIndex = 0;
-        minMax.maxIndex = 0;
-
-        for (let i: number = 1; i < vertexes.length; i++) {
-            const currProj: number = vertexes[i].dot(axis);
-            if (minMax.minProj > currProj) {
-                minMax.minProj = currProj;
-                minMax.minIndex = i;
-            } else if (currProj > minMax.maxProj) {
-                minMax.maxProj = currProj;
-                minMax.maxIndex = i;
-            }
-        }
-
-        return minMax;
-    }
-
-    private getOverlap(projection1: MinMax, projection2: MinMax): number {
-        return Math.min(projection1.maxProj, projection2.maxProj) - Math.max(projection1.minProj, projection2.minProj);
     }
 
     private boxLineDetection(box: BoxCollider, line: LineCollider): boolean {
