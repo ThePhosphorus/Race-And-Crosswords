@@ -95,8 +95,19 @@ export class CollisionDetectorService {
         if (projected1Vertexes.length === 1) {
             return projected1Vertexes[0];
         } else {
-            return projected2Vertexes[0];
+            if (projected2Vertexes.length === 1) {
+                return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
+            } else {
+                return null;
+            }
         }
+    }
+
+    private projectPoint(point: Vector2, line: Array<Vector2>): Vector2 {
+        const axis: Vector2 = line[0].sub(line[1]).normalize();
+        const projection: number = point.dot(axis);
+
+        return line[0].add(axis.multiplyScalar(projection));
     }
 
     private resolveCollision(collision: Collision): void {
