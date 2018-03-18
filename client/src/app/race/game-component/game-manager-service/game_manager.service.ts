@@ -13,7 +13,7 @@ import {
     Vector3
 } from "three";
 import { Car } from "../car/car";
-import { CameraManagerService, TargetInfos } from "../../camera-manager-service/camera-manager.service";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { Renderer } from "../../renderer/renderer";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
@@ -86,10 +86,10 @@ export class GameManagerService extends Renderer {
         this._isNightMode = false;
         this._isShadowMode = false;
 
-        this.player = new Car();
+        this.player = new Car(this.cameraManager);
         this.aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this.aiControlledCars.push(new Car());
+            this.aiControlledCars.push(new Car(this.cameraManager));
         }
     }
 
@@ -101,10 +101,10 @@ export class GameManagerService extends Renderer {
 
     public async start(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        await this.initCars();
         this.initKeyBindings();
         this.initSoundManager();
         this.initCameraManager();
+        await this.initCars();
         this.initSkybox();
         this.initScene();
         this.loadSunlight();
@@ -116,7 +116,6 @@ export class GameManagerService extends Renderer {
         this.aiControlledCars.forEach((car) => car.update(deltaTime));
         this.cameraTargetDirection = this.player.direction;
         this.cameraTargetPosition = this.player.getPosition();
-        this.soundManager.updateCarRpm(this.player.id, this.player.rpm);
         this.collisionDetector.detectCollisions(this.scene);
         this.updateSunlight();
     }
@@ -143,7 +142,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
         this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.carControl.handBrake());
-        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.soundManager.startDrift(this.player));
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.carControl.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.carControl.releaseBrakes());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.carControl.releaseSteeringLeft());
@@ -152,7 +150,8 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
-        // this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.soundManager.stopDrift(this.player.id));
+        // TODO: REMOVE THIS BECAUSE IT'S TEMPORARY
+        this.inputManager.registerKeyDown(13, () => this.player.collisionSound());
     }
 
     private loadSunlight(): void {
@@ -185,6 +184,9 @@ export class GameManagerService extends Renderer {
     private toggleNightMode(): void {
 
         this.player.toggleNightLight();
+        this.aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLight();
+        });
         if (this._isNightMode) {
             this.scene.remove(this._nightAmbientLight);
             this.scene.add(this._dayAmbientLight);
@@ -230,16 +232,10 @@ export class GameManagerService extends Renderer {
     private initSoundManager(): void {
         this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
-        this.soundManager.addCarSound(this.player);
-        // this.aiControlledCars.forEach((car) => this.soundManager.addCarSound(car));
     }
 
     private initCameraManager(): void {
         this.cameraManager.cameraType = CameraType.Perspective;
-        this.cameraManager.updateTargetInfos(new TargetInfos(
-            this.player.getPosition(),
-            this.player.direction
-        ));
     }
 
     private initScene(): void {

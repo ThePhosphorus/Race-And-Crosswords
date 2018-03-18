@@ -4,7 +4,6 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    // Quaternion,
     Box3,
     Vector2
 } from "three";
@@ -16,6 +15,8 @@ import { BoxCollider } from "../collision/colliders/box-collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
 import { CarControl } from "./car-control";
+import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
@@ -28,6 +29,8 @@ const HANDBRAKE_STEERING_ANGLE: number = 0.44;
 const DEFAULT_FRICTION_COEFFICIENT: number = 50000;
 const HANDBRAKE_FRICTION_COEFFICIENT: number = 5000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 100;
+const DRIFT_SOUND_MAX: number = 10000;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * 0.7;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -38,6 +41,7 @@ export class Car extends Object3D {
     private rigidBody: RigidBody;
     private carLights: CarLights;
     private oldFrictionCoefficient: number;
+    private carSound: CarSounds;
 
     public get carMesh(): Object3D {
         return this.mesh;
@@ -74,9 +78,10 @@ export class Car extends Object3D {
     }
 
     public constructor(
+        private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
         rearWheel: Wheel = new Wheel(),
-        mass: number = DEFAULT_MASS,
+        mass: number = DEFAULT_MASS
     ) {
         super();
         this.rigidBody = new RigidBody(mass);
@@ -109,6 +114,7 @@ export class Car extends Object3D {
         this.mesh.add(this.rigidBody);
         this.add(this.mesh);
         this.initCarLights();
+        this.carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
     }
 
     private getSteeringDirection(): number {
@@ -133,6 +139,11 @@ export class Car extends Object3D {
             Math.sin(this.getSteeringDirection() * deltaTime);
         const omega: number = this.speed / R;
         this.mesh.rotateY(omega);
+        this.carSound.updateRPM(this.engine.rpm);
+    }
+
+    public collisionSound(): void {
+        this.carSound.playCollision();
     }
 
     private getPerpendicularForce(): Vector2 {
@@ -148,10 +159,17 @@ export class Car extends Object3D {
             perpendicularForceFactor = DEFAULT_FRICTION_COEFFICIENT;
         }
         this.oldFrictionCoefficient = perpendicularForceFactor;
+        this.updateDrift(perpendicularForceFactor);
 
         return perpDirection.multiplyScalar(-perpSpeed * perpendicularForceFactor);
     }
-
+    private updateDrift(factor: number): void {
+        if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
+            this.carSound.startDrift();
+        } else if (this.carSound.drift.isPlaying()) {
+            this.carSound.releaseDrift();
+        }
+    }
     private getLongitudinalForce(): Vector2 {
         const resultingForce: Vector2 = new Vector2();
 
