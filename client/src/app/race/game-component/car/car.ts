@@ -26,8 +26,8 @@ const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.22;
 const HANDBRAKE_STEERING_ANGLE: number = 0.44;
-const DEFAULT_FRICTION_COEFFICIENT: number = 50000;
-const HANDBRAKE_FRICTION_COEFFICIENT: number = 5000;
+const DEFAULT_FRICTION: number = 500000;
+const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 100;
 const DRIFT_SOUND_MAX: number = 10000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * 0.7;
@@ -149,21 +149,19 @@ export class Car extends Object3D {
     private getPerpendicularForce(): Vector2 {
         const direction: Vector2 = this.direction2D;
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
-        const perpSpeed: number = this.rigidBody.velocity.clone().dot(perpDirection);
-        let perpendicularForceFactor: number;
+        const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
+        let perpendicularForce: number;
         if (this.carControl.hasHandbrakeOn) {
-            perpendicularForceFactor = HANDBRAKE_FRICTION_COEFFICIENT;
-        } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION_COEFFICIENT) {
-            perpendicularForceFactor = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
+            perpendicularForce = HANDBRAKE_FRICTION;
         } else {
-            perpendicularForceFactor = DEFAULT_FRICTION_COEFFICIENT;
+            perpendicularForce = DEFAULT_FRICTION;
         }
-        this.oldFrictionCoefficient = perpendicularForceFactor;
-        this.updateDrift(perpendicularForceFactor);
+        this.oldFrictionCoefficient = perpendicularForce;
+        this.updateDriftSound(perpendicularForce);
 
-        return perpDirection.multiplyScalar(-perpSpeed * perpendicularForceFactor);
+        return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
     }
-    private updateDrift(factor: number): void {
+    private updateDriftSound(factor: number): void {
         if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
             this.carSound.startDrift();
         } else if (this.carSound.drift.isPlaying()) {

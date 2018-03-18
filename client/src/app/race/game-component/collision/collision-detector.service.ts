@@ -79,6 +79,7 @@ export class CollisionDetectorService {
 
         return collision;
     }
+
     private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected): void {
         collision.collidingPoint1 = this.findIntersection(projected1, projected2);
         collision.collidingPoint2 = this.findIntersection(projected2, projected1);
@@ -122,8 +123,10 @@ export class CollisionDetectorService {
             const v1: Vector2 = rb1.velocity.clone();
             const v2: Vector2 = rb2.velocity.clone();
 
-            const antiOverlap1: Vector2 = rb1.velocity.clone().normalize().multiplyScalar(collision.overlap / 2);
-            const antiOverlap2: Vector2 = rb2.velocity.clone().normalize().multiplyScalar(collision.overlap / 2);
+            console.log(collision.overlap);
+
+            const antiOverlap1: Vector2 = rb1.velocity.clone().normalize().multiplyScalar(collision.overlap);
+            const antiOverlap2: Vector2 = rb2.velocity.clone().normalize().multiplyScalar(collision.overlap);
             rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
             rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 
