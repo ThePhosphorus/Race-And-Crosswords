@@ -46,6 +46,11 @@ export abstract class AbstractSoundFacade {
     public play(): void {
         this.sound.play();
     }
+
+    public isPlaying(): boolean {
+        return this.sound.isPlaying;
+    }
+
     public stop(): void {
         this.sound.stop();
     }

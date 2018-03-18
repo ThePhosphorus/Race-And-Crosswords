@@ -5,7 +5,8 @@ import {
 import {CarSounds} from "./sound-facades/car-sounds";
 import { Car } from "../car/car";
 import { GlobalSoundFacade } from "./sound-facades/global-sound-facade";
-const startpath: string = "starting.ogg";
+const startpath: string = "./starting.ogg";
+const START_VOLUME: number = 0.1;
 @Injectable()
 export class SoundManagerService {
 
@@ -19,7 +20,7 @@ export class SoundManagerService {
 
     public startRace(): void {
           this.startSound = new GlobalSoundFacade(this.audioListener, false);
-          this.startSound.init(startpath).then(() => this.startSound.play());
+          this.startSound.init(startpath).then(() => {this.startSound.setVolume(START_VOLUME); this.startSound.play(); });
     }
 
     public addCarSound(car: Car): void {
@@ -32,6 +33,14 @@ export class SoundManagerService {
 
     public init(audioListener: AudioListener): void {
         this.audioListener = audioListener;
+    }
+
+    public startDrift(car: Car): void {
+        this.cars.get(car.id).drift();
+    }
+
+    public stopDrift(id: number): void {
+        this.cars.get(id).releaseDrift();
     }
 
     public stopAllSounds(): void {

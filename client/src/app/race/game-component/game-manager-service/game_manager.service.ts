@@ -143,6 +143,7 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
         this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.carControl.handBrake());
+        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.soundManager.startDrift(this.player));
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.carControl.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.carControl.releaseBrakes());
         this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.carControl.releaseSteeringLeft());
@@ -151,6 +152,7 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
+        // this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.soundManager.stopDrift(this.player.id));
     }
 
     private loadSunlight(): void {
@@ -229,7 +231,7 @@ export class GameManagerService extends Renderer {
         this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
         this.soundManager.addCarSound(this.player);
-        this.aiControlledCars.forEach((car) => this.soundManager.addCarSound(car));
+        // this.aiControlledCars.forEach((car) => this.soundManager.addCarSound(car));
     }
 
     private initCameraManager(): void {
