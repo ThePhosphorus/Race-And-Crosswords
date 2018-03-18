@@ -27,7 +27,7 @@ export class BoxCollider extends Collider {
             const vertex: Vector2 = vertex1.sub(vertex2);
             const normal: Vector2 = new Vector2(
                 vertex.y,
-                vertex.x
+                -vertex.x
             ).normalize();
             normals.push(normal);
         }

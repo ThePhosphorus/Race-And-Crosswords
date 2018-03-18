@@ -76,6 +76,5 @@ export class CollisionDetectorService {
 
     private resolveCollision(coll1: Collider, coll2: Collider, intersection: boolean): void {
         console.log("collision");
-
     }
 }
