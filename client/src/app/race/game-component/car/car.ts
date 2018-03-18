@@ -142,6 +142,10 @@ export class Car extends Object3D {
         this.carSound.updateRPM(this.engine.rpm);
     }
 
+    public collisionSound(): void {
+        this.carSound.playCollision();
+    }
+
     private getPerpendicularForce(): Vector2 {
         const direction: Vector2 = this.direction2D;
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));

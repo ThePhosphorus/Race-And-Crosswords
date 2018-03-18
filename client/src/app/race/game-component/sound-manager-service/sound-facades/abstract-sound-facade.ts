@@ -5,11 +5,9 @@ import { DEFAULT_VOLUME } from "../../../race.constants";
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 
 export abstract class AbstractSoundFacade {
-    private isLoop: boolean;
     protected sound: Audio;
-    public constructor(soundListener: AudioListener, isLoop: boolean) {
+    public constructor(soundListener: AudioListener, private isLoop: boolean) {
         this.instanciateSound(soundListener);
-        this.isLoop = isLoop;
     }
 
     protected abstract instanciateSound(soundListener: AudioListener): void;
