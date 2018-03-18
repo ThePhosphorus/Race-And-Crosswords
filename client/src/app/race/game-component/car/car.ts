@@ -27,6 +27,7 @@ const DEFAULT_STEERING_ANGLE: number = 0.22;
 const HANDBRAKE_STEERING_ANGLE: number = 0.44;
 const DEFAULT_FRICTION_COEFFICIENT: number = 50000;
 const HANDBRAKE_FRICTION_COEFFICIENT: number = 5000;
+const PROGRESSIVE_DRIFT_COEFFICIENT: number = 100;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -142,13 +143,13 @@ export class Car extends Object3D {
         if (this.carControl.hasHandbrakeOn) {
             perpendicularForceFactor = HANDBRAKE_FRICTION_COEFFICIENT;
         } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION_COEFFICIENT) {
-            perpendicularForceFactor = this.oldFrictionCoefficient + 100;
+            perpendicularForceFactor = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
         } else {
             perpendicularForceFactor = DEFAULT_FRICTION_COEFFICIENT;
         }
         this.oldFrictionCoefficient = perpendicularForceFactor;
-        return perpDirection.multiplyScalar(-perpSpeed * perpendicularForceFactor);
 
+        return perpDirection.multiplyScalar(-perpSpeed * perpendicularForceFactor);
     }
 
     private getLongitudinalForce(): Vector2 {
