@@ -5,8 +5,6 @@ import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
 import { Projected } from "./projection";
 
-
-
 @Injectable()
 export class CollisionDetectorService {
 
@@ -57,19 +55,17 @@ export class CollisionDetectorService {
     }
 
     private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): boolean {
-        const normals1: Array<Vector2> = coll1.getNormals();
-        const normals2: Array<Vector2> = coll2.getNormals();
         const vertexes1: Array<Vector2> = coll1.getAbsoluteVertexes2D();
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
 
-        for (const normal of normals1) {
+        for (const normal of coll1.getNormals()) {
             const projected1: Projected = new Projected(vertexes1, normal);
             const projected2: Projected = new Projected(vertexes2, normal);
             if (projected1.isDisjoint(projected2)) {
                 return false;
             }
         }
-        for (const normal of normals2) {
+        for (const normal of coll2.getNormals()) {
             const projected1: Projected = new Projected(vertexes1, normal);
             const projected2: Projected = new Projected(vertexes2, normal);
             if (projected2.isDisjoint(projected1)) {
