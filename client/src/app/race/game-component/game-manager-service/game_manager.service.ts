@@ -255,6 +255,8 @@ export class GameManagerService extends Renderer {
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
         const material: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
+        material.reflectivity = 0;
+        material.shininess = 0;
         const plane: Mesh = new Mesh(new PlaneGeometry(FLOOR_DIMENSION, FLOOR_DIMENSION), material);
         plane.rotateX(PI_OVER_2);
         plane.translateZ(OFF_ROAD_Z_TRANSLATION);

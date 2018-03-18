@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Scene, Vector2 } from "three";
+import { Scene, Vector2, Vector3 } from "three";
 import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
 import { Projected } from "./projection";
 import { Collision } from "./collision";
+import { RigidBody } from "../rigid-body/rigid-body";
 
 @Injectable()
 export class CollisionDetectorService {
@@ -70,6 +71,7 @@ export class CollisionDetectorService {
                 this.addCollisionIntersection(collision, projected1, projected2);
             }
         }
+        collision.overlap = -minDistance;
 
         return collision;
     }
@@ -111,6 +113,23 @@ export class CollisionDetectorService {
     }
 
     private resolveCollision(collision: Collision): void {
-        console.log("collision");
+        const rb1: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        const rb2: RigidBody = collision.coll2.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+
+        if (rb1 != null && rb2 != null) {
+            const m1: number = rb1.mass;
+            const m2: number = rb2.mass;
+
+            const v1: Vector2 = rb1.velocity.clone();
+            const v2: Vector2 = rb2.velocity.clone();
+
+            const antiOverlap1: Vector2 = rb1.velocity.normalize().multiplyScalar(collision.overlap/2);
+            const antiOverlap2: Vector2 = rb2.velocity.normalize().multiplyScalar(collision.overlap/2);
+            rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
+            rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
+
+            rb1.applyCollision(collision.collidingPoint1, m2, v2);
+            rb2.applyCollision(collision.collidingPoint2, m1, v1);
+        }
     }
 }
