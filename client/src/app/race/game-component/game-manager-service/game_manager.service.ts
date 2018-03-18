@@ -182,6 +182,9 @@ export class GameManagerService extends Renderer {
     private toggleNightMode(): void {
 
         this.player.toggleNightLight();
+        this.aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLight();
+        });
         if (this._isNightMode) {
             this.scene.remove(this._nightAmbientLight);
             this.scene.add(this._dayAmbientLight);
