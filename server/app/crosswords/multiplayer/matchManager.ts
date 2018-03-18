@@ -1,6 +1,6 @@
 import { IPlayer } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
-import { CrosswordGrid, Difficulty } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Difficulty, Orientation } from "../../../../common/communication/crossword-grid";
 
 type Socket = SocketIO.Socket;
 
@@ -28,9 +28,10 @@ export class MatchManager {
     }
 
     public addPlayer(socket: Socket): void {
-        this._players.push(new Player(this._players.length, socket, "defaultName"));
-        this.askForName(this._players[this._players.length - 1]);
-        this.registerActions( socket);
+        const id: number = this._players.length;
+        this._players.push(new Player(id, socket, "defaultName"));
+        this.askForName(this._players[id]);
+        this.registerActions( socket, id );
     }
 
     public get difficulty(): Difficulty {
@@ -62,11 +63,24 @@ export class MatchManager {
         return player;
     }
 
-    private registerActions(socket: Socket): void {
-        socket.on(msg.receiveName, (id: number, name: string) => this.receiveName(id, name));
+    private registerActions(socket: Socket, id: number): void {
+        socket.on(msg.receiveName, (name: string) =>
+            this.receiveName(id, name));
+
+        socket.on(msg.playerSelectTile, (letterId: number, orientation: Orientation) =>
+            this.recieveSelect(id, letterId, orientation));
     }
 
     public get Players (): Array<Player> {
         return this._players;
     }
+
+    public recieveSelect(playerId: number, letterId: number, orientation: Orientation ): void {
+        this._players.forEach((p: Player, index: number) => {
+            if (p.id !== playerId) {
+                p.socket.emit(msg.playerSelectTile, letterId, orientation);
+            }
+        });
+    }
+
 }

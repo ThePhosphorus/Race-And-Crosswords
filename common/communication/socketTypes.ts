@@ -3,5 +3,6 @@ export default  {
     askForName: "AskForName",
     receiveName: "recieveName",
     createMatch: "createMatch",
-    joinMatch: "joinMatch"
+    joinMatch: "joinMatch",
+    playerSelectTile: "playerSelectTile"
 }
