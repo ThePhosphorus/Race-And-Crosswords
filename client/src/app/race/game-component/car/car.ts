@@ -16,15 +16,16 @@ import { BoxCollider } from "../collision/colliders/box-collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
 
-const DEFAULT_STEERING_ANGLE: number = 0.22;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
-const MINIMUM_SPEED: number = 0.05;
 const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
+const DEFAULT_STEERING_ANGLE: number = 0.22;
+const HANDBRAKE_STEERING_ANGLE: number = 0.44;
 const DEFAULT_FRICTION_COEFICIENT: number = 50000;
+const HANDBRAKE_FRICTION_COEFICIENT: number = 5000;
 
 export class Car extends Object3D {
     public isAcceleratorPressed: boolean;
@@ -140,7 +141,7 @@ export class Car extends Object3D {
     private updateSteering(): void {
         const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
         this.steeringWheelDirection = steeringState *
-            DEFAULT_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
+            this.steeringAngle * (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     // Input manager callback methods
@@ -166,8 +167,8 @@ export class Car extends Object3D {
     }
 
     public handBrake(): void {
-        this.frictionCoefficient = DEFAULT_FRICTION_COEFICIENT/10;
-        this.steeringAngle = DEFAULT_STEERING_ANGLE*2;
+        this.frictionCoefficient = HANDBRAKE_FRICTION_COEFICIENT;
+        this.steeringAngle = HANDBRAKE_STEERING_ANGLE;
     }
 
     public releaseHandBrake(): void {
@@ -216,10 +217,8 @@ export class Car extends Object3D {
     private getLongitudinalForce(): Vector2 {
         const resultingForce: Vector2 = new Vector2();
 
-        if (this.speed >= MINIMUM_SPEED) {
-            const dragForce: Vector2 = this.getDragForce();
-            resultingForce.add(dragForce);
-        }
+        const dragForce: Vector2 = this.getDragForce();
+        resultingForce.add(dragForce);
 
         const rollingResistance: Vector2 = this.getRollingResistance();
         resultingForce.add(rollingResistance);
