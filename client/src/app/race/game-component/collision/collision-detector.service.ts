@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Scene, Vector3, Ray, Box3 } from "three";
+import { Scene, Vector2 } from "three";
 import { Collider } from "./colliders/collider";
 import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
+import { Projected } from "./projection";
 
 @Injectable()
 export class CollisionDetectorService {
@@ -15,7 +16,7 @@ export class CollisionDetectorService {
         for (let i: number = 0; i < colliders.length; i++) {
             for (let j: number = i + 1; j < colliders.length; j++) {
                 if (this.broadDetection(colliders[i], colliders[j])) {
-                    const intersection: Vector3 = this.narrowDetection(colliders[i], colliders[j]);
+                    const intersection: boolean = this.narrowDetection(colliders[i], colliders[j]);
                     if (intersection) {
                         this.resolveCollision(colliders[i], colliders[j], intersection);
                     }
@@ -41,7 +42,7 @@ export class CollisionDetectorService {
                 coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
 
-    private narrowDetection(coll1: Collider, coll2: Collider): Vector3 {
+    private narrowDetection(coll1: Collider, coll2: Collider): boolean {
         if (coll1 instanceof LineCollider && coll2 instanceof BoxCollider) {
             return this.boxLineDetection(coll2, coll1);
         } else if (coll2 instanceof LineCollider && coll1 instanceof BoxCollider) {
@@ -53,26 +54,27 @@ export class CollisionDetectorService {
         return null;
     }
 
-    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): Vector3 {
+    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): boolean {
+        const vertexes1: Array<Vector2> = coll1.getAbsoluteVertexes2D();
+        const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
+        const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
 
-        for (const vertex of coll1.getVertexes()) {
-            const globalVertex: Vector3 = vertex.clone().applyMatrix4(coll1.parent.matrix);
-            const directionVector: Vector3 = globalVertex.clone().sub(coll1.getAbsolutePosition());
-            const ray: Ray = new Ray(coll1.getAbsolutePosition(), directionVector.clone().normalize());
-            const intersection: Vector3 = ray.intersectBox(new Box3().setFromObject(coll2.parent));
-            if (intersection) {
-                return intersection;
+        for (const normal of axises) {
+            const projected1: Projected = new Projected(vertexes1, normal);
+            const projected2: Projected = new Projected(vertexes2, normal);
+            if (projected1.isDisjoint(projected2)) {
+                return false;
             }
         }
 
-        return null;
+        return true;
     }
 
-    private boxLineDetection(box: BoxCollider, line: LineCollider): Vector3 {
-        return null;
+    private boxLineDetection(box: BoxCollider, line: LineCollider): boolean {
+        return false;
     }
 
-    private resolveCollision(coll1: Collider, coll2: Collider, intersection: Vector3): void {
+    private resolveCollision(coll1: Collider, coll2: Collider, intersection: boolean): void {
         console.log("collision");
 
     }
