@@ -75,7 +75,7 @@ export class CollisionDetectorService {
 
         return collision;
     }
-    private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected ): void {
+    private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected): void {
         collision.collidingPoint1 = this.findIntersection(projected1, projected2);
         collision.collidingPoint2 = this.findIntersection(projected2, projected1);
     }
@@ -83,16 +83,11 @@ export class CollisionDetectorService {
     private findIntersection(projected1: Projected, projected2: Projected): Vector2 {
         const maxProjectedDistance: number = projected2.minProjected - projected1.maxProjected;
         const minProjectedDistance: number = projected1.minProjected - projected2.maxProjected;
-        let projected1Vertexes: Array<Vector2> = null;
-        let projected2Vertexes: Array<Vector2> = null;
 
-        if (maxProjectedDistance > minProjectedDistance) {
-            projected1Vertexes = projected1.maxVertexes;
-            projected2Vertexes = projected2.minVertexes;
-        } else {
-            projected1Vertexes = projected1.minVertexes;
-            projected2Vertexes = projected2.maxVertexes;
-        }
+        const projected1Vertexes: Array<Vector2> =
+            maxProjectedDistance > minProjectedDistance ? projected1.maxVertexes : projected1.minVertexes;
+        const projected2Vertexes: Array<Vector2> =
+            maxProjectedDistance > minProjectedDistance ? projected2.minVertexes : projected2.maxVertexes;
 
         if (projected1Vertexes.length === 1) {
             return projected1Vertexes[0];
@@ -100,7 +95,7 @@ export class CollisionDetectorService {
             if (projected2Vertexes.length === 1) {
                 return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
             } else {
-                return null;
+                return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
             }
         }
     }
@@ -123,8 +118,8 @@ export class CollisionDetectorService {
             const v1: Vector2 = rb1.velocity.clone();
             const v2: Vector2 = rb2.velocity.clone();
 
-            const antiOverlap1: Vector2 = rb1.velocity.normalize().multiplyScalar(collision.overlap/2);
-            const antiOverlap2: Vector2 = rb2.velocity.normalize().multiplyScalar(collision.overlap/2);
+            const antiOverlap1: Vector2 = rb1.velocity.normalize().multiplyScalar(collision.overlap / 2);
+            const antiOverlap2: Vector2 = rb2.velocity.normalize().multiplyScalar(collision.overlap / 2);
             rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
             rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 

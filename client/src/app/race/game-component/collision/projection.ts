@@ -7,7 +7,10 @@ export class Projected {
     private _maxVertexes: Array<Vector2>;
 
     public constructor(objectToProject: Array<Vector2>, projectionAxis: Vector2) {
+        this._minVertexes = new Array<Vector2>();
+        this._maxVertexes = new Array<Vector2>();
         this.project(objectToProject, projectionAxis);
+
     }
 
     public get minProjected(): number {
@@ -31,8 +34,8 @@ export class Projected {
     }
 
     private project(vertexes: Array<Vector2>, axis: Vector2): void {
-        this._minProjected = Number.MAX_VALUE;
-        this._maxProjected = Number.MIN_VALUE;
+        this._minProjected = vertexes[0].dot(axis);
+        this._maxProjected = vertexes[0].dot(axis);
 
         for (const vertex of vertexes) {
             const currProj: number = vertex.dot(axis);
