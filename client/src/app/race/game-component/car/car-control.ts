@@ -68,10 +68,16 @@ export class CarControl extends Object3D {
 
     public handBrake(): void {
         this._hasHandbrakeOn = true;
+        if (this._carLights != null) {
+            this._carLights.brake();
+        }
     }
 
     public releaseHandBrake(): void {
         this._hasHandbrakeOn = false;
+        if (this._carLights != null) {
+            this._carLights.releaseBrakes();
+        }
     }
 
     public releaseSteeringRight(): void {
