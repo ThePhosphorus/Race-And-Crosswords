@@ -8,7 +8,7 @@ export const PERS_CAMERA_ANGLE: number = 25;
 
 export const DEFAULT_WHEELBASE: number = 2.78;
 export const DEFAULT_MASS: number = 1515;
-export const DEFAULT_DRAG_COEFFICIENT: number = 0.35;
+export const DRAG_COEFFICIENT: number = 0.35;
 
 export const DEFAULT_DRIVE_RATIO: number = 3.27;
 export const DEFAULT_DOWNSHIFT_RPM: number = 2500;

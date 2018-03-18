@@ -11,7 +11,7 @@ import {
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
-import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
+import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { BoxCollider } from "../collision/colliders/box-collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
@@ -33,9 +33,7 @@ export class Car extends Object3D {
 
     private readonly engine: Engine;
     private readonly rearWheel: Wheel;
-    private readonly dragCoefficient: number;
     private mesh: Object3D;
-    private steeringWheelDirection: number;
     private rigidBody: RigidBody;
     private carLights: CarLights;
 
@@ -76,31 +74,12 @@ export class Car extends Object3D {
     public constructor(
         engine: Engine = new Engine(),
         rearWheel: Wheel = new Wheel(),
-        wheelbase: number = DEFAULT_WHEELBASE,
         mass: number = DEFAULT_MASS,
-        dragCoefficient: number = DEFAULT_DRAG_COEFFICIENT
     ) {
         super();
-        if (wheelbase <= 0) {
-            console.error("Wheelbase should be greater than 0.");
-            wheelbase = DEFAULT_WHEELBASE;
-        }
-
-        if (mass <= 0) {
-            console.error("Mass should be greater than 0.");
-            mass = DEFAULT_MASS;
-        }
-
-        if (dragCoefficient <= 0) {
-            console.error("Drag coefficient should be greater than 0.");
-            dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
-        }
-
         this.rigidBody = new RigidBody(mass);
         this.engine = engine;
         this.rearWheel = rearWheel;
-        this.dragCoefficient = dragCoefficient;
-        this.steeringWheelDirection = 0;
         this.carControl = new CarControl();
     }
 
@@ -130,11 +109,11 @@ export class Car extends Object3D {
         this.initCarLights();
     }
 
-    private updateSteering(): void {
+    private getSteeringDirection(): number {
         const steeringState: number = (this.carControl.isSteeringLeft === this.carControl.isSteeringRight) ? 0 :
             this.carControl.isSteeringLeft ? 1 : -1;
-        this.steeringWheelDirection =
-            steeringState *
+
+        return steeringState *
             (this.carControl.hasHandbrakeOn ? HANDBRAKE_STEERING_ANGLE : DEFAULT_STEERING_ANGLE) *
             (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
@@ -147,11 +126,9 @@ export class Car extends Object3D {
         this.rigidBody.addForce(this.getPerpendicularForce());
         this.rigidBody.update(deltaTime);
 
-        this.updateSteering();
-
         const R: number =
             DEFAULT_WHEELBASE /
-            Math.sin(this.steeringWheelDirection * deltaTime);
+            Math.sin(this.getSteeringDirection() * deltaTime);
         const omega: number = this.speed / R;
         this.mesh.rotateY(omega);
     }
@@ -206,7 +183,7 @@ export class Car extends Object3D {
             Math.sign(this.speed) *
             airDensity *
             carSurface *
-            -this.dragCoefficient *
+            -DRAG_COEFFICIENT *
             this.speed *
             this.speed
         );
