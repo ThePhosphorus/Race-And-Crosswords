@@ -5,6 +5,7 @@ import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
 import { Projected } from "./projection";
 import { Collision } from "./collision";
+import { RigidBody } from "../rigid-body/rigid-body";
 
 @Injectable()
 export class CollisionDetectorService {
@@ -92,14 +93,23 @@ export class CollisionDetectorService {
             projected2Vertexes = projected2.maxVertexes;
         }
 
-        if (projected1Vertexes.length === 1) {
-            return projected1Vertexes[0];
-        } else {
-            return projected2Vertexes[0];
-        }
+        // if (projected1Vertexes.length === 1) {
+        //     return projected1Vertexes[0];
+        // } else {
+        //     return projected2Vertexes[0];
+        // }
+        return new Vector2();
     }
 
     private resolveCollision(collision: Collision): void {
-        console.log("collision");
+        const rb1: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        const rb2: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        if (rb1 != null) {
+            rb1.applyCollision(collision, rb2);
+        }
+
+        if (rb2 != null) {
+            rb2.applyCollision(collision, rb1);
+        }
     }
 }
