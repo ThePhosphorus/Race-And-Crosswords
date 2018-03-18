@@ -56,8 +56,14 @@ export class CarSounds {
     }
 
     public playCollision(): void {
-        const index: number = Math.floor(Math.random() * this.collisionSounds.length);
-        this.collisionSounds[index].play();
+        let noSoundPlaying: boolean = true;
+        this.collisionSounds.forEach((sound) => { if (sound.isPlaying()) {
+            noSoundPlaying = false;
+        }});
+        if (noSoundPlaying) {
+            const index: number = Math.floor(Math.random() * this.collisionSounds.length);
+            this.collisionSounds[index].play();
+        }
     }
 
     public get drift(): PositionalSoundFacade {
