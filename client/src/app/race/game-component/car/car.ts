@@ -250,5 +250,6 @@ export class Car extends Object3D {
     private initCarLights(): void {
         this.carLights = new CarLights();
         this.mesh.add(this.carLights);
+        this.carControl.carLights = this.carLights;
     }
 }
