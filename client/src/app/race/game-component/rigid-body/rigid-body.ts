@@ -38,8 +38,11 @@ export class RigidBody extends Object3D {
     }
 
     public applyCollision(collidingPoint: Vector2, otherMass: number, otherVelocity: Vector2): void {
-        this.velocity.setLength((this.velocity.length() * (otherMass - this.mass) + (otherMass * otherVelocity.length() * 2))
-            / (this.mass + otherMass));
+        const newSpeed: number = (this.velocity.length() * (this.mass - otherMass) + (otherMass * otherVelocity.length() * 2))
+            / (this.mass + otherMass);
+        console.log(newSpeed);
+        this._velocity = new Vector2(1, 1);
+        this._velocity.setLength(-newSpeed);
     }
 
     public update(deltaTime: number): void {
