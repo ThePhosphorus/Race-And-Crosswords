@@ -57,6 +57,7 @@ export class CollisionDetectorService {
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
         const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
         let minDistance: number = Number.MAX_VALUE;
+        let contact: Vector2 = new Vector2();
         const collision: Collision = new Collision(coll1, null, coll2, null);
 
         for (const normal of axises) {
@@ -68,10 +69,12 @@ export class CollisionDetectorService {
             }
             if (Math.abs(distance) < minDistance) {
                 minDistance = Math.abs(distance);
+                contact = new Vector2(normal.y, -normal.x);
                 this.addCollisionIntersection(collision, projected1, projected2);
             }
         }
         collision.overlap = -minDistance;
+        collision.contactAngle = contact.angle();
 
         return collision;
     }
@@ -123,8 +126,8 @@ export class CollisionDetectorService {
             rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
             rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 
-            rb1.applyCollision(collision.collidingPoint1, m2, v2);
-            rb2.applyCollision(collision.collidingPoint2, m1, v1);
+            rb1.applyCollision(collision.contactAngle, m2, v2);
+            rb2.applyCollision(collision.contactAngle, m1, v1);
         }
     }
 }

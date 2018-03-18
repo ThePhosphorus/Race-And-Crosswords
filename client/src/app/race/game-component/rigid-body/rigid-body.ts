@@ -37,11 +37,19 @@ export class RigidBody extends Object3D {
         this.torque += torque;
     }
 
-    public applyCollision(collidingPoint: Vector2, otherMass: number, otherVelocity: Vector2): void {
-        const newSpeed: number = (this.velocity.length() * (this.mass - otherMass) + (otherMass * otherVelocity.length() * 2))
-            / (this.mass + otherMass);
-        this._velocity = this._velocity.length() === 0 ? otherVelocity.clone().multiplyScalar(-1) : this._velocity;
-        this._velocity.setLength(-newSpeed);
+    public applyCollision(contactAngle: number, otherMass: number, otherVelocity: Vector2): void {
+        const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
+            (this._mass - otherMass) +
+            (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * 2)) /
+            (this.mass + otherMass)) * Math.cos(contactAngle) - this._velocity.length() *
+            Math.sin(this._velocity.angle() - contactAngle) * Math.sin(contactAngle);
+
+        const vy: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
+            (this._mass - otherMass) +
+            (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * 2)) /
+            (this.mass + otherMass)) * Math.sin(contactAngle) + this._velocity.length() *
+            Math.sin(this._velocity.angle() - contactAngle) * Math.cos(contactAngle);
+        this._velocity = new Vector2(vx, vy);
     }
 
     public update(deltaTime: number): void {

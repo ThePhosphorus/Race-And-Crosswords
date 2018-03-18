@@ -1,5 +1,5 @@
 import { Collider } from "./collider";
-import { Vector3, Vector2, Mesh, PlaneGeometry, MeshBasicMaterial, DoubleSide } from "three";
+import { Vector3, Vector2 } from "three";
 
 const HALF: number = 0.5;
 
@@ -13,9 +13,6 @@ export class BoxCollider extends Collider {
         this.radius = this.pythagore(width * HALF, length * HALF);
         this.relativeVertexes = new Array<Vector3>();
         this.initialiseRelativeVertexes(width, length, height);
-        this.add(new Mesh( new PlaneGeometry( width, length).rotateX(-Math.PI / 2)
-                            .translate(0, 2, 0),
-                           new MeshBasicMaterial( {color: 0xffff00, side: DoubleSide} ) ));
     }
 
     public getNormals(): Array<Vector2> {
