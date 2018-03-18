@@ -26,10 +26,10 @@ const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.22;
 const HANDBRAKE_STEERING_ANGLE: number = 0.44;
-const DEFAULT_FRICTION: number = 500000;
+const DEFAULT_FRICTION: number = 400000;
 const HANDBRAKE_FRICTION: number = 50000;
-const PROGRESSIVE_DRIFT_COEFFICIENT: number = 100;
-const DRIFT_SOUND_MAX: number = 10000;
+const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
+const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * 0.7;
 
 export class Car extends Object3D {
@@ -153,6 +153,8 @@ export class Car extends Object3D {
         let perpendicularForce: number;
         if (this.carControl.hasHandbrakeOn) {
             perpendicularForce = HANDBRAKE_FRICTION;
+        } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
+            perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
         } else {
             perpendicularForce = DEFAULT_FRICTION;
         }
