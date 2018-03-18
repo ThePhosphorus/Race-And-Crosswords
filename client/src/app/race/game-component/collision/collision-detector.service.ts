@@ -5,6 +5,7 @@ import { BoxCollider } from "./colliders/box-collider";
 import { LineCollider } from "./colliders/line-collider";
 import { Projected } from "./projection";
 import { Collision } from "./collision";
+import { RigidBody } from "../rigid-body/rigid-body";
 
 @Injectable()
 export class CollisionDetectorService {
@@ -56,7 +57,7 @@ export class CollisionDetectorService {
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
         const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
         let minDistance: number = Number.MAX_VALUE;
-        let minAxis: Vector2 = null;
+        const collision: Collision = new Collision(coll1, null, coll2, null);
 
         for (const normal of axises) {
             const projected1: Projected = new Projected(vertexes1, normal);
@@ -67,14 +68,48 @@ export class CollisionDetectorService {
             }
             if (Math.abs(distance) < minDistance) {
                 minDistance = Math.abs(distance);
-                minAxis = normal;
+                this.addCollisionIntersection(collision, projected1, projected2);
             }
         }
 
-        return new Collision(coll1, new Vector2(), coll2, new Vector2());
+        return collision;
+    }
+    private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected ): void {
+        collision.collidingPoint1 = this.findIntersection(projected1, projected2);
+        collision.collidingPoint2 = this.findIntersection(projected2, projected1);
+    }
+
+    private findIntersection(projected1: Projected, projected2: Projected): Vector2 {
+        const maxProjectedDistance: number = projected2.minProjected - projected1.maxProjected;
+        const minProjectedDistance: number = projected1.minProjected - projected2.maxProjected;
+        let projected1Vertexes: Array<Vector2> = null;
+        let projected2Vertexes: Array<Vector2> = null;
+
+        if (maxProjectedDistance > minProjectedDistance) {
+            projected1Vertexes = projected1.maxVertexes;
+            projected2Vertexes = projected2.minVertexes;
+        } else {
+            projected1Vertexes = projected1.minVertexes;
+            projected2Vertexes = projected2.maxVertexes;
+        }
+
+        // if (projected1Vertexes.length === 1) {
+        //     return projected1Vertexes[0];
+        // } else {
+        //     return projected2Vertexes[0];
+        // }
+        return new Vector2();
     }
 
     private resolveCollision(collision: Collision): void {
-        console.log("collision");
+        const rb1: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        const rb2: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        if (rb1 != null) {
+            rb1.applyCollision(collision, rb2);
+        }
+
+        if (rb2 != null) {
+            rb2.applyCollision(collision, rb1);
+        }
     }
 }
