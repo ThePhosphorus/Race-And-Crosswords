@@ -86,10 +86,10 @@ export class GameManagerService extends Renderer {
         this._isNightMode = false;
         this._isShadowMode = false;
 
-        this.player = new Car();
+        this.player = new Car(this.cameraManager);
         this.aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this.aiControlledCars.push(new Car());
+            this.aiControlledCars.push(new Car(this.cameraManager));
         }
     }
 
@@ -101,10 +101,10 @@ export class GameManagerService extends Renderer {
 
     public async start(container: HTMLDivElement): Promise<void> {
         this.init(container);
-        await this.initCars();
         this.initKeyBindings();
         this.initSoundManager();
         this.initCameraManager();
+        await this.initCars();
         this.initSkybox();
         this.initScene();
         this.loadSunlight();
@@ -152,7 +152,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
-        // this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.soundManager.stopDrift(this.player.id));
     }
 
     private loadSunlight(): void {
@@ -230,16 +229,10 @@ export class GameManagerService extends Renderer {
     private initSoundManager(): void {
         this.soundManager.init(this.cameraManager.audioListener);
         this.soundManager.startRace();
-        this.soundManager.addCarSound(this.player);
-        // this.aiControlledCars.forEach((car) => this.soundManager.addCarSound(car));
     }
 
     private initCameraManager(): void {
         this.cameraManager.cameraType = CameraType.Perspective;
-        this.cameraManager.updateTargetInfos(new TargetInfos(
-            this.player.getPosition(),
-            this.player.direction
-        ));
     }
 
     private initScene(): void {

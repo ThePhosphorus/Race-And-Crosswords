@@ -19,8 +19,8 @@ export class SoundManagerService {
     }
 
     public startRace(): void {
-          this.startSound = new GlobalSoundFacade(this.audioListener, false);
-          this.startSound.init(startpath).then(() => {this.startSound.setVolume(START_VOLUME); this.startSound.play(); });
+        //   this.startSound = new GlobalSoundFacade(this.audioListener, false);
+        //   this.startSound.init(startpath).then(() => {this.startSound.setVolume(START_VOLUME); this.startSound.play(); });
     }
 
     public addCarSound(car: Car): void {

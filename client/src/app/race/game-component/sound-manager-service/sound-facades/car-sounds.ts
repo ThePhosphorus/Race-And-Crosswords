@@ -14,9 +14,9 @@ export class CarSounds {
 
     public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
         this.engine = new PositionalSoundFacade(soundEmittingObject, soundListener, true);
-        this._drift = new PositionalSoundFacade(soundEmittingObject, soundListener, false);
+        // this._drift = new PositionalSoundFacade(soundEmittingObject, soundListener, false);
         this.engine.init(ENGINE_FILE_NAME, sourcePath).then(() => this.engine.play());
-        this._drift.init(DRIFT_FILE_NAME, sourcePath).then(() => this._drift.setVolume(2));
+        // this._drift.init(DRIFT_FILE_NAME, sourcePath).then(() => this._drift.setVolume(2));
     }
     public updateRPM(rpm: number): void {
         this.engine.setPlaybackRate(this.getPlaybackRate(rpm));
