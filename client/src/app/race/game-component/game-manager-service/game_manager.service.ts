@@ -133,24 +133,24 @@ export class GameManagerService extends Renderer {
     }
 
     private initKeyBindings(): void {
-        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this.player.accelerate());
-        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this.player.brake());
-        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this.player.steerLeft());
-        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this.player.steerRight());
+        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this.player.carControl.accelerate());
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this.player.carControl.brake());
+        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this.player.carControl.steerLeft());
+        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this.player.carControl.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
         this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
-        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.releaseAccelerator());
-        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.releaseBrakes());
-        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.releaseSteeringLeft());
-        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this.player.releaseSteeringRight());
         this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
+        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.carControl.handBrake());
+        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.carControl.releaseAccelerator());
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.carControl.releaseBrakes());
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.carControl.releaseSteeringLeft());
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this.player.carControl.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
-        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.handBrake());
-        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.releaseHandBrake());
+        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
     }
 
     private loadSunlight(): void {

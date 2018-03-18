@@ -15,6 +15,7 @@ import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../..
 import { BoxCollider } from "../collision/colliders/box-collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
+import { CarControl } from "./car-control";
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
@@ -24,22 +25,17 @@ const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.22;
 const HANDBRAKE_STEERING_ANGLE: number = 0.44;
-const DEFAULT_FRICTION_COEFICIENT: number = 50000;
-const HANDBRAKE_FRICTION_COEFICIENT: number = 5000;
+const DEFAULT_FRICTION_COEFFICIENT: number = 50000;
+const HANDBRAKE_FRICTION_COEFFICIENT: number = 5000;
 
 export class Car extends Object3D {
-    public isAcceleratorPressed: boolean;
+    public carControl: CarControl;
 
     private readonly engine: Engine;
     private readonly rearWheel: Wheel;
     private readonly dragCoefficient: number;
-    private frictionCoefficient: number;
-    private steeringAngle: number;
-    private isBraking: boolean;
     private mesh: Object3D;
     private steeringWheelDirection: number;
-    private isSteeringLeft: boolean;
-    private isSteeringRight: boolean;
     private rigidBody: RigidBody;
     private carLights: CarLights;
 
@@ -104,12 +100,8 @@ export class Car extends Object3D {
         this.engine = engine;
         this.rearWheel = rearWheel;
         this.dragCoefficient = dragCoefficient;
-        this.isBraking = false;
         this.steeringWheelDirection = 0;
-        this.isSteeringLeft = false;
-        this.isSteeringRight = false;
-        this.frictionCoefficient = DEFAULT_FRICTION_COEFICIENT;
-        this.steeringAngle = DEFAULT_STEERING_ANGLE;
+        this.carControl = new CarControl();
     }
 
     // TODO: move loading code outside of car class.
@@ -139,54 +131,12 @@ export class Car extends Object3D {
     }
 
     private updateSteering(): void {
-        const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
-        this.steeringWheelDirection = steeringState *
-            this.steeringAngle * (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
-    }
-
-    // Input manager callback methods
-    public accelerate(): void {
-        this.isAcceleratorPressed = true;
-    }
-
-    public steerLeft(): void {
-        this.isSteeringLeft = true;
-    }
-
-    public steerRight(): void {
-        this.isSteeringRight = true;
-    }
-
-    public brake(): void {
-        this.isBraking = true;
-        this.carLights.brake();
-    }
-
-    public releaseSteeringLeft(): void {
-        this.isSteeringLeft = false;
-    }
-
-    public handBrake(): void {
-        this.frictionCoefficient = HANDBRAKE_FRICTION_COEFICIENT;
-        this.steeringAngle = HANDBRAKE_STEERING_ANGLE;
-    }
-
-    public releaseHandBrake(): void {
-        this.frictionCoefficient = DEFAULT_FRICTION_COEFICIENT;
-        this.steeringAngle = DEFAULT_STEERING_ANGLE;
-    }
-
-    public releaseSteeringRight(): void {
-        this.isSteeringRight = false;
-    }
-
-    public releaseBrakes(): void {
-        this.isBraking = false;
-        this.carLights.releaseBrakes();
-    }
-
-    public releaseAccelerator(): void {
-        this.isAcceleratorPressed = false;
+        const steeringState: number = (this.carControl.isSteeringLeft === this.carControl.isSteeringRight) ? 0 :
+            this.carControl.isSteeringLeft ? 1 : -1;
+        this.steeringWheelDirection =
+            steeringState *
+            (this.carControl.hasHandbrakeOn ? HANDBRAKE_STEERING_ANGLE : DEFAULT_STEERING_ANGLE) *
+            (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     public update(deltaTime: number): void {
@@ -211,7 +161,8 @@ export class Car extends Object3D {
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeed: number = this.rigidBody.velocity.clone().dot(perpDirection);
 
-        return perpDirection.multiplyScalar(-perpSpeed * this.frictionCoefficient);
+        return perpDirection.multiplyScalar(-perpSpeed *
+                (this.carControl.hasHandbrakeOn ? HANDBRAKE_FRICTION_COEFFICIENT : DEFAULT_FRICTION_COEFFICIENT));
     }
 
     private getLongitudinalForce(): Vector2 {
@@ -223,12 +174,12 @@ export class Car extends Object3D {
         const rollingResistance: Vector2 = this.getRollingResistance();
         resultingForce.add(rollingResistance);
 
-        if (this.isAcceleratorPressed) {
+        if (this.carControl.isAcceleratorPressed) {
             const tractionForce: number = this.getTractionForce();
             const accelerationForce: Vector2 = this.direction2D;
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
-        } else if (this.isBraking && this.isGoingForward()) {
+        } else if (this.carControl.isBraking && this.isGoingForward()) {
             resultingForce.add(this.getBrakeForce());
         }
 
