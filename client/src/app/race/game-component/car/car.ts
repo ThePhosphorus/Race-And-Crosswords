@@ -30,6 +30,7 @@ const DEFAULT_FRICTION_COEFFICIENT: number = 50000;
 const HANDBRAKE_FRICTION_COEFFICIENT: number = 5000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 100;
 const DRIFT_SOUND_MAX: number = 10000;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * 0.7;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -159,7 +160,7 @@ export class Car extends Object3D {
         return perpDirection.multiplyScalar(-perpSpeed * perpendicularForceFactor);
     }
     private updateDrift(factor: number): void {
-        if (factor < DRIFT_SOUND_MAX) {
+        if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
             this.carSound.startDrift();
         } else if (this.carSound.drift.isPlaying()) {
             this.carSound.releaseDrift();
