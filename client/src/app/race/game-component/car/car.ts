@@ -36,6 +36,7 @@ export class Car extends Object3D {
     private mesh: Object3D;
     private rigidBody: RigidBody;
     private carLights: CarLights;
+    private oldFrictionCoefficient: number;
 
     public get carMesh(): Object3D {
         return this.mesh;
@@ -137,9 +138,17 @@ export class Car extends Object3D {
         const direction: Vector2 = this.direction2D;
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeed: number = this.rigidBody.velocity.clone().dot(perpDirection);
+        let perpendicularForceFactor: number;
+        if (this.carControl.hasHandbrakeOn) {
+            perpendicularForceFactor = HANDBRAKE_FRICTION_COEFFICIENT;
+        } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION_COEFFICIENT) {
+            perpendicularForceFactor = this.oldFrictionCoefficient + 100;
+        } else {
+            perpendicularForceFactor = DEFAULT_FRICTION_COEFFICIENT;
+        }
+        this.oldFrictionCoefficient = perpendicularForceFactor;
+        return perpDirection.multiplyScalar(-perpSpeed * perpendicularForceFactor);
 
-        return perpDirection.multiplyScalar(-perpSpeed *
-                (this.carControl.hasHandbrakeOn ? HANDBRAKE_FRICTION_COEFFICIENT : DEFAULT_FRICTION_COEFFICIENT));
     }
 
     private getLongitudinalForce(): Vector2 {
