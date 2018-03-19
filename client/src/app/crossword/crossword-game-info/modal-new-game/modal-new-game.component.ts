@@ -12,7 +12,7 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
     styleUrls: ["./modal-new-game.component.css"]
 })
 export class ModalNewGameComponent implements OnInit {
-    public isCollapsedAvailablePlayer: boolean = false;
+    public isCollapsedAvailablePlayer: boolean;
     public showLevelGame: boolean;
     public isReadytoPlay: boolean;
     public username: string;
@@ -65,5 +65,10 @@ export class ModalNewGameComponent implements OnInit {
 
     public joinMatch(match: string): void {
         this.commService.joinMatch(match);
+    }
+
+    public chooseMode(isSingle: boolean): void {
+        this.isCollapsedAvailablePlayer = (isSingle) ? false : !this.isCollapsedAvailablePlayer;
+        this.showLevelGame = isSingle;
     }
 }
