@@ -14,22 +14,24 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 export class ModalNewGameComponent implements OnInit {
     public isCollapsedAvailablePlayer: boolean;
     public showLevelGame: boolean;
-    public isReadytoPlay: boolean;
-    public username: string;
     @Output() public showModal: EventEmitter<boolean>;
+
+    public username: string;
     private _lvl: Difficulty;
+    public isSinglePlayer: boolean;
+    public joinedPlayer: string;
+
     private _matchesAvailable: Array<InWaitMatch>;
-    private _isInWaitForCreateMatch: boolean;
 
     public constructor(private _crosswordService: CrosswordService, private commService: CrosswordCommunicationService) {
         this.isCollapsedAvailablePlayer = false;
         this.showLevelGame = false;
-        this._lvl = Difficulty.Easy;
-        this.username = null;
         this.showModal = new EventEmitter<boolean>();
-        this.isReadytoPlay = false;
+        this._lvl = null;
+        this.username = null;
+        this.isSinglePlayer = null;
+        this.joinedPlayer = null;
         this._matchesAvailable = [];
-        this._isInWaitForCreateMatch = false;
     }
 
     public ngOnInit(): void {
@@ -44,31 +46,41 @@ export class ModalNewGameComponent implements OnInit {
     public get lvl(): Difficulty { return this._lvl; }
     public changeLevel(lvl: Difficulty): void {
         this._lvl = lvl;
-        this.isReadytoPlay = true;
     }
+    public get isReadyToPlay(): boolean {
+        return (this.isSinglePlayer !== null &&
+                this.username !== null &&
+                this.username !== "" &&
+                this._lvl !== null);
+    }
+
     public closeGameOptions(): void {
         this.showModal.emit(false);
         this.username = null;
     }
     public createNewGame(): void {
         this.commService.returnName = this.username;
-        this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
 
-        if (this._isInWaitForCreateMatch) {
-            this.commService.createMatch(this._lvl);
+        if (this.isSinglePlayer) {
+            this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
+
+        } else {
+            if (this.joinedPlayer === null) {
+                this.commService.createMatch(this._lvl);
+            } else {
+                this.commService.joinMatch(this.joinedPlayer);
+            }
         }
+
         this.closeGameOptions();
-    }
-    public socketToServer(): void {
-        this._isInWaitForCreateMatch = true;
     }
 
     public joinMatch(match: string): void {
-        this.commService.joinMatch(match);
+        this.joinedPlayer = match;
     }
 
-    public chooseMode(isSingle: boolean): void {
-        this.isCollapsedAvailablePlayer = (isSingle) ? false : !this.isCollapsedAvailablePlayer;
-        this.showLevelGame = isSingle;
+    public showLevelChoice(bool: boolean): void {
+        this.isCollapsedAvailablePlayer = (bool) ? false : !this.isCollapsedAvailablePlayer;
+        this.showLevelGame = bool;
     }
 }
