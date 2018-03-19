@@ -89,6 +89,7 @@ export class Car extends Object3D {
         this.engine = engine;
         this.rearWheel = rearWheel;
         this.carControl = new CarControl();
+        this.oldComponent = 0;
     }
 
     // TODO: move loading code outside of car class.
@@ -161,23 +162,24 @@ export class Car extends Object3D {
         }
         this.oldFrictionCoefficient = perpendicularForce;
         this.updateDriftSound(perpendicularForce);
+
         if (this.rigidBody.velocity.length() > 2) {
             this.oldComponent = perpSpeedComponent;
-
             return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
         } else if (Math.sign(this.oldComponent) === Math.sign(perpSpeedComponent)) {
             this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3);
-
             return perpDirection.multiplyScalar(
                 this.oldComponent *
                 perpendicularForce
             );
         } else {
-            this.oldComponent = this.oldComponent * 0.9999;
+            this.oldComponent = (this.oldComponent ) * 0.9999;
+            return (this.oldComponent !== 0) ?
+            perpDirection.multiplyScalar(this.oldComponent * perpendicularForce) :
+            perpDirection.multiplyScalar(-perpSpeedComponent / 100 * perpendicularForce);
+            }
+     }
 
-            return perpDirection.multiplyScalar(this.oldComponent * perpendicularForce);
-        }
-    }
 
     private updateDriftSound(factor: number): void {
         if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
