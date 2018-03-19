@@ -34,23 +34,13 @@
     font-weight: lighter;
     padding-top: unset;
 }
-#levelMod .modal-content {
-    font-family: "Button Font", 'Times New Roman', Times, serif;
-    border: #212529 solid 2vmin;
-    background-color: lightgrey;
-}
-#modalLabel {
-    font-size: 200%;
-    margin: 3vmin;
-}
+
 .card {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     background-color: transparent;
     border: none;
 }
-.modal-footer{
-    border: none;
-}
+
 
 #info .btn:hover {
     color: steelblue;
@@ -100,9 +90,7 @@ p {
 #level {
     text-align: center;
 }
-#levelMod.show {
-    display: block;
-}
+
 
 .btn p {
     margin-top: 0%;
@@ -127,7 +115,9 @@ table td, table th {
 .table {
     border: solid #212529 0.2vmax;
 }
-
+#levelMod.show {
+    display: block;
+}
 @font-face {
     font-family: "Button Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")

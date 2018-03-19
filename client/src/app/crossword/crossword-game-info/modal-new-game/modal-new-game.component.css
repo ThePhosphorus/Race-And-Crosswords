@@ -13,6 +13,9 @@
     box-shadow: none;
 }
 
+#username{
+    display: inline-block;
+}
 #difficultySelector .btn-secondary:hover {
     box-shadow: none;
 }
@@ -55,3 +58,17 @@
     background-color: transparent;
     border: none;
 }
+ .modal-content {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    border: #212529 solid 2vmin;
+    background-color: lightgrey;
+}
+#modalLabel {
+    font-size: 200%;
+    margin: 3vmin;
+}
+.modal-footer{
+    border: none;
+}
+
+

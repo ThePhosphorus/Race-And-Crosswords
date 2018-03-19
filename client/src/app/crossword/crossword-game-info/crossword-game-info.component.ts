@@ -10,19 +10,18 @@ import { Difficulty } from "../../../../../common/communication/crossword-grid";
 
 export class CrosswordGameInfoComponent implements OnInit {
     @Output() public newGameLoad: EventEmitter<boolean>;
-    public isReadytoPlay: boolean;
+    public showModal: boolean;
     private _lvl: Difficulty;
     public nbPlayers: number;
-    public isCollapsedPlayer: boolean = false;
-    public isCollapsedLevel: boolean = false;
+    public isCollapsedPlayer: boolean;
+    public isCollapsedLevel: boolean;
     public showLevel: boolean;
 
     public constructor(private _crosswordService: CrosswordService) {
         this._lvl = null;
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
-        this.showLevel = false;
-        this.isReadytoPlay = false;
+        this.showModal = true;
         this.newGameLoad = new EventEmitter<boolean>();
     }
     public get lvl(): Difficulty {

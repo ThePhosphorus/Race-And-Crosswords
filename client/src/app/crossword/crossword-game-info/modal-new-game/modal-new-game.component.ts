@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { Difficulty } from "../../../../../../common/communication/crossword-grid";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
@@ -13,11 +13,11 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 export class ModalNewGameComponent implements OnInit {
     public isCollapsedAvailablePlayer: boolean = false;
-    public showLevelGame: boolean = false;
-    public isDiffSelected: boolean = false;
+    public showLevelGame: boolean;
+    public isReadytoPlay: boolean;
     public username: string;
+    @Output() public showModal: EventEmitter<boolean>;
     private _lvl: Difficulty;
-    @Output() public isReadytoPlay: EventEmitter<boolean>;
     private _matchesAvailable: Array<InWaitMatch>;
     private _isInWaitForCreateMatch: boolean;
 
@@ -26,7 +26,8 @@ export class ModalNewGameComponent implements OnInit {
         this.showLevelGame = false;
         this._lvl = Difficulty.Easy;
         this.username = null;
-        this.isReadytoPlay = new EventEmitter<boolean>();
+        this.showModal = new EventEmitter<boolean>();
+        this.isReadytoPlay = false;
         this._matchesAvailable = new Array<InWaitMatch>();
         this._isInWaitForCreateMatch = false;
     }
@@ -43,22 +44,24 @@ export class ModalNewGameComponent implements OnInit {
     public get lvl(): Difficulty { return this._lvl; }
     public changeLevel(lvl: Difficulty): void {
         this._lvl = lvl;
-        this.isReadytoPlay.emit(this.isDiffSelected && (this.username !== null));
+        this.isReadytoPlay = true;
+    }
+    public cancelGame(): void {
+        this.showModal.emit(false);
+    }
+    public createNewGame(): void {
         this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
 
-        if ( this._isInWaitForCreateMatch ) {
-            this.commService.createMatch(lvl);
+        if (this._isInWaitForCreateMatch) {
+            this.commService.createMatch(this._lvl);
         }
+        this.showModal.emit(false);
     }
-    public sendUsername(): void {
-        this.isReadytoPlay.emit(this.isDiffSelected && (this.username !== null));
-    }
-
     public socketToServer(): void {
         this._isInWaitForCreateMatch = true;
-     }
+    }
 
     public joinMatch(match: string): void {
-       this.commService.joinMatch(match);
-     }
+        this.commService.joinMatch(match);
+    }
 }
