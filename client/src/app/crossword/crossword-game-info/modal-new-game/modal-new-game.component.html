@@ -36,7 +36,7 @@
                 </table>
               </div>
             </div>
-            <input type="text" class="form-control  align-self-center w-75 mt-2"[hidden]="!showLevelGame"  [(ngModel)]="username"  id="username" placeholder="Username">
+            <input type="text" maxlength="23" class="form-control  align-self-center w-75 mt-2"[hidden]="!showLevelGame"  [(ngModel)]="username"  id="username" placeholder="Username">
             <div id="difficultySelector" [class.collapse]="username == null">
               <div class="card card-block pr-2 pl-2 mt-2  w-100">
                 <div class="btn-group btn-group-block w-100 " data-toggle="buttons">

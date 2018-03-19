@@ -3,42 +3,31 @@
     font-size: 10vmin;
     background-color: transparent;
 }
+
 #listAvailable #newGame {
+    border: #61b446 solid;
     background-color: #61b446;
     border-radius: 1vmin;
 }
 
-
 #difficultySelector .btn-secondary:focus {
     box-shadow: none;
 }
-#cancelBtn{
+
+#cancelBtn {
     background-color: #b44646;
     border: #813232;
 }
-#playBtn{
+
+#playBtn {
     background-color: steelblue;
     border: rgb(47, 90, 124);
 }
 
-.easy {
-    color: #328132;
-}
-
-.medium {
-    color: #dbdb1f;
-}
-
-.hard {
-    color: rgb(126, 0, 0);
-}
-
-
-
-
-#username{
+#username {
     display: inline-block;
 }
+
 #difficultySelector .btn-secondary:hover {
     box-shadow: none;
 }
@@ -48,50 +37,47 @@
     border: inset #212529;
 }
 
-#AvailableTable{
-    border:none;
+#AvailableTable {
+    border: none;
 }
 
-#listAvailable .btn{
-    border-radius: 0%;
-    border:solid darkgrey;
-    background-color:whitesmoke;
-    color: #212529;
+#AvailableTable .btn:hover {
+    box-shadow: inset 0vmin 0vmin 0.2vmin 0.3vmin #212529;
+    border:inset #212529 ;
 }
-#listAvailable .btn:hover{
-    border-radius: 0%;
-    background-color: lightgrey;
-}
-#easyBtn {
+
+#easyBtn, .easy {
     background-color: #61b446;
     border: #61b446 solid;
 }
 
-#mediumBtn {
+#mediumBtn, .medium {
     background-color: #b4b446;
     border: #b4b446 solid;
 }
 
-#hardBtn {
+#hardBtn, .hard {
     background-color: #b44646;
     border: #b44646;
 }
+
 .card {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     background-color: transparent;
     border: none;
 }
- .modal-content {
+
+.modal-content {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     border: #212529 solid 2vmin;
     background-color: lightgrey;
 }
+
 #modalLabel {
     font-size: 200%;
     margin: 3vmin;
 }
-.modal-footer{
+
+.modal-footer {
     border: none;
 }
-
-
