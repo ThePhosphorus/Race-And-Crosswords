@@ -169,11 +169,11 @@ export class Car extends Object3D {
             this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3);
 
             return perpDirection.multiplyScalar(
-                 this.oldComponent *
-                 perpendicularForce
-                );
+                this.oldComponent *
+                perpendicularForce
+            );
         } else {
-            this.oldComponent *= 0.99;
+            this.oldComponent = this.oldComponent * 0.9999;
 
             return perpDirection.multiplyScalar(this.oldComponent * perpendicularForce);
         }
