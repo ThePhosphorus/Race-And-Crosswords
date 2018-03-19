@@ -21,6 +21,19 @@
     border: rgb(47, 90, 124);
 }
 
+.easy {
+    color: #328132;
+}
+
+.medium {
+    color: #dbdb1f;
+}
+
+.hard {
+    color: rgb(126, 0, 0);
+}
+
+
 
 
 #username{

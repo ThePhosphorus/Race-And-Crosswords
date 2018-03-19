@@ -19,7 +19,7 @@
 
                   <tbody>
                       <tr *ngFor="let match of matches" >
-                          <button class="btn btn-secondary  w-100 m-0" (click)="joinMatch(match);isReadytoPlay=true">
+                          <button class="btn btn-secondary  w-100 m-0" (click)="joinMatch(match)" [ngClass]="{'easy': match.difficulty == 'Difficulty.Easy', 'medium': match.difficulty == 'Difficulty.Medium', 'hard': match.difficulty == 'Difficulty.Hard'}">
                              {{match.name}} - {{match.difficulty}}
                             </button>
                       </tr>

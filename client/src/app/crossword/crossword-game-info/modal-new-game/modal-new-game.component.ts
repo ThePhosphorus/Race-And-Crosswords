@@ -51,7 +51,7 @@ export class ModalNewGameComponent implements OnInit {
         return (this.isSinglePlayer !== null &&
                 this.username !== null &&
                 this.username !== "" &&
-                this._lvl !== null);
+                this._lvl !== null) || (this.joinedPlayer !== null);
     }
 
     public closeGameOptions(): void {
