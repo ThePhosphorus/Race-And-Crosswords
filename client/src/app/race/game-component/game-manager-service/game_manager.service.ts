@@ -167,8 +167,6 @@ export class GameManagerService extends Renderer {
         this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
         this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
         this._directionalLight.shadowBias = SHADOW_BIAS;
-        const directionalLightHelper: DirectionalLightHelper = new DirectionalLightHelper(this._directionalLight);
-        this.scene.add(directionalLightHelper);
     }
 
     private loadSkybox(path: string): void {
