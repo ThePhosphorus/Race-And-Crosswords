@@ -4,18 +4,6 @@ import { Orientation, MIN_WORD_LENGTH } from "../../../../../common/crossword/en
 import { Letter } from "../../../../../common/crossword/letter";
 
 export class ExtendedCrosswordGrid extends CrosswordGrid {
-    public getRow(position: number): number {
-        return Math.floor( position / this.size);
-    }
-
-    public getColumn(position: number): number {
-        return position % this.size;
-    }
-
-    public getPosition(row: number, column: number): number {
-        return row * this.size + column;
-    }
-
     public findWords(): Word[] {
         const unPlacedWords: Word[] = new Array<Word>();
         let acrossWord: Word = new Word();
