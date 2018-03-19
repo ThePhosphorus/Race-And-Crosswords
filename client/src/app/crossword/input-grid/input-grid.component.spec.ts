@@ -4,8 +4,10 @@ import { InputGridComponent } from "./input-grid.component";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { HttpClientModule } from "@angular/common/http";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import { CrosswordGrid, Word, Letter } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid} from "../../../../../common/crossword/crossword-grid";
 import { MOCK } from "../mock-crossword/mock-crossword";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 // tslint:disable:no-magic-numbers
 

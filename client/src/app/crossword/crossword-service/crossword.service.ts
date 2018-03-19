@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Difficulty, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";
 import { Subject } from "rxjs/Subject";
 import { MOCK } from "../mock-crossword/mock-crossword";
+import { Difficulty } from "../../../../../common/crossword/enums-constants";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = false;
@@ -14,7 +15,7 @@ const STARTING_BLACK_TILE_RATIO: number = 0.3;
 
 @Injectable()
 export class CrosswordService {
-    private _diff: Difficulty;
+    private _diff: Difficulty
     private _gridSize: number;
     private _blackTilesRatio: number;
     private _gridSubject: Subject<CrosswordGrid>;

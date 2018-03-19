@@ -1,4 +1,4 @@
-import { Word } from "../../../../../common/communication/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
 import { DatamuseWord } from "../../../../../common/communication/datamuse-word";
 import * as Request from "request-promise-native";
 

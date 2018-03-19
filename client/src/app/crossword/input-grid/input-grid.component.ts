@@ -1,6 +1,9 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGrid, Letter, Word, Orientation } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid} from "../../../../../common/crossword/crossword-grid";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Word } from "../../../../../common/crossword/word";
 const INITIAL_GRID_SIZE: number = 10;
 // const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
