@@ -27,6 +27,9 @@ export const SMALL_LIGHT_INTENSITY: number = 10;
 export const BACK_LIGHT_POSITION: Vector3 = new Vector3(0, 0.7, 1.4);
 export const BACK_LIGHT_TARGET: Vector3 = new Vector3(0, 0, 7);
 
+export const POSITION_OFFSET: Vector3 = new Vector3(0, 0.1, 0);
+export const TARGET_OFFSET: Vector3 = new Vector3(0, 2.1, 0);
+
 export const EXT_LEFT_LIGHT_POSITION: Vector3 = new Vector3(-0.47, SMALL_LIGHT_HEIGHT, SMALL_LIGHT_OFFSET);
 export const EXT_LEFT_LIGHT_TARGET: Vector3 = new Vector3(0.5, 0.8, -10 );
 export const INT_LEFT_LIGHT_POSITION: Vector3 = new Vector3(-0.29, SMALL_LIGHT_HEIGHT, SMALL_LIGHT_OFFSET);

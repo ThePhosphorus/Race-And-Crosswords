@@ -11,7 +11,7 @@ export const DEFAULT_MASS: number = 1515;
 export const DRAG_COEFFICIENT: number = 0.35;
 
 export const DEFAULT_DRIVE_RATIO: number = 3.27;
-export const DEFAULT_DOWNSHIFT_RPM: number = 4000;
+export const DEFAULT_DOWNSHIFT_RPM: number = 3000;
 export const DEFAULT_MINIMUM_RPM: number = 800;
 export const DEFAULT_SHIFT_RPM: number = 6500;
 export const DEFAULT_TRANSMISSION_EFFICIENCY: number = 0.7;

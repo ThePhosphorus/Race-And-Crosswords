@@ -22,8 +22,11 @@ import {
     BACK_LIGHT_TARGET,
     FRONT_LIGHT_TARGET,
     FRONT_LIGHT_POSITION,
-    FRONT_LIGHT_INTENSITY
+    FRONT_LIGHT_INTENSITY,
+    POSITION_OFFSET,
+    TARGET_OFFSET
 } from "./lights-constants";
+
 
 export class CarLights extends Object3D {
     private frontLight: SpotLight;
@@ -49,7 +52,7 @@ export class CarLights extends Object3D {
         this.initSmallLight(EXT_LEFT_LIGHT_POSITION, EXT_LEFT_LIGHT_TARGET);
         this.initSmallLight(INT_LEFT_LIGHT_POSITION, INT_LEFT_LIGHT_TARGET);
         this.initSmallLight(INT_RIGHT_LIGHT_POSITION, INT_RIGHT_LIGHT_TARGET);
-        this.initSmallLight(EXT_RIGHT_LIGHT_POSITION, EXT_RIGHT_LIGHT_TARGET);
+        this.initSmallLight(EXT_RIGHT_LIGHT_POSITION.add(POSITION_OFFSET), EXT_RIGHT_LIGHT_TARGET.sub(TARGET_OFFSET));
     }
 
     private initSmallLight(position: Vector3, target: Vector3): void {

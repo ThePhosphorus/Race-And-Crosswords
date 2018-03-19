@@ -160,8 +160,11 @@ export class Car extends Object3D {
         }
         this.oldFrictionCoefficient = perpendicularForce;
         this.updateDriftSound(perpendicularForce);
+        console.log(perpDirection.clone().multiplyScalar(-perpSpeedComponent * perpendicularForce).length());
 
-        return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
+        return perpDirection.clone().multiplyScalar(-perpSpeedComponent * perpendicularForce).length() > 300000 ?
+        perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce).multiplyScalar(0.1)
+        : perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce) ;
     }
     private updateDriftSound(factor: number): void {
         if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
