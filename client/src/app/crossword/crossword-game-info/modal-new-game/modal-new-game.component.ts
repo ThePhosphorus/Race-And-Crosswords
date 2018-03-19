@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Difficulty } from "../../../../../../common/communication/crossword-grid";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
@@ -28,7 +28,7 @@ export class ModalNewGameComponent implements OnInit {
         this.username = null;
         this.showModal = new EventEmitter<boolean>();
         this.isReadytoPlay = false;
-        this._matchesAvailable = new Array<InWaitMatch>();
+        this._matchesAvailable = [];
         this._isInWaitForCreateMatch = false;
     }
 
@@ -46,16 +46,18 @@ export class ModalNewGameComponent implements OnInit {
         this._lvl = lvl;
         this.isReadytoPlay = true;
     }
-    public cancelGame(): void {
+    public closeGameOptions(): void {
         this.showModal.emit(false);
+        this.username = null;
     }
     public createNewGame(): void {
+        this.commService.returnName = this.username;
         this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
 
         if (this._isInWaitForCreateMatch) {
             this.commService.createMatch(this._lvl);
         }
-        this.showModal.emit(false);
+        this.closeGameOptions();
     }
     public socketToServer(): void {
         this._isInWaitForCreateMatch = true;

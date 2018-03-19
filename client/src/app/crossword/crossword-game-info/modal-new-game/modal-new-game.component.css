@@ -12,6 +12,16 @@
 #difficultySelector .btn-secondary:focus {
     box-shadow: none;
 }
+#cancelBtn{
+    background-color: #b44646;
+    border: #813232;
+}
+#playBtn{
+    background-color: steelblue;
+    border: rgb(47, 90, 124);
+}
+
+
 
 #username{
     display: inline-block;
