@@ -1,7 +1,8 @@
 import * as assert from "assert";
 import { ExternalCommunications } from "./external-communications";
-import { Word, Letter } from "../../../../../common/communication/crossword-grid";
 import { DatamuseWord} from "../../../../../common/communication/datamuse-word";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 const externalCommunication: ExternalCommunications = new ExternalCommunications();
 let testWord: string;

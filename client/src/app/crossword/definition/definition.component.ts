@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../../common/crossword/letter";
 import { DisplayService } from "../display-service/display.service";
 
 class DisplayedDefinition {

@@ -1,5 +1,7 @@
 import { Component, OnInit, HostListener } from "@angular/core";
-import { CrosswordGrid, Letter, Word } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid} from "../../../../../common/crossword/crossword-grid";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Word } from "../../../../../common/crossword/word";
 import { DisplayService, GridState } from "../display-service/display.service";
 
 @Component({
