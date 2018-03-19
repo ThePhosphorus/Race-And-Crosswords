@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import {GridGenerator } from "./grid-generator";
-import {Difficulty, CrosswordGrid} from "../../../../common/communication/crossword-grid";
+import {CrosswordGrid} from "../../../../common/crossword/crossword-grid";
+import { Difficulty } from "../../../../common/crossword/enums-constants";
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;

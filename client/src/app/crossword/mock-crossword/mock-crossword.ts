@@ -1,10 +1,10 @@
-import { CrosswordGrid, Orientation} from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
 
 // tslint:disable
 export const MOCK: CrosswordGrid = {
         words: [
             {
-                rollbackCount: 0,
                 id: 0,
                 letters: [
                     {
@@ -74,7 +74,6 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
                 id: 0,
                 letters: [
                     {
@@ -144,7 +143,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 6,
                 letters: [
                     {
@@ -184,7 +183,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 2,
                 letters: [
                     {
@@ -206,7 +205,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 4,
                 letters: [
                     {
@@ -228,7 +227,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 80,
                 letters: [
                     {
@@ -262,7 +261,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 20,
                 letters: [
                     {
@@ -284,7 +283,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 60,
                 letters: [
                     {
@@ -306,7 +305,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 40,
                 letters: [
                     {
@@ -337,7 +336,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 44,
                 letters: [
                     {
@@ -368,7 +367,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 72,
                 letters: [
                     {
@@ -399,7 +398,6 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 3,
                 id: 32,
                 letters: [
                     {
@@ -421,7 +419,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 44,
                 letters: [
                     {
@@ -443,7 +441,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 28,
                 letters: [
                     {
@@ -465,7 +463,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 28,
                 letters: [
                     {
@@ -517,7 +515,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Down
             },
             {
-                rollbackCount: 0,
+                
                 id: 48,
                 letters: [
                     {
@@ -539,7 +537,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 87,
                 letters: [
                     {
@@ -567,7 +565,7 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 0,
+                
                 id: 65,
                 letters: [
                     {
@@ -609,7 +607,6 @@ export const MOCK: CrosswordGrid = {
                 orientation: Orientation.Across
             },
             {
-                rollbackCount: 2,
                 id: 66,
                 letters: [
                     {

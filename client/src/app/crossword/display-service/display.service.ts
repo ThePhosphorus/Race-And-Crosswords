@@ -1,8 +1,11 @@
 import { Injectable } from "@angular/core";
-import { CrosswordGrid, Letter, Word, Orientation } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { CrosswordService } from "../crossword-service/crossword.service";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Word } from "../../../../../common/crossword/word";
 
 const INITIAL_GRID_SIZE: number = 10;
 const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";

@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { EmptyGridFactory, GRID_SIZE } from "./empty-grid-factory";
 
 describe(" Empty grid generation", () => {
