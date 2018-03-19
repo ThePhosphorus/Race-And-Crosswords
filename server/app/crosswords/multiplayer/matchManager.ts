@@ -24,9 +24,7 @@ export class MatchManager {
     }
 
     public get PlayerOne(): string {
-        console.log(this._players);
-
-        return this._players[0].name;
+       return this._players[0].name;
     }
 
     public get gotPlayers(): boolean {
