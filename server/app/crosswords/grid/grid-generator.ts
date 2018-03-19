@@ -3,7 +3,7 @@ import { EmptyGridGenerator } from "./emptyGridGenerator/empty-grid-generator";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./externalCommunications/external-communications";
 import {Word} from "../../../../common/crossword/word"
-import {CrosswordGrid} from "../../../../common/crossword/crossword-grid"
+import {ICrosswordGrid} from "../../../../common/crossword/I-crossword-grid"
 import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../common/crossword/letter";
 
@@ -21,7 +21,7 @@ export class GridGenerator {
     public constructor() {
         this.externalCommunications = new ExternalCommunications();
     }
-    public async getNewGrid(difficulty: Difficulty, size: number): Promise<CrosswordGrid> {
+    public async getNewGrid(difficulty: Difficulty, size: number): Promise<ICrosswordGrid> {
         this.emptyGridFactory = new EmptyGridGenerator();
         this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);

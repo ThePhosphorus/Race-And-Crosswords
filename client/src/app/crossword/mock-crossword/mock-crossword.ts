@@ -1,8 +1,8 @@
-import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { ICrosswordGrid } from "../../../../../common/crossword/I-crossword-grid";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 
 // tslint:disable
-export const MOCK: CrosswordGrid = {
+export const MOCK: ICrosswordGrid = {
         words: [
             {
                 id: 0,

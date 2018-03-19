@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { ICrosswordGrid } from "../../../../../common/crossword/I-crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";
@@ -18,7 +18,7 @@ export class CrosswordService {
     private _diff: Difficulty;
     private _gridSize: number;
     private _blackTilesRatio: number;
-    private _gridSubject: Subject<CrosswordGrid>;
+    private _gridSubject: Subject<ICrosswordGrid>;
     private _solvedWords: number[];
     private _currentPlayer: number;
     private _currentPlayerSubject: Subject<number>;
@@ -28,7 +28,7 @@ export class CrosswordService {
         this._diff = Difficulty.Easy;
         this._gridSize = STARTING_GRID_SIZE;
         this._blackTilesRatio = STARTING_BLACK_TILE_RATIO;
-        this._gridSubject = new Subject<CrosswordGrid>();
+        this._gridSubject = new Subject<ICrosswordGrid>();
         this._currentPlayer = 1;
         this._currentPlayerSubject = new Subject<number>();
         this._solvedWords = [];
@@ -47,16 +47,16 @@ export class CrosswordService {
         return this._solvedWordsSubject.asObservable();
     }
 
-    public get grid(): Observable<CrosswordGrid> {
+    public get grid(): Observable<ICrosswordGrid> {
         return USE_MOCK_GRID ? of(MOCK) : this._gridSubject.asObservable();
     }
 
-    public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
+    public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<ICrosswordGrid> {
         if (!USE_MOCK_GRID) {
             this._diff = difficulty;
             this._gridSize = gridSize;
             this._blackTilesRatio = btRatio;
-            this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
+            this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: ICrosswordGrid) => {
                 this._gridSubject.next(crosswordGrid);
             });
         }
