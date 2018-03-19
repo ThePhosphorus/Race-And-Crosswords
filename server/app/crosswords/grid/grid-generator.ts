@@ -1,7 +1,7 @@
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridGenerator } from "./emptyGridGenerator/empty-grid-generator";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
-import { ExternalCommunications } from "./ExternalCommunications/external-communications";
+import { ExternalCommunications } from "./externalCommunications/external-communications";
 import {Word} from "../../../../common/crossword/word"
 import {CrosswordGrid} from "../../../../common/crossword/crossword-grid"
 import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
