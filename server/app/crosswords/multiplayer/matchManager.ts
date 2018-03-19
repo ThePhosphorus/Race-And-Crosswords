@@ -73,7 +73,7 @@ export class MatchManager {
         socket.on(msg.disconnect, () => this.playerLeave(id));
     }
 
-    public get Players (): Array<IPlayer> {
+    public get Players(): Array<IPlayer> {
         return this._players.map((p: Player) => p as IPlayer);
     }
 
