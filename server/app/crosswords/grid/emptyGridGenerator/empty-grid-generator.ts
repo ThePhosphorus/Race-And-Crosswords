@@ -6,7 +6,7 @@ import { Letter } from "../../../../../common/crossword/letter";
 const COMPLEXITY_THRESHOLD: number = 125;
 export const GRID_SIZE: number = 10;
 
-export class EmptyGridFactory {
+export class EmptyGridGenerator {
 
     private crossword: ExtendedCrosswordGrid;
 

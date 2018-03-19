@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
-import { EmptyGridFactory, GRID_SIZE } from "./empty-grid-factory";
+import { EmptyGridFactory, GRID_SIZE } from "./empty-grid-generator";
 
 describe(" Empty grid generation", () => {
     describe("When the empty grid is generated", () => {

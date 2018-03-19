@@ -1,5 +1,5 @@
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
-import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
+import { EmptyGridFactory } from "./emptyGridGenerator/empty-grid-generator";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 import {Word} from "../../../../common/crossword/word"
