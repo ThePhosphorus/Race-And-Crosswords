@@ -32,11 +32,11 @@ export class GridGenerator {
 
     private initialiseEmptyGrid(size: number): void {
 
-        this.crossword = this.emptyGridFactory.getNewGrid();
+        this.crossword = this.emptyGridFactory.getNewGrid() as ExtendedCrosswordGrid;
         this.crossword.words = new Array<Word>();
         this.notPlacedWords = this.crossword.findWords();
     }
-
+    
     private getWordWeight(word: Word): number {
         let weight: number = 0;
         for (const letter of word.letters) {

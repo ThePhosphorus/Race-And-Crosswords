@@ -1,5 +1,5 @@
 import {MIN_WORD_LENGTH, Orientation } from "../../../../../common/crossword/enums-constants";
-import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import {DEFAULT_BLACK_TILES} from "./default-black-tiles";
 import { Letter } from "../../../../../common/crossword/letter";
 
@@ -8,12 +8,12 @@ export const GRID_SIZE: number = 10;
 
 export class EmptyGridGenerator {
 
-    private crossword: ExtendedCrosswordGrid;
+    private crossword: CrosswordGrid;
 
-    public getNewGrid(): ExtendedCrosswordGrid {
+    public getNewGrid(): CrosswordGrid {
         let complexity: number;
         do {
-            this.crossword = new ExtendedCrosswordGrid();
+            this.crossword = new CrosswordGrid();
             this.initializeGrid();
             this.generateBlackTiles();
             complexity = this.getComplexity();
