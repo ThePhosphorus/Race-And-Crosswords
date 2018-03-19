@@ -35,14 +35,16 @@ export class CrosswordCommunicationService {
             "difficulty=" + difficulty +
             "&size=" + size);
     }
+
     public getMatches(): Observable<Array<InWaitMatch>> {
         return this.http.get<Array<InWaitMatch>>(BACKEND_URL + "crosswords/multiplayer/matchs");
     }
+
     public basicServerConnection(): Observable<string> {
         return this.http.get<string>(BACKEND_URL);
     }
 
-    public createSocket(): void {
+    private createSocket(): void {
         this.socket = connect(BACKEND_URL);
 
         this.socket.on(socketMsg.requestName, (id: number) =>
