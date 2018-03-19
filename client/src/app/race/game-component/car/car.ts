@@ -161,23 +161,22 @@ export class Car extends Object3D {
         }
         this.oldFrictionCoefficient = perpendicularForce;
         this.updateDriftSound(perpendicularForce);
-        if (this.rigidBody.velocity.length() > 2) { //NORMAL CASE
-            console.log("normal");
+        if (this.rigidBody.velocity.length() > 2) {
             this.oldComponent = perpSpeedComponent;
+
             return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
-        } else if (Math.sign(this.oldComponent) === Math.sign(perpSpeedComponent)) { //  Pas Transition
-            console.log("descendre doucement");
-            this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3)
+        } else if (Math.sign(this.oldComponent) === Math.sign(perpSpeedComponent)) {
+            this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3);
 
             return perpDirection.multiplyScalar(
                  this.oldComponent *
                  perpendicularForce
                 );
-        } else { console.log("transition");
-            this.oldComponent *= 0.9;
-            return perpDirection.multiplyScalar(-this.oldComponent * perpendicularForce);
-        }
+        } else {
+            this.oldComponent *= 0.99;
 
+            return perpDirection.multiplyScalar(this.oldComponent * perpendicularForce);
+        }
     }
 
     private updateDriftSound(factor: number): void {
