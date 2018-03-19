@@ -10,7 +10,8 @@ import {
     MeshPhongMaterial,
     AmbientLight,
     DirectionalLight,
-    Vector3
+    Vector3,
+    DirectionalLightHelper
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -41,7 +42,7 @@ const SPACE_BETWEEN_CARS: number = 5;
 const D_LIGHT_PLANE_SIZE: number = 200;
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
-const DIRECTIONAL_LIGHT_OFFSET: number = 5;
+const DIRECTIONAL_LIGHT_OFFSET: number = 50;
 const SHADOW_BIAS: number = 0.0001;
 const SUNLIGHT_INTENSITY: number = 0.2;
 // Keycodes
@@ -166,6 +167,8 @@ export class GameManagerService extends Renderer {
         this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
         this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
         this._directionalLight.shadowBias = SHADOW_BIAS;
+        const directionalLightHelper: DirectionalLightHelper = new DirectionalLightHelper(this._directionalLight);
+        this.scene.add(directionalLightHelper);
     }
 
     private loadSkybox(path: string): void {
@@ -262,7 +265,7 @@ export class GameManagerService extends Renderer {
     }
 
     private updateSunlight(): void {
-        const sunlightoffSet: Vector3 = new Vector3(-DIRECTIONAL_LIGHT_OFFSET, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET);
+        const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET/2);
         this._directionalLight.target = this.player["mesh"];
         this._directionalLight.position.copy((this.player.getPosition().clone().add(sunlightoffSet)));
     }

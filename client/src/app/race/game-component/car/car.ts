@@ -163,7 +163,7 @@ export class Car extends Object3D {
         console.log(perpDirection.clone().multiplyScalar(-perpSpeedComponent * perpendicularForce).length());
 
         return perpDirection.clone().multiplyScalar(-perpSpeedComponent * perpendicularForce).length() > 300000 ?
-        perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce).multiplyScalar(0.1)
+        perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce).multiplyScalar(0.01)
         : perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce) ;
     }
     private updateDriftSound(factor: number): void {
