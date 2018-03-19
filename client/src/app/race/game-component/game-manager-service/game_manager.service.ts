@@ -34,7 +34,7 @@ import {
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
-const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
+const OFF_ROAD_PATH: string = "../../assets/textures/dirt.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const N_AI_CONTROLLED_CARS: number = 1;

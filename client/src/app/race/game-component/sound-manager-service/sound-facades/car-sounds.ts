@@ -2,9 +2,9 @@ import {AudioListener, Object3D} from "three";
 import { PositionalSoundFacade } from "./positional-sound-facade";
 import { CRASH_PATH_1, CRASH_PATH_2, CRASH_PATH_3, CRASH_PATH_4 } from "../sound-constants";
 
-const ENGINE_FILE_NAME: string = "./engine/idle.ogg";
+const ENGINE_FILE_NAME: string = "./engine/engine2.ogg";
 const DRIFT_FILE_NAME: string = "./drift/drift1.ogg";
-const MAX_RPM: number = 5500;
+const MAX_RPM: number = 6500;
 const MIN_RPM: number = 800;
 const PLAYBACK_SPEED_FACTOR: number = 2;
 
@@ -43,7 +43,7 @@ export class CarSounds {
         this.engine.setPlaybackRate(this.getPlaybackRate(rpm));
     }
     private getPlaybackRate(rpm: number): number {
-        return (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
+        return (rpm - 800) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
     }
     public stop(): void {
         this.engine.stop();

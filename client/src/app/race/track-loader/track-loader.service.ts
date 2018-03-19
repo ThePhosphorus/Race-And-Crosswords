@@ -9,7 +9,7 @@ import "rxjs/add/operator/map";
 import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-constants/constants";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
-const TRACK_PATH: string = "../../assets/textures/floor.jpg";
+const TRACK_PATH: string = "../../assets/textures/test.jpg";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
