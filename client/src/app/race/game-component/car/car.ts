@@ -42,6 +42,7 @@ export class Car extends Object3D {
     private carLights: CarLights;
     private oldFrictionCoefficient: number;
     private carSound: CarSounds;
+    private oldComponent: number;
 
     public get carMesh(): Object3D {
         return this.mesh;
@@ -160,12 +161,25 @@ export class Car extends Object3D {
         }
         this.oldFrictionCoefficient = perpendicularForce;
         this.updateDriftSound(perpendicularForce);
-        console.log(perpDirection.clone().multiplyScalar(-perpSpeedComponent * perpendicularForce).length());
+        if (this.rigidBody.velocity.length() > 2) { //NORMAL CASE
+            console.log("normal");
+            this.oldComponent = perpSpeedComponent;
+            return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
+        } else if (Math.sign(this.oldComponent) === Math.sign(perpSpeedComponent)) { //  Pas Transition
+            console.log("descendre doucement");
+            this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3)
 
-        return perpDirection.clone().multiplyScalar(-perpSpeedComponent * perpendicularForce).length() > 300000 ?
-        perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce).multiplyScalar(0.01)
-        : perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce) ;
+            return perpDirection.multiplyScalar(
+                 this.oldComponent *
+                 perpendicularForce
+                );
+        } else { console.log("transition");
+            this.oldComponent *= 0.9;
+            return perpDirection.multiplyScalar(-this.oldComponent * perpendicularForce);
+        }
+
     }
+
     private updateDriftSound(factor: number): void {
         if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
             this.carSound.startDrift();

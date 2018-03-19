@@ -1,6 +1,6 @@
 import { Vector2, Object3D, Vector3 } from "three";
 
-const MINIMUM_SPEED: number = 0.05;
+const MINIMUM_SPEED: number = 0.02;
 
 export class RigidBody extends Object3D {
 
@@ -30,7 +30,9 @@ export class RigidBody extends Object3D {
     }
 
     public addForce(force: Vector2): void {
-        this.forces.add(force);
+        if (force != null) {
+            this.forces.add(force);
+        }
     }
 
     public addTorque(torque: number): void {
