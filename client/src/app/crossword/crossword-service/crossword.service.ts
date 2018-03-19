@@ -14,25 +14,27 @@ const STARTING_BLACK_TILE_RATIO: number = 0.3;
 
 @Injectable()
 export class CrosswordService {
-    private _diff: Difficulty;
     private _gridSize: number;
     private _blackTilesRatio: number;
+    private _grid: CrosswordGrid;
     private _gridSubject: Subject<CrosswordGrid>;
     private _solvedWords: number[];
+    private _solvedWordsSubject: Subject<number[]>;
     private _currentPlayer: number;
     private _currentPlayerSubject: Subject<number>;
-    private _solvedWordsSubject: Subject<number[]>;
+    private _diff: Difficulty;
     private _diffSubject: Subject<Difficulty>;
 
     public constructor(private commService: CrosswordCommunicationService) {
-        this._diff = Difficulty.Easy;
         this._gridSize = STARTING_GRID_SIZE;
         this._blackTilesRatio = STARTING_BLACK_TILE_RATIO;
+        this._grid = new CrosswordGrid;
         this._gridSubject = new Subject<CrosswordGrid>();
         this._currentPlayer = 1;
         this._currentPlayerSubject = new Subject<number>();
         this._solvedWords = [];
         this._solvedWordsSubject = new Subject<number[]>();
+        this._diff = Difficulty.Easy;
         this._diffSubject =  new Subject<Difficulty>();
     }
 
@@ -60,7 +62,8 @@ export class CrosswordService {
             this._gridSize = gridSize;
             this._blackTilesRatio = btRatio;
             this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
-                this._gridSubject.next(crosswordGrid);
+                this._grid = crosswordGrid;
+                this._gridSubject.next(this._grid);
             });
         }
         this._currentPlayer = 1;
@@ -74,5 +77,8 @@ export class CrosswordService {
     public addSolvedWord(index: number): void {
         this._solvedWords.push(index);
         this._solvedWordsSubject.next(this._solvedWords);
+        if (this._solvedWords.length === this._grid.words.length) {
+            this.newGame(this._diff, this._gridSize, this._blackTilesRatio);
+        }
     }
 }
