@@ -1,5 +1,5 @@
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
-import { EmptyGridFactory } from "./emptyGridGenerator/empty-grid-generator";
+import { EmptyGridGenerator } from "./emptyGridGenerator/empty-grid-generator";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
 import {Word} from "../../../../common/crossword/word"
@@ -13,7 +13,7 @@ const CONSTRAINT_CHAR: string = "?";
 export class GridGenerator {
 
     private externalCommunications: ExternalCommunications;
-    private emptyGridFactory: EmptyGridFactory;
+    private emptyGridFactory: EmptyGridGenerator;
     private crossword: ExtendedCrosswordGrid;
     private notPlacedWords: Word[];
     private rollbackCount: number = 0;
@@ -22,7 +22,7 @@ export class GridGenerator {
         this.externalCommunications = new ExternalCommunications();
     }
     public async getNewGrid(difficulty: Difficulty, size: number): Promise<CrosswordGrid> {
-        this.emptyGridFactory = new EmptyGridFactory();
+        this.emptyGridFactory = new EmptyGridGenerator();
         this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);
         this.cleanGrid();
