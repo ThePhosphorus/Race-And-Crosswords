@@ -18,9 +18,9 @@
                 <table class="table table-sm mb-0" id="AvailableTable">
 
                   <tbody>
-                      <tr *ngFor="let match of matches; let col = index" [ngClass]="{'black': true}">
+                      <tr *ngFor="let match of matches" >
                           <button class="btn btn-secondary  w-100 m-0" (click)="joinMatch(match)">
-                              {{match.name}} - {{match.difficulty}}
+                             {{match.name}} - {{match.difficulty}}
                             </button>
                       </tr>
                       <tr>
@@ -56,7 +56,7 @@
           </div>
           <div class="modal-footer m-0">
               <button type="button" id="playBtn" [disabled]="!isReadytoPlay" (click)="createNewGame()  "class="btn btn-primary">Play</button>
-              <button id="cancelBtn" type="button"(click)="cancelGame()" class="btn btn-secondary" >Cancel</button>
+              <button id="cancelBtn" type="button"(click)="closeGameOptions()" class="btn btn-secondary" >Cancel</button>
           </div>
       </div>
     </div>

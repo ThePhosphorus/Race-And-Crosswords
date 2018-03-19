@@ -19,14 +19,7 @@
     vertical-align: bottom;
     text-align: match-parent;
 }
-#cancelBtn{
-    background-color: #b44646;
-    border: #813232;
-}
-#playBtn{
-    background-color: steelblue;
-    border: rgb(47, 90, 124);
-}
+
 #info .btn {
     border: solid darkgrey;
     background-color: transparent;
