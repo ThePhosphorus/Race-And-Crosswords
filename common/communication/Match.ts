@@ -4,5 +4,7 @@ export class InWaitMatch {
     public constructor(
         public name: string,
         public difficulty: Difficulty
-    ) {}
+    ) {
+        this.name = name;
+    }
 }
