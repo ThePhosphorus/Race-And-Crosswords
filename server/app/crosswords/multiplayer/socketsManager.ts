@@ -51,14 +51,14 @@ export class SocketsManager {
     }
 
     public getInWaitMatches(): Array<InWaitMatch> {
-        const names: Array<InWaitMatch> = new Array<InWaitMatch>();
+        const matchs: Array<InWaitMatch> = new Array<InWaitMatch>();
         this._inWaitMatchs.forEach((m: MatchManager) => {
             if (m.PlayerOne != null) {
-                names.push(new InWaitMatch(m.PlayerOne, m.difficulty));
+                matchs.push(new InWaitMatch(m.PlayerOne, m.difficulty));
             }
         });
 
-        return names;
+        return matchs;
     }
 
     private addSocket(socket: Socket): void {
