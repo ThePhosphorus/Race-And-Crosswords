@@ -52,8 +52,10 @@ export class SocketsManager {
 
     public getInWaitMatches(): Array<InWaitMatch> {
         const matchs: Array<InWaitMatch> = new Array<InWaitMatch>();
-        this._inWaitMatchs.forEach((m: MatchManager) => {
-            if (m.PlayerOne != null) {
+        this._inWaitMatchs.forEach((m: MatchManager, index: number) => {
+            if (!m.gotPlayers) {
+                this._inWaitMatchs.slice(index, 1);
+            } else if (m.PlayerOne != null) {
                 matchs.push(new InWaitMatch(m.PlayerOne, m.difficulty));
             }
         });

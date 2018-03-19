@@ -25,7 +25,7 @@ export class CrosswordCommunicationService {
 
     public constructor(private http: HttpClient) {
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, null);
+        this.socketInfos = new SocketToServerInfos(null, null, null, "John C Doe");
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
@@ -66,7 +66,7 @@ export class CrosswordCommunicationService {
     }
 
     private socketReturnName(id: number): void {
-        this.socket.emit(socketMsg.requestName, "player");
+        this.socket.emit(socketMsg.requestName, this.socketInfos.returnName);
     }
 
     private receivePlayers(players: Array<IPlayer>): void {
@@ -101,9 +101,6 @@ export class CrosswordCommunicationService {
 
     public set returnName(name: string) {
         this.socketInfos.returnName = name;
-    }
-    public get returnName(): string {
-        return this.socketInfos.returnName;
     }
 
     public notifySelect(letterId: number, orientation: Orientation): void {

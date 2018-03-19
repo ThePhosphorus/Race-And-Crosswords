@@ -24,7 +24,13 @@ export class MatchManager {
     }
 
     public get PlayerOne(): string {
+        console.log(this._players);
+
         return this._players[0].name;
+    }
+
+    public get gotPlayers(): boolean {
+        return this._players.length > 0;
     }
 
     public addPlayer(socket: Socket): void {
