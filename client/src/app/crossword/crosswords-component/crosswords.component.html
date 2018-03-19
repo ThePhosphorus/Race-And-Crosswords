@@ -1,6 +1,7 @@
 <div class="row  row justify-content-center " *ngIf="loading" id="overlay">
-    <div class="col-4 text-center mt-5 pt-3 w-100">
-  <p id="text">LOADING</p>
+    <div class="col-4 text-center  justify-content-center center-block align-items-center mt-5 pt-3">
+  <p id="loading">LOADING</p>
+  <p id="dots">...</p>
     </div>
 </div>
 <div class="row text-center  mt-5" (click)="grid.unselectWord($event)">
