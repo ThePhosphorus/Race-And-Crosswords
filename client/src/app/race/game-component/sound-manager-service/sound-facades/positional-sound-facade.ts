@@ -11,7 +11,7 @@ export  class PositionalSoundFacade extends AbstractSoundFacade {
         soundListener: AudioListener,
         isLoop: boolean,
         volume: number) {
-        super(soundListener, isLoop, volume);
+        super(soundListener, isLoop);
         soundEmittingObject.add(this.sound);
     }
 

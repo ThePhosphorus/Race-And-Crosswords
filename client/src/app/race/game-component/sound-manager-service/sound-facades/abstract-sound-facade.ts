@@ -29,7 +29,6 @@ export abstract class AbstractSoundFacade {
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(this.isLoop);
-        this.sound.setVolume(this.volume);
     }
 
     public setVolume(volume: number): void {

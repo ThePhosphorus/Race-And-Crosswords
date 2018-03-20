@@ -11,7 +11,7 @@ export class GlobalSoundFacade extends AbstractSoundFacade {
         soundListener: AudioListener,
         isLoop: boolean,
         volume: number) {
-        super(soundListener, isLoop, volume);
+        super(soundListener, isLoop);
     }
 
     protected instanciateSound(soundListener: AudioListener): void {
