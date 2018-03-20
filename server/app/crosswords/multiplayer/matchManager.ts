@@ -1,30 +1,32 @@
 import { IPlayer } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
-import { CrosswordGrid, Difficulty, Orientation } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../common/communication/crossword-grid";
 
 type Socket = SocketIO.Socket;
 
 class Player implements IPlayer {
-    public constructor (
-    public id: number,
-    public socket: Socket,
-    public name: string
-    ) {}
+    public constructor(
+        public id: number,
+        public socket: Socket,
+        public name: string
+    ) { }
 }
 
 export class MatchManager {
     public grid: CrosswordGrid;
     private _players: Array<Player>;
     private _difficulty: Difficulty;
+    private currentGrid: CrosswordGrid;
 
     public constructor(player1: Socket, difficulty: Difficulty) {
-        this._players = new Array <Player>();
+        this._players = new Array<Player>();
+        this.currentGrid = new CrosswordGrid();
         this.addPlayer(player1);
         this._difficulty = difficulty;
     }
 
     public get PlayerOne(): string {
-       return this._players[0].name;
+        return this._players[0].name;
     }
 
     public get gotPlayers(): boolean {
@@ -35,7 +37,7 @@ export class MatchManager {
         const id: number = this._players.length;
         this._players.push(new Player(id, socket, "Jonh Doe"));
         this.askForName(this._players[id]);
-        this.registerActions( socket, id );
+        this.registerActions(socket, id);
     }
 
     public get difficulty(): Difficulty {
@@ -75,28 +77,41 @@ export class MatchManager {
             this.recieveSelect(id, letterId, orientation));
 
         socket.on(msg.disconnect, () => this.playerLeave(id));
+        socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
     }
 
     public get Players(): Array<IPlayer> {
         return this._players.map((p: Player) => p as IPlayer);
     }
 
-    public recieveSelect(playerId: number, letterId: number, orientation: Orientation ): void {
-        this._players.forEach((p: Player, index: number) => {
+    public verifyFirst(w: Word, playerId: number): void {
+        let confirmWord: boolean = true;
+        this.currentGrid.words.forEach((word: Word) => {
+            if (word === w) {
+                confirmWord = false;
+            }
+        });
+        this.getPlayerById(playerId).socket.emit(msg.completedWord, confirmWord);
+        if (confirmWord) {
+            this.currentGrid.words.push(w);
+            this.notifyOthers(playerId, msg.updateWord, w);
+        }
+    }
+    public notifyOthers(playerId: number, socketMsg: string, ...args: any[]): void {
+        this._players.forEach((p: Player) => {
             if (p.id !== playerId) {
-                p.socket.emit(msg.playerSelectTile, letterId, orientation);
+            p.socket.emit(socketMsg, args);
             }
         });
     }
 
+    public recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
+            this.notifyOthers(playerId, msg.playerSelectTile, letterId, orientation);
+    }
+
     public playerLeave(id: number): void {
         this._players.splice(id, 1);
-        this._players.forEach((p: Player, index: number) => {
-            if (index !== p.id) {
-                p.id = index;
-            }
-            p.socket.emit(msg.getPlayers, this.Players);
-        });
+        this.notifyOthers(id, msg.getPlayers, this.Players);
 
     }
 

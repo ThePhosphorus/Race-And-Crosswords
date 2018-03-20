@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CrosswordGrid, Difficulty, Orientation } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
 import { connect } from "socket.io-client";
@@ -9,12 +9,14 @@ import { InWaitMatch } from "../../../../../common/communication/Match";
 import { IPlayer } from "../../../../../common/communication/Player";
 
 export class SocketToServerInfos {
-    public constructor (
-    public receivePlayersCallBack: Function,
-    public receiveSelectCallBack: Function,
-    public receiveGrid: Function,
-    public returnName: string
-    ) {}
+    public constructor(
+        public receivePlayersCallBack: Function,
+        public receiveSelectCallBack: Function,
+        public receiveGrid: Function,
+        public receiveCompletedWord: Function,
+        public returnName: string
+
+    ) { }
 }
 
 @Injectable()
@@ -25,7 +27,7 @@ export class CrosswordCommunicationService {
 
     public constructor(private http: HttpClient) {
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, "John C Doe");
+        this.socketInfos = new SocketToServerInfos(null, null, null, null, "John C Doe");
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
@@ -48,13 +50,17 @@ export class CrosswordCommunicationService {
             this.socketReturnName(id));
 
         this.socket.on(socketMsg.getPlayers, (players: Array<IPlayer>) =>
-            this.receivePlayers(players) );
+            this.receivePlayers(players));
 
         this.socket.on(socketMsg.playerSelectTile, (playerId: number, letterId: number, orientation: Orientation) =>
             this.receiveSelect(playerId, letterId, orientation));
 
         this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) =>
             this.receiveGrid(grid));
+
+        this.socket.on(socketMsg.updateWord, (w: Word) =>
+            this.receiveCompletedWord(w)
+        );
     }
 
     public createMatch(difficulty: Difficulty): void {
@@ -86,6 +92,11 @@ export class CrosswordCommunicationService {
             this.socketInfos.receiveGrid(grid);
         }
     }
+    private receiveCompletedWord(w: Word): void {
+        if (this.socketInfos.receiveCompletedWord != null) {
+            this.socketInfos.receiveCompletedWord(w);
+        }
+    }
 
     public set listenerReceivePlayers(func: Function) {
         this.socketInfos.receivePlayersCallBack = func;
@@ -99,6 +110,10 @@ export class CrosswordCommunicationService {
         this.socketInfos.receiveGrid = func;
     }
 
+    public set listenerReceiveCompletedWord(func: Function) {
+        this.socketInfos.receiveCompletedWord = func;
+    }
+
     public set returnName(name: string) {
         this.socketInfos.returnName = name;
     }
@@ -106,4 +121,6 @@ export class CrosswordCommunicationService {
     public notifySelect(letterId: number, orientation: Orientation): void {
         this.socket.emit(socketMsg.playerSelectTile, letterId, orientation);
     }
+
+
 }
