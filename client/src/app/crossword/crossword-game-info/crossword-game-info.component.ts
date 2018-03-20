@@ -24,6 +24,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.showModal = true;
         this.newGameLoad = new EventEmitter<boolean>();
     }
+
     public get lvl(): Difficulty {
         return this._lvl;
     }
@@ -34,6 +35,7 @@ export class CrosswordGameInfoComponent implements OnInit {
             this._lvl = difficulty;
         });
     }
+
     public loadNewGame(isNewGame: boolean): void {
         this.newGameLoad.emit(isNewGame);
     }

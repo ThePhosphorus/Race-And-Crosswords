@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
-import { DisplayService } from "../display-service/display.service";
 
 class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}
@@ -19,7 +18,7 @@ export class DefinitionComponent implements OnInit {
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
 
-    public constructor(private _crosswordService: CrosswordService, private _displayService: DisplayService) {
+    public constructor(private _crosswordService: CrosswordService) {
         this._cheatmode = false;
         this._wordGrid = null;
         this._solvedWords = [];
@@ -66,15 +65,15 @@ export class DefinitionComponent implements OnInit {
     }
 
     public select(index: number, orientation: string): void {
-        this._displayService.setSelectedWord(this.findWordByIndex(index, orientation));
+        this._crosswordService.setSelectedWord(this.findWordByIndex(index, orientation));
     }
 
     public hover(index: number, orientation: string): void {
-        this._displayService.setHoveredWord(this.findWordByIndex(index, orientation));
+        this._crosswordService.setHoveredWord(this.findWordByIndex(index, orientation));
     }
 
     public unHover(): void {
-        this._displayService.setHoveredWord(null);
+        this._crosswordService.setHoveredWord(null);
     }
 
     private findWordByIndex(index: number, orientation: string): Word {

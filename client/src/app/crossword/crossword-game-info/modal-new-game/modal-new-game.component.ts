@@ -43,10 +43,12 @@ export class ModalNewGameComponent implements OnInit {
     public get matches(): Array<InWaitMatch> {
         return this._matchesAvailable;
     }
+
     public get lvl(): Difficulty { return this._lvl; }
     public changeLevel(lvl: Difficulty): void {
         this._lvl = lvl;
     }
+
     public get isReadyToPlay(): boolean {
         return (this.isSinglePlayer !== null &&
                 this.username !== null &&
@@ -58,6 +60,7 @@ export class ModalNewGameComponent implements OnInit {
         this.showModal.emit(false);
         this.username = null;
     }
+
     public createNewGame(): void {
         this.commService.returnName = this.username;
 

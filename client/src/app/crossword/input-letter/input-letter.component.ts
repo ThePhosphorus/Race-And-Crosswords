@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { GridState, DisplayService } from "../display-service/display.service";
+import { Players } from "../../../../../common/communication/Player";
+import { GridState } from "../grid-state/grid-state";
+import { CrosswordService } from "../crossword-service/crossword.service";
 
 @Component({
     selector: "app-input-letter",
@@ -11,20 +13,20 @@ export class InputLetterComponent implements OnInit {
     @Input() public id: number;
     private _gridState: GridState;
 
-    public constructor(private _displayService: DisplayService) {
+    public constructor(private _crosswordService: CrosswordService) {
         this.letter = "	 ";
         this.id = 1;
         this._gridState = new GridState();
     }
 
     public ngOnInit(): void {
-        this._displayService.gridState.subscribe((gridState: GridState) => {
+        this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
             this._gridState = gridState;
         });
     }
 
     public select(): void {
-        this._displayService.setSelectedLetter(this.id);
+        this._crosswordService.setSelectedLetter(this.id);
     }
 
     public isDisabled(): boolean {
@@ -36,7 +38,7 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isHighlighted(): boolean {
-        return this._gridState.highlightedLetters.indexOf(this.id) > -1;
+        return this._gridState.selectedLetters.indexOf(this.id) > -1;
     }
 
     public isCurrentLetter(): boolean {
@@ -44,11 +46,10 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isPlayer1(): boolean {
-        return this._gridState.currentPlayer === 1;
+        return this._gridState.currentPlayer === Players.PLAYER1;
     }
 
     public isPlayer2(): boolean {
-        // tslint:disable-next-line:no-magic-numbers
-        return this._gridState.currentPlayer === 2;
+        return this._gridState.currentPlayer === Players.PLAYER2;
     }
 }
