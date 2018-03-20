@@ -9,8 +9,9 @@ export class GlobalSoundFacade extends AbstractSoundFacade {
 
     public constructor(
         soundListener: AudioListener,
-        isLoop: boolean) {
-        super(soundListener, isLoop);
+        isLoop: boolean,
+        volume: number) {
+        super(soundListener, isLoop, volume);
     }
 
     protected instanciateSound(soundListener: AudioListener): void {
