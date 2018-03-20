@@ -13,8 +13,8 @@ export class Timer {
         this._minutes = 0;
     }
 
-    public update(): void {
-        this._centiseconds++;
+    public update(t: number): void {
+        this._centiseconds += t /10;
         if (this._centiseconds >= 100) {
             this._centiseconds = 0;
             this._seconds++;

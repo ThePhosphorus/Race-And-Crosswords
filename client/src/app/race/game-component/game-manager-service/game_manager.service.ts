@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import {
     CubeTextureLoader,
     Mesh,
@@ -29,6 +29,8 @@ import {
     SHADOWMAP_SIZE,
     SHADOW_CAMERA_PLANE_RATIO
 } from "../../../global-constants/constants";
+import { Subject } from "rxjs/Subject";
+import { Observable } from "rxjs/Observable";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
@@ -67,13 +69,14 @@ export class CarInfos {
 
 @Injectable()
 export class GameManagerService extends Renderer {
-    private player: Car;
-    private aiControlledCars: Array<Car>;
+    private _player: Car;
+    private _aiControlledCars: Array<Car>;
     private _isShadowMode: boolean;
     private _isNightMode: boolean;
     private _directionalLight: DirectionalLight;
     private _dayAmbientLight: AmbientLight;
     private _nightAmbientLight: AmbientLight;
+    private _hudSubject: Subject<number>;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -85,18 +88,19 @@ export class GameManagerService extends Renderer {
         this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
         this._isNightMode = false;
         this._isShadowMode = false;
+        this._hudSubject = new Subject<number>();
 
-        this.player = new Car(this.cameraManager);
-        this.aiControlledCars = new Array<Car>();
+        this._player = new Car(this.cameraManager);
+        this._aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this.aiControlledCars.push(new Car(this.cameraManager));
+            this._aiControlledCars.push(new Car(this.cameraManager));
         }
     }
 
     public get playerInfos(): CarInfos {
-        return new CarInfos(this.player.speed,
-                            this.player.currentGear,
-                            this.player.rpm);
+        return new CarInfos(this._player.speed,
+                            this._player.currentGear,
+                            this._player.rpm);
     }
 
     public async start(container: HTMLDivElement): Promise<void> {
@@ -110,20 +114,28 @@ export class GameManagerService extends Renderer {
         this.loadSunlight();
         this.startRenderingLoop();
     }
+    public get hud(): Observable<number> {
+        return this._hudSubject.asObservable();
+    }
+
+    public getDeltaTime(): Observable<number> {
+        return this._hudSubject.asObservable();
+    }
 
     protected update(deltaTime: number): void {
-        this.player.update(deltaTime);
-        this.aiControlledCars.forEach((car) => car.update(deltaTime));
-        this.cameraTargetDirection = this.player.direction;
-        this.cameraTargetPosition = this.player.getPosition();
+        this._player.update(deltaTime);
+        this._hudSubject.next(deltaTime);
+        this._aiControlledCars.forEach((car) => car.update(deltaTime));
+        this.cameraTargetDirection = this._player.direction;
+        this.cameraTargetPosition = this._player.getPosition();
         this.collisionDetector.detectCollisions(this.scene);
         this.updateSunlight();
     }
 
     private async initCars(): Promise<void> {
-        await this.player.init(new Vector3(0, 0, 0), "green");
-        for (let i: number = 0; i < this.aiControlledCars.length; i++) {
-            await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
+        await this._player.init(new Vector3(0, 0, 0), "purple");
+        for (let i: number = 0; i < this._aiControlledCars.length; i++) {
+            await this._aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
         }
     }
 
@@ -132,26 +144,26 @@ export class GameManagerService extends Renderer {
     }
 
     private initKeyBindings(): void {
-        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this.player.carControl.accelerate());
-        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this.player.carControl.brake());
-        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this.player.carControl.steerLeft());
-        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this.player.carControl.steerRight());
+        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this._player.carControl.accelerate());
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this._player.carControl.brake());
+        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._player.carControl.steerLeft());
+        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._player.carControl.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
         this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
-        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.carControl.handBrake());
-        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.carControl.releaseAccelerator());
-        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.carControl.releaseBrakes());
-        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.carControl.releaseSteeringLeft());
-        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this.player.carControl.releaseSteeringRight());
+        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this._player.carControl.handBrake());
+        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._player.carControl.releaseAccelerator());
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._player.carControl.releaseBrakes());
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._player.carControl.releaseSteeringLeft());
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._player.carControl.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
-        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
+        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
         // TODO: REMOVE THIS BECAUSE IT'S TEMPORARY
-        this.inputManager.registerKeyDown(13, () => this.player.collisionSound());
+        this.inputManager.registerKeyDown(13, () => this._player.collisionSound());
     }
 
     private loadSunlight(): void {
@@ -183,8 +195,8 @@ export class GameManagerService extends Renderer {
 
     private toggleNightMode(): void {
 
-        this.player.toggleNightLight();
-        this.aiControlledCars.forEach((aiCar) => {
+        this._player.toggleNightLight();
+        this._aiControlledCars.forEach((aiCar) => {
             aiCar.toggleNightLight();
         });
         if (this._isNightMode) {
@@ -240,9 +252,9 @@ export class GameManagerService extends Renderer {
 
     private initScene(): void {
         this.scene.add(this.getFloor());
-        this.scene.add(this.player);
+        this.scene.add(this._player);
         this.scene.add(this._dayAmbientLight);
-        this.aiControlledCars.forEach((car) => this.scene.add(car));
+        this._aiControlledCars.forEach((car) => this.scene.add(car));
     }
 
     private getFloor(): Mesh {
@@ -263,7 +275,7 @@ export class GameManagerService extends Renderer {
 
     private updateSunlight(): void {
         const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET/2);
-        this._directionalLight.target = this.player["mesh"];
-        this._directionalLight.position.copy((this.player.getPosition().clone().add(sunlightoffSet)));
+        this._directionalLight.target = this._player["mesh"];
+        this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 }

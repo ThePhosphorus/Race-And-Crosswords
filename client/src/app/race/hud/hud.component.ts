@@ -4,6 +4,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Timer } from "./timer";
 import { GameManagerService, CarInfos } from "../game-component/game-manager-service/game_manager.service";
 import { TWO_SECONDS, CENTISECOND } from "../../global-constants/constants";
+import { Observable } from "rxjs/Observable";
 
 @Component({
     selector: "app-hud",
@@ -15,7 +16,6 @@ export class HudComponent implements OnInit {
     private globalTimer: Timer;
     private lapTimer: Timer;
 
-    private subscription: Subscription;
     public constructor(private gameManagerService: GameManagerService) {
         this.initTick();
         this.globalTimer = new Timer();
@@ -32,17 +32,15 @@ export class HudComponent implements OnInit {
     }
 
     public get carInfos(): CarInfos {
-        return this.gameManagerService.carInfos;
+        return this.gameManagerService.playerInfos;
     }
 
     private start_chron(): void {
         // tslint:disable-next-line:no-magic-numbers
         // tslint:disable-next-line:typedef
-        const timer = TimerObservable.create(TWO_SECONDS, CENTISECOND);
-        this.subscription = timer.subscribe((t) => {
-            this.tick = t;
-            this.lapTimer.update();
-            this.globalTimer.update();
+        this.gameManagerService.hud.subscribe((t: number) => {
+            this.lapTimer.update(t);
+            this.globalTimer.update(t);
 
         });
 

@@ -12,10 +12,13 @@ export class RpmBarComponent {
   public constructor(private _gameManagerService: GameManagerService) { }
 
   public get speed(): number {
-    return Math.round(this._gameManagerService.carInfos.speed * METER_TO_KM_SPEED_CONVERSION);
+    return Math.round(this._gameManagerService.playerInfos.speed * METER_TO_KM_SPEED_CONVERSION);
   }
 
+  public get gear(): number {
+    return this._gameManagerService.playerInfos.gear + 1;
+  }
   public get rpm(): number {
-    return Math.round(this._gameManagerService.carInfos.rpm);
+    return Math.round(this._gameManagerService.playerInfos.rpm);
   }
 }
