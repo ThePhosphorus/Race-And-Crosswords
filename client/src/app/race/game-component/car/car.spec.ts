@@ -1,4 +1,4 @@
-import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
+import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { Engine } from "./engine";
 import { Wheel } from "./wheel";
 import { Vector3 } from "three";
@@ -117,6 +117,6 @@ describe("Car", () => {
 
     it("should check validity of dragCoefficient parameter", () => {
         car = new Car(new MockEngine(), new Wheel(), DEFAULT_WHEELBASE, DEFAULT_MASS, -10);
-        expect(car["dragCoefficient"]).toBe(DEFAULT_DRAG_COEFFICIENT);
+        expect(car["dragCoefficient"]).toBe(DRAG_COEFFICIENT);
     });
 });

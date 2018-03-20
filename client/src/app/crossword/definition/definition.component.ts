@@ -1,6 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../../common/crossword/letter";
+import { DisplayService } from "../display-service/display.service";
 
 class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}
@@ -12,21 +16,18 @@ class DisplayedDefinition {
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-    @Output() public setSelectedWord: EventEmitter<Word>;
-    @Output() public setHoveredWord: EventEmitter<Word>;
-    @Output() public _cheatmode: boolean;
     private _wordGrid: Word[];
-    public solvedWords: number[];
+    private _cheatmode: boolean;
+    private _solvedWords: number[];
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService, private _displayService: DisplayService) {
         this._cheatmode = false;
         this._wordGrid = null;
+        this._solvedWords = [];
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
-        this.setSelectedWord = new EventEmitter<Word>();
-        this.setHoveredWord = new EventEmitter<Word>();
     }
 
     public ngOnInit(): void {
@@ -44,7 +45,7 @@ export class DefinitionComponent implements OnInit {
             }
         });
         this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
-            this.solvedWords = solvedWords;
+            this._solvedWords = solvedWords;
         });
     }
 
@@ -53,7 +54,7 @@ export class DefinitionComponent implements OnInit {
                                        this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), id);
     }
 
-    public upperFirstLetter(str: string): string {
+    private upperFirstLetter(str: string): string {
         return str ? str.charAt(0).toUpperCase() + str.slice(1) : undefined;
     }
 
@@ -61,20 +62,22 @@ export class DefinitionComponent implements OnInit {
         this._cheatmode = !this._cheatmode;
     }
 
-    public get cheatMode(): boolean {
-        return this._cheatmode;
+    public get cheatMode(): boolean { return this._cheatmode; }
+
+    public isWordSolved(id: number): boolean {
+        return this._solvedWords.indexOf(id) > -1;
     }
 
     public select(index: number, orientation: string): void {
-        this.setSelectedWord.emit(this.findWordByIndex(index, orientation));
+        this._displayService.setSelectedWord(this.findWordByIndex(index, orientation));
     }
 
     public hover(index: number, orientation: string): void {
-        this.setHoveredWord.emit(this.findWordByIndex(index, orientation));
+        this._displayService.setHoveredWord(this.findWordByIndex(index, orientation));
     }
 
     public unHover(): void {
-        this.setHoveredWord.emit(null);
+        this._displayService.setHoveredWord(null);
     }
 
     private findWordByIndex(index: number, orientation: string): Word {

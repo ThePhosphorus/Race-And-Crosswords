@@ -86,15 +86,15 @@ export class PerspectiveCameraContainer extends CameraContainer {
         return this._perspCamera;
     }
 
-    public toggleEffect(): void {
-        this.effectModeEnabled = !this.effectModeEnabled;
-    }
-
     public get effectModeEnabled(): boolean {
         return this.effectModeisEnabled;
     }
 
     public set effectModeEnabled(value: boolean) {
         this.effectModeisEnabled = value;
+    }
+
+    public toggleEffectMode(): void {
+        this.effectModeEnabled = !this.effectModeEnabled;
     }
 }

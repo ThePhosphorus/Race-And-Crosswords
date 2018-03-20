@@ -1,8 +1,11 @@
-import { Word, CrosswordGrid, Letter, Difficulty, Orientation } from "../../../../common/communication/crossword-grid";
 import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 import { EmptyGridFactory } from "./emptyGridFactory/empty-grid-factory";
 import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
 import { ExternalCommunications } from "./ExternalCommunications/external-communications";
+import {Word} from "../../../../common/crossword/word"
+import {CrosswordGrid} from "../../../../common/crossword/crossword-grid"
+import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../common/crossword/letter";
 
 const MAX_TOTAL_ROLLBACKS: number = 30;
 const CONSTRAINT_CHAR: string = "?";

@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CrosswordGrid, Difficulty } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
+import { Difficulty } from "../../../../../common/crossword/enums-constants";
 
 @Injectable()
 export class CrosswordCommunicationService {
