@@ -16,11 +16,11 @@ export class MatchManager {
     public grid: CrosswordGrid;
     private _players: Array<Player>;
     private _difficulty: Difficulty;
-    private currentGrid: CrosswordGrid;
+    private completedWords: Array<Word>;
 
     public constructor(player1: Socket, difficulty: Difficulty) {
         this._players = new Array<Player>();
-        this.currentGrid = new CrosswordGrid();
+        this.completedWords = new Array<Word>();
         this.addPlayer(player1);
         this._difficulty = difficulty;
     }
@@ -86,18 +86,18 @@ export class MatchManager {
 
     public verifyFirst(w: Word, playerId: number): void {
         let confirmWord: boolean = true;
-        this.currentGrid.words.forEach((word: Word) => {
+        this.completedWords.forEach((word: Word) => {
             if (word === w) {
                 confirmWord = false;
             }
         });
         this.getPlayerById(playerId).socket.emit(msg.completedWord, confirmWord);
         if (confirmWord) {
-            this.currentGrid.words.push(w);
+            this.completedWords.push(w);
             this.notifyOthers(playerId, msg.updateWord, w);
         }
     }
-    public notifyOthers(playerId: number, socketMsg: string, ...args: any[]): void {
+    public notifyOthers(playerId: number, socketMsg: string, ...args: {}[]): void {
         this._players.forEach((p: Player) => {
             if (p.id !== playerId) {
             p.socket.emit(socketMsg, args);
