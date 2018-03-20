@@ -16,4 +16,20 @@ export class GridState {
         this.disabledLetters = [];
         this.currentPlayer = 1;
     }
+
+    public LIsDisabled(letterId: number): boolean {
+        return this.disabledLetters.indexOf(letterId) > -1;
+    }
+
+    public LIsHovered(letterId: number): boolean {
+        return this.hoveredLetters.indexOf(letterId) > -1;
+    }
+
+    public LIsHighlighted(letterId: number): boolean {
+        return this.selectedLetters.indexOf(letterId) > -1;
+    }
+
+    public LIsCurrentLetter(letterId: number): boolean {
+        return this.currentLetter === letterId;
+    }
 }

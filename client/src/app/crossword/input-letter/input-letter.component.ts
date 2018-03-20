@@ -30,26 +30,22 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isDisabled(): boolean {
-        return this._gridState.disabledLetters.indexOf(this.id) > -1;
+        return this._gridState.LIsDisabled(this.id);
     }
 
     public isHovered(): boolean {
-        return this._gridState.hoveredLetters.indexOf(this.id) > -1;
+        return this._gridState.LIsHovered(this.id);
     }
 
     public isHighlighted(): boolean {
-        return this._gridState.selectedLetters.indexOf(this.id) > -1;
+        return this._gridState.LIsHighlighted(this.id);
     }
 
     public isCurrentLetter(): boolean {
-        return this._gridState.currentLetter === this.id;
+        return this._gridState.LIsCurrentLetter(this.id);
     }
 
-    public isPlayer1(): boolean {
+    public isPlayer(playerIs: Players): boolean { // TODO: Check What this means
         return this._gridState.currentPlayer === Players.PLAYER1;
-    }
-
-    public isPlayer2(): boolean {
-        return this._gridState.currentPlayer === Players.PLAYER2;
     }
 }
