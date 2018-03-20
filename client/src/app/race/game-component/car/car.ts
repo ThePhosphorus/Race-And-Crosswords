@@ -4,71 +4,48 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    Quaternion,
-    SpotLight
+    Box3,
+    Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG, RED } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
-import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
-import { SpotLightManager } from "./lights/spotlight-facade";
-import {
-    FRONT_LIGHT_COLOR,
-    FAR_LIGHT_DISTANCE,
-    FRONT_LIGHT_PENUMBRA,
-    FRONT_LIGHT_HEIGHT,
-    FRONT_LIGHT_LATERAL_OFFSET,
-    FRONT_LIGHT_OFFSET,
-    BACK_LIGHT_PENUMBRA,
-    FRONT_LIGHT_ANGLE,
-    BACK_LIGHT_HEIGHT,
-    BACK_LIGHT_LATERAL_OFFSET,
-    BACK_LIGHT_OFFSET,
-    BACK_LIGHT_INTENSITY,
-    SMALL_LATERAL_OFFSET,
-    BIG_LATERAL_OFFSET,
-    SMALL_LIGHT_ANGLE,
-    NEAR_LIGHT_DISTANCE,
-    SMALL_LIGHT_HEIGHT,
-    SMALL_LIGHT_OFFSET,
-    SMALL_LIGHT_INTENSITY
-} from "./lights/lights-constants";
+import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
+import { BoxCollider } from "../collision/colliders/box-collider";
+import { RigidBody } from "../rigid-body/rigid-body";
+import { CarLights } from "./carLights/carLights";
+import { CarControl } from "./car-control";
+import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 
-const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
-const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
-const MINIMUM_SPEED: number = 0.05;
-const NUMBER_REAR_WHEELS: number = 2;
-const NUMBER_WHEELS: number = 4;
+const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
-const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
+const DEFAULT_STEERING_ANGLE: number = 0.15;
+const HANDBRAKE_STEERING_ANGLE: number = 0.40;
+const DEFAULT_FRICTION: number = 400000;
+const HANDBRAKE_FRICTION: number = 50000;
+const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
+const DRIFT_SOUND_MAX: number = 150000;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * 0.7;
+
 export class Car extends Object3D {
-    public isAcceleratorPressed: boolean;
+    public carControl: CarControl;
 
     private readonly engine: Engine;
-    private readonly mass: number;
     private readonly rearWheel: Wheel;
-    private readonly wheelbase: number;
-    private readonly dragCoefficient: number;
-
-    private frontLightManager: SpotLightManager;
-    private brakeLights: Array<SpotLightManager>;
-    private _speed: Vector3;
-    private isBraking: boolean;
     private mesh: Object3D;
-    private steeringWheelDirection: number;
-    private weightRear: number;
-    private isSteeringLeft: boolean;
-    private isSteeringRight: boolean;
+    private rigidBody: RigidBody;
+    private carLights: CarLights;
+    private oldFrictionCoefficient: number;
+    private carSound: CarSounds;
+    private oldComponent: number;
 
     public get carMesh(): Object3D {
         return this.mesh;
-    }
-    public get speed(): Vector3 {
-        return this._speed.clone();
     }
 
     public get currentGear(): number {
@@ -93,41 +70,26 @@ export class Car extends Object3D {
         return carDirection;
     }
 
+    public get direction2D(): Vector2 {
+        return new Vector2(this.direction.x, this.direction.z);
+    }
+
+    public get speed(): number {
+        return this.mesh == null ? 0 : this.rigidBody.velocity.clone().dot(this.direction2D);
+    }
+
     public constructor(
+        private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
         rearWheel: Wheel = new Wheel(),
-        wheelbase: number = DEFAULT_WHEELBASE,
-        mass: number = DEFAULT_MASS,
-        dragCoefficient: number = DEFAULT_DRAG_COEFFICIENT
+        mass: number = DEFAULT_MASS
     ) {
         super();
-        if (wheelbase <= 0) {
-            console.error("Wheelbase should be greater than 0.");
-            wheelbase = DEFAULT_WHEELBASE;
-        }
-
-        if (mass <= 0) {
-            console.error("Mass should be greater than 0.");
-            mass = DEFAULT_MASS;
-        }
-
-        if (dragCoefficient <= 0) {
-            console.error("Drag coefficient should be greater than 0.");
-            dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
-        }
-
+        this.rigidBody = new RigidBody(mass);
         this.engine = engine;
         this.rearWheel = rearWheel;
-        this.wheelbase = wheelbase;
-        this.mass = mass;
-        this.dragCoefficient = dragCoefficient;
-        this.isBraking = false;
-        this.steeringWheelDirection = 0;
-        this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
-        this._speed = new Vector3(0, 0, 0);
-        this.isSteeringLeft = false;
-        this.isSteeringRight = false;
-        this.brakeLights = new Array<SpotLightManager>();
+        this.carControl = new CarControl();
+        this.oldComponent = 0;
     }
 
     // TODO: move loading code outside of car class.
@@ -143,206 +105,132 @@ export class Car extends Object3D {
         });
     }
 
-    public async init(color: string): Promise<void> {
+    public async init(position: Vector3, color: string): Promise<void> {
         this.mesh = await this.load(color);
+        this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this.mesh.translateY(CAR_Y_OFFSET);
+
+        const box: Box3 = new Box3().setFromObject(this.mesh);
+        this.mesh.add(new BoxCollider(box.getSize().z, box.getSize().x, box.getSize().y));
+        this.mesh.add(this.rigidBody);
         this.add(this.mesh);
-        this.initLights();
-    }
-    private initLights(): void {
-        this.initFrontLight();
-        this.initBrakeLights();
-
-    }
-    private initFrontLight(): void {
-        const frontLight: SpotLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
-        frontLight.penumbra = FRONT_LIGHT_PENUMBRA;
-        this.frontLightManager =
-            new SpotLightManager(
-                frontLight,
-                FRONT_LIGHT_HEIGHT,
-                FRONT_LIGHT_LATERAL_OFFSET,
-                FRONT_LIGHT_OFFSET,
-                true
-            );
-        this.add(this.frontLightManager.light);
+        this.initCarLights();
+        this.carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
     }
 
-    private initBrakeLights(): void {
-        const brakeLightCenter: SpotLight = new SpotLight(RED, 0, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
-        brakeLightCenter.penumbra = BACK_LIGHT_PENUMBRA;
-        const brakeLightCenterManager: SpotLightManager =
-            new SpotLightManager(
-                brakeLightCenter,
-                BACK_LIGHT_HEIGHT,
-                BACK_LIGHT_LATERAL_OFFSET,
-                BACK_LIGHT_OFFSET,
-                false,
-                BACK_LIGHT_INTENSITY
-            );
+    private getSteeringDirection(): number {
+        const steeringState: number = (this.carControl.isSteeringLeft === this.carControl.isSteeringRight) ? 0 :
+            this.carControl.isSteeringLeft ? 1 : -1;
 
-        this.brakeLights.push(brakeLightCenterManager);
-        this.brakeLights.push(this.createSmallLight(SMALL_LATERAL_OFFSET));
-        this.brakeLights.push(this.createSmallLight(BIG_LATERAL_OFFSET));
-        this.brakeLights.push(this.createSmallLight(-BIG_LATERAL_OFFSET));
-        this.brakeLights.push(this.createSmallLight(-SMALL_LATERAL_OFFSET));
-
-        this.brakeLights.forEach((spotlight: SpotLightManager) => this.add(spotlight.light));
-    }
-
-    private createSmallLight(lateralTranslation: number ): SpotLightManager {
-        const smallLight: SpotLight = new SpotLight(RED, 0, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE);
-
-        return new SpotLightManager(
-            smallLight,
-            SMALL_LIGHT_HEIGHT,
-            lateralTranslation,
-            SMALL_LIGHT_OFFSET,
-            true,
-            SMALL_LIGHT_INTENSITY
-        );
-    }
-    private updateSteering(): void {
-        const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
-        this.steeringWheelDirection = steeringState *
-            MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
-    }
-
-    // Input manager callback methods
-    public accelerate(): void {
-        this.isAcceleratorPressed = true;
-    }
-
-    public steerLeft(): void {
-        this.isSteeringLeft = true;
-    }
-
-    public steerRight(): void {
-        this.isSteeringRight = true;
-    }
-
-    public brake(): void {
-        this.isBraking = true;
-        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.enable());
-    }
-
-    public releaseSteeringLeft(): void {
-        this.isSteeringLeft = false;
-    }
-
-    public releaseSteeringRight(): void {
-        this.isSteeringRight = false;
-    }
-
-    public releaseBrakes(): void {
-        this.isBraking = false;
-        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.disable());
-    }
-
-    public releaseAccelerator(): void {
-        this.isAcceleratorPressed = false;
+        return steeringState *
+            (this.carControl.hasHandbrakeOn ? HANDBRAKE_STEERING_ANGLE : DEFAULT_STEERING_ANGLE) *
+            (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
+        this.engine.update(this.speed, this.rearWheel.radius);
 
-        // Move to car coordinates
-        const rotationMatrix: Matrix4 = new Matrix4();
-        rotationMatrix.extractRotation(this.mesh.matrix);
-        const rotationQuaternion: Quaternion = new Quaternion();
-        rotationQuaternion.setFromRotationMatrix(rotationMatrix);
-        this._speed.applyMatrix4(rotationMatrix);
+        this.rigidBody.addForce(this.getLongitudinalForce());
+        this.rigidBody.addForce(this.getPerpendicularForce());
+        this.rigidBody.update(deltaTime);
 
-        // Physics calculations
-        this.physicsUpdate(deltaTime);
-        // this.lightUpdate();
-        // Move back to world coordinates
-        this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
-
-        this.updateSteering();
-        // Angular rotation of the car
         const R: number =
             DEFAULT_WHEELBASE /
-            Math.sin(this.steeringWheelDirection * deltaTime);
-        const omega: number = this._speed.length() / R;
+            Math.sin(this.getSteeringDirection() * deltaTime);
+        const omega: number = this.speed / R;
         this.mesh.rotateY(omega);
+        this.carSound.updateRPM(this.engine.rpm);
     }
 
-    private physicsUpdate(deltaTime: number): void {
-        this.rearWheel.angularVelocity +=
-            this.getAngularAcceleration() * deltaTime;
-        this.engine.update(this._speed.length(), this.rearWheel.radius);
-        this.weightRear = this.getWeightDistribution();
-        this._speed.add(this.getDeltaSpeed(deltaTime));
-        this._speed.setLength(
-            this._speed.length() <= MINIMUM_SPEED ? 0 : this._speed.length()
-        );
-        this.mesh.position.add(this.getDeltaPosition(deltaTime));
-        this.rearWheel.update(this._speed.length());
-    }
-    private lightUpdate(): void {
-        this.frontLightManager.update(this.mesh.position, this.direction);
-        this.brakeLights.forEach((spotlight: SpotLightManager) => spotlight.update(this.mesh.position, this.direction));
-    }
-    private getWeightDistribution(): number {
-        const acceleration: number = this.getAcceleration().length();
-        /* tslint:disable:no-magic-numbers */
-        const distribution: number =
-            this.mass + 1 / this.wheelbase * this.mass * acceleration / 2;
-
-        return Math.min(Math.max(0.25, distribution), 0.75);
-        /* tslint:enable:no-magic-numbers */
+    public collisionSound(): void {
+        this.carSound.playCollision();
     }
 
-    private getLongitudinalForce(): Vector3 {
-        const resultingForce: Vector3 = new Vector3();
-
-        if (this._speed.length() >= MINIMUM_SPEED) {
-            const dragForce: Vector3 = this.getDragForce();
-            const rollingResistance: Vector3 = this.getRollingResistance();
-            resultingForce.add(dragForce).add(rollingResistance);
+    private getPerpendicularForce(): Vector2 {
+        const direction: Vector2 = this.direction2D;
+        const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
+        const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
+        let perpendicularForce: number;
+        if (this.carControl.hasHandbrakeOn) {
+            perpendicularForce = HANDBRAKE_FRICTION;
+        } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
+            perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
+        } else {
+            perpendicularForce = DEFAULT_FRICTION;
         }
+        this.oldFrictionCoefficient = perpendicularForce;
+        this.updateDriftSound(perpendicularForce);
 
-        if (this.isAcceleratorPressed) {
+        if (this.rigidBody.velocity.length() > 2) {
+            this.oldComponent = perpSpeedComponent;
+            return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
+        } else if (Math.sign(this.oldComponent) === Math.sign(perpSpeedComponent)) {
+            this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3);
+            return perpDirection.multiplyScalar(
+                this.oldComponent *
+                perpendicularForce
+            );
+        } else {
+            this.oldComponent = (this.oldComponent ) * 0.9999;
+            return (this.oldComponent !== 0) ?
+            perpDirection.multiplyScalar(this.oldComponent * perpendicularForce) :
+            perpDirection.multiplyScalar(-perpSpeedComponent / 100 * perpendicularForce);
+            }
+     }
+
+    private updateDriftSound(factor: number): void {
+        if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
+            this.carSound.startDrift();
+        } else if (this.carSound.drift.isPlaying()) {
+            this.carSound.releaseDrift();
+        }
+    }
+    private getLongitudinalForce(): Vector2 {
+        const resultingForce: Vector2 = new Vector2();
+
+        const dragForce: Vector2 = this.getDragForce();
+        resultingForce.add(dragForce);
+
+        const rollingResistance: Vector2 = this.getRollingResistance();
+        resultingForce.add(rollingResistance);
+
+        if (this.carControl.isAcceleratorPressed) {
             const tractionForce: number = this.getTractionForce();
-            const accelerationForce: Vector3 = this.direction;
+            const accelerationForce: Vector2 = this.direction2D;
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
-        } else if (this.isBraking && this.isGoingForward()) {
-            const brakeForce: Vector3 = this.getBrakeForce();
-            resultingForce.add(brakeForce);
+        } else if (this.carControl.isBraking && this.isGoingForward()) {
+            resultingForce.add(this.getBrakeForce());
         }
 
         return resultingForce;
     }
 
-    private getRollingResistance(): Vector3 {
+    private getRollingResistance(): Vector2 {
         const tirePressure: number = 1;
         // formula taken from: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
-
-        // tslint:disable-next-line:no-magic-numbers
+        /* tslint:disable:no-magic-numbers */
         const rollingCoefficient: number =
             1 / tirePressure *
-            (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
+            (Math.pow(this.speed * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
+        /* tslint:enable:no-magic-numbers */
 
-        if (this.isGoingForward()) {
-            return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
-        }
-
-        return this.direction.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.mass * GRAVITY);
+        return this.direction2D.multiplyScalar(Math.sign(this.speed) * rollingCoefficient * this.rigidBody.mass * GRAVITY);
     }
 
-    private getDragForce(): Vector3 {
+    private getDragForce(): Vector2 {
         const carSurface: number = 3;
         const airDensity: number = 1.2;
-        const resistance: Vector3 = this.direction;
+        const resistance: Vector2 = this.direction2D;
         resistance.multiplyScalar(
+            Math.sign(this.speed) *
             airDensity *
             carSurface *
-            -this.dragCoefficient *
-            this.speed.length() *
-            this.speed.length()
+            -DRAG_COEFFICIENT *
+            this.speed *
+            this.speed
         );
 
         return resistance;
@@ -352,40 +240,16 @@ export class Car extends Object3D {
         const force: number = this.getEngineForce();
         const maxForce: number =
             this.rearWheel.frictionCoefficient *
-            this.mass *
-            GRAVITY *
-            this.weightRear *
-            NUMBER_REAR_WHEELS /
-            NUMBER_WHEELS;
+            this.rigidBody.mass *
+            WHEEL_DISTRIBUTION *
+            GRAVITY;
 
         return -Math.min(force, maxForce);
     }
 
-    private getAngularAcceleration(): number {
-        return (
-            this.getTotalTorque() /
-            (this.rearWheel.inertia * NUMBER_REAR_WHEELS)
-        );
-    }
-
-    private getBrakeForce(): Vector3 {
-        return this.direction.multiplyScalar(
-            this.rearWheel.frictionCoefficient * this.mass * GRAVITY
-        );
-    }
-
-    private getBrakeTorque(): number {
-        return this.getBrakeForce().length() * this.rearWheel.radius;
-    }
-
-    private getTractionTorque(): number {
-        return this.getTractionForce() * this.rearWheel.radius;
-    }
-
-    private getTotalTorque(): number {
-        return (
-            this.getTractionTorque() * NUMBER_REAR_WHEELS +
-            this.getBrakeTorque()
+    private getBrakeForce(): Vector2 {
+        return this.direction2D.multiplyScalar(
+            Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
         );
     }
 
@@ -393,21 +257,8 @@ export class Car extends Object3D {
         return this.engine.getDriveTorque() / this.rearWheel.radius;
     }
 
-    private getAcceleration(): Vector3 {
-        return this.getLongitudinalForce().divideScalar(this.mass);
-    }
-
-    private getDeltaSpeed(deltaTime: number): Vector3 {
-        return this.getAcceleration().multiplyScalar(deltaTime);
-    }
-
-    private getDeltaPosition(deltaTime: number): Vector3 {
-        return this.speed.multiplyScalar(deltaTime);
-    }
-
     private isGoingForward(): boolean {
-        // tslint:disable-next-line:no-magic-numbers
-        return this.speed.normalize().dot(this.direction) > MINIMUM_SPEED;
+        return this.speed > 0;
     }
 
     public getPosition(): Vector3 {
@@ -415,6 +266,12 @@ export class Car extends Object3D {
     }
 
     public toggleNightLight(): void {
-        this.frontLightManager.toggle();
+        this.carLights.toggleFrontLight();
+    }
+
+    private initCarLights(): void {
+        this.carLights = new CarLights();
+        this.mesh.add(this.carLights);
+        this.carControl.carLights = this.carLights;
     }
 }

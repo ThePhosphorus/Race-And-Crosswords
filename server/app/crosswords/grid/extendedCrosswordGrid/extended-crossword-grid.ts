@@ -1,4 +1,7 @@
-import { CrosswordGrid, Word, Orientation, MIN_WORD_LENGTH, Letter } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid} from "../../../../../common/crossword/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
+import { Orientation, MIN_WORD_LENGTH } from "../../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../../common/crossword/letter";
 
 export class ExtendedCrosswordGrid extends CrosswordGrid {
     public getRow(position: number): number {

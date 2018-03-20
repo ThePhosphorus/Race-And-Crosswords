@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Mesh, PlaneGeometry, TextureLoader,
-    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial
+    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial, Material
 } from "three";
 import { Vector3Struct, Track } from "../../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
@@ -9,7 +9,8 @@ import "rxjs/add/operator/map";
 import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-constants/constants";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
-const TRACK_PATH: string = "../../assets/textures/floor.jpg";
+const TRACK_PATH: string = "../../assets/textures/test.jpg";
+const LINE_PATH: string = "../../assets/textures/linefixed.bmp";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
@@ -25,13 +26,19 @@ export class TrackLoaderService {
 
     public static getTrackMeshs(track: Track): Mesh[] {
         const meshs: Array<Mesh> = new Array<Mesh>();
+        const startMesh: Mesh =
+        TrackLoaderService.getStartMesh(
+            TrackLoaderService.toVector(track.points[0]),
+            TrackLoaderService.toVector(track.points[1])
+           );
+        meshs.push(startMesh);
         for (let i: number = 0; i < track.points.length - 1; i++) {
             const roadMesh: Mesh = TrackLoaderService.getRoad(
                 TrackLoaderService.toVector(track.points[i]),
                 TrackLoaderService.toVector(track.points[i + 1]));
-
-            if (i === 0) { roadMesh.position.add(new Vector3(0, DOUBLE * Y_OFFSET, 0));
-            } else if (i % DOUBLE) { roadMesh.position.add(new Vector3(0, Y_OFFSET, 0)); }
+            if (i === 0) {
+                 roadMesh.position.setY(DOUBLE * Y_OFFSET);
+            } else if (i % DOUBLE) { roadMesh.position.setY(Y_OFFSET); }
             meshs.push(roadMesh);
 
             meshs.push(TrackLoaderService.getCornerAprox(
@@ -49,8 +56,18 @@ export class TrackLoaderService {
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(width * FLOOR_RATIO, length * FLOOR_RATIO);
-
         return new MeshPhongMaterial({ map: texture, side: DoubleSide });
+    }
+    public static getFinishLineMaterial(width: number, length: number): MeshPhongMaterial {
+        const texture: Texture = new TextureLoader().load(LINE_PATH);
+        texture.wrapS = RepeatWrapping;
+        texture.wrapT = RepeatWrapping;
+        texture.repeat.set(width , length / 4);
+        const mat: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
+        mat.transparent = true;
+        mat.opacity = 0.2;
+
+        return mat;
     }
 
     public static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
@@ -61,6 +78,20 @@ export class TrackLoaderService {
         circleMesh.receiveShadow = true;
 
         return circleMesh;
+    }
+    public static getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
+        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH/4);
+        geo.rotateX( - PI_OVER_2);
+
+        const mesh: Mesh = new Mesh(geo, TrackLoaderService.getFinishLineMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
+
+        mesh.position.copy(point);
+        mesh.position.setY(0.02);
+        mesh.lookAt(pointB);
+
+        mesh.receiveShadow = true;
+
+        return mesh;
     }
 
     public static getRoad(pointA: Vector3, pointB: Vector3, width?: number): Mesh {

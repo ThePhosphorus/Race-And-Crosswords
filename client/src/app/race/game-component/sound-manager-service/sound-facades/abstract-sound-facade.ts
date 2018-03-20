@@ -4,12 +4,9 @@ import { AudioLoader, AudioBuffer, AudioListener, Audio } from "three";
 const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 
 export abstract class AbstractSoundFacade {
-    private isLoop: boolean;
     protected sound: Audio;
-    public constructor(soundListener: AudioListener, isLoop: boolean, private volume: number) {
-
+    public constructor(soundListener: AudioListener, private isLoop: boolean) {
         this.instanciateSound(soundListener);
-        this.isLoop = isLoop;
     }
 
     protected abstract instanciateSound(soundListener: AudioListener): void;
@@ -46,7 +43,14 @@ export abstract class AbstractSoundFacade {
     public play(): void {
         this.sound.play();
     }
+
+    public isPlaying(): boolean {
+        return this.sound.isPlaying;
+    }
+
     public stop(): void {
-        this.sound.stop();
+        if (this.sound != null) {
+            this.sound.stop();
+        }
     }
 }

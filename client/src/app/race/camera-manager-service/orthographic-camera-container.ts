@@ -1,5 +1,5 @@
 import { OrthographicCamera, Vector3, AudioListener, Camera } from "three";
-import { CameraContainer, ZoomLimit} from "./camera-container";
+import { CameraContainer, ZoomLimit } from "./camera-container";
 import { TargetInfos } from "./camera-manager.service";
 import {
     CameraType,
@@ -25,7 +25,7 @@ export class OrthographicCameraContainer extends CameraContainer {
             FAR_CLIPPING_PLANE
         );
         this.init();
-     }
+    }
 
     private init(): void {
         this._orthoCamera.position.set(
@@ -34,32 +34,36 @@ export class OrthographicCameraContainer extends CameraContainer {
             this._targetInfos.position.z
         );
         this._orthoCamera.lookAt(this._targetInfos.position);
-     }
+    }
     public fixUpdate(): void {
         this.onResize();
         this._orthoCamera.position.copy(this._targetInfos.position);
         this._orthoCamera.position.setY(INITIAL_CAMERA_POSITION_Y);
-     }
+    }
 
     public removeAudioListener(): void {
         this._orthoCamera.remove(this.audioListener);
-     }
+    }
 
     public onResize(aspectRatio?: number): void {
         if (aspectRatio) {
             this.aspectRatio = aspectRatio;
-         }
+        }
         this._orthoCamera.left = -this.cameraDistance * this.aspectRatio;
         this._orthoCamera.right = this.cameraDistance * this.aspectRatio;
         this._orthoCamera.top = this.cameraDistance;
         this._orthoCamera.bottom = -this.cameraDistance;
         this._orthoCamera.updateProjectionMatrix();
-     }
+    }
     public get camera(): Camera {
         return this._orthoCamera;
-     }
+    }
 
     public position(): Vector3 {
         return this._orthoCamera.position;
-     }
+    }
+
+    public toggleEffectMode(): void {
+        return;
+    }
 }
