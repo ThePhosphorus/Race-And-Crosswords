@@ -1,6 +1,6 @@
 import {AudioListener, Object3D} from "three";
 import { PositionalSoundFacade } from "./positional-sound-facade";
-import { CRASH_PATH_1, CRASH_PATH_2, CRASH_PATH_3, CRASH_PATH_4 } from "../sound-constants";
+import { CRASH_PATH_1, CRASH_PATH_2, CRASH_PATH_3, CRASH_PATH_4, CRASH_VOLUME } from "../sound-constants";
 import { DEFAULT_VOLUME } from "../../../race.constants";
 
 const ENGINE_FILE_NAME: string = "./engine/engine2.ogg";
@@ -31,10 +31,10 @@ export class CarSounds {
         const crash4: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
         const crash5: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
         crash1.init(CRASH_PATH_1, sourcePath).then( () => this.collisionSounds[0].setVolume(1));
-        crash2.init(CRASH_PATH_2, sourcePath).then( () => this.collisionSounds[1].setVolume(2));
-        crash3.init(CRASH_PATH_3, sourcePath).then( () => this.collisionSounds[2].setVolume(2));
-        crash4.init(CRASH_PATH_4, sourcePath).then( () => this.collisionSounds[3].setVolume(2));
-        crash5.init(CRASH_PATH_4, sourcePath).then( () => this.collisionSounds[4].setVolume(2));
+        crash2.init(CRASH_PATH_2, sourcePath).then( () => this.collisionSounds[1].setVolume(CRASH_VOLUME));
+        crash3.init(CRASH_PATH_3, sourcePath).then( () => this.collisionSounds[2].setVolume(CRASH_VOLUME));
+        crash4.init(CRASH_PATH_4, sourcePath).then( () => this.collisionSounds[3].setVolume(CRASH_VOLUME));
+        crash5.init(CRASH_PATH_4, sourcePath).then( () => this.collisionSounds[4].setVolume(CRASH_VOLUME));
         this.collisionSounds.push(crash1);
         this.collisionSounds.push(crash2);
         this.collisionSounds.push(crash3);

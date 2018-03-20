@@ -5,7 +5,7 @@ const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
 
 export abstract class AbstractSoundFacade {
     protected sound: Audio;
-    public constructor(soundListener: AudioListener, private isLoop: boolean) {
+    public constructor(soundListener: AudioListener, private isLoop: boolean, private volume: number) {
         this.instanciateSound(soundListener);
     }
 
@@ -29,6 +29,7 @@ export abstract class AbstractSoundFacade {
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(this.isLoop);
+        this.sound.setVolume(this.volume);
     }
 
     public setVolume(volume: number): void {

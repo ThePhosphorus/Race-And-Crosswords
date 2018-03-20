@@ -10,3 +10,4 @@ export const CRASH_PATH_5: string = COLLISION_SOUNDS_PATH + "/crash5.ogg";
 export const MUSIC_VOLUME: number = 0.2;
 export const ENGINE_VOLUME: number = 1;
 export const START_VOLUME: number = 0.2;
+export const CRASH_VOLUME: number = 2;
