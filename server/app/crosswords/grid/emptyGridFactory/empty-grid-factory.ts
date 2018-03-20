@@ -1,6 +1,7 @@
-import { Letter, MIN_WORD_LENGTH, Orientation } from "../../../../../common/communication/crossword-grid";
+import {MIN_WORD_LENGTH, Orientation } from "../../../../../common/crossword/enums-constants";
 import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
 import {DEFAULT_BLACK_TILES} from "./default-black-tiles";
+import { Letter } from "../../../../../common/crossword/letter";
 
 const COMPLEXITY_THRESHOLD: number = 125;
 export const GRID_SIZE: number = 10;
