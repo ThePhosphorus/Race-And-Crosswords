@@ -35,7 +35,8 @@ export class HoodCamContainer extends CameraContainer {
 
     public fixUpdate(deltaTime: number): void {
         this._perspCamera.position.copy(this.calcPosPerspCamera());
-        this._perspCamera.lookAt(this._targetInfos.direction.clone().add(this._targetInfos.position));
+        console.log(this._targetInfos.direction.clone().add(this._targetInfos.position));
+        this._perspCamera.lookAt(this._targetInfos.direction.clone().add(this._targetInfos.position).add(new Vector3(0, 1, 0)));
     }
 
     public onResize(aspectRatio: number): void {
@@ -46,7 +47,7 @@ export class HoodCamContainer extends CameraContainer {
     private calcPosPerspCamera(): Vector3 {
         const carDirection: Vector3 = this._targetInfos.direction;
         carDirection.setY(0);
-        carDirection.normalize();
+        // carDirection.normalize();
 
         return new Vector3(
             this._targetInfos.position.x + (carDirection.x ),
