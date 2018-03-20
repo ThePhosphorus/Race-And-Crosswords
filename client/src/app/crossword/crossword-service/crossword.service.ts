@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Difficulty, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
+import { Players } from "../../../../../common/communication/Player";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";
 import { Subject } from "rxjs/Subject";
@@ -24,6 +25,9 @@ export class CrosswordService {
     private _currentPlayerSubject: Subject<number>;
     private _diff: Difficulty;
     private _diffSubject: Subject<Difficulty>;
+    private _isMultiplayer: boolean;
+    private _myPlayer: Players;
+    private _currentTurn: Players;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gridSize = STARTING_GRID_SIZE;
@@ -36,6 +40,9 @@ export class CrosswordService {
         this._solvedWordsSubject = new Subject<number[]>();
         this._diff = Difficulty.Easy;
         this._diffSubject =  new Subject<Difficulty>();
+        this._isMultiplayer = false;
+        this._myPlayer = Players.PLAYER1;
+        this._currentTurn = Players.PLAYER1;
     }
 
     public get gridSize(): number { return this._gridSize; }
