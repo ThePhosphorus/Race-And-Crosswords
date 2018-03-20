@@ -1,5 +1,6 @@
+<div [ngClass]="{'player1':isPlayer1(),'player2':isPlayer2()}">
 <button type="button" (click)="select()"[ngClass]="{'disabled': isDisabled(),
 'hovered': isHovered() && !isDisabled(), 'current': isCurrentLetter(),
-'highlight-player-1': isHighlighted() && isPlayer1(),
-'highlight-player-2': isHighlighted() && isPlayer2()}">
+'highlight': isHighlighted() }">
 {{ letter | uppercase }}</button>
+</div>

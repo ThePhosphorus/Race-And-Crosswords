@@ -39,7 +39,7 @@ export class InputGridComponent implements OnInit {
                 this.twoDimensionGrid[i].push(this._playerGrid.grid[(i * this._playerGrid.size) + j]);
             }
         }
-        this.hideLoading.emit(false);
+
     }
 
     public setSelectedWord(word: Word): void {
