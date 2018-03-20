@@ -10,8 +10,7 @@ import {
     MeshPhongMaterial,
     AmbientLight,
     DirectionalLight,
-    Vector3,
-    DirectionalLightHelper
+    Vector3
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -122,9 +121,9 @@ export class GameManagerService extends Renderer {
     }
 
     private async initCars(): Promise<void> {
-        await this.player.init(new Vector3(0, 0, 0), COLORS[0]);
+        await this.player.init(new Vector3(0, 0, 0), "green");
         for (let i: number = 0; i < this.aiControlledCars.length; i++) {
-            await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), COLORS[(i + 1) % COLORS.length]);
+            await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
         }
     }
 

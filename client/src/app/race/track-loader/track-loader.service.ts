@@ -10,6 +10,7 @@ import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-const
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
 const TRACK_PATH: string = "../../assets/textures/test.jpg";
+const LINE_PATH: string = "../../assets/textures/line.jpg";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
@@ -26,11 +27,17 @@ export class TrackLoaderService {
     public static getTrackMeshs(track: Track): Mesh[] {
         const meshs: Array<Mesh> = new Array<Mesh>();
         for (let i: number = 0; i < track.points.length - 1; i++) {
-            const roadMesh: Mesh = TrackLoaderService.getRoad(
+            let roadMesh: Mesh = TrackLoaderService.getRoad(
                 TrackLoaderService.toVector(track.points[i]),
                 TrackLoaderService.toVector(track.points[i + 1]));
 
-            if (i === 0) { roadMesh.position.add(new Vector3(0, DOUBLE * Y_OFFSET, 0));
+            if (i === 0) {
+                 roadMesh =
+                 TrackLoaderService.getStartMesh(
+                     TrackLoaderService.toVector(track.points[0]),
+                     TrackLoaderService.toVector(track.points[1])
+                    );
+                 roadMesh.position.add(new Vector3(0, DOUBLE * Y_OFFSET, 0));
             } else if (i % DOUBLE) { roadMesh.position.add(new Vector3(0, Y_OFFSET, 0)); }
             meshs.push(roadMesh);
 
@@ -52,6 +59,11 @@ export class TrackLoaderService {
 
         return new MeshPhongMaterial({ map: texture, side: DoubleSide });
     }
+    public static getFinishLineMaterial(width: number, length: number): MeshPhongMaterial {
+        const texture: Texture = new TextureLoader().load(LINE_PATH);
+
+        return new MeshPhongMaterial({ map: texture, side: DoubleSide });
+    }
 
     public static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
         const circleGeo: CircleGeometry =  new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, CORNER_NB_SEGMENTS);
@@ -61,6 +73,20 @@ export class TrackLoaderService {
         circleMesh.receiveShadow = true;
 
         return circleMesh;
+    }
+    public static getStartMesh(point: Vector3, direction: Vector3, width?: number): Mesh {
+        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH);
+        geo.rotateX( - PI_OVER_2);
+
+        const mesh: Mesh = new Mesh(geo, TrackLoaderService.getFinishLineMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
+
+        mesh.position.copy(point);
+        mesh.position.setY(1);
+        mesh.lookAt(direction);
+
+        mesh.receiveShadow = true;
+
+        return mesh;
     }
 
     public static getRoad(pointA: Vector3, pointB: Vector3, width?: number): Mesh {
