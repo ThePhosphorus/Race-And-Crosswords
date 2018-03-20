@@ -137,7 +137,7 @@ export class CrosswordService {
         }
     }
 
-    public writeChar(key: string): void {
+    public writeChar(key: string): void { // TODO: Put a lowerCase (to make no differance between Upper/Lower case.)
         if (this._gridState.currentLetter != null) {
             if (key.match(/^[a-zA-z]$/i) != null) {
                 let nextLetterId: number;

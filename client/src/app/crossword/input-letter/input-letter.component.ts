@@ -9,7 +9,7 @@ import { CrosswordService } from "../crossword-service/crossword.service";
     styleUrls: ["./input-letter.component.css"]
 })
 export class InputLetterComponent implements OnInit {
-    @Input() public letter: string;
+    @Input() public letter: string; // TODO: Get object from service and not trough @Input() (We already know the id)
     @Input() public id: number;
     private _gridState: GridState;
 
