@@ -16,10 +16,11 @@ export class GridGenerator {
     private emptyGridGenerator: EmptyGridGenerator;
     private crossword: ExtendedCrosswordGrid;
     private notPlacedWords: Word[];
-    private rollbackCount: number = 0;
+    private rollbackCount: number;
 
     public constructor() {
         this.externalCommunications = new ExternalCommunications();
+        this.rollbackCount = 0;
     }
     public async getNewGrid(difficulty: Difficulty, size: number): Promise<ICrosswordGrid> {
         this.emptyGridGenerator = new EmptyGridGenerator();
@@ -32,7 +33,7 @@ export class GridGenerator {
 
     private initialiseEmptyGrid(size: number): void {
 
-        this.crossword = this.emptyGridGenerator.getNewGrid();
+        this.crossword = <ExtendedCrosswordGrid> this.emptyGridGenerator.getNewGrid();
         this.crossword.words = new Array<Word>();
         this.notPlacedWords = this.crossword.findWords();
     }
