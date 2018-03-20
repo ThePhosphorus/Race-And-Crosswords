@@ -13,7 +13,7 @@ const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
 
 @injectable()
 export class SocketsManager {
-    private io: SocketIO.Server ;
+    private io: SocketIO.Server;
     private _inWaitMatchs: Array<MatchManager>;
 
     public constructor() {
@@ -42,7 +42,9 @@ export class SocketsManager {
 
     public joinMatch(socket: Socket, joinName: string): void {
         this._inWaitMatchs.forEach((m: MatchManager, index: number) => {
-            if (m.PlayerOne === joinName) {
+            if (!m.gotPlayers) {
+                this._inWaitMatchs.slice(index, 1);
+            } else if (m.PlayerOne === joinName) {
                 m.addPlayer(socket);
                 socket.emit(msg.getGrid, m.grid);
                 this._inWaitMatchs.slice(index, 1);
@@ -64,7 +66,7 @@ export class SocketsManager {
     }
 
     private addSocket(socket: Socket): void {
-        socket.on(msg.createMatch, (diff: Difficulty) => this.createMatch(socket, diff) );
+        socket.on(msg.createMatch, (diff: Difficulty) => this.createMatch(socket, diff));
         socket.on(msg.joinMatch, (name: string) => this.joinMatch(socket, name));
     }
 }

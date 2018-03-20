@@ -29,7 +29,7 @@
     overflow: hidden;
     align-self: center;
     width:6rem;
-    animation: typing 10s steps(4,end) 0.5s  infinite  ;
+    animation: typing 2s steps(4,end)   infinite  ;
     white-space: nowrap;
     margin: 0 auto;
     font-size:4rem;

@@ -5,6 +5,5 @@ export class InWaitMatch {
         public name: string,
         public difficulty: Difficulty
     ) {
-        this.name = name;
     }
 }

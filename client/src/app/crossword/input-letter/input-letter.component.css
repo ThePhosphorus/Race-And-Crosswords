@@ -18,7 +18,7 @@ button {
     border-radius: 0%;
 }
 
-.highlight-player-1 {
+.player1 .highlight {
 
     background-color: #b6cee2 !important;
     border-style: dotted;
@@ -29,7 +29,7 @@ button {
     border-color: steelblue!important;
 }
 
-.highlight-player-2 {
+.player2 .highlight {
     background-color: #dbb1a3 !important;
     border-style: dotted;
     width:90% ;

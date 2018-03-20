@@ -34,9 +34,7 @@ export class CrosswordGameInfoComponent implements OnInit {
             this._lvl = difficulty;
         });
     }
-
     public loadNewGame(isNewGame: boolean): void {
         this.newGameLoad.emit(isNewGame);
     }
-
 }
