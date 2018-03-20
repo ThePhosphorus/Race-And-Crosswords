@@ -10,8 +10,7 @@ import {
     MeshPhongMaterial,
     AmbientLight,
     DirectionalLight,
-    Vector3,
-    DirectionalLightHelper
+    Vector3
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -34,7 +33,7 @@ import {
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
-const OFF_ROAD_PATH: string = "../../assets/textures/grass.jpg";
+const OFF_ROAD_PATH: string = "../../assets/textures/dirt.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const N_AI_CONTROLLED_CARS: number = 1;
@@ -122,9 +121,9 @@ export class GameManagerService extends Renderer {
     }
 
     private async initCars(): Promise<void> {
-        await this.player.init(new Vector3(0, 0, 0), COLORS[0]);
+        await this.player.init(new Vector3(0, 0, 0), "green");
         for (let i: number = 0; i < this.aiControlledCars.length; i++) {
-            await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), COLORS[(i + 1) % COLORS.length]);
+            await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
         }
     }
 
@@ -167,8 +166,6 @@ export class GameManagerService extends Renderer {
         this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
         this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
         this._directionalLight.shadowBias = SHADOW_BIAS;
-        const directionalLightHelper: DirectionalLightHelper = new DirectionalLightHelper(this._directionalLight);
-        this.scene.add(directionalLightHelper);
     }
 
     private loadSkybox(path: string): void {

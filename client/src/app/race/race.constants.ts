@@ -15,7 +15,7 @@ export const DEFAULT_DOWNSHIFT_RPM: number = 3000;
 export const DEFAULT_MINIMUM_RPM: number = 800;
 export const DEFAULT_SHIFT_RPM: number = 6500;
 export const DEFAULT_TRANSMISSION_EFFICIENCY: number = 0.7;
-export const DEFAULT_MAX_RPM: number = 9000;
+export const DEFAULT_MAX_RPM: number = 7000;
 export const DEFAULT_GEAR_RATIOS: number[] = [
     4.4,
     2.59,

@@ -24,8 +24,8 @@ const APPROX_MAXIMUM_SPEED: number = 300;
 const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
-const DEFAULT_STEERING_ANGLE: number = 0.22;
-const HANDBRAKE_STEERING_ANGLE: number = 0.44;
+const DEFAULT_STEERING_ANGLE: number = 0.15;
+const HANDBRAKE_STEERING_ANGLE: number = 0.40;
 const DEFAULT_FRICTION: number = 400000;
 const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
@@ -179,7 +179,6 @@ export class Car extends Object3D {
             perpDirection.multiplyScalar(-perpSpeedComponent / 100 * perpendicularForce);
             }
      }
-
 
     private updateDriftSound(factor: number): void {
         if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
