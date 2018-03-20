@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
-import {GridGenerator } from "./grid-generator";
+import {GridGenerator } from "./grid-generator/grid-generator";
 import {CrosswordGrid} from "../../../../common/crossword/crossword-grid";
 import { Difficulty } from "../../../../common/crossword/enums-constants";
 

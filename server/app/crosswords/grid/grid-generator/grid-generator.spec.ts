@@ -1,11 +1,11 @@
 import * as assert from "assert";
 import { GridGenerator } from "./grid-generator";
-import { ExtendedCrosswordGrid } from "./extendedCrosswordGrid/extended-crossword-grid";
-import { ExternalCommunications } from "./externalCommunications/external-communications";
-import { DatamuseWord} from "../../../../common/communication/datamuse-word";
-import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
-import { Word } from "../../../../common/crossword/word";
-import { Letter } from "../../../../common/crossword/letter";
+import { ExtendedCrosswordGrid } from "../extendedCrosswordGrid/extended-crossword-grid";
+import { ExternalCommunications } from "../externalCommunications/external-communications";
+import { DatamuseWord} from "../../../../../common/communication/datamuse-word";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 const gridGenerator: GridGenerator = new GridGenerator();
 const communication: ExternalCommunications = new ExternalCommunications();
