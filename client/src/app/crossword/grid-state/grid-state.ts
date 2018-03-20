@@ -6,7 +6,7 @@ export class GridState {
     public selectedLetters: number[];
     public hoveredLetters: number[];
     public disabledLetters: number[];
-    public currentPlayer: number;
+    public currentPlayer: number; // TODO: Understand this property
 
     public constructor() {
         this.currentOrientation = Orientation.Across;

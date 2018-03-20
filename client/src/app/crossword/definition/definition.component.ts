@@ -14,7 +14,7 @@ class DisplayedDefinition {
 export class DefinitionComponent implements OnInit {
     private _wordGrid: Word[];
     private _cheatmode: boolean;
-    private _solvedWords: number[];
+    private _solvedWords: number[]; // TODO: Check if it can go in crossword Service
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
 
@@ -31,8 +31,10 @@ export class DefinitionComponent implements OnInit {
             this.acrossDefinitions = new Array<DisplayedDefinition>();
             this.downDefinitions = new Array<DisplayedDefinition>();
             this._wordGrid = grid.words;
+
             for (let i: number = 0; i < this._wordGrid.length; i++) {
                 const definition: DisplayedDefinition = this.wordToDefinition(this._wordGrid[i], i);
+
                 if (this._wordGrid[i].orientation === Orientation.Across) {
                     this.acrossDefinitions.push(definition);
                 } else {
@@ -40,6 +42,7 @@ export class DefinitionComponent implements OnInit {
                 }
             }
         });
+
         this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
             this._solvedWords = solvedWords;
         });
@@ -60,7 +63,7 @@ export class DefinitionComponent implements OnInit {
 
     public get cheatMode(): boolean { return this._cheatmode; }
 
-    public isWordSolved(id: number): boolean {
+    public isWordSolved(id: number): boolean {      // Take in orientation, and maybe do it in crossWord service
         return this._solvedWords.indexOf(id) > -1;
     }
 
@@ -76,7 +79,7 @@ export class DefinitionComponent implements OnInit {
         this._crosswordService.setHoveredWord(null);
     }
 
-    private findWordByIndex(index: number, orientation: string): Word {
+    private findWordByIndex(index: number, orientation: string): Word {  // TODO: Put it someWhere more appropriate
         let targetWord: Word;
         for (const word of this._wordGrid) {
             if (word.orientation === orientation) {
