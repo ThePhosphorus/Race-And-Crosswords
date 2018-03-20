@@ -13,7 +13,7 @@ const CONSTRAINT_CHAR: string = "?";
 export class GridGenerator {
 
     private externalCommunications: ExternalCommunications;
-    private emptyGridFactory: EmptyGridGenerator;
+    private emptyGridGenerator: EmptyGridGenerator;
     private crossword: ExtendedCrosswordGrid;
     private notPlacedWords: Word[];
     private rollbackCount: number = 0;
@@ -22,7 +22,7 @@ export class GridGenerator {
         this.externalCommunications = new ExternalCommunications();
     }
     public async getNewGrid(difficulty: Difficulty, size: number): Promise<ICrosswordGrid> {
-        this.emptyGridFactory = new EmptyGridGenerator();
+        this.emptyGridGenerator = new EmptyGridGenerator();
         this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);
         this.cleanGrid();
@@ -32,7 +32,7 @@ export class GridGenerator {
 
     private initialiseEmptyGrid(size: number): void {
 
-        this.crossword = this.emptyGridFactory.getNewGrid() as ExtendedCrosswordGrid;
+        this.crossword = this.emptyGridGenerator.getNewGrid();
         this.crossword.words = new Array<Word>();
         this.notPlacedWords = this.crossword.findWords();
     }
