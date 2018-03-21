@@ -25,7 +25,7 @@ const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
-const HANDBRAKE_STEERING_ANGLE: number = 0.40;
+const HANDBRAKE_STEERING_ANGLE: number = 0.4;
 const DEFAULT_FRICTION: number = 400000;
 const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
@@ -43,6 +43,7 @@ export class Car extends Object3D {
     private oldFrictionCoefficient: number;
     private carSound: CarSounds;
     private oldComponent: number;
+    private hasPenalty: boolean;
 
     public get carMesh(): Object3D {
         return this.mesh;
@@ -117,6 +118,7 @@ export class Car extends Object3D {
         this.add(this.mesh);
         this.initCarLights();
         this.carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
+        this.rigidBody.addCollisionObserver(() => this.onCollision());
     }
 
     private getSteeringDirection(): number {
@@ -153,15 +155,24 @@ export class Car extends Object3D {
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
         let perpendicularForce: number;
-        if (this.carControl.hasHandbrakeOn) {
-            perpendicularForce = HANDBRAKE_FRICTION;
-        } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
-            perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
+        if (!this.hasPenalty) {
+            if (this.carControl.hasHandbrakeOn) {
+                perpendicularForce = HANDBRAKE_FRICTION;
+            } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
+                perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
+            } else {
+                perpendicularForce = DEFAULT_FRICTION;
+            }
+            this.oldFrictionCoefficient = perpendicularForce;
+            this.updateDriftSound(perpendicularForce);
         } else {
-            perpendicularForce = DEFAULT_FRICTION;
+            if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
+                perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
+                this.oldFrictionCoefficient = perpendicularForce;
+            } else {
+                this.hasPenalty = false;
+            }
         }
-        this.oldFrictionCoefficient = perpendicularForce;
-        this.updateDriftSound(perpendicularForce);
 
         if (this.rigidBody.velocity.length() > 2) {
             this.oldComponent = perpSpeedComponent;
@@ -269,6 +280,14 @@ export class Car extends Object3D {
         this.carLights.toggleFrontLight();
     }
 
+    private onCollision(): void {
+        this.collisionSound();
+        this.carPenalty();
+    }
+    private carPenalty(): void {
+        this.hasPenalty = true;
+        this.oldFrictionCoefficient = HANDBRAKE_FRICTION;
+    }
     private initCarLights(): void {
         this.carLights = new CarLights();
         this.mesh.add(this.carLights);

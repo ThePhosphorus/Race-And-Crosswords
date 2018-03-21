@@ -1,4 +1,5 @@
 import { Vector2, Object3D, Vector3 } from "three";
+import { HALF } from "../../../global-constants/constants";
 
 const MINIMUM_SPEED: number = 0.02;
 
@@ -10,6 +11,7 @@ export class RigidBody extends Object3D {
     private _velocity: Vector2;
     private _angularVelocity: number;
     private _mass: number;
+    private collisionObservers: Array<() => void>;
 
     public get mass(): number {
         return this._mass;
@@ -27,6 +29,7 @@ export class RigidBody extends Object3D {
         this._velocity = new Vector2(0, 0);
         this._angularVelocity = 0;
         this._mass = mass;
+        this.collisionObservers = new Array<() => void>();
     }
 
     public addForce(force: Vector2): void {
@@ -39,8 +42,12 @@ export class RigidBody extends Object3D {
         this.torque += torque;
     }
 
+    public addCollisionObserver(callback: () => void): void {
+        this.collisionObservers.push(callback);
+    }
+
     public applyCollision(contactAngle: number, otherMass: number, otherVelocity: Vector2): void {
-        contactAngle -= Math.PI / 2;
+        contactAngle -= Math.PI * HALF;
         const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
             (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * 2)) /
@@ -53,6 +60,7 @@ export class RigidBody extends Object3D {
             (this.mass + otherMass)) * Math.sin(contactAngle) + this._velocity.length() *
             Math.sin(this._velocity.angle() - contactAngle) * Math.cos(contactAngle);
         this._velocity = new Vector2(vx, vy);
+        this.onCollision();
     }
 
     public update(deltaTime: number): void {
@@ -97,5 +105,9 @@ export class RigidBody extends Object3D {
 
     private getAngularAcceleration(): number {
         return this.torque / this._mass;
+    }
+
+    private onCollision(): void {
+       this.collisionObservers.forEach((collisionObserver) => collisionObserver());
     }
 }
