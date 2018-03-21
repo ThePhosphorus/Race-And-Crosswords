@@ -1,25 +1,27 @@
-import { IPlayer } from "../../../../common/communication/Player";
+import { Player } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
 import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../common/communication/crossword-grid";
 
 type Socket = SocketIO.Socket;
 
-class Player implements IPlayer {
+class SPlayer extends Player {
     public constructor(
         public id: number,
-        public socket: Socket,
-        public name: string
-    ) { }
+        public name: string,
+        public socket: Socket
+    ) {
+        super(id, name);
+     }
 }
 
 export class MatchManager {
     public grid: CrosswordGrid;
-    private _players: Array<Player>;
+    private _players: Array<SPlayer>;
     private _difficulty: Difficulty;
     private completedWords: Array<Word>;
 
     public constructor(player1: Socket, difficulty: Difficulty) {
-        this._players = new Array<Player>();
+        this._players = new Array<SPlayer>();
         this.completedWords = new Array<Word>();
         this.addPlayer(player1);
         this._difficulty = difficulty;
@@ -35,33 +37,34 @@ export class MatchManager {
 
     public addPlayer(socket: Socket): void {
         const id: number = this._players.length;
-        this._players.push(new Player(id, socket, "Jonh Doe"));
-        this.askForName(this._players[id]);
+        this._players.push(new SPlayer(id, "Jonh Doe", socket));
         this.registerActions(socket, id);
+        this.askForName(this._players[id]);
     }
 
     public get difficulty(): Difficulty {
         return this._difficulty;
     }
 
-    private askForName(player: Player): void {
+    private askForName(player: SPlayer): void {
         player.socket.emit(msg.requestName);
     }
 
     private receiveName(id: number, name: string): void {
-        const player: Player = this.getPlayerById(id);
+        const player: SPlayer = this.getPlayerById(id);
         if (player != null) {
             player.name = name;
+            this.notifyAll(msg.getPlayers, this.Players);
         }
     }
 
-    private getPlayerById(id: number): Player {
+    private getPlayerById(id: number): SPlayer {
         // Check if it's at the right place
-        let player: Player = null;
+        let player: SPlayer = null;
         if (this._players[id].id === id) {
             player = this._players[id];
         } else {
-            this._players.forEach((p: Player) => {
+            this._players.forEach((p: SPlayer) => {
                 if (p.id === id) { player = p; }
             });
         }
@@ -80,10 +83,6 @@ export class MatchManager {
         socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
     }
 
-    public get Players(): Array<IPlayer> {
-        return this._players.map((p: Player) => p as IPlayer);
-    }
-
     public verifyFirst(w: Word, playerId: number): void {
         let confirmWord: boolean = true;
         this.completedWords.forEach((word: Word) => {
@@ -98,11 +97,19 @@ export class MatchManager {
         }
     }
     public notifyOthers(playerId: number, socketMsg: string, ...args: {}[]): void {
-        this._players.forEach((p: Player) => {
+        this._players.forEach((p: SPlayer) => {
             if (p.id !== playerId) {
-            p.socket.emit(socketMsg, args);
+                p.socket.emit(socketMsg, ...args);
             }
         });
+    }
+
+    public notifyAll(socketMsg: string, ...args: {}[]): void {
+        this._players.forEach((p: SPlayer) => p.socket.emit(socketMsg, ...args));
+    }
+
+    public get Players(): Array<Player> {
+        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name));
     }
 
     public recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
@@ -111,7 +118,7 @@ export class MatchManager {
 
     public playerLeave(id: number): void {
         this._players.splice(id, 1);
-        this.notifyOthers(id, msg.getPlayers, this.Players);
+        this.notifyOthers(id, msg.getGrid, this.Players);
 
     }
 

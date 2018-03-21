@@ -1,5 +1,5 @@
 import { Difficulty, CrosswordGrid, Word, Letter } from "../../../../../common/communication/crossword-grid";
-import { Players } from "../../../../../common/communication/Player";
+import { Players, Player } from "../../../../../common/communication/Player";
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
@@ -11,7 +11,7 @@ export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 export class GameManager {
     private _solvedGrid: CrosswordGrid;
     private _solvedWords: number[];
-    private _currentPlayer: number;
+    private _players: BehaviorSubject<Player[]>;
     private _isMultiplayer: boolean;
     private _myPlayer: Players;
     private _difficulty: Difficulty;
@@ -25,13 +25,13 @@ export class GameManager {
         this._solvedWordsSubject = new Subject<number[]>();
         this._currentPlayerSubject = new Subject<number>();
         this._difficultySubject =  new Subject<Difficulty>();
+        this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
         this.initializeEmptyGrid();
     }
 
     public newGame(): void {
         this._solvedGrid = new CrosswordGrid();
-        this._currentPlayer = Players.PLAYER1;
         this._solvedWords = [];
         this._isMultiplayer = false;
         this._myPlayer = Players.PLAYER1;
@@ -48,6 +48,10 @@ export class GameManager {
 
     public get currentPlayerObs(): Observable<Players> {
         return this._currentPlayerSubject.asObservable();
+    }
+
+    public get playersObs(): Observable<Player[]> {
+        return this._players.asObservable();
     }
 
     public get gridObs(): Observable<CrosswordGrid> {
@@ -68,6 +72,10 @@ export class GameManager {
         });
 
         this._playerGridSubject.next(playerGrid);
+    }
+
+    public set players( players: Player[]) {
+        this._players.next(players);
     }
 
     public getChar(index: number): string {

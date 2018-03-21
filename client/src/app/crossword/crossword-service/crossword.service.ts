@@ -7,6 +7,7 @@ import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { of } from "rxjs/observable/of";
 import { MOCK } from "../mock-crossword/mock-crossword";
+import { Player } from "../../../../../common/communication/Player";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = false;
@@ -45,6 +46,10 @@ export class CrosswordService {
         return USE_MOCK_GRID ? of(MOCK) : this._gameManager.gridObs;
     }
 
+    public get players(): Observable<Player[]> {
+        return this._gameManager.playersObs;
+    }
+
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): Observable<CrosswordGrid> {
         if (!USE_MOCK_GRID) {
             this._gameManager.newGame();
@@ -54,8 +59,12 @@ export class CrosswordService {
                 .subscribe((crosswordGrid: CrosswordGrid) => {
                     this._gameManager.grid = crosswordGrid;
                 });
+
+                this._gameManager.players = [new Player(0, this.commService.returnName)];
             } else {
-                this.commService.listenerReceiveGrid = (grid: CrosswordGrid) => this._gameManager.grid = grid;
+                this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
+                    this._gameManager.grid = grid;
+                this.commService.listenerReceivePlayers = (players: Player[]) => this._gameManager.players = players;
             }
         }
 

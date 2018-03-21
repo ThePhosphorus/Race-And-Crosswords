@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../common/communication/crossword-grid";
+import { Player } from "../../../../../common/communication/Player";
 
 @Component({
     selector: "app-crossword-game-info",
@@ -12,7 +13,7 @@ export class CrosswordGameInfoComponent implements OnInit {
     @Output() public newGameLoad: EventEmitter<boolean>;
     public showModal: boolean;
     private _lvl: Difficulty;
-    public nbPlayers: number;
+    public players: Array<Player>;
     public isCollapsedPlayer: boolean;
     public isCollapsedLevel: boolean;
     public showLevel: boolean;
@@ -23,6 +24,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.isCollapsedLevel = false;
         this.showModal = true;
         this.newGameLoad = new EventEmitter<boolean>();
+        this.players = new Array<Player>();
     }
 
     public get lvl(): Difficulty {
@@ -30,10 +32,11 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.nbPlayers = 1;
-        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) => {
-            this._lvl = difficulty;
-        });
+        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
+            this._lvl = difficulty);
+
+        this._crosswordService.players.subscribe((players: Array<Player>) =>
+            this.players = players);
     }
 
     public loadNewGame(isNewGame: boolean): void { // TODO: Remove

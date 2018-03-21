@@ -30,13 +30,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr id="player1">
-                <th scope="row" id="player">Player1</th>
-                <td id="result">Score1</td>
-              </tr>
-              <tr id="player2">
-                <th scope="row" id="player">Player2</th>
-                <td id="result">Score2</td>
+              <tr id="player{{player.id + 1}}" *ngFor="let player of players">
+                <th scope="row" id="player">{{ player.name }}</th>
+                <td id="result">Score{{player.id + 1}}</td>
               </tr>
             </tbody>
           </table>

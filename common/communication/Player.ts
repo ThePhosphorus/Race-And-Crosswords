@@ -1,6 +1,8 @@
-export interface IPlayer {
-    id: number;
-    name: string;
+export class Player {
+    public constructor (
+        public id: number,
+        public name: string
+        ) {}
 }
 
 export enum Players {

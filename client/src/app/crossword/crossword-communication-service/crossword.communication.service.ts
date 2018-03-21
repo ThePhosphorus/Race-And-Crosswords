@@ -6,7 +6,7 @@ import { BACKEND_URL } from "../../global-constants/constants";
 import { connect } from "socket.io-client";
 import socketMsg from "../../../../../common/communication/socketTypes";
 import { InWaitMatch } from "../../../../../common/communication/Match";
-import { IPlayer } from "../../../../../common/communication/Player";
+import { Player } from "../../../../../common/communication/Player";
 
 export class SocketToServerInfos {
     public constructor(
@@ -49,7 +49,7 @@ export class CrosswordCommunicationService {
         this.socket.on(socketMsg.requestName, (id: number) =>
             this.socketReturnName(id));
 
-        this.socket.on(socketMsg.getPlayers, (players: Array<IPlayer>) =>
+        this.socket.on(socketMsg.getPlayers, (players: Array<Player>) =>
             this.execute(this.socketInfos.receivePlayersCallBack, players));
 
         this.socket.on(socketMsg.playerSelectTile, (playerId: number, letterId: number, orientation: Orientation) =>
@@ -93,6 +93,10 @@ export class CrosswordCommunicationService {
 
     public set returnName(name: string) {
         this.socketInfos.returnName = name;
+    }
+
+    public get returnName(): string {
+        return this.socketInfos.returnName;
     }
 
     public notifySelect(letterId: number, orientation: Orientation): void {
