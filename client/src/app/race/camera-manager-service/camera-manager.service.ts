@@ -56,7 +56,7 @@ export class CameraManagerService {
     }
 
     private initAudioListener(): void {
-        this.selectedCamera.addAudioListener();
+        this._cameraArray[1].addAudioListener();
     }
 
     public updateTargetInfos(infos: TargetInfos): void {
