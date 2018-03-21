@@ -7,7 +7,6 @@ import { Difficulty, CrosswordGrid } from "../../../../common/communication/cros
 import { InWaitMatch } from "../../../../common/communication/Match";
 import { GRID_GENERATION_SERVICE_URL } from "../../constants";
 import * as Request from "request-promise-native";
-import { Response } from "express";
 
 type Socket = SocketIO.Socket;
 const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
