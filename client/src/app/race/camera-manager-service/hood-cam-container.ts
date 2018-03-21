@@ -1,14 +1,12 @@
 import { PerspectiveCamera, Vector3, AudioListener, Camera } from "three";
 import { CameraContainer, ZoomLimit } from "./camera-container";
 import { TargetInfos } from "./camera-manager.service";
-import { PERS_CAMERA_ANGLE } from "../race.constants";
 import {
     CameraType,
     FAR_CLIPPING_PLANE,
     NEAR_CLIPPING_PLANE,
     INITIAL_CAMERA_POSITION_Y,
     INITIAL_ASPECT_RATIO,
-    DEG_TO_RAD
 } from "../../global-constants/constants";
 
 const FIELD_OF_VIEW: number = 70;
