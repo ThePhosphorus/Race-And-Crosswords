@@ -145,7 +145,9 @@ export class CrosswordService {
                     }
                     if (orientation === this._gridState.currentOrientation) {
                         this.unselectWord();
-                        this._gameManager.addSolvedWord(playerWord);
+                        if (this._gameManager.addSolvedWord(playerWord)) {
+                            // show end game modal
+                        }
                     }
                 }
             }
