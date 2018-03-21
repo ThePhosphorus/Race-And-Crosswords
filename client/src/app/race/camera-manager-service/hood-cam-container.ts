@@ -10,9 +10,11 @@ import {
 } from "../../global-constants/constants";
 
 const FIELD_OF_VIEW: number = 70;
-
+const CAMERA_TARGET_FACTOR: number = 10;
+const TARGET_HEIGHT: number = 1;
+const DIRECTION_FACTOR: number = 0.3;
+const CAMERA_HEIGHT: number = 1.4;
 export class HoodCamContainer extends CameraContainer {
-    private thirdPersonPoint: Vector3;
     private _perspCamera: PerspectiveCamera;
 
     public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
@@ -34,9 +36,9 @@ export class HoodCamContainer extends CameraContainer {
     public fixUpdate(deltaTime: number): void {
         this._perspCamera.position.copy(this.calcPosPerspCamera());
         this._perspCamera.lookAt(this._targetInfos.position.clone()
-        .add(new Vector3(0, 1, 0)
+        .add(new Vector3(0, TARGET_HEIGHT, 0)
         .add(
-            this._targetInfos.direction.multiplyScalar(10)
+            this._targetInfos.direction.multiplyScalar(CAMERA_TARGET_FACTOR)
         )));
     }
 
@@ -51,14 +53,14 @@ export class HoodCamContainer extends CameraContainer {
         carDirection.normalize();
 
         return new Vector3(
-            this._targetInfos.position.x + (carDirection.x * 0.3 ),
-            this._targetInfos.position.y + 1.4,
-            this._targetInfos.position.z + (carDirection.z * 0.3)
+            this._targetInfos.position.x + (carDirection.x * DIRECTION_FACTOR ),
+            this._targetInfos.position.y + CAMERA_HEIGHT,
+            this._targetInfos.position.z + (carDirection.z * DIRECTION_FACTOR)
         );
     }
 
     public position(): Vector3 {
-        return this.thirdPersonPoint;
+        return this._perspCamera.position;
     }
 
     public get camera(): Camera {
