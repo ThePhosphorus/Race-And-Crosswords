@@ -4,6 +4,7 @@ import { CameraContainer, ZoomLimit } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
 import { CameraType } from "../../global-constants/constants";
+import { HoodCamContainer } from "./hood-cam-container";
 
 const INITIAL_CAMERA_DISTANCE: number = 10;
 
@@ -46,12 +47,16 @@ export class CameraManagerService {
 
         const orthoContainer: OrthographicCameraContainer =
             new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+
+        const hoodContainer: HoodCamContainer =
+            new HoodCamContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+        this._cameraArray.push(hoodContainer);
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
     }
 
     private initAudioListener(): void {
-        this.selectedCamera.addAudioListener();
+        this._cameraArray[1].addAudioListener();
     }
 
     public updateTargetInfos(infos: TargetInfos): void {
