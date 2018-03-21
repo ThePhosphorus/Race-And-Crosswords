@@ -27,7 +27,8 @@ import {
     AMBIENT_NIGHT_LIGHT_OPACITY,
     QUARTER,
     SHADOWMAP_SIZE,
-    SHADOW_CAMERA_PLANE_RATIO
+    SHADOW_CAMERA_PLANE_RATIO,
+    HALF
 } from "../../../global-constants/constants";
 
 const FLOOR_DIMENSION: number = 10000;
@@ -121,7 +122,7 @@ export class GameManagerService extends Renderer {
     }
 
     private async initCars(): Promise<void> {
-        await this.player.init(new Vector3(0, 0, 0), "green");
+        await this.player.init(new Vector3(0, 0, 0), COLORS[0]);
         for (let i: number = 0; i < this.aiControlledCars.length; i++) {
             await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
         }
@@ -150,8 +151,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
-        // TODO: REMOVE THIS BECAUSE IT'S TEMPORARY
-        this.inputManager.registerKeyDown(13, () => this.player.collisionSound());
     }
 
     private loadSunlight(): void {
@@ -262,7 +261,7 @@ export class GameManagerService extends Renderer {
     }
 
     private updateSunlight(): void {
-        const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET/2);
+        const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET * HALF);
         this._directionalLight.target = this.player["mesh"];
         this._directionalLight.position.copy((this.player.getPosition().clone().add(sunlightoffSet)));
     }
