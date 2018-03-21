@@ -66,15 +66,15 @@ export class CrosswordService {
     }
 
     public setSelectedLetter(index: number): void {
-        if (this._gridState.disabledLetters.indexOf(index) === -1) {
-            if (index === this._gridState.currentLetter) {
-                this._gridState.currentOrientation = this._gridState.currentOrientation === Orientation.Across ?
-                                                    Orientation.Down : Orientation.Across;
+        if (this._gridState.LIsDisabled(index)) {
+            if (this._gridState.LIsCurrentLetter(index)) {
+                this._gridState.switchOrientation();
             } else {
                 this._gridState.currentOrientation = Orientation.Across;
             }
             let targetWord: Word;
             if ((targetWord = this._gameManager.findWordFromLetter(index, this._gridState.currentOrientation, false)) === null) {
+                // TODO: Undestand this If
                 for (const ori of Object.keys(Orientation)) {
                     if (ori !== this._gridState.currentOrientation) {
                         this._gridState.currentOrientation = ori as Orientation;
@@ -85,7 +85,7 @@ export class CrosswordService {
             }
             this.setSelectedWord(targetWord);
             this._gridState.currentLetter = targetWord.letters[0].id;
-            if (this._gridState.disabledLetters.indexOf(this._gridState.currentLetter) > -1) {
+            if (this._gridState.LIsDisabled(this._gridState.currentLetter)) {
                 this._gridState.currentLetter = this.findNextLetterId(true);
             }
         }
@@ -94,7 +94,7 @@ export class CrosswordService {
     public setSelectedWord(word: Word): void {
         let startingIndex: number = null;
         for (const letter of word.letters) {
-            if (this._gridState.disabledLetters.indexOf(letter.id) === -1) {
+            if (this._gridState.LIsDisabled(letter.id)) {
                 startingIndex = letter.id;
                 break;
             }
@@ -164,13 +164,13 @@ export class CrosswordService {
         if (isForward) {
             for (let i: number = this._gridState.selectedLetters.indexOf(this._gridState.currentLetter) + 1;
                                                         i < this._gridState.selectedLetters.length; i++) {
-                if (this._gridState.disabledLetters.indexOf(this._gridState.selectedLetters[i]) === -1) {
+                if (!this._gridState.LIsDisabled(this._gridState.selectedLetters[i])) {
                     return this._gridState.selectedLetters[i];
                 }
             }
         } else {
             for (let i: number = this._gridState.selectedLetters.indexOf(this._gridState.currentLetter) - 1; i >= 0; i--) {
-                if (this._gridState.disabledLetters.indexOf(this._gridState.selectedLetters[i]) === -1) {
+                if (!this._gridState.LIsDisabled(this._gridState.selectedLetters[i])) {
                     return this._gridState.selectedLetters[i];
                 }
             }

@@ -32,4 +32,13 @@ export class GridState {
     public LIsCurrentLetter(letterId: number): boolean {
         return this.currentLetter === letterId;
     }
+
+    public isCurrentOrientation(orientation: Orientation): boolean {
+        return orientation === this.currentOrientation;
+    }
+
+    public switchOrientation(): void {
+        this.currentOrientation = this.currentOrientation === Orientation.Down ?
+            Orientation.Across : Orientation.Down;
+    }
 }

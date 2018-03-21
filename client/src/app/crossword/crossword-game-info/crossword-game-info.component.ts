@@ -39,4 +39,6 @@ export class CrosswordGameInfoComponent implements OnInit {
     public loadNewGame(isNewGame: boolean): void {
         this.newGameLoad.emit(isNewGame);
     }
+
+    // TODO: Complete Logic
 }
