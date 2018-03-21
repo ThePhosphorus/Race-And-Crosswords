@@ -129,8 +129,6 @@ export class CollisionDetectorService {
 
             rb1.applyCollision(collision.contactAngle, m2, v2);
             rb2.applyCollision(collision.contactAngle, m1, v1);
-            this.collisionSound(rb1);
-            this.collisionSound(rb2);
         }
     }
 
@@ -145,13 +143,5 @@ export class CollisionDetectorService {
         rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 
         console.log(antiOverlap1);
-    }
-
-    private collisionSound(obj: Object3D): void {
-        obj.traverseAncestors((parent) => {
-            if (parent instanceof Car) {
-                parent.collisionSound();
-            }
-        });
     }
 }

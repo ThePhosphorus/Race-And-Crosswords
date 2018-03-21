@@ -42,7 +42,6 @@ export class Car extends Object3D {
     private carLights: CarLights;
     private oldFrictionCoefficient: number;
     private carSound: CarSounds;
-    private oldComponent: number;
     private hasPenalty: boolean;
 
     public get carMesh(): Object3D {
@@ -90,7 +89,6 @@ export class Car extends Object3D {
         this.engine = engine;
         this.rearWheel = rearWheel;
         this.carControl = new CarControl();
-        this.oldComponent = 0;
     }
 
     // TODO: move loading code outside of car class.
@@ -135,8 +133,7 @@ export class Car extends Object3D {
         this.engine.update(this.speed, this.rearWheel.radius);
 
         this.rigidBody.addForce(this.getLongitudinalForce());
-        this.rigidBody.addForce(this.getPerpendicularForce());
-        this.rigidBody.addAngularVelocity(this.getAngularFriction());
+        this.rigidBody.setFrictionForce(this.getPerpendicularForce());
         this.rigidBody.update(deltaTime);
 
         const R: number =
@@ -171,21 +168,7 @@ export class Car extends Object3D {
             }
         }
 
-        if (this.rigidBody.velocity.length() > 2) {
-            this.oldComponent = perpSpeedComponent;
-            return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
-        } else if (Math.sign(this.oldComponent) === Math.sign(perpSpeedComponent)) {
-            this.oldComponent = -perpSpeedComponent * Math.min(this.rigidBody.velocity.lengthSq(), 0.3);
-            return perpDirection.multiplyScalar(
-                this.oldComponent *
-                perpendicularForce
-            );
-        } else {
-            this.oldComponent = (this.oldComponent) * 0.9999;
-            return (this.oldComponent !== 0) ?
-                perpDirection.multiplyScalar(this.oldComponent * perpendicularForce) :
-                perpDirection.multiplyScalar(-perpSpeedComponent / 100 * perpendicularForce);
-        }
+        return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
     }
 
     private getLongitudinalForce(): Vector2 {
@@ -207,10 +190,6 @@ export class Car extends Object3D {
         }
 
         return resultingForce;
-    }
-
-    private getAngularFriction(): number {
-        return null;
     }
 
     private getRollingResistance(): Vector2 {
