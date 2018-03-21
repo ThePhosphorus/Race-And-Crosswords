@@ -7,6 +7,7 @@ import { Difficulty, CrosswordGrid } from "../../../../common/communication/cros
 import { InWaitMatch } from "../../../../common/communication/Match";
 import { GRID_GENERATION_SERVICE_URL } from "../../constants";
 import * as Request from "request-promise-native";
+import { Response } from "express";
 
 type Socket = SocketIO.Socket;
 const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
@@ -34,7 +35,8 @@ export class SocketsManager {
         const newMatch: MatchManager = new MatchManager(socket, diff);
         const link: string = GET_10X10_GRID_LINK + "&difficulty=" + diff;
 
-        await Request(link, (res: CrosswordGrid) => newMatch.grid = res);
+        await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
+            newMatch.grid = grid);
 
         this._inWaitMatchs.push(newMatch);
         socket.emit(msg.getGrid, newMatch.grid);

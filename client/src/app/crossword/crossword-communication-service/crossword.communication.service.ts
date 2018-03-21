@@ -55,8 +55,9 @@ export class CrosswordCommunicationService {
         this.socket.on(socketMsg.playerSelectTile, (playerId: number, letterId: number, orientation: Orientation) =>
             this.execute(this.socketInfos.receiveSelectCallBack, playerId, letterId, orientation));
 
-        this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) =>
-            this.execute(this.socketInfos.receiveGrid, grid));
+        this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) => {
+            this.execute(this.socketInfos.receiveGrid, this.realGrid(grid));
+        });
 
         this.socket.on(socketMsg.updateWord, (w: Word) =>
             this.execute(this.socketInfos.receiveCompletedWord, w));
@@ -99,7 +100,11 @@ export class CrosswordCommunicationService {
     }
 
     private execute(func: Function, ...args: {}[]): void {
-        if (func != null) { func(args); }
+        if (func != null) { func(...args); }
+    }
+
+    private realGrid(sgrid: CrosswordGrid): CrosswordGrid { // For some reason the Crossword that we get isn't a real object (it's in JSON)
+        return JSON.parse("" + sgrid);
     }
 
 }

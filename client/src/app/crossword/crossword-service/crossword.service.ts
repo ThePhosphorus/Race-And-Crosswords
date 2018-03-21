@@ -55,7 +55,7 @@ export class CrosswordService {
                     this._gameManager.grid = crosswordGrid;
                 });
             } else {
-                this.commService.listenerReceiveGrid((grid: CrosswordGrid) => this._gameManager.grid = grid);
+                this.commService.listenerReceiveGrid = (grid: CrosswordGrid) => this._gameManager.grid = grid;
             }
         }
 
