@@ -16,12 +16,14 @@ export class GameManager {
     private _myPlayer: Players;
     private _difficulty: Difficulty;
     private _playerGridSubject: BehaviorSubject<CrosswordGrid>;
+    private _solvedGridSubject: Subject<CrosswordGrid>;
     private _solvedWordsSubject: Subject<number[]>;
     private _currentPlayerSubject: Subject<number>;
     private _difficultySubject: Subject<Difficulty>;
 
     public constructor() {
         this._playerGridSubject = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
+        this._solvedGridSubject = new Subject<CrosswordGrid>();
         this._solvedWordsSubject = new Subject<number[]>();
         this._currentPlayerSubject = new Subject<number>();
         this._difficultySubject =  new Subject<Difficulty>();
@@ -36,6 +38,15 @@ export class GameManager {
         this._isMultiplayer = false;
         this._myPlayer = Players.PLAYER1;
         this._difficulty = Difficulty.Easy;
+        this.notifyAll();
+    }
+
+    private notifyAll(): void {
+        this._difficultySubject.next(this._difficulty);
+        this._playerGridSubject.next(new CrosswordGrid());
+        this._solvedGridSubject.next(this._solvedGrid);
+        this._solvedWordsSubject.next(this._solvedWords);
+        this._currentPlayerSubject.next(this._myPlayer);
     }
 
     public get difficultyObs(): Observable<Difficulty> {
@@ -54,8 +65,12 @@ export class GameManager {
         return this._players.asObservable();
     }
 
-    public get gridObs(): Observable<CrosswordGrid> {
+    public get playerGridObs(): Observable<CrosswordGrid> {
         return this._playerGridSubject.asObservable();
+    }
+
+    public get solvedGridObs(): Observable<CrosswordGrid> {
+        return this._solvedGridSubject.asObservable();
     }
 
     public set grid(crosswordGrid: CrosswordGrid) {
@@ -72,6 +87,7 @@ export class GameManager {
         });
 
         this._playerGridSubject.next(playerGrid);
+        this._solvedGridSubject.next(this._solvedGrid);
     }
 
     public set players( players: Player[]) {

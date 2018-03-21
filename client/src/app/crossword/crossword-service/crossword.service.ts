@@ -42,15 +42,19 @@ export class CrosswordService {
         return this._gridStateSubject.asObservable();
     }
 
-    public get grid(): Observable<CrosswordGrid> {
-        return USE_MOCK_GRID ? of(MOCK) : this._gameManager.gridObs;
+    public get playerGrid(): Observable<CrosswordGrid> {
+        return USE_MOCK_GRID ? of(MOCK) : this._gameManager.playerGridObs;
+    }
+
+    public get solvedGrid(): Observable<CrosswordGrid> {
+        return this._gameManager.solvedGridObs;
     }
 
     public get players(): Observable<Player[]> {
         return this._gameManager.playersObs;
     }
 
-    public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): Observable<CrosswordGrid> {
+    public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): void {
         if (!USE_MOCK_GRID) {
             this._gameManager.newGame();
             this._gameManager.difficulty = difficulty;
@@ -67,8 +71,6 @@ export class CrosswordService {
                 this.commService.listenerReceivePlayers = (players: Player[]) => this._gameManager.players = players;
             }
         }
-
-        return this.grid;
     }
 
     public setHoveredWord(word: Word): void {
