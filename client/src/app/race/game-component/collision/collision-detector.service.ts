@@ -62,17 +62,18 @@ export class CollisionDetectorService {
         // const collision: Collision = new Collision(coll1, null, coll2, null);
 
         for (const normal of axises) {
-            const projected1: Projected = new Projected(vertexes1, normal);
-            const projected2: Projected = new Projected(vertexes2, normal);
+            const projected1: Projected = new Projected(vertexes1, normal.clone());
+            const projected2: Projected = new Projected(vertexes2, normal.clone());
             const distance: number = projected1.distance(projected2);
             if (distance > 0) {
                 return null;
             }
             if (Math.abs(distance) < minDistance) {
                 minDistance = Math.abs(distance);
-                distanceNormal = normal;
+                distanceNormal = normal.clone();
                 // this.addCollisionIntersection(collision, projected1, projected2);
             }
+            // console.log(normal);
         }
 
         // collision.overlap = -minDistance;
@@ -124,18 +125,24 @@ export class CollisionDetectorService {
             const v1: Vector2 = rb1.velocity.clone();
             const v2: Vector2 = rb2.velocity.clone();
 
-            const antiOverlap1: Vector2 = collision.normal.clone()
-                .multiplyScalar(rb1.velocity.clone().normalize().dot(collision.normal) * (collision.overlap / 2));
-            const antiOverlap2: Vector2 = collision.normal.clone()
-                .multiplyScalar(rb2.velocity.clone().normalize().dot(collision.normal) * (collision.overlap / 2));
-            rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
-            rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
+            this.antiOverlap(collision, rb1, rb2);
 
             rb1.applyCollision(collision.contactAngle, m2, v2);
             rb2.applyCollision(collision.contactAngle, m1, v1);
             this.collisionSound(rb1);
             this.collisionSound(rb2);
         }
+    }
+
+    private antiOverlap(collision: Collision, rb1: RigidBody, rb2: RigidBody): void {
+        const antiOverlap1: Vector2 = collision.normal.clone()
+            .multiplyScalar(rb1.velocity.clone().normalize().dot(collision.normal.clone()) * (collision.overlap));
+        const antiOverlap2: Vector2 = collision.normal.clone()
+            .multiplyScalar(rb2.velocity.clone().normalize().dot(collision.normal.clone()) * (collision.overlap));
+        rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
+        rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
+        // console.log(antiOverlap1);
+        // console.log(collision.normal);
     }
 
     private collisionSound(obj: Object3D): void {
