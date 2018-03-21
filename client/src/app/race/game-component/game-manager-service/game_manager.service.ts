@@ -37,7 +37,7 @@ const OFF_ROAD_PATH: string = "../../assets/textures/dirt.jpg";
 const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
 const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const N_AI_CONTROLLED_CARS: number = 1;
-const SPACE_BETWEEN_CARS: number = 5;
+const SPACE_BETWEEN_CARS: number = 15;
 const D_LIGHT_PLANE_SIZE: number = 200;
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 

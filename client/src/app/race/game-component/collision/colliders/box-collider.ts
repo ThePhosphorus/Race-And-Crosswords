@@ -21,7 +21,7 @@ export class BoxCollider extends Collider {
         for (let i: number = 0; i < vertexes.length; i++) {
             const vertex1: Vector2 = vertexes[i];
             const vertex2: Vector2 = i < vertexes.length - 1 ? vertexes[i + 1] : vertexes[0];
-            const vertex: Vector2 = vertex1.sub(vertex2);
+            const vertex: Vector2 = vertex1.clone().sub(vertex2);
             const normal: Vector2 = new Vector2(
                 vertex.y,
                 -vertex.x

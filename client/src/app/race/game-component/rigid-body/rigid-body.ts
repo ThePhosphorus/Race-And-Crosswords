@@ -52,7 +52,6 @@ export class RigidBody extends Object3D {
             (this.mass + otherMass)) * Math.sin(contactAngle) + this._velocity.length() *
             Math.sin(this._velocity.angle() - contactAngle) * Math.cos(contactAngle);
         this._velocity = new Vector2(vx, vy);
-        console.log(this._velocity);
     }
 
     public update(deltaTime: number): void {
