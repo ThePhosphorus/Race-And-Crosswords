@@ -82,4 +82,8 @@ export class ModalNewGameComponent implements OnInit {
         this.isCollapsedAvailablePlayer = (bool) ? false : !this.isCollapsedAvailablePlayer;
         this.showLevelGame = bool;
     }
+
+    public isDiff( diff: Difficulty): boolean {
+        return diff === this._lvl;
+    }
 }
