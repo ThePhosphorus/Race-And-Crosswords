@@ -11,7 +11,7 @@
   </div>
 
   <div class="col-5 mt-3 align-items-center ">
-    <app-crossword-game-info (newGameLoad)="loading=!($event)"></app-crossword-game-info>
-    <app-input-grid #grid (hideLoading)="loading=($event);"></app-input-grid>
+    <app-crossword-game-info (newGameLoad)="loading=($event)"></app-crossword-game-info>
+    <app-input-grid #grid (showLoading)="loading=($event)"></app-input-grid>
   </div>
 </div>
