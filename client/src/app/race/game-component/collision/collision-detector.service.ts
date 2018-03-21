@@ -58,8 +58,8 @@ export class CollisionDetectorService {
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
         const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
         let minDistance: number = Number.MAX_VALUE;
-        let contact: Vector2 = new Vector2();
-        const collision: Collision = new Collision(coll1, null, coll2, null);
+        let distanceNormal: Vector2 = new Vector2();
+        // const collision: Collision = new Collision(coll1, null, coll2, null);
 
         for (const normal of axises) {
             const projected1: Projected = new Projected(vertexes1, normal);
@@ -70,48 +70,48 @@ export class CollisionDetectorService {
             }
             if (Math.abs(distance) < minDistance) {
                 minDistance = Math.abs(distance);
-                contact = new Vector2(normal.y, -normal.x);
-                this.addCollisionIntersection(collision, projected1, projected2);
+                distanceNormal = normal;
+                // this.addCollisionIntersection(collision, projected1, projected2);
             }
         }
 
-        collision.overlap = -minDistance;
-        collision.contactAngle = contact.angle();
+        // collision.overlap = -minDistance;
+        // collision.contactAngle = contact.angle();
 
-        return collision;
+        return new Collision(coll1, coll2, distanceNormal, minDistance);
     }
 
-    private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected): void {
-        collision.collidingPoint1 = this.findIntersection(projected1, projected2);
-        collision.collidingPoint2 = this.findIntersection(projected2, projected1);
-    }
+    // private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected): void {
+    //     collision.collidingPoint1 = this.findIntersection(projected1, projected2);
+    //     collision.collidingPoint2 = this.findIntersection(projected2, projected1);
+    // }
 
-    private findIntersection(projected1: Projected, projected2: Projected): Vector2 {
-        const maxProjectedDistance: number = projected2.minProjected - projected1.maxProjected;
-        const minProjectedDistance: number = projected1.minProjected - projected2.maxProjected;
+    // private findIntersection(projected1: Projected, projected2: Projected): Vector2 {
+    //     const maxProjectedDistance: number = projected2.minProjected - projected1.maxProjected;
+    //     const minProjectedDistance: number = projected1.minProjected - projected2.maxProjected;
 
-        const projected1Vertexes: Array<Vector2> =
-            maxProjectedDistance > minProjectedDistance ? projected1.maxVertexes : projected1.minVertexes;
-        const projected2Vertexes: Array<Vector2> =
-            maxProjectedDistance > minProjectedDistance ? projected2.minVertexes : projected2.maxVertexes;
+    //     const projected1Vertexes: Array<Vector2> =
+    //         maxProjectedDistance > minProjectedDistance ? projected1.maxVertexes : projected1.minVertexes;
+    //     const projected2Vertexes: Array<Vector2> =
+    //         maxProjectedDistance > minProjectedDistance ? projected2.minVertexes : projected2.maxVertexes;
 
-        if (projected1Vertexes.length === 1) {
-            return projected1Vertexes[0];
-        } else {
-            if (projected2Vertexes.length === 1) {
-                return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
-            } else {
-                return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
-            }
-        }
-    }
+    //     if (projected1Vertexes.length === 1) {
+    //         return projected1Vertexes[0];
+    //     } else {
+    //         if (projected2Vertexes.length === 1) {
+    //             return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
+    //         } else {
+    //             return this.projectPoint(projected2Vertexes[0], projected1Vertexes);
+    //         }
+    //     }
+    // }
 
-    private projectPoint(point: Vector2, line: Array<Vector2>): Vector2 {
-        const axis: Vector2 = line[0].sub(line[1]).normalize();
-        const projection: number = point.dot(axis);
+    // private projectPoint(point: Vector2, line: Array<Vector2>): Vector2 {
+    //     const axis: Vector2 = line[0].sub(line[1]).normalize();
+    //     const projection: number = point.dot(axis);
 
-        return line[0].add(axis.multiplyScalar(projection));
-    }
+    //     return line[0].add(axis.multiplyScalar(projection));
+    // }
 
     private resolveCollision(collision: Collision): void {
         const rb1: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
@@ -124,8 +124,10 @@ export class CollisionDetectorService {
             const v1: Vector2 = rb1.velocity.clone();
             const v2: Vector2 = rb2.velocity.clone();
 
-            const antiOverlap1: Vector2 = rb1.velocity.clone().normalize().multiplyScalar(collision.overlap / 2);
-            const antiOverlap2: Vector2 = rb2.velocity.clone().normalize().multiplyScalar(collision.overlap / 2);
+            const antiOverlap1: Vector2 = collision.normal.clone()
+                .multiplyScalar(rb1.velocity.clone().normalize().dot(collision.normal) * (collision.overlap / 2));
+            const antiOverlap2: Vector2 = collision.normal.clone()
+                .multiplyScalar(rb2.velocity.clone().normalize().dot(collision.normal) * (collision.overlap / 2));
             rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
             rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 
