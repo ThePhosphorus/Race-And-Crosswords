@@ -73,13 +73,12 @@ export class CollisionDetectorService {
                 distanceNormal = normal.clone();
                 // this.addCollisionIntersection(collision, projected1, projected2);
             }
-            // console.log(normal);
         }
 
         // collision.overlap = -minDistance;
         // collision.contactAngle = contact.angle();
 
-        return new Collision(coll1, coll2, distanceNormal, minDistance);
+        return new Collision(coll1, coll2, distanceNormal, -minDistance);
     }
 
     // private addCollisionIntersection(collision: Collision, projected1: Projected, projected2: Projected): void {
@@ -135,14 +134,16 @@ export class CollisionDetectorService {
     }
 
     private antiOverlap(collision: Collision, rb1: RigidBody, rb2: RigidBody): void {
-        const antiOverlap1: Vector2 = collision.normal.clone()
-            .multiplyScalar(rb1.velocity.clone().normalize().dot(collision.normal.clone()) * (collision.overlap));
-        const antiOverlap2: Vector2 = collision.normal.clone()
-            .multiplyScalar(rb2.velocity.clone().normalize().dot(collision.normal.clone()) * (collision.overlap));
+        const pos1: Vector2 = new Vector2(rb1.parent.position.clone().x, rb1.parent.position.clone().z);
+        const pos2: Vector2 = new Vector2(rb2.parent.position.clone().x, rb2.parent.position.clone().z);
+        const sign: number = Math.sign(pos2.clone().sub(pos1).dot(collision.normal));
+
+        const antiOverlap1: Vector2 = collision.normal.clone().multiplyScalar(sign * collision.overlap);
+        const antiOverlap2: Vector2 = collision.normal.clone().multiplyScalar(-sign * collision.overlap);
         rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
         rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
-        // console.log(antiOverlap1);
-        // console.log(collision.normal);
+
+        console.log(antiOverlap1);
     }
 
     private collisionSound(obj: Object3D): void {

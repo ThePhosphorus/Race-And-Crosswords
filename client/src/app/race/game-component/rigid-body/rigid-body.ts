@@ -40,6 +40,7 @@ export class RigidBody extends Object3D {
     }
 
     public applyCollision(contactAngle: number, otherMass: number, otherVelocity: Vector2): void {
+        contactAngle -= Math.PI / 2;
         const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
             (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * 2)) /
