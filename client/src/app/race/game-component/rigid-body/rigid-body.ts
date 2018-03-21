@@ -128,10 +128,9 @@ export class RigidBody extends Object3D {
 
     private applyFrictionForce(deltaTime: number): void {
         const frictionCausedVelocity: Vector2 = this.getDeltaVelocity(this.frictionForce, deltaTime);
-        const newXComponent: number = this._velocity.x + frictionCausedVelocity.x;
-        const newYComponent: number = this._velocity.y + frictionCausedVelocity.y;
-        this._velocity.setX(Math.sign(this._velocity.x) === Math.sign(newXComponent) ? newXComponent : 0);
-        this._velocity.setY(Math.sign(this._velocity.y) === Math.sign(newYComponent) ? newYComponent : 0);
+        const projectedVelocity: number = this._velocity.clone().dot(frictionCausedVelocity.clone().normalize());
+        const projectedNewVelocity: number = frictionCausedVelocity.length() + projectedVelocity;
+        this._velocity.add(Math.sign(projectedNewVelocity) === Math.sign(projectedVelocity) ? frictionCausedVelocity : new Vector2(0, 0));
     }
 
     private onCollision(): void {
