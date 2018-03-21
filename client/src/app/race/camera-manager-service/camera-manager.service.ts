@@ -50,9 +50,9 @@ export class CameraManagerService {
 
         const hoodContainer: HoodCamContainer =
             new HoodCamContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+        this._cameraArray.push(hoodContainer);
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
-        this._cameraArray.push(hoodContainer);
     }
 
     private initAudioListener(): void {
