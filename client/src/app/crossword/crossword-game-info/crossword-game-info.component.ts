@@ -36,7 +36,9 @@ export class CrosswordGameInfoComponent implements OnInit {
         });
     }
 
-    public loadNewGame(isNewGame: boolean): void {
+    public loadNewGame(isNewGame: boolean): void { // TODO: Remove
         this.newGameLoad.emit(isNewGame);
     }
+
+    // TODO: Complete Logic
 }

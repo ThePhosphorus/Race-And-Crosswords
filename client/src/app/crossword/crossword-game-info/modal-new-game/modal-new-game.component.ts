@@ -3,8 +3,6 @@ import { Difficulty } from "../../../../../../common/communication/crossword-gri
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
-const INITIAL_GRID_SIZE: number = 10;
-const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
     selector: "app-modal-new-game",
@@ -64,16 +62,14 @@ export class ModalNewGameComponent implements OnInit {
     public createNewGame(): void {
         this.commService.returnName = this.username;
 
-        if (this.isSinglePlayer) {
-            this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
-
-        } else {
+        if (!this.isSinglePlayer) {
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this._lvl);
             } else {
                 this.commService.joinMatch(this.joinedPlayer);
             }
         }
+        this._crosswordService.newGame(this._lvl, this.isSinglePlayer);
 
         this.closeGameOptions();
     }
@@ -85,5 +81,9 @@ export class ModalNewGameComponent implements OnInit {
     public showLevelChoice(bool: boolean): void {
         this.isCollapsedAvailablePlayer = (bool) ? false : !this.isCollapsedAvailablePlayer;
         this.showLevelGame = bool;
+    }
+
+    public isDiff( diff: Difficulty): boolean {
+        return diff === this._lvl;
     }
 }

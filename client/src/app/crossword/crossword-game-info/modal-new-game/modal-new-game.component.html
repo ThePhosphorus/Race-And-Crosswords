@@ -19,7 +19,7 @@
 
                   <tbody>
                       <tr *ngFor="let match of matches" >
-                          <button class="btn btn-secondary  w-100 m-0" (click)="joinMatch(match)" [ngClass]="{'easy': match.difficulty == 'Difficulty.Easy', 'medium': match.difficulty == 'Difficulty.Medium', 'hard': match.difficulty == 'Difficulty.Hard'}">
+                          <button class="btn btn-secondary  w-100 m-0" (click)="joinMatch(match.name)" [ngClass]="{'easy': match.difficulty == 'Difficulty.Easy', 'medium': match.difficulty == 'Difficulty.Medium', 'hard': match.difficulty == 'Difficulty.Hard'}">
                              {{match.name}} - {{match.difficulty}}
                             </button>
                       </tr>
@@ -27,7 +27,7 @@
                         Or
                       </tr>
                     <tr>
-                      <button id="newGame" (click)="showLevelChoice(true)" class="btn btn-secondary  m-2 w-75 m-0">
+                      <button id="newGame" (click)="showLevelChoice(true); joinedPlayer = null" class="btn btn-secondary  m-2 w-75 m-0">
                         CREATE A GAME
                       </button>
 
@@ -40,13 +40,13 @@
             <div id="difficultySelector" [class.collapse]="username == null">
               <div class="card card-block pr-2 pl-2 mt-2  w-100">
                 <div class="btn-group btn-group-block w-100 " data-toggle="buttons">
-                  <button class="btn btn-secondary w-100 m-0" [class.active]="lvl == 'Difficulty.Easy'" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
+                  <button class="btn btn-secondary w-100 m-0" [class.active]="isDiff('Difficulty.Easy')" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
                     EASY
                   </button>
-                  <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="lvl == 'Difficulty.Medium'" (click)="changeLevel('Difficulty.Medium')">
+                  <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="isDiff('Difficulty.Medium')" (click)="changeLevel('Difficulty.Medium')">
                     MEDIUM
                   </button>
-                  <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="lvl == 'Difficulty.Hard'" (click)="changeLevel('Difficulty.Hard');">
+                  <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="isDiff('Difficulty.Hard')" (click)="changeLevel('Difficulty.Hard');">
                     HARD
                   </button>
                 </div>

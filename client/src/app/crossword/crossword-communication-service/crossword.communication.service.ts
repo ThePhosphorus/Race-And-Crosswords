@@ -50,17 +50,17 @@ export class CrosswordCommunicationService {
             this.socketReturnName(id));
 
         this.socket.on(socketMsg.getPlayers, (players: Array<IPlayer>) =>
-            this.receivePlayers(players));
+            this.execute(this.socketInfos.receivePlayersCallBack, players));
 
         this.socket.on(socketMsg.playerSelectTile, (playerId: number, letterId: number, orientation: Orientation) =>
-            this.receiveSelect(playerId, letterId, orientation));
+            this.execute(this.socketInfos.receiveSelectCallBack, playerId, letterId, orientation));
 
-        this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) =>
-            this.receiveGrid(grid));
+        this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) => {
+            this.execute(this.socketInfos.receiveGrid, this.realGrid(grid));
+        });
 
         this.socket.on(socketMsg.updateWord, (w: Word) =>
-            this.receiveCompletedWord(w)
-        );
+            this.execute(this.socketInfos.receiveCompletedWord, w));
     }
 
     public createMatch(difficulty: Difficulty): void {
@@ -73,29 +73,6 @@ export class CrosswordCommunicationService {
 
     private socketReturnName(id: number): void {
         this.socket.emit(socketMsg.requestName, this.socketInfos.returnName);
-    }
-
-    private receivePlayers(players: Array<IPlayer>): void {
-        if (this.socketInfos.receivePlayersCallBack != null) {
-            this.socketInfos.receivePlayersCallBack(players);
-        }
-    }
-
-    private receiveSelect(playerId: number, letterId: number, orientation: Orientation): void {
-        if (this.socketInfos.receiveSelectCallBack != null) {
-            this.socketInfos.receiveSelectCallBack(playerId, letterId, orientation);
-        }
-    }
-
-    private receiveGrid(grid: CrosswordGrid): void {
-        if (this.socketInfos.receiveGrid != null) {
-            this.socketInfos.receiveGrid(grid);
-        }
-    }
-    private receiveCompletedWord(w: Word): void {
-        if (this.socketInfos.receiveCompletedWord != null) {
-            this.socketInfos.receiveCompletedWord(w);
-        }
     }
 
     public set listenerReceivePlayers(func: Function) {
@@ -122,5 +99,12 @@ export class CrosswordCommunicationService {
         this.socket.emit(socketMsg.playerSelectTile, letterId, orientation);
     }
 
+    private execute(func: Function, ...args: {}[]): void {
+        if (func != null) { func(...args); }
+    }
+
+    private realGrid(sgrid: CrosswordGrid): CrosswordGrid { // For some reason the Crossword that we get isn't a real object (it's in JSON)
+        return JSON.parse("" + sgrid);
+    }
 
 }

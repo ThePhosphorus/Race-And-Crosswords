@@ -34,7 +34,8 @@ export class SocketsManager {
         const newMatch: MatchManager = new MatchManager(socket, diff);
         const link: string = GET_10X10_GRID_LINK + "&difficulty=" + diff;
 
-        await Request(link, (res: CrosswordGrid) => newMatch.grid = res);
+        await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
+            newMatch.grid = grid);
 
         this._inWaitMatchs.push(newMatch);
         socket.emit(msg.getGrid, newMatch.grid);

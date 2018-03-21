@@ -1,6 +1,7 @@
-<div [ngClass]="{'player1':isPlayer1(),'player2':isPlayer2()}">
-<button type="button" (click)="select()"[ngClass]="{'disabled': isDisabled(),
-'hovered': isHovered() && !isDisabled(), 'current': isCurrentLetter(),
-'highlight': isHighlighted() }">
-{{ letter | uppercase }}</button>
+<div [ngClass]="{'player1':isPlayer(1),'player2':isPlayer(2)}">
+  <button type="button" (click)="select()"
+  [ngClass]="{'disabled': isDisabled(), 'hovered': isHovered() &&
+              !isDisabled(), 'current': isCurrentLetter(), 'highlight': isHighlighted() }">
+    {{ letter | uppercase }}
+  </button>
 </div>

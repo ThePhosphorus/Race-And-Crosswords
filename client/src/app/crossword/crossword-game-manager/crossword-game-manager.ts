@@ -10,7 +10,6 @@ export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
 export class GameManager {
     private _solvedGrid: CrosswordGrid;
-    private _playerGrid: CrosswordGrid;
     private _solvedWords: number[];
     private _currentPlayer: number;
     private _isMultiplayer: boolean;
@@ -22,19 +21,21 @@ export class GameManager {
     private _difficultySubject: Subject<Difficulty>;
 
     public constructor() {
-        this._solvedGrid = new CrosswordGrid();
-        this._playerGrid = new CrosswordGrid();
-        this._currentPlayer = Players.PLAYER1;
-        this._solvedWords = [];
-        this._isMultiplayer = false;
-        this._myPlayer = Players.PLAYER1;
-        this._difficulty = Difficulty.Easy;
-        this._playerGridSubject = new BehaviorSubject<CrosswordGrid>(this._playerGrid);
+        this._playerGridSubject = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._solvedWordsSubject = new Subject<number[]>();
         this._currentPlayerSubject = new Subject<number>();
         this._difficultySubject =  new Subject<Difficulty>();
 
         this.initializeEmptyGrid();
+    }
+
+    public newGame(): void {
+        this._solvedGrid = new CrosswordGrid();
+        this._currentPlayer = Players.PLAYER1;
+        this._solvedWords = [];
+        this._isMultiplayer = false;
+        this._myPlayer = Players.PLAYER1;
+        this._difficulty = Difficulty.Easy;
     }
 
     public get difficultyObs(): Observable<Difficulty> {
@@ -56,22 +57,25 @@ export class GameManager {
     public set grid(crosswordGrid: CrosswordGrid) {
         this._solvedGrid = crosswordGrid;
         this.relinkLetters(this._solvedGrid);
-        this._playerGrid = JSON.parse(JSON.stringify(crosswordGrid));
-        this.relinkLetters(this._playerGrid);
-        this._playerGrid.grid.forEach((letter: Letter) => {
+
+        const playerGrid: CrosswordGrid = JSON.parse(JSON.stringify(crosswordGrid));
+        this.relinkLetters(playerGrid);
+
+        playerGrid.grid.forEach((letter: Letter) => {
             if (!letter.isBlackTile) {
                 letter.char = EMPTY_TILE_CHARACTER;
             }
         });
-        this._playerGridSubject.next(this._playerGrid);
+
+        this._playerGridSubject.next(playerGrid);
     }
 
     public getChar(index: number): string {
-        return this._playerGrid.grid[index].char;
+        return this._playerGridSubject.getValue().grid[index].char;
     }
 
     public setChar(index: number, char: string): void {
-        this._playerGrid.grid[index].char = char;
+        this._playerGridSubject.value.grid[index].char = char;
     }
 
     public set difficulty(difficulty: Difficulty) {
@@ -80,7 +84,7 @@ export class GameManager {
     }
 
     public addSolvedWord(word: Word): boolean {
-        this._solvedWords.push(this._playerGrid.words.indexOf(word));
+        this._solvedWords.push(this._playerGridSubject.getValue().words.indexOf(word));
         this._solvedWordsSubject.next(this._solvedWords);
 
         return this._solvedWords.length === this._solvedGrid.words.length;
@@ -99,15 +103,14 @@ export class GameManager {
     }
 
     private initializeEmptyGrid(): void {
-        this._playerGrid.size = INITIAL_GRID_SIZE;
-        for (let i: number = 0; i < (this._playerGrid.size * this._playerGrid.size); i++) {
-            this._playerGrid.grid.push(new Letter(EMPTY_TILE_CHARACTER));
+        this._playerGridSubject.value.size = INITIAL_GRID_SIZE;
+        for (let i: number = 0; i < (this._playerGridSubject.value.size * this._playerGridSubject.value.size); i++) {
+            this._playerGridSubject.value.grid.push(new Letter(EMPTY_TILE_CHARACTER));
         }
-        this._playerGridSubject.next(this._playerGrid);
     }
 
     public findWordFromLetter(index: number, orientation: string, isSolved: boolean): Word {
-        const targetGrid: CrosswordGrid = isSolved ? this._solvedGrid : this._playerGrid;
+        const targetGrid: CrosswordGrid = isSolved ? this._solvedGrid : this._playerGridSubject.getValue();
         for (const word of targetGrid.words) {
             if (word.orientation === orientation) {
                 for (const letter of word.letters) {

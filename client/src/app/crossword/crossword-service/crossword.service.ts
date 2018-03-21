@@ -10,6 +10,8 @@ import { MOCK } from "../mock-crossword/mock-crossword";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = false;
+const INITIAL_GRID_SIZE: number = 10;
+const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Injectable()
 export class CrosswordService {
@@ -43,13 +45,18 @@ export class CrosswordService {
         return USE_MOCK_GRID ? of(MOCK) : this._gameManager.gridObs;
     }
 
-    public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
+    public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): Observable<CrosswordGrid> {
         if (!USE_MOCK_GRID) {
-            this._gameManager = new GameManager();
+            this._gameManager.newGame();
             this._gameManager.difficulty = difficulty;
-            this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
-                this._gameManager.grid = crosswordGrid;
-            });
+            if (isSinglePlayer) {
+                this.commService.getCrossword(difficulty, INITIAL_BLACK_TILES_RATIO, INITIAL_GRID_SIZE)
+                .subscribe((crosswordGrid: CrosswordGrid) => {
+                    this._gameManager.grid = crosswordGrid;
+                });
+            } else {
+                this.commService.listenerReceiveGrid = (grid: CrosswordGrid) => this._gameManager.grid = grid;
+            }
         }
 
         return this.grid;
@@ -66,10 +73,9 @@ export class CrosswordService {
     }
 
     public setSelectedLetter(index: number): void {
-        if (this._gridState.disabledLetters.indexOf(index) === -1) {
-            if (index === this._gridState.currentLetter) {
-                this._gridState.currentOrientation = this._gridState.currentOrientation === Orientation.Across ?
-                                                    Orientation.Down : Orientation.Across;
+        if (!this._gridState.LIsDisabled(index)) {
+            if (this._gridState.LIsCurrentLetter(index)) {
+                this._gridState.switchOrientation();
             } else {
                 this._gridState.currentOrientation = Orientation.Across;
             }
@@ -85,7 +91,7 @@ export class CrosswordService {
             }
             this.setSelectedWord(targetWord);
             this._gridState.currentLetter = targetWord.letters[0].id;
-            if (this._gridState.disabledLetters.indexOf(this._gridState.currentLetter) > -1) {
+            if (this._gridState.LIsDisabled(this._gridState.currentLetter)) {
                 this._gridState.currentLetter = this.findNextLetterId(true);
             }
         }
@@ -94,7 +100,7 @@ export class CrosswordService {
     public setSelectedWord(word: Word): void {
         let startingIndex: number = null;
         for (const letter of word.letters) {
-            if (this._gridState.disabledLetters.indexOf(letter.id) === -1) {
+            if (!this._gridState.LIsDisabled(letter.id)) {
                 startingIndex = letter.id;
                 break;
             }
@@ -166,13 +172,13 @@ export class CrosswordService {
         if (isForward) {
             for (let i: number = this._gridState.selectedLetters.indexOf(this._gridState.currentLetter) + 1;
                                                         i < this._gridState.selectedLetters.length; i++) {
-                if (this._gridState.disabledLetters.indexOf(this._gridState.selectedLetters[i]) === -1) {
+                if (!this._gridState.LIsDisabled(this._gridState.selectedLetters[i])) {
                     return this._gridState.selectedLetters[i];
                 }
             }
         } else {
             for (let i: number = this._gridState.selectedLetters.indexOf(this._gridState.currentLetter) - 1; i >= 0; i--) {
-                if (this._gridState.disabledLetters.indexOf(this._gridState.selectedLetters[i]) === -1) {
+                if (!this._gridState.LIsDisabled(this._gridState.selectedLetters[i])) {
                     return this._gridState.selectedLetters[i];
                 }
             }
