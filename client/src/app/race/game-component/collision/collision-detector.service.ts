@@ -137,8 +137,8 @@ export class CollisionDetectorService {
         const pos2: Vector2 = new Vector2(rb2.parent.position.clone().x, rb2.parent.position.clone().z);
         const sign: number = Math.sign(pos2.clone().sub(pos1).dot(collision.normal));
 
-        const antiOverlap1: Vector2 = collision.normal.clone().multiplyScalar(OVERLAP_FACTOR*sign * collision.overlap);
-        const antiOverlap2: Vector2 = collision.normal.clone().multiplyScalar(-OVERLAP_FACTOR*sign * collision.overlap);
+        const antiOverlap1: Vector2 = collision.normal.clone().multiplyScalar(OVERLAP_FACTOR * sign * collision.overlap);
+        const antiOverlap2: Vector2 = collision.normal.clone().multiplyScalar(-OVERLAP_FACTOR * sign * collision.overlap);
         rb1.parent.position.add(new Vector3(antiOverlap1.x, 0, antiOverlap1.y));
         rb2.parent.position.add(new Vector3(antiOverlap2.x, 0, antiOverlap2.y));
 

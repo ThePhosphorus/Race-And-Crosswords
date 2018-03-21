@@ -131,7 +131,7 @@ export class RigidBody extends Object3D {
         const projectedVelocity: number = this._velocity.clone().dot(frictionCausedVelocity.clone().normalize());
         const projectedNewVelocity: number = frictionCausedVelocity.length() + projectedVelocity;
         this._velocity.add(Math.sign(projectedNewVelocity) === Math.sign(projectedVelocity) ?
-            frictionCausedVelocity : frictionCausedVelocity.setLength(projectedVelocity));
+            frictionCausedVelocity : frictionCausedVelocity.setLength(-projectedVelocity));
     }
 
     private onCollision(): void {
