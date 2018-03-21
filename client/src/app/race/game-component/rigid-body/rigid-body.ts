@@ -21,6 +21,10 @@ export class RigidBody extends Object3D {
         return this._velocity;
     }
 
+    public get angularVelocity(): number {
+        return this._angularVelocity;
+    }
+
     public constructor(mass: number, fixed?: boolean) {
         super();
         this.fixed = fixed == null ? false : fixed;

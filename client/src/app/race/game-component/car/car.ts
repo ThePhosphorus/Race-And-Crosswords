@@ -136,6 +136,7 @@ export class Car extends Object3D {
 
         this.rigidBody.addForce(this.getLongitudinalForce());
         this.rigidBody.addForce(this.getPerpendicularForce());
+        this.rigidBody.addAngularVelocity(this.getAngularFriction());
         this.rigidBody.update(deltaTime);
 
         const R: number =
@@ -144,10 +145,6 @@ export class Car extends Object3D {
         const omega: number = this.speed / R;
         this.mesh.rotateY(omega);
         this.carSound.updateRPM(this.engine.rpm);
-    }
-
-    public collisionSound(): void {
-        this.carSound.playCollision();
     }
 
     private getPerpendicularForce(): Vector2 {
@@ -184,20 +181,13 @@ export class Car extends Object3D {
                 perpendicularForce
             );
         } else {
-            this.oldComponent = (this.oldComponent ) * 0.9999;
+            this.oldComponent = (this.oldComponent) * 0.9999;
             return (this.oldComponent !== 0) ?
-            perpDirection.multiplyScalar(this.oldComponent * perpendicularForce) :
-            perpDirection.multiplyScalar(-perpSpeedComponent / 100 * perpendicularForce);
-            }
-     }
-
-    private updateDriftSound(factor: number): void {
-        if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED ) {
-            this.carSound.startDrift();
-        } else if (this.carSound.drift.isPlaying()) {
-            this.carSound.releaseDrift();
+                perpDirection.multiplyScalar(this.oldComponent * perpendicularForce) :
+                perpDirection.multiplyScalar(-perpSpeedComponent / 100 * perpendicularForce);
         }
     }
+
     private getLongitudinalForce(): Vector2 {
         const resultingForce: Vector2 = new Vector2();
 
@@ -217,6 +207,10 @@ export class Car extends Object3D {
         }
 
         return resultingForce;
+    }
+
+    private getAngularFriction(): number {
+        return null;
     }
 
     private getRollingResistance(): Vector2 {
@@ -284,6 +278,19 @@ export class Car extends Object3D {
         this.collisionSound();
         this.carPenalty();
     }
+
+    private collisionSound(): void {
+        this.carSound.playCollision();
+    }
+
+    private updateDriftSound(factor: number): void {
+        if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED) {
+            this.carSound.startDrift();
+        } else if (this.carSound.drift.isPlaying()) {
+            this.carSound.releaseDrift();
+        }
+    }
+
     private carPenalty(): void {
         this.hasPenalty = true;
         this.oldFrictionCoefficient = HANDBRAKE_FRICTION;
