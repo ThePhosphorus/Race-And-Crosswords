@@ -10,6 +10,8 @@ import { MOCK } from "../mock-crossword/mock-crossword";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = false;
+const INITIAL_GRID_SIZE: number = 10;
+const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Injectable()
 export class CrosswordService {
@@ -43,13 +45,18 @@ export class CrosswordService {
         return USE_MOCK_GRID ? of(MOCK) : this._gameManager.gridObs;
     }
 
-    public newGame(difficulty: Difficulty, gridSize: number, btRatio: number): Observable<CrosswordGrid> {
+    public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): Observable<CrosswordGrid> {
         if (!USE_MOCK_GRID) {
-            this._gameManager = new GameManager();
+            this._gameManager.newGame();
             this._gameManager.difficulty = difficulty;
-            this.commService.getCrossword(difficulty, btRatio, gridSize).subscribe((crosswordGrid: CrosswordGrid) => {
-                this._gameManager.grid = crosswordGrid;
-            });
+            if (isSinglePlayer) {
+                this.commService.getCrossword(difficulty, INITIAL_BLACK_TILES_RATIO, INITIAL_GRID_SIZE)
+                .subscribe((crosswordGrid: CrosswordGrid) => {
+                    this._gameManager.grid = crosswordGrid;
+                });
+            } else {
+                this.commService.listenerReceiveGrid((grid: CrosswordGrid) => this._gameManager.grid = grid);
+            }
         }
 
         return this.grid;
@@ -66,7 +73,7 @@ export class CrosswordService {
     }
 
     public setSelectedLetter(index: number): void {
-        if (this._gridState.LIsDisabled(index)) {
+        if (!this._gridState.LIsDisabled(index)) {
             if (this._gridState.LIsCurrentLetter(index)) {
                 this._gridState.switchOrientation();
             } else {
@@ -74,7 +81,6 @@ export class CrosswordService {
             }
             let targetWord: Word;
             if ((targetWord = this._gameManager.findWordFromLetter(index, this._gridState.currentOrientation, false)) === null) {
-                // TODO: Undestand this If
                 for (const ori of Object.keys(Orientation)) {
                     if (ori !== this._gridState.currentOrientation) {
                         this._gridState.currentOrientation = ori as Orientation;
@@ -94,7 +100,7 @@ export class CrosswordService {
     public setSelectedWord(word: Word): void {
         let startingIndex: number = null;
         for (const letter of word.letters) {
-            if (this._gridState.LIsDisabled(letter.id)) {
+            if (!this._gridState.LIsDisabled(letter.id)) {
                 startingIndex = letter.id;
                 break;
             }
@@ -137,7 +143,7 @@ export class CrosswordService {
         }
     }
 
-    public writeChar(key: string): void { // TODO: Put a lowerCase (to make no differance between Upper/Lower case.)
+    public writeChar(key: string): void {
         if (this._gridState.currentLetter != null) {
             if (key.match(/^[a-zA-z]$/i) != null) {
                 let nextLetterId: number;

@@ -8,19 +8,20 @@ import { CrosswordService } from "../crossword-service/crossword.service";
     styleUrls: ["./input-grid.component.css"]
 })
 export class InputGridComponent implements OnInit {
-    @Output() public hideLoading: EventEmitter<boolean>;
+    @Output() public showLoading: EventEmitter<boolean>;
 
     public twoDimensionGrid: Letter[][];
 
     public constructor(private _crosswordService: CrosswordService) {
         this.twoDimensionGrid = new Array<Array<Letter>>();
-        this.hideLoading = new EventEmitter<boolean>();
+        this.showLoading = new EventEmitter<boolean>();
     }
 
     public ngOnInit(): void {
-        this._crosswordService.grid.subscribe((crosswordGrid: CrosswordGrid) => {
+        this._crosswordService["_gameManager"].gridObs.subscribe((crosswordGrid: CrosswordGrid) => {
             this.makeTwoDimensionGrid(crosswordGrid);
-            this.hideLoading.emit(true);
+
+            this.showLoading.emit(true);
         });
     }
 
