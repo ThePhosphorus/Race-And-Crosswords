@@ -2,6 +2,14 @@ import { Component, Input, OnInit } from "@angular/core";
 import { PlayerId } from "../../../../../common/communication/Player";
 import { GridState } from "../grid-state/grid-state";
 import { CrosswordService } from "../crossword-service/crossword.service";
+import { Color } from "three";
+
+const RED_IN_STEELBLUE: number = 70;
+const BLUE_IN_STEELBLUE: number = 180;
+const GREEN_IN_STEELBLUE: number = 130;
+const RED_IN_ORANGE: number = 180;
+const BLUE_IN_ORANGE: number = 70;
+const GREEN_IN_ORANGE: number = 97;
 
 @Component({
     selector: "app-input-letter",
@@ -55,9 +63,9 @@ export class InputLetterComponent implements OnInit {
         }
 
         return {
-            "border-color" : "" + color + " !important",
-            "box-shadow" : "0 0 0 0.4vmin " + color + ",inset 0 0 1.5vmin " + color,
-            "background-color" : "" + bgColor + "!important;"
+            "border-color": "" + color + " !important",
+            "box-shadow": "0 0 0 0.4vmin " + color + ",inset 0 0 1.5vmin " + color,
+            "background-color": "" + bgColor + "!important;"
         };
     }
 
@@ -68,6 +76,13 @@ export class InputLetterComponent implements OnInit {
             default:
                 return "steelblue";
         }
+        const ratio: number = player /(this._crosswordService.players.getValue().length-1);
+
+        const red: number = RED_IN_STEELBLUE + (ratio * (RED_IN_ORANGE - RED_IN_STEELBLUE));
+        const blue: number = BLUE_IN_STEELBLUE + (ratio * (BLUE_IN_ORANGE - BLUE_IN_STEELBLUE));
+        const green: number = GREEN_IN_STEELBLUE + (ratio * (GREEN_IN_ORANGE - GREEN_IN_STEELBLUE));
+
+        return ("rgb" + "(" + red + "," + green + "," + blue + ")");
     }
 
     public getBGPlayerColor(player: PlayerId): string {
