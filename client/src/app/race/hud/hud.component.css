@@ -9,14 +9,14 @@
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 300%;
-    color: crimson;
+    color: whitesmoke;
     text-shadow: 0px 0px 1vmin black;
 }
 #timerLap{
     font-family: "Timer Font",'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 200%;
-    color: whitesmoke;
+    color: crimson;
     text-shadow: 0px 0px 1vmin black;
 }
 #timers{
@@ -36,9 +36,9 @@
     font-size: 50%;
 }
 #currentLap{
-    font-size: 200%;
-    color: black;
-    text-shadow: 0px 0px 1vmin crimson;
+    font-size: 400%;
+    color: whitesmoke;
+    text-shadow: 0px 0px 1vmin black;
 }
 #rpm{
 margin-top: 20%;
