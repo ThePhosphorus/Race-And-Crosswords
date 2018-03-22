@@ -143,19 +143,14 @@ export class Car extends Object3D {
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
         this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
-        let perpendicularForce: number;
-        if (!this.hasPenalty) {
-            perpendicularForce = this.carControl.hasHandbrakeOn ? HANDBRAKE_FRICTION : this.frictionCoefficient;
-            this.updateDriftSound(perpendicularForce);
-        } else {
-            if (this.frictionCoefficient < DEFAULT_FRICTION) {
-                perpendicularForce = this.frictionCoefficient;
-            } else {
-                this.hasPenalty = false;
-            }
+        if (!this.hasPenalty && this.carControl.hasHandbrakeOn) {
+            this.frictionCoefficient = HANDBRAKE_FRICTION;
+            this.updateDriftSound(this.frictionCoefficient);
+        } else if (this.frictionCoefficient >= DEFAULT_FRICTION) {
+            this.hasPenalty = false;
         }
 
-        return perpDirection.multiplyScalar(-perpSpeedComponent * perpendicularForce);
+        return perpDirection.multiplyScalar(-perpSpeedComponent * this.frictionCoefficient);
     }
 
     private getLongitudinalForce(): Vector2 {
