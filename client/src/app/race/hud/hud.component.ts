@@ -40,4 +40,4 @@ export class HudComponent implements OnInit {
 
     }
 
-    }
+}

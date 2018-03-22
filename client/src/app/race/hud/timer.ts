@@ -26,6 +26,12 @@ export class Timer {
         }
     }
 
+    public reset(): void {
+        this._centiseconds = 0;
+        this._seconds = 0;
+        this._minutes = 0;
+    }
+
     public get minutes(): number {
         return this._minutes;
     }
