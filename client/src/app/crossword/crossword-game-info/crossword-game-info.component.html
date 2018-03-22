@@ -32,7 +32,7 @@
             <tbody>
               <tr id="player{{player.id + 1}}" *ngFor="let player of players">
                 <th scope="row" id="player">{{ player.name }}</th>
-                <td id="result">Score{{player.id + 1}}</td>
+                <td id="result">{{ player.score }}</td>
               </tr>
             </tbody>
           </table>

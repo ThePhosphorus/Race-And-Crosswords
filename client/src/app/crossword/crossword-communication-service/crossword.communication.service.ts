@@ -102,6 +102,9 @@ export class CrosswordCommunicationService {
     public notifySelect(letterId: number, orientation: Orientation): void {
         this.socket.emit(socketMsg.playerSelectTile, letterId, orientation);
     }
+    public completedWord(w: Word): void {
+        this.socket.emit(socketMsg.completedWord, w);
+    }
 
     private execute(func: Function, ...args: {}[]): void {
         if (func != null) { func(...args); }
