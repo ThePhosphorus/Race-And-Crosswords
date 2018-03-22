@@ -46,7 +46,9 @@ export class RigidBody extends Object3D {
     }
 
     public setFrictionForce(force: Vector2): void {
-        this.frictionForce = force;
+        if (force != null) {
+            this.frictionForce = force;
+        }
     }
 
     public addTorque(torque: number): void {
