@@ -4,11 +4,17 @@ import { CameraManagerService } from "../../camera-manager-service/camera-manage
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { CollisionDetectorService } from "../collision/collision-detector.service";
+import { LightManagerService } from "../light-manager/light-manager.service";
 
 describe("GameManager", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [GameManagerService, CameraManagerService, InputManagerService, SoundManagerService, CollisionDetectorService]
+            providers: [GameManagerService,
+                        CameraManagerService,
+                        InputManagerService,
+                        SoundManagerService,
+                        CollisionDetectorService,
+                        LightManagerService]
         });
     });
 
