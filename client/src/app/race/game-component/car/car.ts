@@ -227,13 +227,9 @@ export class Car extends Object3D {
     }
 
     private getBrakeForce(): Vector2 {
-        if (this.isGoingForward) {
-            return this.direction2D.multiplyScalar(
-                Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
-            );
-        } else {
-
-        }
+        return this.isGoingForward ?
+            this.direction2D.multiplyScalar(Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY) :
+            new Vector2(0, 0);
     }
 
     private getEngineForce(): number {
