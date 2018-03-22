@@ -8,9 +8,10 @@ class SPlayer extends Player {
     public constructor(
         public id: number,
         public name: string,
+        public score: number,
         public socket: Socket
     ) {
-        super(id, name);
+        super(id, name, score);
      }
 }
 
@@ -37,7 +38,7 @@ export class MatchManager {
 
     public addPlayer(socket: Socket): void {
         const id: number = this._players.length;
-        this._players.push(new SPlayer(id, "Jonh Doe", socket));
+        this._players.push(new SPlayer(id, "Jonh Doe", 0, socket));
         this.registerActions(socket, id);
         this.askForName(this._players[id]);
     }
@@ -109,7 +110,7 @@ export class MatchManager {
     }
 
     public get Players(): Array<Player> {
-        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name));
+        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name, sp.score));
     }
 
     public recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
