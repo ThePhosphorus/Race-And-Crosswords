@@ -13,9 +13,9 @@ button {
     outline: none;
     background-color: transparent;
     margin:0%;
-    border: none;
-    padding: 0%;
+    border-color: transparent;
     border-radius: 0%;
+
 }
 
 .input-letter {
@@ -27,8 +27,8 @@ button {
     width:90% ;
     height: 90%;
     border-width: 0.2vmin;
-}
 
+}
 
 .disabled {
     background-color: darkgrey;

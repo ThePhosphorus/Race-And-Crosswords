@@ -7,10 +7,18 @@ import { Color } from "three";
 const RED_IN_STEELBLUE: number = 70;
 const BLUE_IN_STEELBLUE: number = 180;
 const GREEN_IN_STEELBLUE: number = 130;
+
 const RED_IN_ORANGE: number = 180;
 const BLUE_IN_ORANGE: number = 70;
 const GREEN_IN_ORANGE: number = 97;
 
+const RED_IN_BGBLUE: number = 182;
+const BLUE_IN_BGBLUE: number = 226;
+const GREEN_IN_BGBLUE: number = 206;
+
+const RED_IN_BGORANGE: number = 219;
+const BLUE_IN_BGORANGE: number = 163;
+const GREEN_IN_BGORANGE: number = 177;
 @Component({
     selector: "app-input-letter",
     templateUrl: "./input-letter.component.html",
@@ -54,38 +62,47 @@ export class InputLetterComponent implements OnInit {
     }
 
     public get playerHiglightCSS(): {} {
+        let color: string = "white";
         const player: PlayerId = this._crosswordService.getLetterHighlightPlayer(this.id);
-        const color: string = this.getPlayerColor(player);
+        if (this.isHighlighted) {
+            color = this.getPlayerColor(player);
+        }
         const bgColor: string = this.getBGPlayerColor(player);
-
         if (player === null) {
             return {};
         }
 
         return {
-            "border-color": "" + color + " !important",
-            "box-shadow": "0 0 0 0.4vmin " + color + ",inset 0 0 1.5vmin " + color + "!important;",
-            "background-color": "" + bgColor + "!important;"
+            "border-color": color,
+            "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
+            "background-color": bgColor
         };
     }
 
     public getPlayerColor(player: PlayerId): string { // TODO: Find a good algo for generating colors
+        let ratio: number = 0;
         if (this._crosswordService.players.getValue().length > 0) {
-            const ratio: number = player / (this._crosswordService.players.getValue().length - 1);
+            ratio = player / (this._crosswordService.players.getValue().length);
         }
-        const red: number = RED_IN_STEELBLUE + (ratio * (RED_IN_ORANGE - RED_IN_STEELBLUE));
-        const blue: number = BLUE_IN_STEELBLUE + (ratio * (BLUE_IN_ORANGE - BLUE_IN_STEELBLUE));
-        const green: number = GREEN_IN_STEELBLUE + (ratio * (GREEN_IN_ORANGE - GREEN_IN_STEELBLUE));
 
-        return "rgb" + "(" + red + "," + green + "," + blue + ")";
+        const red: number = Math.round(RED_IN_STEELBLUE + (ratio * (RED_IN_ORANGE - RED_IN_STEELBLUE)));
+        const blue: number = Math.round(BLUE_IN_STEELBLUE + (ratio * (BLUE_IN_ORANGE - BLUE_IN_STEELBLUE)));
+        const green: number =Math.round (GREEN_IN_STEELBLUE + (ratio * (GREEN_IN_ORANGE - GREEN_IN_STEELBLUE)));
+
+        return ("rgb" + "(" + red.toString() + "," + green.toString() + "," + blue.toString() + ")");
     }
 
     public getBGPlayerColor(player: PlayerId): string {
-        switch (player) {
-            case PlayerId.PLAYER1: return "#b6cee2";
-            case PlayerId.PLAYER2: return "#dbb1a3";
-            default:
-                return "#b6cee2";
+        let ratio: number = 0;
+        if (this._crosswordService.players.getValue().length > 0) {
+            ratio = player / (this._crosswordService.players.getValue().length - 1);
         }
+
+        const red: number = Math.round(RED_IN_BGBLUE + (ratio * (RED_IN_BGORANGE - RED_IN_BGBLUE)));
+        const blue: number = Math.round(BLUE_IN_BGBLUE + (ratio * (BLUE_IN_BGORANGE - BLUE_IN_BGBLUE)));
+        const green: number = Math.round(GREEN_IN_BGBLUE + (ratio * (GREEN_IN_BGORANGE - GREEN_IN_BGBLUE)));
+
+        return ("rgb" + "(" + red.toString() + "," + green.toString() + "," + blue.toString() + ")");
+
     }
 }
