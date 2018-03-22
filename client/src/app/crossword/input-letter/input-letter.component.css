@@ -18,6 +18,10 @@ button {
     border-radius: 0%;
 }
 
+.input-letter {
+    display: inherit;
+}
+
 .player1 .highlight {
 
     background-color: #b6cee2 !important;
