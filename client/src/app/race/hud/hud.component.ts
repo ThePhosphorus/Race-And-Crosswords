@@ -8,19 +8,13 @@ import { GameManagerService, CarInfos } from "../game-component/game-manager-ser
     styleUrls: ["./hud.component.css"]
 })
 export class HudComponent implements OnInit {
-    public tick: number;
     private globalTimer: Timer;
     private lapTimer: Timer;
 
     public constructor(private gameManagerService: GameManagerService) {
-        this.initTick();
         this.globalTimer = new Timer();
         this.lapTimer = new Timer();
 
-    }
-
-    private initTick(): void {
-        this.tick = 0;
     }
 
     public ngOnInit(): void {
