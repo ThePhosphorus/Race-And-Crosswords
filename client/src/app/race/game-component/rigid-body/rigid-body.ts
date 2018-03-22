@@ -112,15 +112,11 @@ export class RigidBody extends Object3D {
     }
 
     private getDeltaAngularVelocity(torque: number, deltaTime: number): number {
-        return this.getAngularAcceleration(torque) * deltaTime;
+        return torque * deltaTime;
     }
 
     private getAcceleration(force: Vector2): Vector2 {
         return force.divideScalar(this._mass);
-    }
-
-    private getAngularAcceleration(torque: number): number {
-        return torque / this._mass;
     }
 
     private applyFrictionForce(deltaTime: number): void {
