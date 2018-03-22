@@ -39,7 +39,7 @@ const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/dirt.jpg";
 const N_AI_CONTROLLED_CARS: number = 1;
-const SPACE_BETWEEN_CARS: number = 15;
+const SPACE_BETWEEN_CARS: number = 1;
 
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
