@@ -1,6 +1,5 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable } from "@angular/core";
 import {
-    CubeTextureLoader,
     Mesh,
     Texture,
     TextureLoader,
@@ -8,8 +7,6 @@ import {
     PlaneGeometry,
     DoubleSide,
     MeshPhongMaterial,
-    AmbientLight,
-    DirectionalLight,
     Vector3
 } from "three";
 import { Car } from "../car/car";
@@ -21,43 +18,30 @@ import { CollisionDetectorService } from "../collision/collision-detector.servic
 import {
     CameraType,
     PI_OVER_2,
-    WHITE,
-    SUNSET,
-    AMBIENT_LIGHT_OPACITY,
-    AMBIENT_NIGHT_LIGHT_OPACITY,
-    QUARTER,
-    SHADOWMAP_SIZE,
-    SHADOW_CAMERA_PLANE_RATIO
+    ACCELERATE_KEYCODE,
+    BRAKE_KEYCODE,
+    LEFT_KEYCODE,
+    RIGHT_KEYCODE,
+    CHANGE_CAMERA_KEYCODE,
+    TOGGLE_CAMERA_EFFECT_MODE,
+    ZOOM_IN_KEYCODE,
+    ZOOM_OUT_KEYCODE,
+    TOGGLE_NIGHT_MODE_KEYCODE,
+    HANDBRAKE_KEYCODE,
+    TOGGLE_SUNLIGHT_KEYCODE,
 } from "../../../global-constants/constants";
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
+import { LightManagerService } from "../light-manager/light-manager.service";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/dirt.jpg";
-const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
-const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const N_AI_CONTROLLED_CARS: number = 1;
-const SPACE_BETWEEN_CARS: number = 5;
-const D_LIGHT_PLANE_SIZE: number = 200;
-const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
+const SPACE_BETWEEN_CARS: number = 15;
 
-const DIRECTIONAL_LIGHT_OFFSET: number = 50;
-const SHADOW_BIAS: number = 0.0001;
-const SUNLIGHT_INTENSITY: number = 0.2;
-// Keycodes
-const ACCELERATE_KEYCODE: number = 87; // w
-const LEFT_KEYCODE: number = 65; // a
-const BRAKE_KEYCODE: number = 83; // s
-const RIGHT_KEYCODE: number = 68; // d
-const CHANGE_CAMERA_KEYCODE: number = 67; // c
-const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
-const ZOOM_IN_KEYCODE: number = 187; // +
-const ZOOM_OUT_KEYCODE: number = 189; // -
-const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
-const TOGGLE_SUNLIGHT_KEYCODE: number = 77; // m
-const HANDBRAKE_KEYCODE: number = 32; // spacebar
+const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
 export class CarInfos {
     public constructor(
@@ -71,27 +55,16 @@ export class CarInfos {
 export class GameManagerService extends Renderer {
     private _player: Car;
     private _aiControlledCars: Array<Car>;
-    private _isShadowMode: boolean;
-    private _isNightMode: boolean;
-    private _directionalLight: DirectionalLight;
-    private _dayAmbientLight: AmbientLight;
-    private _nightAmbientLight: AmbientLight;
     private _hudTimerSubject: Subject<number>;
     private _hudLapResetSubject: Subject<void>;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
-                       private collisionDetector: CollisionDetectorService) {
+                       private collisionDetector: CollisionDetectorService,
+                       private lightManager: LightManagerService ) {
 
         super(cameraManager, true);
-        this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
-        this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
-        this._isNightMode = false;
-        this._isShadowMode = false;
-        this._hudTimerSubject = new Subject<number>();
-        this._hudLapResetSubject = new Subject<void>();
-
         this._player = new Car(this.cameraManager);
         this._aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
@@ -111,9 +84,7 @@ export class GameManagerService extends Renderer {
         this.initSoundManager();
         this.initCameraManager();
         await this.initCars();
-        this.initSkybox();
         this.initScene();
-        this.loadSunlight();
         this.startRenderingLoop();
     }
     public get hudTimer(): Observable<number> {
@@ -134,13 +105,13 @@ export class GameManagerService extends Renderer {
         this.cameraTargetDirection = this._player.direction;
         this.cameraTargetPosition = this._player.getPosition();
         this.collisionDetector.detectCollisions(this.scene);
-        this.updateSunlight();
+        this.lightManager.updateSunlight();
     }
 
     private async initCars(): Promise<void> {
-        await this._player.init(new Vector3(0, 0, 0), "purple");
+        await this._player.init(new Vector3(0, 0, 0), COLORS[0]);
         for (let i: number = 0; i < this._aiControlledCars.length; i++) {
-            await this._aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
+            await this._aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), COLORS[1]);
         }
     }
 
@@ -157,7 +128,7 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
-        this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.toggleNightMode());
+        this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.lightManager.toggleNightMode());
         this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this._player.carControl.handBrake());
         this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._player.carControl.releaseAccelerator());
         this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._player.carControl.releaseBrakes());
@@ -165,88 +136,8 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._player.carControl.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
-        this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
+        this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.lightManager.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
-        // TODO: REMOVE THIS BECAUSE IT'S TEMPORARY
-        this.inputManager.registerKeyDown(13, () => this.resetLapTimer());
-    }
-    private resetLapTimer(): void {
-        this._hudLapResetSubject.next();
-    }
-
-    private loadSunlight(): void {
-        this._directionalLight = new DirectionalLight(SUNSET, SUNLIGHT_INTENSITY);
-        this._directionalLight.castShadow = true;
-        this._directionalLight.shadow.camera.bottom = -D_LIGHT_PLANE_SIZE * QUARTER;
-        this._directionalLight.shadow.camera.top = D_LIGHT_PLANE_SIZE * QUARTER;
-        this._directionalLight.shadow.camera.left = -D_LIGHT_PLANE_SIZE * QUARTER;
-        this._directionalLight.shadow.camera.right = D_LIGHT_PLANE_SIZE * QUARTER;
-        this._directionalLight.shadow.camera.near = D_LIGHT_PLANE_SIZE * SHADOW_CAMERA_PLANE_RATIO;
-        this._directionalLight.shadow.camera.far = D_LIGHT_PLANE_SIZE;
-        this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
-        this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
-        this._directionalLight.shadowBias = SHADOW_BIAS;
-    }
-
-    private loadSkybox(path: string): void {
-        this.scene.background = new CubeTextureLoader()
-        .setPath(path)
-        .load([
-            "posx.png",
-            "negx.png",
-            "posy.png",
-            "negy.png",
-            "posz.png",
-            "negz.png"
-        ]);
-    }
-
-    private toggleNightMode(): void {
-
-        this._player.toggleNightLight();
-        this._aiControlledCars.forEach((aiCar) => {
-            aiCar.toggleNightLight();
-        });
-        if (this._isNightMode) {
-            this.scene.remove(this._nightAmbientLight);
-            this.scene.add(this._dayAmbientLight);
-            this.loadSkybox(BACKGROUND_PATH);
-            this._isNightMode = false;
-            if (this._isShadowMode) {
-                this.scene.add(this._directionalLight);
-            }
-        } else {
-            this.scene.remove(this._dayAmbientLight);
-            this.scene.add(this._nightAmbientLight);
-            this.loadSkybox(NIGHT_BACKGROUND_PATH);
-            this._isNightMode = true;
-            if (this._isShadowMode) {
-                this.scene.remove(this._directionalLight);
-            }
-        }
-    }
-
-    private toggleSunlight(): void {
-        if (this.scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
-            this.scene.remove(this._directionalLight);
-            this._isShadowMode = false;
-        } else if (!this._isNightMode) {
-            this.scene.add(this._directionalLight);
-            this._isShadowMode = true;
-        }
-    }
-
-    private initSkybox(): void {
-        this.scene.background = new CubeTextureLoader()
-            .setPath(BACKGROUND_PATH)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
     }
 
     private initSoundManager(): void {
@@ -261,8 +152,8 @@ export class GameManagerService extends Renderer {
     private initScene(): void {
         this.scene.add(this.getFloor());
         this.scene.add(this._player);
-        this.scene.add(this._dayAmbientLight);
         this._aiControlledCars.forEach((car) => this.scene.add(car));
+        this.lightManager.init(this.scene, this._player, this._aiControlledCars);
     }
 
     private getFloor(): Mesh {
@@ -279,11 +170,5 @@ export class GameManagerService extends Renderer {
         plane.receiveShadow = true;
 
         return plane;
-    }
-
-    private updateSunlight(): void {
-        const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET/2);
-        this._directionalLight.target = this._player["mesh"];
-        this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 }

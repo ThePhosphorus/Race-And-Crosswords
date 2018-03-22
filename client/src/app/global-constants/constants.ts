@@ -32,9 +32,24 @@ export const QUARTER: number = 0.25;
 export const SHADOWMAP_SIZE: number = 2048;
 export const SHADOW_CAMERA_PLANE_RATIO: number = 1 / 30;
 
-export const COLLIDER_NAME: string = "collider";
-
 export const BACKEND_URL: string = "http://localhost:3000/";
+
+// KEYCODES CONSTANTS
+export const ACCELERATE_KEYCODE: number = 87; // w
+export const LEFT_KEYCODE: number = 65; // a
+export const BRAKE_KEYCODE: number = 83; // s
+export const RIGHT_KEYCODE: number = 68; // d
+export const CHANGE_CAMERA_KEYCODE: number = 67; // c
+export const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
+export const ZOOM_IN_KEYCODE: number = 187; // +
+export const ZOOM_OUT_KEYCODE: number = 189; // -
+export const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
+export const TOGGLE_SUNLIGHT_KEYCODE: number = 77; // m
+export const HANDBRAKE_KEYCODE: number = 32; // spacebar
+export const LEFT_CLICK_CODE: number = 0;
+export const MIDDLE_CLICK_CODE: number = 1;
+export const RIGHT_CLICK_CODE: number = 2;
+export const DELETE_KEY: number = 46;
 
 // timer constants
 export const CENTISECOND: number = 10;

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Mesh, PlaneGeometry, TextureLoader,
-    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial, Material
+    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial
 } from "three";
 import { Vector3Struct, Track } from "../../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
