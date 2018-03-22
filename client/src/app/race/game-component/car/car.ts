@@ -145,6 +145,7 @@ export class Car extends Object3D {
         this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
         if (!this.hasPenalty && this.carControl.hasHandbrakeOn) {
             this.frictionCoefficient = HANDBRAKE_FRICTION;
+            this.carLights.brake();
         } else if (this.frictionCoefficient >= DEFAULT_FRICTION) {
             this.hasPenalty = false;
         }
@@ -167,8 +168,12 @@ export class Car extends Object3D {
             const accelerationForce: Vector2 = this.direction2D;
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
+            this.carLights.releaseBrakes();
         } else if (this.carControl.isBraking && this.isGoingForward()) {
             resultingForce.add(this.getBrakeForce());
+            this.carLights.brake();
+        } else {
+            this.carLights.releaseBrakes();
         }
 
         return resultingForce;
@@ -214,9 +219,13 @@ export class Car extends Object3D {
     }
 
     private getBrakeForce(): Vector2 {
-        return this.direction2D.multiplyScalar(
-            Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
-        );
+        if (this.isGoingForward) {
+            return this.direction2D.multiplyScalar(
+                Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
+            );
+        } else {
+
+        }
     }
 
     private getEngineForce(): number {
