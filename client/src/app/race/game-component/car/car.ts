@@ -145,10 +145,10 @@ export class Car extends Object3D {
         this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
         if (!this.hasPenalty && this.carControl.hasHandbrakeOn) {
             this.frictionCoefficient = HANDBRAKE_FRICTION;
-            this.updateDriftSound(this.frictionCoefficient);
         } else if (this.frictionCoefficient >= DEFAULT_FRICTION) {
             this.hasPenalty = false;
         }
+        this.updateDriftSound(this.frictionCoefficient);
 
         return perpDirection.multiplyScalar(-perpSpeedComponent * this.frictionCoefficient);
     }
