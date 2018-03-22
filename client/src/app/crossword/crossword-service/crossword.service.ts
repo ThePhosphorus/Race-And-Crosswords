@@ -9,7 +9,7 @@ import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player, PlayerId } from "../../../../../common/communication/Player";
 
 // Put true tu use mock grid instead of generated one
-const USE_MOCK_GRID: boolean = true;
+const USE_MOCK_GRID: boolean = false;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
@@ -224,5 +224,17 @@ export class CrosswordService {
         }
 
         return player;
+    }
+
+    public selectWordFromOtherPlayer(playerId: PlayerId, wordId: number, orientation: Orientation): void {
+        let player: OtherPlayersHover = this._otherPlayersHover.find((oph: OtherPlayersHover) => oph.playerId === playerId);
+        if (player == null) {
+            player = new OtherPlayersHover(playerId, []);
+            this._otherPlayersHover.push(player);
+        }
+
+        player.hoverdLetters = this._gameManager.findWordFromLetter(wordId, orientation, false).letters.map(
+                (letter: Letter) => letter.id
+            );
     }
 }
