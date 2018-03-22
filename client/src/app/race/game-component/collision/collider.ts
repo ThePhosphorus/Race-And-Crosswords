@@ -1,18 +1,17 @@
-import { Collider } from "./collider";
-import { Vector3, Vector2 } from "three";
+import { Vector3, Vector2, Object3D } from "three";
 
 const HALF: number = 0.5;
 
-export class BoxCollider extends Collider {
+export class Collider extends Object3D {
 
     private radius: number;
     private relativeVertexes: Vector3[];
 
-    public constructor(width: number, length: number, height: number) {
+    public constructor(width: number, length: number) {
         super();
         this.radius = this.pythagore(width * HALF, length * HALF);
         this.relativeVertexes = new Array<Vector3>();
-        this.initialiseRelativeVertexes(width, length, height);
+        this.initialiseRelativeVertexes(width, length);
     }
 
     public getNormals(): Array<Vector2> {
@@ -21,11 +20,11 @@ export class BoxCollider extends Collider {
         for (let i: number = 0; i < vertexes.length; i++) {
             const vertex1: Vector2 = vertexes[i];
             const vertex2: Vector2 = i < vertexes.length - 1 ? vertexes[i + 1] : vertexes[0];
-            const vertex: Vector2 = vertex1.sub(vertex2);
+            const edge: Vector2 = vertex1.clone().sub(vertex2).normalize();
             const normal: Vector2 = new Vector2(
-                vertex.y,
-                -vertex.x
-            ).normalize();
+                edge.y,
+                -edge.x
+            );
             normals.push(normal);
         }
 
@@ -53,10 +52,10 @@ export class BoxCollider extends Collider {
         return Math.sqrt((x * x) + (y * y));
     }
 
-    private initialiseRelativeVertexes(width: number, length: number, height: number): void {
-        this.relativeVertexes.push(new Vector3(width * HALF, height, length * HALF));
-        this.relativeVertexes.push(new Vector3(width * HALF, height, -length * HALF));
-        this.relativeVertexes.push(new Vector3(-width * HALF, height, length * HALF));
-        this.relativeVertexes.push(new Vector3(-width * HALF, height, -length * HALF));
+    private initialiseRelativeVertexes(width: number, length: number): void {
+        this.relativeVertexes.push(new Vector3(width * HALF, 0, length * HALF));
+        this.relativeVertexes.push(new Vector3(-width * HALF, 0, length * HALF));
+        this.relativeVertexes.push(new Vector3(-width * HALF, 0, -length * HALF));
+        this.relativeVertexes.push(new Vector3(width * HALF, 0, -length * HALF));
     }
 }

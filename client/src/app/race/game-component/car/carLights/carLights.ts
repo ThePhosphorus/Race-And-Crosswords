@@ -1,5 +1,5 @@
-import { SpotLight, Vector3, Object3D } from "three";
-import { RED } from "../../../../global-constants/constants";
+import { SpotLight, Vector3, Object3D, Color } from "three";
+import { RED, WHITE } from "../../../../global-constants/constants";
 import {
     FRONT_LIGHT_COLOR,
     FAR_LIGHT_DISTANCE,
@@ -26,7 +26,6 @@ import {
     POSITION_OFFSET,
     TARGET_OFFSET
 } from "./lights-constants";
-
 
 export class CarLights extends Object3D {
     private frontLight: SpotLight;
@@ -86,5 +85,23 @@ export class CarLights extends Object3D {
 
     public releaseBrakes(): void {
         this.brakeLights.forEach((brakeLight) => { brakeLight.intensity = 0; });
+    }
+
+    public reverse(): void {
+        this.brakeLights.forEach((smallLight) => {
+            if (smallLight !== this.brakeLights[0]) {
+                smallLight.color = new Color(WHITE);
+                smallLight.intensity = SMALL_LIGHT_INTENSITY;
+            }});
+        this.brakeLights[0].intensity = 0;
+    }
+
+    public releaseReverse(): void {
+        this.brakeLights.forEach((smallLight) => {
+            if (smallLight !== this.brakeLights[0]) {
+                smallLight.color = new Color(RED);
+                smallLight.intensity = 0;
+            }});
+        this.brakeLights[0].intensity = 0;
     }
 }

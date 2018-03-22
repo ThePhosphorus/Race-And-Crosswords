@@ -1,5 +1,4 @@
 import { Object3D } from "three";
-import { CarLights } from "./carLights/carLights";
 
 export class CarControl extends Object3D {
     private _isAcceleratorPressed: boolean;
@@ -7,7 +6,6 @@ export class CarControl extends Object3D {
     private _isSteeringLeft: boolean;
     private _isSteeringRight: boolean;
     private _hasHandbrakeOn: boolean;
-    private _carLights: CarLights;
 
     public get isAcceleratorPressed(): boolean {
         return this._isAcceleratorPressed;
@@ -29,13 +27,8 @@ export class CarControl extends Object3D {
         return this._hasHandbrakeOn;
     }
 
-    public set carLights(carLights: CarLights) {
-        this._carLights = carLights;
-    }
-
     public constructor() {
         super();
-        this._carLights = null;
         this._isAcceleratorPressed = false;
         this._isBraking = false;
         this._isSteeringLeft = false;
@@ -56,9 +49,6 @@ export class CarControl extends Object3D {
     }
 
     public brake(): void {
-        if (this._carLights != null) {
-            this._carLights.brake();
-        }
         this._isBraking = true;
     }
 
@@ -68,16 +58,10 @@ export class CarControl extends Object3D {
 
     public handBrake(): void {
         this._hasHandbrakeOn = true;
-        if (this._carLights != null) {
-            this._carLights.brake();
-        }
     }
 
     public releaseHandBrake(): void {
         this._hasHandbrakeOn = false;
-        if (this._carLights != null) {
-            this._carLights.releaseBrakes();
-        }
     }
 
     public releaseSteeringRight(): void {
@@ -85,9 +69,6 @@ export class CarControl extends Object3D {
     }
 
     public releaseBrakes(): void {
-        if (this._carLights != null) {
-            this._carLights.releaseBrakes();
-        }
         this._isBraking = false;
     }
 

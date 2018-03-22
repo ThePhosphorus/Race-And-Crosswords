@@ -7,6 +7,7 @@ import { InputManagerService } from "../input-manager-service/input-manager.serv
 import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/communication/track";
+import { LightManagerService } from "./light-manager/light-manager.service";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
 
@@ -20,7 +21,8 @@ const FULLSCREEN_KEYCODE: number = 70; // F
         CameraManagerService,
         SoundManagerService,
         CollisionDetectorService,
-        TrackLoaderService
+        TrackLoaderService,
+        LightManagerService
     ]
 })
 export class GameComponent implements AfterViewInit, OnDestroy {
