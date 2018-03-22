@@ -79,7 +79,7 @@ export class InputLetterComponent implements OnInit {
         };
     }
 
-    public getPlayerColor(player: PlayerId): string { // TODO: Find a good algo for generating colors
+    public getPlayerColor(player: PlayerId): string {
         let ratio: number = 0;
         if (this._crosswordService.players.getValue().length > 0) {
             ratio = player / (this._crosswordService.players.getValue().length);
