@@ -4,10 +4,13 @@
     background-color: transparent;
 }
 
-#listAvailable #newGame {
+#newGame {
     border: #61b446 solid;
     background-color: #61b446;
     border-radius: 1vmin;
+}
+#newGame:hover{
+    border: #4d8f37 solid;
 }
 
 #difficultySelector .btn-secondary:focus {
