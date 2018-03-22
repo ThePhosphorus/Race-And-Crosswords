@@ -8,7 +8,7 @@ import {
     Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2 } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, DOUBLE } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { BoxCollider } from "../collision/colliders/box-collider";
@@ -174,7 +174,7 @@ export class Car extends Object3D {
         } else if (this.carControl.isBraking) {
             this.carLights.releaseBrakes();
             this.carLights.reverse();
-            if (Math.abs(this.speed) < 2 * METER_TO_KM_SPEED_CONVERSION){
+            if (Math.abs(this.speed) < DOUBLE * METER_TO_KM_SPEED_CONVERSION) {
                 const tractionForce: number = this.getTractionForce();
                 const accelerationForce: Vector2 = this.direction2D;
                 accelerationForce.multiplyScalar(tractionForce);
