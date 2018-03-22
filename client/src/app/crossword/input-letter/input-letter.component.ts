@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { PlayerId } from "../../../../../common/communication/Player";
 import { GridState } from "../grid-state/grid-state";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Color } from "three";
 
 const RED_IN_STEELBLUE: number = 70;
 const BLUE_IN_STEELBLUE: number = 180;
