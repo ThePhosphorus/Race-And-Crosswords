@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { SolvedWord } from "../crossword-game-manager/crossword-game-manager";
 
 class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}
@@ -14,7 +15,7 @@ class DisplayedDefinition {
 export class DefinitionComponent implements OnInit {
     private _wordGrid: Word[];
     private _cheatmode: boolean;
-    private _solvedWords: number[]; // TODO: Check if it can go in crossword Service
+    private _solvedWords: SolvedWord[]; // TODO: Check if it can go in crossword Service
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
 
@@ -43,7 +44,7 @@ export class DefinitionComponent implements OnInit {
             }
         });
 
-        this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
+        this._crosswordService.solvedWords.subscribe((solvedWords: SolvedWord[]) => {
             this._solvedWords = solvedWords;
         });
     }
@@ -64,7 +65,7 @@ export class DefinitionComponent implements OnInit {
     public get cheatMode(): boolean { return this._cheatmode; }
 
     public isWordSolved(id: number): boolean {      // Take in orientation, and maybe do it in crossWord service
-        return this._solvedWords.indexOf(id) > -1;
+        return this._solvedWords.map((solvedWord: SolvedWord) => solvedWord.id).indexOf(id) > -1;
     }
 
     public select(index: number, orientation: string): void {
