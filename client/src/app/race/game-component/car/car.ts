@@ -105,7 +105,7 @@ export class Car extends Object3D {
         this.mesh.translateY(CAR_Y_OFFSET);
 
         const box: Box3 = new Box3().setFromObject(this.mesh);
-        this.mesh.add(new Collider(box.getSize().z, box.getSize().x, box.getSize().y));
+        this.mesh.add(new Collider(box.getSize().z, box.getSize().x));
         this.mesh.add(this.rigidBody);
         this.add(this.mesh);
         this.initCarLights();
