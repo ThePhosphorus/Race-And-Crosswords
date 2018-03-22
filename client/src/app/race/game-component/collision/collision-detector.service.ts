@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Scene, Vector2, Vector3 } from "three";
-import { Collider } from "./colliders/collider";
-import { BoxCollider } from "./colliders/box-collider";
-import { LineCollider } from "./colliders/line-collider";
+import { Collider } from "./collider";
 import { Projected } from "./projection";
 import { Collision } from "./collision";
 import { RigidBody } from "../rigid-body/rigid-body";
@@ -18,7 +16,7 @@ export class CollisionDetectorService {
         for (let i: number = 0; i < colliders.length; i++) {
             for (let j: number = i + 1; j < colliders.length; j++) {
                 if (this.broadDetection(colliders[i], colliders[j])) {
-                    const collision: Collision = this.narrowDetection(colliders[i], colliders[j]);
+                    const collision: Collision = this.boxBoxDetection(colliders[i], colliders[j]);
                     if (collision != null) {
                         this.resolveCollision(collision);
                     }
@@ -39,26 +37,16 @@ export class CollisionDetectorService {
     }
 
     private broadDetection(coll1: Collider, coll2: Collider): boolean {
-        return !(coll1 instanceof LineCollider && coll2 instanceof LineCollider) &&
-            coll2.getAbsolutePosition().clone().sub(
+        return coll2.getAbsolutePosition().clone().sub(
                 coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
 
-    private narrowDetection(coll1: Collider, coll2: Collider): Collision {
-        if (coll1 instanceof BoxCollider && coll2 instanceof BoxCollider) {
-            return this.boxBoxDetection(coll1, coll2);
-        }
-
-        return null;
-    }
-
-    private boxBoxDetection(coll1: BoxCollider, coll2: BoxCollider): Collision {
+    private boxBoxDetection(coll1: Collider, coll2: Collider): Collision {
         const vertexes1: Array<Vector2> = coll1.getAbsoluteVertexes2D();
         const vertexes2: Array<Vector2> = coll2.getAbsoluteVertexes2D();
         const axises: Array<Vector2> = coll1.getNormals().concat(coll2.getNormals());
         let minDistance: number = Number.MAX_VALUE;
         let distanceNormal: Vector2 = new Vector2();
-        // const collision: Collision = new Collision(coll1, null, coll2, null);
 
         for (const normal of axises) {
             const projected1: Projected = new Projected(vertexes1, normal.clone());

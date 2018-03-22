@@ -1,4 +1,4 @@
-import { Collider } from "./colliders/collider";
+import { Collider } from "./collider";
 import { Vector2 } from "three";
 
 export class Collision {

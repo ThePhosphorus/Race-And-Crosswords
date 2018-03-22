@@ -32,6 +32,4 @@ export const QUARTER: number = 0.25;
 export const SHADOWMAP_SIZE: number = 2048;
 export const SHADOW_CAMERA_PLANE_RATIO: number = 1 / 30;
 
-export const COLLIDER_NAME: string = "collider";
-
 export const BACKEND_URL: string = "http://localhost:3000/";

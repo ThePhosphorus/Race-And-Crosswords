@@ -11,7 +11,7 @@ import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2 } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
-import { BoxCollider } from "../collision/colliders/box-collider";
+import { Collider } from "../collision/collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
 import { CarControl } from "./car-control";
@@ -105,7 +105,7 @@ export class Car extends Object3D {
         this.mesh.translateY(CAR_Y_OFFSET);
 
         const box: Box3 = new Box3().setFromObject(this.mesh);
-        this.mesh.add(new BoxCollider(box.getSize().z, box.getSize().x, box.getSize().y));
+        this.mesh.add(new Collider(box.getSize().z, box.getSize().x, box.getSize().y));
         this.mesh.add(this.rigidBody);
         this.add(this.mesh);
         this.initCarLights();

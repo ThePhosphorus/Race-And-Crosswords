@@ -1,9 +1,8 @@
-import { Collider } from "./collider";
-import { Vector3, Vector2 } from "three";
+import { Vector3, Vector2, Object3D } from "three";
 
 const HALF: number = 0.5;
 
-export class BoxCollider extends Collider {
+export class Collider extends Object3D {
 
     private radius: number;
     private relativeVertexes: Vector3[];
