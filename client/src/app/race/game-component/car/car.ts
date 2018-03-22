@@ -8,7 +8,7 @@ import {
     Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2 } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, DOUBLE } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { BoxCollider } from "../collision/colliders/box-collider";
@@ -145,6 +145,7 @@ export class Car extends Object3D {
         this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
         if (!this.hasPenalty && this.carControl.hasHandbrakeOn) {
             this.frictionCoefficient = HANDBRAKE_FRICTION;
+            this.carLights.brake();
         } else if (this.frictionCoefficient >= DEFAULT_FRICTION) {
             this.hasPenalty = false;
         }
@@ -155,20 +156,30 @@ export class Car extends Object3D {
 
     private getLongitudinalForce(): Vector2 {
         const resultingForce: Vector2 = new Vector2();
-
         const dragForce: Vector2 = this.getDragForce();
-        resultingForce.add(dragForce);
-
         const rollingResistance: Vector2 = this.getRollingResistance();
-        resultingForce.add(rollingResistance);
+        resultingForce.add(dragForce).add(rollingResistance);
 
         if (this.carControl.isAcceleratorPressed) {
             const tractionForce: number = this.getTractionForce();
             const accelerationForce: Vector2 = this.direction2D;
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
+            this.carLights.releaseBrakes();
+            this.carLights.releaseReverse();
         } else if (this.carControl.isBraking && this.isGoingForward()) {
             resultingForce.add(this.getBrakeForce());
+            this.carLights.releaseReverse();
+            this.carLights.brake();
+        } else if (this.carControl.isBraking) {
+            this.carLights.releaseBrakes();
+            this.carLights.reverse();
+            if (Math.abs(this.speed) < DOUBLE * METER_TO_KM_SPEED_CONVERSION) {
+                const tractionForce: number = this.getTractionForce();
+                const accelerationForce: Vector2 = this.direction2D;
+                accelerationForce.multiplyScalar(tractionForce);
+                resultingForce.sub(accelerationForce);
+            }
         }
 
         return resultingForce;
@@ -214,9 +225,13 @@ export class Car extends Object3D {
     }
 
     private getBrakeForce(): Vector2 {
-        return this.direction2D.multiplyScalar(
-            Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
-        );
+        if (this.isGoingForward) {
+            return this.direction2D.multiplyScalar(
+                Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY
+            );
+        } else {
+
+        }
     }
 
     private getEngineForce(): number {
@@ -260,6 +275,5 @@ export class Car extends Object3D {
     private initCarLights(): void {
         this.carLights = new CarLights();
         this.mesh.add(this.carLights);
-        this.carControl.carLights = this.carLights;
     }
 }
