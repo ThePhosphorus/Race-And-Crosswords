@@ -1,4 +1,3 @@
-import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { Engine } from "./engine";
 import { Vector3, Vector2 } from "three";
 import { Car } from "./car";
