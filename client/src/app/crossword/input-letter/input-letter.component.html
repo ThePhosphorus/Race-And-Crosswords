@@ -1,4 +1,4 @@
-<div [ngClass]="{'player1':isPlayer(1),'player2':isPlayer(2)}">
+<div [ngClass]="{'player1':true,'player2':false}">
   <button type="button" (click)="select()"
   [ngClass]="{'disabled': isDisabled(), 'hovered': isHovered() &&
               !isDisabled(), 'current': isCurrentLetter(), 'highlight': isHighlighted() }">
