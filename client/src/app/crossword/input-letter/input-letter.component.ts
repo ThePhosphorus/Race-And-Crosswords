@@ -69,12 +69,6 @@ export class InputLetterComponent implements OnInit {
     }
 
     public getPlayerColor(player: PlayerId): string { // TODO: Find a good algo for generating colors
-        // switch (player) {
-        //     case PlayerId.PLAYER1: return "steelblue";
-        //     case PlayerId.PLAYER2: return "#b46146";
-        //     default:
-        //         return "steelblue";
-        // }
         const ratio: number = player / (this._crosswordService.players.getValue().length - 1);
 
         const red: number = RED_IN_STEELBLUE + (ratio * (RED_IN_ORANGE - RED_IN_STEELBLUE));
