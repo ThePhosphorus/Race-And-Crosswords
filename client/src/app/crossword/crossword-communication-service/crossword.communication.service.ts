@@ -13,7 +13,9 @@ export class SocketToServerInfos {
         public receivePlayersCallBack: Function,
         public receiveSelectCallBack: Function,
         public receiveGrid: Function,
-        public receiveCompletedWord: Function,
+        public receiveUpdateWord: Function,
+        public receiveIsCompletedWord: Function,
+        public isFirst: boolean,
         public returnName: string
 
     ) { }
@@ -27,7 +29,7 @@ export class CrosswordCommunicationService {
 
     public constructor(private http: HttpClient) {
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, null, "John C Doe");
+        this.socketInfos = new SocketToServerInfos(null, null, null, null, null, false, "John C Doe");
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
@@ -60,7 +62,11 @@ export class CrosswordCommunicationService {
         });
 
         this.socket.on(socketMsg.updateWord, (w: Word) =>
-            this.execute(this.socketInfos.receiveCompletedWord, w));
+            this.execute(this.socketInfos.receiveUpdateWord, w));
+
+        this.socket.on(socketMsg.completedWord, (isFirst: boolean) =>
+            this.execute(this.socketInfos.receiveIsCompletedWord, isFirst));
+
     }
 
     public createMatch(difficulty: Difficulty): void {
@@ -87,16 +93,21 @@ export class CrosswordCommunicationService {
         this.socketInfos.receiveGrid = func;
     }
 
-    public set listenerReceiveCompletedWord(func: Function) {
-        this.socketInfos.receiveCompletedWord = func;
+    public set listenerReceiveUpdatedWord(func: Function) {
+        this.socketInfos.receiveUpdateWord = func;
+    }
+    public set listenerIsCompletedFirst(func: Function) {
+        this.socketInfos.receiveIsCompletedWord = func;
     }
 
     public set returnName(name: string) {
         this.socketInfos.returnName = name;
     }
-
     public get returnName(): string {
         return this.socketInfos.returnName;
+    }
+    public get isFirstCompleted(): boolean {
+        return this.socketInfos.isFirst;
     }
 
     public notifySelect(letterId: number, orientation: Orientation): void {

@@ -73,7 +73,7 @@ export class CrosswordService {
                         this._gameManager.grid = crosswordGrid;
                     });
 
-                this._gameManager.players = [new Player(0, this.commService.returnName,0)];
+                this._gameManager.players = [new Player(0, this.commService.returnName, 0)];
             } else {
                 this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
                     this._gameManager.grid = grid;
@@ -81,9 +81,9 @@ export class CrosswordService {
                 this._gameManager.currentPlayer = this.commService.returnName;
                 this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
                     this.selectWordFromOtherPlayer(playerId, letterId, orientation);
-                this.commService.listenerReceiveCompletedWord = (word: Word) =>
+                this.commService.listenerReceiveUpdatedWord = (word: Word) =>
                     this.disableWord(word);
-                }
+            }
         }
     }
 
@@ -152,14 +152,16 @@ export class CrosswordService {
     }
 
     private disableWord(word: Word): void {
-        for (const letter of word.letters) {
-            this._gridStateSubject.value.disabledLetters.push(letter.id);
-
-        }
-        if (orientation === this._gridStateSubject.value.currentOrientation) {
-            this.unselectWord();
-            if (this._gameManager.addSolvedWord(word)) {
-                // show end game modal
+        for (const orientation of Object.keys(Orientation)) {
+            for (const letter of word.letters) {
+                this._gridStateSubject.value.disabledLetters.push(letter.id);
+                this._gameManager.setChar(letter.id, letter.char);
+            }
+            if (orientation === this._gridStateSubject.value.currentOrientation) {
+                this.unselectWord();
+                if (this._gameManager.addSolvedWord(word)) {
+                    // show end game modal
+                }
             }
         }
     }
@@ -172,11 +174,13 @@ export class CrosswordService {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     this.commService.completedWord(solvedWord);
+                    this.commService.listenerIsCompletedFirst = (bool: boolean) => {
+                       if (bool) { this.disableWord(solvedWord); }
+                    };
                 }
             }
         }
     }
-
     public writeChar(key: string): void {
         if (this._gridStateSubject.value.currentLetter != null) {
             if (key.match(/^[a-zA-z]$/i) != null) {
