@@ -18,14 +18,6 @@ describe("Track Saver", () => {
         expect(service).toBeTruthy();
     }));
 
-    it("should convert to vector Struct", inject([TrackSaverService], (service: TrackSaverService) => {
-        const vector: Vector3 = new Vector3(20, 32, 23);
-        const vectorStruct: Vector3Struct = service.toVectorStruct(vector);
-        expect(vectorStruct.x).toBe(vector.x);
-        expect(vectorStruct.y).toBe(vector.y);
-        expect(vectorStruct.z).toBe(vector.z);
-    }));
-
     it("should save the track", inject([TrackSaverService], (service: TrackSaverService) => {
         const name: string = "Name";
         const description: string = "Description";
