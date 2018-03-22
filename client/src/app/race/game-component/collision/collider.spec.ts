@@ -1,5 +1,5 @@
 import { Collider } from "./collider";
-import { Object3D, Vector2, Vector3, Matrix4 } from "three";
+import { Object3D, Vector2 } from "three";
 
 const COLLIDER_WIDTH: number = 5;
 const COLLIDER_LENGTH: number = 5;
@@ -19,6 +19,7 @@ describe("Collider", () => {
         const objectMovement: Vector2 = new Vector2(100, 50);
         object.translateX(objectMovement.x);
         object.translateZ(objectMovement.y);
+        object.updateMatrixWorld(true);
         const newColliderVertexes: Vector2[] = collider.getAbsoluteVertexes2D();
 
         for (let i: number = 0; i < oldColliderVertexes.length; i++) {
@@ -28,6 +29,7 @@ describe("Collider", () => {
         }
 
     });
+
     it("should have normals perpendicular to the sides", () => {
         const collider: Collider = new Collider(COLLIDER_WIDTH, COLLIDER_LENGTH);
         const object: Object3D = new Object3D();
@@ -45,5 +47,4 @@ describe("Collider", () => {
         }
 
     });
-
 });
