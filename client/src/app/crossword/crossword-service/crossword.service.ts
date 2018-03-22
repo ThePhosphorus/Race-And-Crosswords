@@ -79,6 +79,8 @@ export class CrosswordService {
                     this._gameManager.grid = grid;
                 this.commService.listenerReceivePlayers = (players: Player[]) => this._gameManager.players = players;
                 this._gameManager.currentPlayer = this.commService.returnName;
+                this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
+                    this.selectWordFromOtherPlayer(playerId, letterId, orientation);
             }
         }
     }
@@ -116,6 +118,7 @@ export class CrosswordService {
             if (this._gridStateSubject.value.LIsDisabled(this._gridStateSubject.value.currentLetter)) {
                 this._gridStateSubject.value.currentLetter = this.findNextLetterId(true);
             }
+            this.commService.notifySelect(index, this._gridStateSubject.value.currentOrientation);
         }
     }
 

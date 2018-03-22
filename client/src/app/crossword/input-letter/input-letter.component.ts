@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { PlayerId } from "../../../../../common/communication/Player";
 import { GridState } from "../grid-state/grid-state";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Color } from "three";
 
 const RED_IN_STEELBLUE: number = 70;
 const BLUE_IN_STEELBLUE: number = 180;
@@ -70,13 +69,13 @@ export class InputLetterComponent implements OnInit {
     }
 
     public getPlayerColor(player: PlayerId): string { // TODO: Find a good algo for generating colors
-        switch (player) {
-            case PlayerId.PLAYER1: return "steelblue";
-            case PlayerId.PLAYER2: return "#b46146";
-            default:
-                return "steelblue";
-        }
-        const ratio: number = player /(this._crosswordService.players.getValue().length-1);
+        // switch (player) {
+        //     case PlayerId.PLAYER1: return "steelblue";
+        //     case PlayerId.PLAYER2: return "#b46146";
+        //     default:
+        //         return "steelblue";
+        // }
+        const ratio: number = player / (this._crosswordService.players.getValue().length - 1);
 
         const red: number = RED_IN_STEELBLUE + (ratio * (RED_IN_ORANGE - RED_IN_STEELBLUE));
         const blue: number = BLUE_IN_STEELBLUE + (ratio * (BLUE_IN_ORANGE - BLUE_IN_STEELBLUE));
