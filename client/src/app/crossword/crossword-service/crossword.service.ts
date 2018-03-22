@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Difficulty, CrosswordGrid, Orientation, Word, Letter } from "../../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import { GameManager, EMPTY_TILE_CHARACTER } from "../crossword-game-manager/crossword-game-manager";
+import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
 import { GridState } from "../grid-state/grid-state";
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
@@ -34,7 +34,7 @@ export class CrosswordService {
         return this._gameManager.difficultyObs;
     }
 
-    public get solvedWords(): Observable<number[]> {
+    public get solvedWords(): Observable<SolvedWord[]> {
         return this._gameManager.solvedWordsObs;
     }
 

@@ -8,23 +8,27 @@ const INITIAL_GRID_SIZE: number = 10;
 
 export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
+export class SolvedWord {
+    public constructor(public id: number, public player: Players) {}
+}
+
 export class GameManager {
     private _solvedGrid: CrosswordGrid;
-    private _solvedWords: number[];
+    private _solvedWords: SolvedWord[];
     private _players: BehaviorSubject<Player[]>;
     private _isMultiplayer: boolean;
     private _myPlayer: Players;
     private _difficulty: Difficulty;
     private _playerGridSubject: BehaviorSubject<CrosswordGrid>;
+    private _solvedWordsSubject: Subject<SolvedWord[]>;
     private _solvedGridSubject: Subject<CrosswordGrid>;
-    private _solvedWordsSubject: Subject<number[]>;
     private _currentPlayerSubject: Subject<number>;
     private _difficultySubject: Subject<Difficulty>;
 
     public constructor() {
         this._playerGridSubject = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
+        this._solvedWordsSubject = new Subject<SolvedWord[]>();
         this._solvedGridSubject = new Subject<CrosswordGrid>();
-        this._solvedWordsSubject = new Subject<number[]>();
         this._currentPlayerSubject = new Subject<number>();
         this._difficultySubject =  new Subject<Difficulty>();
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
@@ -53,7 +57,7 @@ export class GameManager {
         return this._difficultySubject.asObservable();
     }
 
-    public get solvedWordsObs(): Observable<number[]> {
+    public get solvedWordsObs(): Observable<SolvedWord[]> {
         return this._solvedWordsSubject.asObservable();
     }
 
@@ -108,7 +112,7 @@ export class GameManager {
     }
 
     public addSolvedWord(word: Word): boolean {
-        this._solvedWords.push(this._playerGridSubject.getValue().words.indexOf(word));
+        this._solvedWords.push(new SolvedWord(this._playerGridSubject.getValue().words.indexOf(word), this._myPlayer));
         this._solvedWordsSubject.next(this._solvedWords);
 
         return this._solvedWords.length === this._solvedGrid.words.length;
