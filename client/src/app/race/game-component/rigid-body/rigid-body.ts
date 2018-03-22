@@ -2,6 +2,7 @@ import { Vector2, Object3D, Vector3 } from "three";
 import { HALF } from "../../../global-constants/constants";
 
 const MINIMUM_SPEED: number = 0.02;
+const TWICE: number = 2;
 
 export class RigidBody extends Object3D {
 
@@ -9,7 +10,6 @@ export class RigidBody extends Object3D {
     private forces: Vector2;
     private frictionForce: Vector2;
     private torque: number;
-    private angularFrictionForce: number;
     private _velocity: Vector2;
     private _angularVelocity: number;
     private _mass: number;
@@ -31,7 +31,6 @@ export class RigidBody extends Object3D {
         super();
         this.fixed = fixed == null ? false : fixed;
         this.torque = 0;
-        this.angularFrictionForce = 0;
         this.forces = new Vector2(0, 0);
         this.frictionForce = new Vector2(0, 0);
         this._velocity = new Vector2(0, 0);
@@ -47,11 +46,9 @@ export class RigidBody extends Object3D {
     }
 
     public setFrictionForce(force: Vector2): void {
-        this.frictionForce = force;
-    }
-
-    public setAngularFrictionForce(force: number): void {
-        this.angularFrictionForce = force;
+        if (force != null) {
+            this.frictionForce = force;
+        }
     }
 
     public addTorque(torque: number): void {
@@ -66,13 +63,13 @@ export class RigidBody extends Object3D {
         contactAngle -= Math.PI * HALF;
         const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
-            (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * 2)) /
+            (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * TWICE)) /
             (this.mass + otherMass)) * Math.cos(contactAngle) - this._velocity.length() *
             Math.sin(this._velocity.angle() - contactAngle) * Math.sin(contactAngle);
 
         const vy: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
-            (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * 2)) /
+            (otherVelocity.length() * otherMass * Math.cos(otherVelocity.clone().angle() - contactAngle) * TWICE)) /
             (this.mass + otherMass)) * Math.sin(contactAngle) + this._velocity.length() *
             Math.sin(this._velocity.angle() - contactAngle) * Math.cos(contactAngle);
         this._velocity = new Vector2(vx, vy);

@@ -9,8 +9,13 @@ import {
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, DOUBLE } from "../../../global-constants/constants";
-import { Wheel } from "./wheel";
-import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
+import {
+    DEFAULT_WHEELBASE,
+    DEFAULT_MASS,
+    DRAG_COEFFICIENT,
+    DEFAULT_WHEEL_RADIUS,
+    DEFAULT_FRICTION_COEFFICIENT
+} from "../../race.constants";
 import { Collider } from "../collision/collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./carLights/carLights";
@@ -37,7 +42,6 @@ export class Car extends Object3D {
     public carControl: CarControl;
 
     private readonly engine: Engine;
-    private readonly rearWheel: Wheel;
     private mesh: Object3D;
     private rigidBody: RigidBody;
     private carLights: CarLights;
@@ -74,13 +78,11 @@ export class Car extends Object3D {
     public constructor(
         private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
-        rearWheel: Wheel = new Wheel(),
         mass: number = DEFAULT_MASS
     ) {
         super();
         this.rigidBody = new RigidBody(mass);
         this.engine = engine;
-        this.rearWheel = rearWheel;
         this.carControl = new CarControl();
         this.frictionCoefficient = DEFAULT_FRICTION;
     }
@@ -124,7 +126,7 @@ export class Car extends Object3D {
 
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
-        this.engine.update(this.speed, this.rearWheel.radius);
+        this.engine.update(Math.abs(this.speed), DEFAULT_WHEEL_RADIUS);
 
         this.rigidBody.addForce(this.getLongitudinalForce());
         this.rigidBody.setFrictionForce(this.getPerpendicularForce());
@@ -218,7 +220,7 @@ export class Car extends Object3D {
     private getTractionForce(): number {
         const force: number = this.getEngineForce();
         const maxForce: number =
-            this.rearWheel.frictionCoefficient *
+            DEFAULT_FRICTION_COEFFICIENT *
             this.rigidBody.mass *
             WHEEL_DISTRIBUTION *
             GRAVITY;
@@ -228,12 +230,12 @@ export class Car extends Object3D {
 
     private getBrakeForce(): Vector2 {
         return this.isGoingForward ?
-            this.direction2D.multiplyScalar(Math.sign(this.speed) * this.rearWheel.frictionCoefficient * this.rigidBody.mass * GRAVITY) :
+            this.direction2D.multiplyScalar(Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this.rigidBody.mass * GRAVITY) :
             new Vector2(0, 0);
     }
 
     private getEngineForce(): number {
-        return this.engine.getDriveTorque() / this.rearWheel.radius;
+        return this.engine.getDriveTorque() / DEFAULT_WHEEL_RADIUS;
     }
 
     private isGoingForward(): boolean {
