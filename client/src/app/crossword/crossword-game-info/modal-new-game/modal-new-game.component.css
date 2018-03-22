@@ -4,13 +4,14 @@
     background-color: transparent;
 }
 
+
 #newGame {
     border: #61b446 solid;
     background-color: #61b446;
     border-radius: 1vmin;
 }
 #newGame:hover{
-    border: #4d8f37 solid;
+    border: lightgrey solid;
 }
 
 #difficultySelector .btn-secondary:focus {
@@ -18,12 +19,13 @@
 }
 
 #cancelBtn {
-    background-color: #b44646;
+    background-color: #b44646 ;
     border: #813232;
 }
 
+
 #playBtn {
-    background-color: steelblue;
+    background-color: steelblue  solid;
     border: rgb(47, 90, 124);
 }
 
@@ -33,20 +35,23 @@
 
 #difficultySelector .btn-secondary:hover {
     box-shadow: none;
+    border: lightgrey solid;
 }
 
 #difficultySelector .active {
     text-decoration-line: underline;
-    border: inset #212529;
+    border: solid rgb(97, 96, 96);
 }
 
 #AvailableTable {
     border: none;
 }
 
-#AvailableTable .btn:hover {
-    box-shadow: inset 0vmin 0vmin 0.2vmin 0.3vmin #212529;
-    border:inset #212529 ;
+#listPlayer:hover {
+    box-shadow: inset 0vmin 0vmin 0.2vmin 0.3vmin lightgray;
+    border:solid lightgrey;
+    border-radius: 10%;
+
 }
 
 #easyBtn, .easy {
@@ -61,7 +66,7 @@
 
 #hardBtn, .hard {
     background-color: #b44646;
-    border: #b44646;
+    border: #b44646 solid;
 }
 
 .card {
