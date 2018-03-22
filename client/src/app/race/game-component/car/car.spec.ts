@@ -17,19 +17,14 @@ class MockEngine extends Engine {
 describe("Car", () => {
     let car: Car;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-          providers: [CameraManagerService]
-        });
-      });
-
-    beforeEach(inject([CameraManagerService], async (cameraManager: CameraManagerService, done: () => void) => {
-        car = new Car(cameraManager, new MockEngine());
-        await car.init(CAR_DEFAULT_POSITION, "YELLOW");
+    beforeEach(async (done: () => void) => {
+        TestBed.configureTestingModule({providers: [CameraManagerService]});
+        car = new Car(TestBed.get(CameraManagerService), new MockEngine());
+        await car.init(CAR_DEFAULT_POSITION, "yellow");
 
         car.update(MS_BETWEEN_FRAMES);
         done();
-    }));
+    });
 
     it("should be instantiable using default constructor", inject([CameraManagerService], (cameraManager: CameraManagerService) => {
         car = new Car(cameraManager, new MockEngine());
@@ -73,22 +68,6 @@ describe("Car", () => {
         car.carControl.brake();
         car.update(MS_BETWEEN_FRAMES);
         expect(car.speed).toBeLessThan(initialSpeed);
-    });
-
-    it("should turn when left turn key is pressed", () => {
-        const initialDirection: Vector3 = car.direction.clone();
-        car.carControl.accelerate();
-        car.carControl.steerLeft();
-        car.update(MS_BETWEEN_FRAMES * 2);
-        expect(!car.direction.equals(initialDirection)).toBeTruthy();
-    });
-
-    it("should turn when right turn key is pressed", () => {
-        const initialDirection: Vector3 = car.direction.clone();
-        car.carControl.accelerate();
-        car.carControl.steerRight();
-        car.update(MS_BETWEEN_FRAMES * 2);
-        expect(!car.direction.equals(initialDirection)).toBeTruthy();
     });
 
     it("should not turn when steering keys are released", () => {
