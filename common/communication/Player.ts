@@ -5,6 +5,6 @@ export class Player {
         ) {}
 }
 
-export enum Players {
+export enum PlayerId {
     PLAYER1, PLAYER2
 }
