@@ -9,7 +9,7 @@ import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player } from "../../../../../common/communication/Player";
 
 // Put true tu use mock grid instead of generated one
-const USE_MOCK_GRID: boolean = false;
+const USE_MOCK_GRID: boolean = true;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
@@ -58,17 +58,19 @@ export class CrosswordService {
         if (!USE_MOCK_GRID) {
             this._gameManager.newGame();
             this._gameManager.difficulty = difficulty;
+
             if (isSinglePlayer) {
                 this.commService.getCrossword(difficulty, INITIAL_BLACK_TILES_RATIO, INITIAL_GRID_SIZE)
-                .subscribe((crosswordGrid: CrosswordGrid) => {
-                    this._gameManager.grid = crosswordGrid;
-                });
+                    .subscribe((crosswordGrid: CrosswordGrid) => {
+                        this._gameManager.grid = crosswordGrid;
+                    });
 
                 this._gameManager.players = [new Player(0, this.commService.returnName)];
             } else {
                 this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
                     this._gameManager.grid = grid;
                 this.commService.listenerReceivePlayers = (players: Player[]) => this._gameManager.players = players;
+                this._gameManager.currentPlayer = this.commService.returnName;
             }
         }
     }

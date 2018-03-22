@@ -48,4 +48,38 @@ export class InputLetterComponent implements OnInit {
     public isPlayer(playerIs: Players): boolean { // TODO: Check What this means
         return this._gridState.currentPlayer === Players.PLAYER1;
     }
+
+    public get playerHiglightCSS(): {} {
+        const player: Players = 1;
+        const color: string = this.getPlayerColor(player);
+        const bgColor: string = this.getBGPlayerColor(player);
+
+        if (player === null) {
+            return player;
+        }
+
+        return {
+            "border-color" : "" + color + " !important",
+            "box-shadow" : "0 0 0 0.4vmin " + color + ",inset 0 0 1.5vmin " + color,
+            "background-color" : "" + bgColor + "!important;"
+        };
+    }
+
+    public getPlayerColor(player: Players): string { // TODO: Find a good algo for generating colors
+        switch (player) {
+            case Players.PLAYER1: return "steelblue";
+            case Players.PLAYER2: return "#b46146";
+            default:
+                return "steelblue";
+        }
+    }
+
+    public getBGPlayerColor(player: Players): string {
+        switch (player) {
+            case Players.PLAYER1: return "#b6cee2";
+            case Players.PLAYER2: return "#dbb1a3";
+            default:
+                return "#b6cee2";
+        }
+    }
 }

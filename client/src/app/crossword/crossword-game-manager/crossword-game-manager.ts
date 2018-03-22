@@ -81,8 +81,12 @@ export class GameManager {
         this._players.next(players);
     }
 
-    public set currentPlayer(player: Players) {
-        this._currentPlayer.next(player);
+    public set currentPlayer(playerName: string) {  // Players must be set first
+        this._players.getValue().forEach((p: Player) => {
+            if (p.name === playerName) {
+                this._currentPlayer.next(p.id);
+            }
+        });
     }
 
     public getChar(index: number): string {
