@@ -1,4 +1,4 @@
-<div class="input-letter"  [ngStyle]="playerHiglightCSS">
+<div class="input-letter"  [ngClass]="{'player1': isPlayer(), 'player2':!isPlayer() }">
   <button type="button" (click)="select()"
   [ngClass]="{'disabled': isDisabled(), 'hovered': isHovered() &&
               !isDisabled(), 'current': isCurrentLetter(), 'highlight': isHighlighted() }">
