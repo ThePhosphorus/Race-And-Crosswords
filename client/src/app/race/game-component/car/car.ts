@@ -30,7 +30,8 @@ const DEFAULT_FRICTION: number = 400000;
 const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
-const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * 0.7;
+const MIN_DRIFT_SPEED_M_S: number = 0.7;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * MIN_DRIFT_SPEED_M_S;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -40,7 +41,7 @@ export class Car extends Object3D {
     private mesh: Object3D;
     private rigidBody: RigidBody;
     private carLights: CarLights;
-    private oldFrictionCoefficient: number;
+    private frictionCoefficient: number;
     private carSound: CarSounds;
     private hasPenalty: boolean;
 
@@ -148,21 +149,14 @@ export class Car extends Object3D {
         const direction: Vector2 = this.direction2D;
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
+        this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
         let perpendicularForce: number;
         if (!this.hasPenalty) {
-            if (this.carControl.hasHandbrakeOn) {
-                perpendicularForce = HANDBRAKE_FRICTION;
-            } else if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
-                perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
-            } else {
-                perpendicularForce = DEFAULT_FRICTION;
-            }
-            this.oldFrictionCoefficient = perpendicularForce;
+            perpendicularForce = this.carControl.hasHandbrakeOn ? HANDBRAKE_FRICTION : this.frictionCoefficient;
             this.updateDriftSound(perpendicularForce);
         } else {
-            if (this.oldFrictionCoefficient < DEFAULT_FRICTION) {
-                perpendicularForce = this.oldFrictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT;
-                this.oldFrictionCoefficient = perpendicularForce;
+            if (this.frictionCoefficient < DEFAULT_FRICTION) {
+                perpendicularForce = this.frictionCoefficient;
             } else {
                 this.hasPenalty = false;
             }
@@ -272,7 +266,7 @@ export class Car extends Object3D {
 
     private carPenalty(): void {
         this.hasPenalty = true;
-        this.oldFrictionCoefficient = HANDBRAKE_FRICTION;
+        this.frictionCoefficient = HANDBRAKE_FRICTION;
     }
     private initCarLights(): void {
         this.carLights = new CarLights();
