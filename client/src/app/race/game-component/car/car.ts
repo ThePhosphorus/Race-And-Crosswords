@@ -124,7 +124,7 @@ export class Car extends Object3D {
 
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
-        this.engine.update(this.speed, this.rearWheel.radius);
+        this.engine.update(Math.abs(this.speed), this.rearWheel.radius);
 
         this.rigidBody.addForce(this.getLongitudinalForce());
         this.rigidBody.setFrictionForce(this.getPerpendicularForce());
