@@ -65,6 +65,8 @@ export class GameManagerService extends Renderer {
                        private lightManager: LightManagerService ) {
 
         super(cameraManager, true);
+        this._hudTimerSubject = new Subject<number>();
+        this._hudLapResetSubject = new Subject<void>();
         this._player = new Car(this.cameraManager);
         this._aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {

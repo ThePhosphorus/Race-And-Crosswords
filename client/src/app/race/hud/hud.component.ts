@@ -24,7 +24,7 @@ export class HudComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.start_chron();
+        this.startChronometer();
         this.gameManagerService.hudLapReset.subscribe(() => this.lapTimer.reset());
     }
 
@@ -32,7 +32,7 @@ export class HudComponent implements OnInit {
         return this.gameManagerService.playerInfos;
     }
 
-    private start_chron(): void {
+    private startChronometer(): void {
         this.gameManagerService.hudTimer.subscribe((t: number) => {
             this.lapTimer.update(t);
             this.globalTimer.update(t);
