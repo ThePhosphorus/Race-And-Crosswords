@@ -8,7 +8,7 @@ import {
     Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2 } from "../../../global-constants/constants";
 import { Wheel } from "./wheel";
 import { DEFAULT_WHEELBASE, DEFAULT_MASS, DRAG_COEFFICIENT } from "../../race.constants";
 import { BoxCollider } from "../collision/colliders/box-collider";
@@ -51,10 +51,6 @@ export class Car extends Object3D {
 
     public get rpm(): number {
         return this.engine.rpm;
-    }
-
-    public get angle(): number {
-        return this.mesh.rotation.y * RAD_TO_DEG;
     }
 
     public get direction(): Vector3 {
@@ -265,6 +261,7 @@ export class Car extends Object3D {
         this.hasPenalty = true;
         this.frictionCoefficient = HANDBRAKE_FRICTION;
     }
+
     private initCarLights(): void {
         this.carLights = new CarLights();
         this.mesh.add(this.carLights);
