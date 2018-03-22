@@ -32,15 +32,8 @@ describe("Rigid Body", () => {
         const tempPos: Vector3 = obj.position.clone();
         rb.addForce(new Vector2(1000, 0));
         rb.update(DEFAULT_DELTA_TIME);
-        expect(!obj.position.clone().sub(tempPos).x).toBeGreaterThan(0);
-        expect(!obj.position.clone().sub(tempPos).y).toEqual(0);
-    });
-
-    it("should rotate when adding torque", () => {
-        const tempRotation: number = obj.rotation.y;
-        rb.addTorque(1);
-        rb.update(DEFAULT_DELTA_TIME);
-        expect(obj.rotation.y !== tempRotation).toBeTruthy();
+        expect(obj.position.clone().sub(tempPos).x).toBeGreaterThan(0);
+        expect(obj.position.clone().sub(tempPos).y).toEqual(0);
     });
 
     it("should not move when adding friction force", () => {
@@ -52,10 +45,10 @@ describe("Rigid Body", () => {
 
     it("should apply collision", () => {
         const tempPos: Vector3 = obj.position.clone();
-        const objVelocity: Vector2 = new Vector2(100, 0);
+        const objVelocity: Vector2 = new Vector2(0, 10000);
         rb.applyCollision(0, DEFAULT_MASS, objVelocity);
         rb.update(DEFAULT_DELTA_TIME);
-        expect(rb.velocity.equals(objVelocity)).toBeTruthy();
+        expect(rb.velocity.length()).toEqual(objVelocity.length());
         expect(!obj.position.equals(tempPos)).toBeTruthy();
     });
 });

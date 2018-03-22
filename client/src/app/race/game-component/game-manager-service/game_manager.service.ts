@@ -18,6 +18,17 @@ import { CollisionDetectorService } from "../collision/collision-detector.servic
 import {
     CameraType,
     PI_OVER_2,
+    ACCELERATE_KEYCODE,
+    BRAKE_KEYCODE,
+    LEFT_KEYCODE,
+    RIGHT_KEYCODE,
+    CHANGE_CAMERA_KEYCODE,
+    TOGGLE_CAMERA_EFFECT_MODE,
+    ZOOM_IN_KEYCODE,
+    ZOOM_OUT_KEYCODE,
+    TOGGLE_NIGHT_MODE_KEYCODE,
+    HANDBRAKE_KEYCODE,
+    TOGGLE_SUNLIGHT_KEYCODE,
 } from "../../../global-constants/constants";
 import { LightManagerService } from "../light-manager/light-manager.service";
 
@@ -29,18 +40,6 @@ const N_AI_CONTROLLED_CARS: number = 1;
 const SPACE_BETWEEN_CARS: number = 15;
 
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
-// Keycodes
-const ACCELERATE_KEYCODE: number = 87; // w
-const LEFT_KEYCODE: number = 65; // a
-const BRAKE_KEYCODE: number = 83; // s
-const RIGHT_KEYCODE: number = 68; // d
-const CHANGE_CAMERA_KEYCODE: number = 67; // c
-const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
-const ZOOM_IN_KEYCODE: number = 187; // +
-const ZOOM_OUT_KEYCODE: number = 189; // -
-const TOGGLE_NIGHT_MODE_KEYCODE: number = 78; // n
-const TOGGLE_SUNLIGHT_KEYCODE: number = 77; // m
-const HANDBRAKE_KEYCODE: number = 32; // spacebar
 
 export class CarInfos {
     public constructor(

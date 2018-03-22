@@ -20,7 +20,7 @@ describe("Track Saver", () => {
 
     it("should convert to vector Struct", inject([TrackLoaderService], (service: TrackLoaderService) => {
         const vector: Vector3Struct = new Vector3Struct(20, 32, 23);
-        const vectorStruct: Vector3 = service.toVector(vector);
+        const vectorStruct: Vector3 = TrackLoaderService.toVector(vector);
         expect(vectorStruct.x).toBe(vector.x);
         expect(vectorStruct.y).toBe(vector.y);
         expect(vectorStruct.z).toBe(vector.z);
