@@ -5,30 +5,21 @@ import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game
 import { GridState } from "../grid-state/grid-state";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { MOCK } from "../mock-crossword/mock-crossword";
-import { Player, PlayerId } from "../../../../../common/communication/Player";
+import { Player } from "../../../../../common/communication/Player";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = false;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
-class OtherPlayersHover {
-    public constructor (
-        public playerId: PlayerId,
-        public hoverdLetters: Array<number>,
-    ) {}
-}
-
 @Injectable()
 export class CrosswordService {
     private _gameManager: GameManager;
     private _gridStateSubject: BehaviorSubject<GridState>;
-    private _otherPlayersHover: Array<OtherPlayersHover>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridStateSubject = new BehaviorSubject<GridState>(new GridState());
-        this._otherPlayersHover = new Array<OtherPlayersHover>();
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
@@ -162,6 +153,7 @@ export class CrosswordService {
                             // show end game modal
                         }
                     }
+
                 }
             }
         }
