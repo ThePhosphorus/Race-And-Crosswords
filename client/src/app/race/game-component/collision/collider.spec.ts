@@ -1,11 +1,11 @@
 import { Collider } from "./collider";
-import { Object3D, Vector2 } from "three";
+import { Object3D, Vector2, Vector3, Matrix4 } from "three";
 
 const COLLIDER_WIDTH: number = 5;
 const COLLIDER_LENGTH: number = 5;
 
 /* tslint:disable: no-magic-numbers */
-describe("Collisider", () => {
+describe("Collider", () => {
     it("should be created", () => {
         const collider: Collider = new Collider(COLLIDER_WIDTH, COLLIDER_LENGTH);
         expect(collider).toBeTruthy();
@@ -23,6 +23,7 @@ describe("Collisider", () => {
 
         for (let i: number = 0; i < oldColliderVertexes.length; i++) {
             const vertexMouvement: Vector2 = newColliderVertexes[i].clone().sub(oldColliderVertexes[i]);
+            expect(newColliderVertexes[i] !== oldColliderVertexes[i]).toBeTruthy();
             expect(vertexMouvement).toEqual(objectMovement);
         }
 
@@ -38,7 +39,7 @@ describe("Collisider", () => {
             const vertex2: Vector2 = i < colliderVertexes.length - 1 ? colliderVertexes[i + 1] : colliderVertexes[0];
             const line: Vector2 = colliderVertexes[i].clone().sub(vertex2);
 
-            const dotProduct: number = line.dot(colliderNormals[i]);
+            const dotProduct: number = Math.abs(line.dot(colliderNormals[i]));
 
             expect(dotProduct).toEqual(0);
         }
