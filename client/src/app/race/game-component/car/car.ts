@@ -45,10 +45,6 @@ export class Car extends Object3D {
     private carSound: CarSounds;
     private hasPenalty: boolean;
 
-    public get carMesh(): Object3D {
-        return this.mesh;
-    }
-
     public get currentGear(): number {
         return this.engine.currentGear;
     }
@@ -90,6 +86,7 @@ export class Car extends Object3D {
         this.engine = engine;
         this.rearWheel = rearWheel;
         this.carControl = new CarControl();
+        this.frictionCoefficient = DEFAULT_FRICTION;
     }
 
     // TODO: move loading code outside of car class.
