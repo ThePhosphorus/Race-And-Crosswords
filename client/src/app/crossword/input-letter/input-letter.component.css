@@ -22,26 +22,13 @@ button {
     display: inherit;
 }
 
-
-.player1 .highlight {
+.highlight{
     border-style: dotted;
     width:90% ;
     height: 90%;
     border-width: 0.2vmin;
-    background-color: #b6cee2 !important;
-    box-shadow: 0 0 0 0.4vmin steelblue,inset 0 0 1vmin steelblue ;
-    border-color: steelblue!important;
 }
 
-.player2 .highlight {
-    border-style: dotted;
-    width:90% ;
-    height: 90%;
-    border-width: 0.2vmin;
-    background-color: #dbb1a3 !important;
-    box-shadow: 0 0 0 0.4vmin #b46146,inset 0 0 1.5vmin #b46146 ;
-    border-color: #b46146!important;
-}
 
 .disabled {
     background-color: darkgrey;

@@ -64,7 +64,7 @@ export class InputLetterComponent implements OnInit {
 
         return {
             "border-color": "" + color + " !important",
-            "box-shadow": "0 0 0 0.4vmin " + color + ",inset 0 0 1.5vmin " + color,
+            "box-shadow": "0 0 0 0.4vmin " + color + ",inset 0 0 1.5vmin " + color + "!important;",
             "background-color": "" + bgColor + "!important;"
         };
     }
@@ -76,7 +76,7 @@ export class InputLetterComponent implements OnInit {
         const blue: number = BLUE_IN_STEELBLUE + (ratio * (BLUE_IN_ORANGE - BLUE_IN_STEELBLUE));
         const green: number = GREEN_IN_STEELBLUE + (ratio * (GREEN_IN_ORANGE - GREEN_IN_STEELBLUE));
 
-        return ("rgb" + "(" + red + "," + green + "," + blue + ")");
+        return "rgb" + "(" + red + "," + green + "," + blue + ")";
     }
 
     public getBGPlayerColor(player: PlayerId): string {
