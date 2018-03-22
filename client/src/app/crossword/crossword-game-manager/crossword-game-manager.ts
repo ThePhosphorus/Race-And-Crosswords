@@ -1,6 +1,5 @@
-import { Difficulty, CrosswordGrid, Word, Letter } from "../../../../../common/communication/crossword-grid";
-import { Players, Player } from "../../../../../common/communication/Player";
-import { Observable } from "rxjs/Observable";
+import { Difficulty, CrosswordGrid, Word, Letter, Orientation } from "../../../../../common/communication/crossword-grid";
+import { PlayerId, Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 const INITIAL_GRID_SIZE: number = 10;
@@ -8,7 +7,7 @@ const INITIAL_GRID_SIZE: number = 10;
 export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
 export class SolvedWord {
-    public constructor(public id: number, public player: Players) {}
+    public constructor(public id: number, orientation: Orientation, public player: PlayerId) {}
 }
 
 export class GameManager {
@@ -32,32 +31,32 @@ export class GameManager {
 
     public newGame(): void {
         this._solvedGrid.next(new CrosswordGrid());
-        this._currentPlayer.next(Players.PLAYER1);
+        this._currentPlayer.next(PlayerId.PLAYER1);
         this._difficulty.next(Difficulty.Easy);
     }
 
-    public get difficultyObs(): Observable<Difficulty> {
-        return this._difficulty.asObservable();
+    public get difficultyObs(): BehaviorSubject<Difficulty> {
+        return this._difficulty;
     }
 
-    public get solvedWordsObs(): Observable<SolvedWord[]> {
-        return this._solvedWords.asObservable();
+    public get solvedWordsObs(): BehaviorSubject<SolvedWord[]> {
+        return this._solvedWords;
     }
 
-    public get currentPlayerObs(): Observable<Players> {
-        return this._currentPlayer.asObservable();
+    public get currentPlayerObs(): BehaviorSubject<PlayerId> {
+        return this._currentPlayer;
     }
 
-    public get playersObs(): Observable<Player[]> {
-        return this._players.asObservable();
+    public get playersObs(): BehaviorSubject<Player[]> {
+        return this._players;
     }
 
-    public get playerGridObs(): Observable<CrosswordGrid> {
-        return this._playerGrid.asObservable();
+    public get playerGridObs(): BehaviorSubject<CrosswordGrid> {
+        return this._playerGrid;
     }
 
-    public get solvedGridObs(): Observable<CrosswordGrid> {
-        return this._solvedGrid.asObservable();
+    public get solvedGridObs(): BehaviorSubject<CrosswordGrid> {
+        return this._solvedGrid;
     }
 
     public set grid(crosswordGrid: CrosswordGrid) {
@@ -103,7 +102,7 @@ export class GameManager {
 
     public addSolvedWord(word: Word): boolean {
         this._solvedWords.value.push(
-            new SolvedWord(this._playerGrid.getValue().words.indexOf(word), this._currentPlayer.value));
+            new SolvedWord(this._playerGrid.getValue().words.indexOf(word), Orientation.Across, this._currentPlayer.value));
 
         return this._solvedWords.value.length === this._solvedGrid.getValue().words.length;
     }

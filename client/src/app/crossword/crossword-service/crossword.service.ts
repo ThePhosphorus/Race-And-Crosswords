@@ -6,36 +6,45 @@ import { GridState } from "../grid-state/grid-state";
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { MOCK } from "../mock-crossword/mock-crossword";
-import { Player } from "../../../../../common/communication/Player";
+import { Player, PlayerId } from "../../../../../common/communication/Player";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = true;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
+class OtherPlayersHover {
+    public constructor (
+        public playerId: PlayerId,
+        public hoverdLetters: Array<number>,
+    ) {}
+}
+
 @Injectable()
 export class CrosswordService {
     private _gameManager: GameManager;
     private _gridStateSubject: BehaviorSubject<GridState>;
+    private _otherPlayersHover: Array<OtherPlayersHover>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridStateSubject = new BehaviorSubject<GridState>(new GridState());
+        this._otherPlayersHover = new Array<OtherPlayersHover>();
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
     }
 
     public get currentPlayer(): Observable<number> {
-        return this._gameManager.currentPlayerObs;
+        return this._gameManager.currentPlayerObs.asObservable();
     }
 
     public get difficulty(): Observable<Difficulty> {
-        return this._gameManager.difficultyObs;
+        return this._gameManager.difficultyObs.asObservable();
     }
 
     public get solvedWords(): Observable<SolvedWord[]> {
-        return this._gameManager.solvedWordsObs;
+        return this._gameManager.solvedWordsObs.asObservable();
     }
 
     public get gridStateObs(): Observable<GridState> {
@@ -43,15 +52,15 @@ export class CrosswordService {
     }
 
     public get playerGrid(): Observable<CrosswordGrid> {
-        return this._gameManager.playerGridObs;
+        return this._gameManager.playerGridObs.asObservable();
     }
 
     public get solvedGrid(): Observable<CrosswordGrid> {
-        return this._gameManager.solvedGridObs;
+        return this._gameManager.solvedGridObs.asObservable();
     }
 
     public get players(): Observable<Player[]> {
-        return this._gameManager.playersObs;
+        return this._gameManager.playersObs.asObservable();
     }
 
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): void {
@@ -200,5 +209,20 @@ export class CrosswordService {
         }
 
         return null;
+    }
+
+    public getLetterHighlightPlayer(letterId: number): PlayerId {
+        let player: PlayerId = null;
+        if (this._gridStateSubject.getValue().LIsHighlighted(letterId)) {
+            player = this._gameManager.currentPlayerObs.getValue();
+        } else {
+            this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
+                if (oph.hoverdLetters.indexOf(letterId) > -1) {
+                    player = oph.playerId;
+                }
+            });
+        }
+
+        return player;
     }
 }

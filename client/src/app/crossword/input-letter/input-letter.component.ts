@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Players } from "../../../../../common/communication/Player";
+import { PlayerId } from "../../../../../common/communication/Player";
 import { GridState } from "../grid-state/grid-state";
 import { CrosswordService } from "../crossword-service/crossword.service";
 
@@ -45,17 +45,13 @@ export class InputLetterComponent implements OnInit {
         return this._gridState.LIsCurrentLetter(this.id);
     }
 
-    public isPlayer(playerIs: Players): boolean { // TODO: Check What this means
-        return this._gridState.currentPlayer === Players.PLAYER1;
-    }
-
     public get playerHiglightCSS(): {} {
-        const player: Players = 1;
+        const player: PlayerId = this._crosswordService.getLetterHighlightPlayer(this.id);
         const color: string = this.getPlayerColor(player);
         const bgColor: string = this.getBGPlayerColor(player);
 
         if (player === null) {
-            return player;
+            return {};
         }
 
         return {
@@ -65,19 +61,19 @@ export class InputLetterComponent implements OnInit {
         };
     }
 
-    public getPlayerColor(player: Players): string { // TODO: Find a good algo for generating colors
+    public getPlayerColor(player: PlayerId): string { // TODO: Find a good algo for generating colors
         switch (player) {
-            case Players.PLAYER1: return "steelblue";
-            case Players.PLAYER2: return "#b46146";
+            case PlayerId.PLAYER1: return "steelblue";
+            case PlayerId.PLAYER2: return "#b46146";
             default:
                 return "steelblue";
         }
     }
 
-    public getBGPlayerColor(player: Players): string {
+    public getBGPlayerColor(player: PlayerId): string {
         switch (player) {
-            case Players.PLAYER1: return "#b6cee2";
-            case Players.PLAYER2: return "#dbb1a3";
+            case PlayerId.PLAYER1: return "#b6cee2";
+            case PlayerId.PLAYER2: return "#dbb1a3";
             default:
                 return "#b6cee2";
         }
