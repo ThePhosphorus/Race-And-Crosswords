@@ -3,7 +3,6 @@ import { Difficulty, CrosswordGrid, Orientation, Word, Letter } from "../../../.
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
 import { GridState } from "../grid-state/grid-state";
-import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player, PlayerId } from "../../../../../common/communication/Player";
@@ -35,32 +34,32 @@ export class CrosswordService {
         }
     }
 
-    public get currentPlayer(): Observable<number> {
-        return this._gameManager.currentPlayerObs.asObservable();
+    public get currentPlayer(): BehaviorSubject<number> {
+        return this._gameManager.currentPlayerObs;
     }
 
-    public get difficulty(): Observable<Difficulty> {
-        return this._gameManager.difficultyObs.asObservable();
+    public get difficulty(): BehaviorSubject<Difficulty> {
+        return this._gameManager.difficultyObs;
     }
 
-    public get solvedWords(): Observable<SolvedWord[]> {
-        return this._gameManager.solvedWordsObs.asObservable();
+    public get solvedWords(): BehaviorSubject<SolvedWord[]> {
+        return this._gameManager.solvedWordsObs;
     }
 
-    public get gridStateObs(): Observable<GridState> {
-        return this._gridStateSubject.asObservable();
+    public get gridStateObs(): BehaviorSubject<GridState> {
+        return this._gridStateSubject;
     }
 
-    public get playerGrid(): Observable<CrosswordGrid> {
-        return this._gameManager.playerGridObs.asObservable();
+    public get playerGrid(): BehaviorSubject<CrosswordGrid> {
+        return this._gameManager.playerGridObs;
     }
 
-    public get solvedGrid(): Observable<CrosswordGrid> {
-        return this._gameManager.solvedGridObs.asObservable();
+    public get solvedGrid(): BehaviorSubject<CrosswordGrid> {
+        return this._gameManager.solvedGridObs;
     }
 
-    public get players(): Observable<Player[]> {
-        return this._gameManager.playersObs.asObservable();
+    public get players(): BehaviorSubject<Player[]> {
+        return this._gameManager.playersObs;
     }
 
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean ): void {
