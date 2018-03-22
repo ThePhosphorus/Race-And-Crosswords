@@ -1,6 +1,5 @@
 import { Difficulty, CrosswordGrid, Word, Letter } from "../../../../../common/communication/crossword-grid";
 import { Players, Player } from "../../../../../common/communication/Player";
-import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
@@ -13,56 +12,40 @@ export class SolvedWord {
 }
 
 export class GameManager {
-    private _solvedGrid: CrosswordGrid;
-    private _solvedWords: SolvedWord[];
     private _players: BehaviorSubject<Player[]>;
-    private _isMultiplayer: boolean;
-    private _myPlayer: Players;
-    private _difficulty: Difficulty;
-    private _playerGridSubject: BehaviorSubject<CrosswordGrid>;
-    private _solvedWordsSubject: Subject<SolvedWord[]>;
-    private _solvedGridSubject: Subject<CrosswordGrid>;
-    private _currentPlayerSubject: Subject<number>;
-    private _difficultySubject: Subject<Difficulty>;
+    private _playerGrid: BehaviorSubject<CrosswordGrid>;
+    private _solvedWords: BehaviorSubject<SolvedWord[]>;
+    private _solvedGrid: BehaviorSubject<CrosswordGrid>;
+    private _currentPlayer: BehaviorSubject<number>;
+    private _difficulty: BehaviorSubject<Difficulty>;
 
     public constructor() {
-        this._playerGridSubject = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
-        this._solvedWordsSubject = new Subject<SolvedWord[]>();
-        this._solvedGridSubject = new Subject<CrosswordGrid>();
-        this._currentPlayerSubject = new Subject<number>();
-        this._difficultySubject =  new Subject<Difficulty>();
+        this._playerGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
+        this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
+        this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
+        this._currentPlayer = new BehaviorSubject<number>(0);
+        this._difficulty =  new BehaviorSubject<Difficulty>(Difficulty.Easy);
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
         this.initializeEmptyGrid();
     }
 
     public newGame(): void {
-        this._solvedGrid = new CrosswordGrid();
-        this._solvedWords = [];
-        this._isMultiplayer = false;
-        this._myPlayer = Players.PLAYER1;
-        this._difficulty = Difficulty.Easy;
-        this.notifyAll();
-    }
-
-    private notifyAll(): void {
-        this._difficultySubject.next(this._difficulty);
-        this._playerGridSubject.next(new CrosswordGrid());
-        this._solvedGridSubject.next(this._solvedGrid);
-        this._solvedWordsSubject.next(this._solvedWords);
-        this._currentPlayerSubject.next(this._myPlayer);
+        this._solvedGrid.next(new CrosswordGrid());
+        this._currentPlayer.next(Players.PLAYER1);
+        this._difficulty.next(Difficulty.Easy);
     }
 
     public get difficultyObs(): Observable<Difficulty> {
-        return this._difficultySubject.asObservable();
+        return this._difficulty.asObservable();
     }
 
     public get solvedWordsObs(): Observable<SolvedWord[]> {
-        return this._solvedWordsSubject.asObservable();
+        return this._solvedWords.asObservable();
     }
 
     public get currentPlayerObs(): Observable<Players> {
-        return this._currentPlayerSubject.asObservable();
+        return this._currentPlayer.asObservable();
     }
 
     public get playersObs(): Observable<Player[]> {
@@ -70,16 +53,16 @@ export class GameManager {
     }
 
     public get playerGridObs(): Observable<CrosswordGrid> {
-        return this._playerGridSubject.asObservable();
+        return this._playerGrid.asObservable();
     }
 
     public get solvedGridObs(): Observable<CrosswordGrid> {
-        return this._solvedGridSubject.asObservable();
+        return this._solvedGrid.asObservable();
     }
 
     public set grid(crosswordGrid: CrosswordGrid) {
-        this._solvedGrid = crosswordGrid;
-        this.relinkLetters(this._solvedGrid);
+        const solvedGrid: CrosswordGrid = crosswordGrid; // TODO: create a function for copy is solvedGrid
+        this.relinkLetters(solvedGrid);
 
         const playerGrid: CrosswordGrid = JSON.parse(JSON.stringify(crosswordGrid));
         this.relinkLetters(playerGrid);
@@ -90,32 +73,35 @@ export class GameManager {
             }
         });
 
-        this._playerGridSubject.next(playerGrid);
-        this._solvedGridSubject.next(this._solvedGrid);
+        this._playerGrid.next(playerGrid);
+        this._solvedGrid.next(solvedGrid);
     }
 
     public set players( players: Player[]) {
         this._players.next(players);
     }
 
+    public set currentPlayer(player: Players) {
+        this._currentPlayer.next(player);
+    }
+
     public getChar(index: number): string {
-        return this._playerGridSubject.getValue().grid[index].char;
+        return this._playerGrid.getValue().grid[index].char;
     }
 
     public setChar(index: number, char: string): void {
-        this._playerGridSubject.value.grid[index].char = char;
+        this._playerGrid.value.grid[index].char = char;
     }
 
     public set difficulty(difficulty: Difficulty) {
-        this._difficulty = difficulty;
-        this._difficultySubject.next(this._difficulty);
+        this._difficulty.next(difficulty);
     }
 
     public addSolvedWord(word: Word): boolean {
-        this._solvedWords.push(new SolvedWord(this._playerGridSubject.getValue().words.indexOf(word), this._myPlayer));
-        this._solvedWordsSubject.next(this._solvedWords);
+        this._solvedWords.value.push(
+            new SolvedWord(this._playerGrid.getValue().words.indexOf(word), this._currentPlayer.value));
 
-        return this._solvedWords.length === this._solvedGrid.words.length;
+        return this._solvedWords.value.length === this._solvedGrid.getValue().words.length;
     }
 
     private relinkLetters(crosswordGrid: CrosswordGrid): void {
@@ -131,14 +117,14 @@ export class GameManager {
     }
 
     private initializeEmptyGrid(): void {
-        this._playerGridSubject.value.size = INITIAL_GRID_SIZE;
-        for (let i: number = 0; i < (this._playerGridSubject.value.size * this._playerGridSubject.value.size); i++) {
-            this._playerGridSubject.value.grid.push(new Letter(EMPTY_TILE_CHARACTER));
+        this._playerGrid.value.size = INITIAL_GRID_SIZE;
+        for (let i: number = 0; i < (this._playerGrid.value.size * this._playerGrid.value.size); i++) {
+            this._playerGrid.getValue().grid.push(new Letter(EMPTY_TILE_CHARACTER));
         }
     }
 
     public findWordFromLetter(index: number, orientation: string, isSolved: boolean): Word {
-        const targetGrid: CrosswordGrid = isSolved ? this._solvedGrid : this._playerGridSubject.getValue();
+        const targetGrid: CrosswordGrid = isSolved ? this._solvedGrid.getValue() : this._playerGrid.getValue();
         for (const word of targetGrid.words) {
             if (word.orientation === orientation) {
                 for (const letter of word.letters) {
