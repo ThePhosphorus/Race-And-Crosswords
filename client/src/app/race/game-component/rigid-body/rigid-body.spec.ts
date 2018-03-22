@@ -9,7 +9,7 @@ describe("Rigid Body", () => {
     let rb: RigidBody;
     let obj: Object3D;
 
-    beforeEach(async (done: () => void) => {
+    beforeEach(() => {
         rb = new RigidBody(DEFAULT_MASS, false);
         obj = new Object3D();
         obj.add(rb);
