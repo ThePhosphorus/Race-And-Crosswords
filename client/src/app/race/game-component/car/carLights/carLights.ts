@@ -27,7 +27,6 @@ import {
     TARGET_OFFSET
 } from "./lights-constants";
 
-
 export class CarLights extends Object3D {
     private frontLight: SpotLight;
     private brakeLights: Array<SpotLight>;
@@ -92,7 +91,7 @@ export class CarLights extends Object3D {
         this.brakeLights.forEach((smallLight) => {
             if (smallLight !== this.brakeLights[0]) {
                 smallLight.color = new Color(WHITE);
-                smallLight.intensity = 20;
+                smallLight.intensity = SMALL_LIGHT_INTENSITY;
             }});
         this.brakeLights[0].intensity = 0;
     }
