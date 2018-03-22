@@ -34,7 +34,7 @@ const DEFAULT_FRICTION: number = 400000;
 const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
-const MIN_DRIFT_SPEED: number = 2* METER_TO_KM_SPEED_CONVERSION;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -263,7 +263,6 @@ export class Car extends Object3D {
     }
 
     private carPenalty(): void {
-        this.hasPenalty = true;
         this.frictionCoefficient = HANDBRAKE_FRICTION;
     }
 
