@@ -7,6 +7,7 @@ import { InputManagerService } from "../input-manager-service/input-manager.serv
 import { SoundManagerService } from "../game-component/sound-manager-service/sound-manager.service";
 import { CollisionDetectorService } from "../game-component/collision/collision-detector.service";
 import { LightManagerService } from "../game-component/light-manager/light-manager.service";
+import { RpmBarComponent } from "./rpm-bar/rpm-bar.component";
 
 describe("HudComponent", () => {
   let component: HudComponent;
@@ -14,7 +15,7 @@ describe("HudComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HudComponent ],
+      declarations: [ HudComponent, RpmBarComponent ],
       providers: [GameManagerService,
                   CameraManagerService,
                   InputManagerService,
