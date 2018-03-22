@@ -158,15 +158,14 @@ export class Car extends Object3D {
         const resultingForce: Vector2 = new Vector2();
         const dragForce: Vector2 = this.getDragForce();
         const rollingResistance: Vector2 = this.getRollingResistance();
+        const tractionForce: number = this.getTractionForce();
+        const accelerationForce: Vector2 = this.direction2D;
         resultingForce.add(dragForce).add(rollingResistance);
-
         if (this.carControl.isAcceleratorPressed) {
-            const tractionForce: number = this.getTractionForce();
-            const accelerationForce: Vector2 = this.direction2D;
+
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
-            this.carLights.releaseBrakes();
-            this.carLights.releaseReverse();
+            this.turnOffRearLights();
         } else if (this.carControl.isBraking && this.isGoingForward()) {
             resultingForce.add(this.getBrakeForce());
             this.carLights.releaseReverse();
@@ -175,16 +174,19 @@ export class Car extends Object3D {
             this.carLights.releaseBrakes();
             this.carLights.reverse();
             if (Math.abs(this.speed) < DOUBLE * METER_TO_KM_SPEED_CONVERSION) {
-                const tractionForce: number = this.getTractionForce();
-                const accelerationForce: Vector2 = this.direction2D;
                 accelerationForce.multiplyScalar(tractionForce);
                 resultingForce.sub(accelerationForce);
             }
+        } else {
+            this.turnOffRearLights();
         }
 
         return resultingForce;
     }
-
+    private turnOffRearLights(): void {
+        this.carLights.releaseBrakes();
+        this.carLights.releaseReverse();
+    }
     private getRollingResistance(): Vector2 {
         const tirePressure: number = 1;
         // formula taken from: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
