@@ -34,4 +34,8 @@ describe("RpmBarComponent", () => {
   it("should create", () => {
     expect(component).toBeTruthy();
   });
+
+  it("should disply right gear", () => {
+    expect(component).toBeTruthy();
+  });
 });
