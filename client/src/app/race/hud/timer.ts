@@ -27,9 +27,7 @@ export class Timer {
     }
 
     public reset(): void {
-        this._centiseconds = 0;
-        this._seconds = 0;
-        this._minutes = 0;
+        this.initNumbers();
     }
 
     public get minutes(): number {

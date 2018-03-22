@@ -76,7 +76,8 @@ export class GameManagerService extends Renderer {
     private _directionalLight: DirectionalLight;
     private _dayAmbientLight: AmbientLight;
     private _nightAmbientLight: AmbientLight;
-    private _hudSubject: Subject<number>;
+    private _hudTimerSubject: Subject<number>;
+    private _hudLapResetSubject: Subject<void>;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -88,7 +89,8 @@ export class GameManagerService extends Renderer {
         this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
         this._isNightMode = false;
         this._isShadowMode = false;
-        this._hudSubject = new Subject<number>();
+        this._hudTimerSubject = new Subject<number>();
+        this._hudLapResetSubject = new Subject<void>();
 
         this._player = new Car(this.cameraManager);
         this._aiControlledCars = new Array<Car>();
@@ -114,17 +116,20 @@ export class GameManagerService extends Renderer {
         this.loadSunlight();
         this.startRenderingLoop();
     }
-    public get hud(): Observable<number> {
-        return this._hudSubject.asObservable();
+    public get hudTimer(): Observable<number> {
+        return this._hudTimerSubject.asObservable();
+    }
+    public get hudLapReset(): Observable<void> {
+        return this._hudLapResetSubject.asObservable();
     }
 
     public getDeltaTime(): Observable<number> {
-        return this._hudSubject.asObservable();
+        return this._hudTimerSubject.asObservable();
     }
 
     protected update(deltaTime: number): void {
         this._player.update(deltaTime);
-        this._hudSubject.next(deltaTime);
+        this._hudTimerSubject.next(deltaTime);
         this._aiControlledCars.forEach((car) => car.update(deltaTime));
         this.cameraTargetDirection = this._player.direction;
         this.cameraTargetPosition = this._player.getPosition();
@@ -163,7 +168,10 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
         // TODO: REMOVE THIS BECAUSE IT'S TEMPORARY
-        this.inputManager.registerKeyDown(13, () => this._player.collisionSound());
+        this.inputManager.registerKeyDown(13, () => this.resetLapTimer());
+    }
+    private resetLapTimer(): void {
+        this._hudLapResetSubject.next();
     }
 
     private loadSunlight(): void {

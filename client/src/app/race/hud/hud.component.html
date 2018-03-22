@@ -6,12 +6,12 @@
         <span id="chron">{{globalTimer.minutes | number :'2.0-0'}}</span>:<span id="chron">{{globalTimer.seconds | number :'2.0-0'}}</span>.<span id = "cent"></span><span id="cent">{{globalTimer.centiseconds | number :'2.0-0'}}</span>
       </div>
       <div class="display" id="timerLap">
-          <span id="lap">LAP:  </span><span id="chron">{{globalTimer.minutes | number :'2.0-0'}}</span>:<span id="chron">{{globalTimer.seconds | number :'2.0-0'}}</span>.<span id = "cent"></span><span id="cent">{{globalTimer.centiseconds | number :'2.0-0'}} </span>
+          <span id="lap">LAP:  </span><span id="chron">{{lapTimer.minutes | number :'2.0-0'}}</span>:<span id="chron">{{lapTimer.seconds | number :'2.0-0'}}</span>.<span id = "cent"></span><span id="cent">{{lapTimer.centiseconds | number :'2.0-0'}} </span>
       </div>
     </div>
   </div>
   <div class="row w-100 justify-content-right align-items-end mt-4" id="hudBody" >
-  
+
     <div class="col-block col-4 fixed-bottom pb-3 mr-5 pr-3 w-50  mb-5"><app-rpm-bar></app-rpm-bar></div>
   </div>
 
