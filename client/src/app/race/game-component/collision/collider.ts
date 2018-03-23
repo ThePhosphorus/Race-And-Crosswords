@@ -29,7 +29,6 @@ export class Collider extends Object3D {
                 edge.y,
                 -edge.x
             );
-            console.log(normal);
             normals.push(normal);
         }
 
