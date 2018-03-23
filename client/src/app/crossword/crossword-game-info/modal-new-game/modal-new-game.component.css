@@ -17,18 +17,15 @@
     overflow-y: scroll;
     max-height: 25vmin;
     position: relative;
-    box-shadow: 0vmin 0vmin 0.2vmin 0.3vmin gray;
 }
 ::-webkit-scrollbar {
     width: 1vmin;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     background: darkgray;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: grey;
 }
@@ -42,6 +39,11 @@
 }
 #difficultySelector .btn-secondary:focus {
     box-shadow: none;
+}
+#noMatch {
+    font-size: 90%;
+    text-decoration: underline;
+    padding-bottom: 10%;
 }
 
 #cancelBtn {

@@ -1,8 +1,7 @@
 <div class="row  row justify-content-center " *ngIf="loading||searching" id="overlay">
-    <div class="col-4 text-center  justify-content-center center-block align-items-center mt-5 pt-3">
-  <p *ngIf="loading"  id="loading">LOADING</p>
-  <p *ngIf="searching"  id="searching">Looking for a friend</p>
-  <p id="dots">...</p>
+    <div class="col-4 text-center  justify-content-center align-middle center-block align-items-center mt-5 pt-3">
+  <p *ngIf="loading"  id="loading">Crossing the words</p>
+  <p *ngIf="searching&&!loading"  id="searching">Looking for a friend</p>
 
     </div>
 </div>

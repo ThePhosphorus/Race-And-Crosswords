@@ -13,9 +13,9 @@
               </button>
             </div>
             <div id="listAvailable" [class.collapse]="!isCollapsedAvailablePlayer">
-              <div class="card card-block pr-2 pl-2  w-100">
+              <div class="card card-block mt-2 pr-2 pl-2  w-100">
                 Join A Game?
-                <table class="table w-100 mb-0" id="AvailableTable">
+                <table class="table w-100 mt-2 mb-0" id="AvailableTable">
 
                   <tbody >
                       <div class="list-group w-100" id="bodyOfMatches">
@@ -24,10 +24,15 @@
                                   [ngClass]="{'easy': match.difficulty == 'Difficulty.Easy', 'medium': match.difficulty == 'Difficulty.Medium', 'hard': match.difficulty == 'Difficulty.Hard'}">
                              {{match.name}} - {{match.difficulty}}
                       </a>
+
                       </tr>
+
                       </div>
                       <tr>
-                        Or
+                          <a id="noMatch" *ngIf="matches.length===0">Sorry, no one wants to play with you</a>
+                      </tr>
+                      <tr>
+                          Or
                       </tr>
                     <tr>
                       <button id="newGame" (click)="showLevelChoice(true); joinedPlayer = null" class="btn btn-secondary  m-2 w-75 m-0">
