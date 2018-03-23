@@ -122,7 +122,7 @@ export class MatchManager {
 
     public playerLeave(id: number): void {
         this._players.splice(id, 1);
-        this.notifyOthers(id, msg.getGrid, this.Players);
+        this.notifyAll(msg.getPlayers, this.Players);
 
     }
 
