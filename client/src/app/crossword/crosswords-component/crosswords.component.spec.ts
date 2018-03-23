@@ -30,5 +30,8 @@ describe("CrosswordsComponent", () => {
   it("should create", () => {
     expect(component).toBeTruthy();
   });
+  it("loading should be true on init", () => {
+    expect(component.loading).toBeTruthy();
+  });
 
 });

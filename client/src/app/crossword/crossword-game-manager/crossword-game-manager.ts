@@ -59,6 +59,10 @@ export class GameManager {
         return this._solvedGrid;
     }
 
+    public get myPlayer(): Player {
+        return this._players.getValue()[this._currentPlayer.getValue()];
+    }
+
     public set grid(crosswordGrid: CrosswordGrid) {
         const solvedGrid: CrosswordGrid = crosswordGrid; // TODO: create a function for copy is solvedGrid
         this.relinkLetters(solvedGrid);

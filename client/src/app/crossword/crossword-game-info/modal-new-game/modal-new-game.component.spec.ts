@@ -29,4 +29,10 @@ describe("ModalNewGameComponent", () => {
     component.changeLevel(diff);
     expect(component.lvl).toBe(diff);
 });
+it("should receive a promise", inject([CrosswordCommunicationService], (service: CrosswordCommunicationService) => {
+    this._crosswordService.newGame(this._lvl, this.isSinglePlayer);
+    service.grid.subscribe( (grid: CrosswordGrid) => {
+      expect(grid).toBeDefined();
+    });
+}));
 });
