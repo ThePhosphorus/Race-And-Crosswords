@@ -6,7 +6,7 @@ const TWICE: number = 2;
 
 export class RigidBody extends Object3D {
 
-    private fixed: boolean;
+    private _fixed: boolean;
     private forces: Vector2;
     private frictionForce: Vector2;
     private torque: number;
@@ -27,9 +27,13 @@ export class RigidBody extends Object3D {
         return this._angularVelocity;
     }
 
+    public get fixed(): boolean {
+        return this._fixed;
+    }
+
     public constructor(mass: number, fixed?: boolean) {
         super();
-        this.fixed = fixed == null ? false : fixed;
+        this._fixed = fixed == null ? false : fixed;
         this.torque = 0;
         this.forces = new Vector2(0, 0);
         this.frictionForce = new Vector2(0, 0);
@@ -80,7 +84,7 @@ export class RigidBody extends Object3D {
         if (!(this.parent instanceof Object3D)) {
             return;
         }
-        if (this.fixed) {
+        if (this._fixed) {
             this.forces = new Vector2();
             this.torque = 0;
 

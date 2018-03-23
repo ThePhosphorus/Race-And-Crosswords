@@ -60,16 +60,16 @@ export class Collider extends Object3D {
 
     private initialiseRelativeVertexes(width: number, length: number, offset: Vector2): void {
         this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
-            0,
-            offset.y + (length * HALF)));
+                                               0,
+                                               offset.y + (length * HALF)));
         this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
-            0,
-            offset.y + (length * HALF)));
+                                               0,
+                                               offset.y + (length * HALF)));
         this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
-            0,
-            offset.y - (length * HALF)));
+                                               0,
+                                               offset.y - (length * HALF)));
         this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
-            0,
-            offset.y - (length * HALF)));
+                                               0,
+                                               offset.y - (length * HALF)));
     }
 }

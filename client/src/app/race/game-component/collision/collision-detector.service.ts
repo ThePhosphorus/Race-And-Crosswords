@@ -15,7 +15,9 @@ export class CollisionDetectorService {
         const colliders: Array<Collider> = this.getColliders(scene);
         for (let i: number = 0; i < colliders.length; i++) {
             for (let j: number = i + 1; j < colliders.length; j++) {
-                if (this.broadDetection(colliders[i], colliders[j])) {
+                const rb1: RigidBody = colliders[i].rigidBody;
+                const rb2: RigidBody = colliders[j].rigidBody;
+                if (rb1 != null && rb2 != null && (!rb1.fixed || !rb2.fixed) && this.broadDetection(colliders[i], colliders[j])) {
                     const collision: Collision = this.boxBoxDetection(colliders[i], colliders[j]);
                     if (collision != null) {
                         this.resolveCollision(collision);
@@ -38,7 +40,7 @@ export class CollisionDetectorService {
 
     private broadDetection(coll1: Collider, coll2: Collider): boolean {
         return coll2.getAbsolutePosition().clone().sub(
-                coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
+            coll1.getAbsolutePosition()).length() <= (coll1.getBroadRadius() + coll2.getBroadRadius());
     }
 
     private boxBoxDetection(coll1: Collider, coll2: Collider): Collision {
