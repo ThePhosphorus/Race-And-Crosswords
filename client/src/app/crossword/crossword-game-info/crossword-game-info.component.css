@@ -44,14 +44,6 @@ p {
     margin-bottom: 0%
 }
 
-#player1 {
-    background-color: #b6cee2;
-}
-
-#player2 {
-    background-color: #dbb1a3;
-}
-
 #info .btn:hover {
     background-color: transparent;
     box-shadow: transparent;

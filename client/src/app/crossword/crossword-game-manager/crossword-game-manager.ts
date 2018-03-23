@@ -68,7 +68,7 @@ export class GameManager {
     }
 
     public set grid(crosswordGrid: CrosswordGrid) {
-        const solvedGrid: CrosswordGrid = crosswordGrid; // TODO: create a function for copy is solvedGrid
+        const solvedGrid: CrosswordGrid = crosswordGrid;
         this.relinkLetters(solvedGrid);
 
         const playerGrid: CrosswordGrid = JSON.parse(JSON.stringify(crosswordGrid));
@@ -108,9 +108,9 @@ export class GameManager {
         this._difficulty.next(difficulty);
     }
 
-    public addSolvedWord(word: Word): boolean {
+    public addSolvedWord(word: Word, playerId: PlayerId): boolean {
         this._solvedWords.value.push(
-            new SolvedWord(this._playerGrid.getValue().words.indexOf(word), Orientation.Across, this._currentPlayer.value));
+            new SolvedWord(this._playerGrid.getValue().words.indexOf(word), Orientation.Across, playerId));
 
         return this._solvedWords.value.length === this._solvedGrid.getValue().words.length;
     }

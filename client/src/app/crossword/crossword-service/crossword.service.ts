@@ -83,8 +83,8 @@ export class CrosswordService {
                 };
                 this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
                     this.selectWordFromOtherPlayer(playerId, letterId, orientation);
-                this.commService.listenerReceiveUpdatedWord = (word: Word) =>
-                    this.disableWord(word);
+                this.commService.listenerIsCompletedFirst = (playerId: PlayerId, word: Word) =>
+                    this.disableWord(word, playerId);
             }
         }
     }
@@ -96,7 +96,6 @@ export class CrosswordService {
                 this._gridStateSubject.value.hoveredLetters.push(letter.id);
             }
         }
-        // this._gridStateSubject.next(this._gridState);
     }
 
     public setSelectedLetter(index: number): void {
@@ -142,7 +141,6 @@ export class CrosswordService {
             }
             this._gridStateSubject.value.currentLetter = startingIndex;
         }
-        // this._gridStateSubject.next(this._gridState);
     }
 
     public unselectWord(): void {
@@ -150,10 +148,9 @@ export class CrosswordService {
         this._gridStateSubject.value.selectedLetters = [];
         this._gridStateSubject.value.hoveredLetters = [];
         this._gridStateSubject.value.currentOrientation = Orientation.Across;
-        // this._gridStateSubject.next(this._gridState);
     }
 
-    private disableWord(word: Word): void {
+    private disableWord(word: Word, playerId: PlayerId): void {
         for (const orientation of Object.keys(Orientation)) {
             for (const letter of word.letters) {
                 this._gridStateSubject.value.disabledLetters.push(letter.id);
@@ -161,7 +158,7 @@ export class CrosswordService {
             }
             if (orientation === this._gridStateSubject.value.currentOrientation) {
                 this.unselectWord();
-                if (this._gameManager.addSolvedWord(word)) {
+                if (this._gameManager.addSolvedWord(word, playerId)) {
                     // show end game modal
                 }
             }
@@ -176,11 +173,6 @@ export class CrosswordService {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     this.commService.completedWord(solvedWord);
-                    this.commService.listenerIsCompletedFirst = (isFirst: boolean) => {
-                        if (isFirst) {
-                            this.disableWord(solvedWord);
-                        }
-                    };
                 }
             }
         }

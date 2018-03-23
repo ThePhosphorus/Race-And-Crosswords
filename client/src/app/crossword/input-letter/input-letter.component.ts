@@ -12,13 +12,11 @@ export class InputLetterComponent implements OnInit {
     @Input() public letter: string; // TODO: Get object from service and not trough @Input() (We already know the id)
     @Input() public id: number;
     private _gridState: GridState;
-    private _isOtherPlayerSelected: boolean;
 
     public constructor(private _crosswordService: CrosswordService) {
         this.letter = "	 ";
         this.id = 1;
         this._gridState = new GridState();
-        this._isOtherPlayerSelected = false;
     }
 
     public ngOnInit(): void {
@@ -39,10 +37,6 @@ export class InputLetterComponent implements OnInit {
         return this._gridState.LIsHovered(this.id);
     }
 
-    public isHighlighted(): boolean {
-        return this._gridState.LIsHighlighted(this.id) || this._isOtherPlayerSelected;
-    }
-
     public isCurrentLetter(): boolean {
         return this._gridState.LIsCurrentLetter(this.id);
     }
@@ -50,33 +44,23 @@ export class InputLetterComponent implements OnInit {
     public get playerHiglightCSS(): {} {
         let color: string = "white";
         let bgColor: string = "white";
-        this._isOtherPlayerSelected = true;
         const players: Array<PlayerId> = this._crosswordService.getLetterHighlightPlayers(this.id);
         if (players.length === 0) {
-            this._isOtherPlayerSelected = false;
-
             return {};
-        } else if (players.length === 1) {
+        } else {
             color = this._crosswordService.getPlayerColor(players[0], true);
             bgColor = this._crosswordService.getPlayerColor(players[0], false);
 
             return {
+                "border-style" : "dotted",
+                "width" : "90%",
+                "height" : "90%",
+                "border-width": "0.2vmin",
                 "border-color": color,
                 "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
                 "background-color": bgColor
             };
-        } else {
-            color = this._crosswordService.getPlayerColor(players[0], true);
-            const secondColor: string = this._crosswordService.getPlayerColor(players[1], true);
-
-            return {
-                "background-image": "repeating-linear-gradient(45deg" +
-                    color + "25%," + color + "25%," + secondColor + "25%," + secondColor + "25%);"
-            };
         }
-
-
-
 
     }
 }

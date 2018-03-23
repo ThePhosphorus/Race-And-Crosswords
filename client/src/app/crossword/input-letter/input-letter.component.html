@@ -1,7 +1,7 @@
 <div class="input-letter" >
   <button   [ngStyle]="playerHiglightCSS" type="button" (click)="select()"
   [ngClass]="{'disabled': isDisabled(), 'hovered': isHovered() &&
-              !isDisabled(), 'current': isCurrentLetter(), 'highlight': isHighlighted() }" >
+              !isDisabled(), 'current': isCurrentLetter() }" >
     {{ letter | uppercase }}
   </button>
 </div>
