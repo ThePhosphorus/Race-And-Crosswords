@@ -7,11 +7,11 @@ export class Collider extends Object3D {
     private radius: number;
     private relativeVertexes: Vector3[];
 
-    public constructor(width: number, length: number) {
+    public constructor(width: number, length: number, offset: Vector2 = new Vector2(0 , 0)) {
         super();
-        this.radius = this.pythagore(width * HALF, length * HALF);
+        this.radius = this.pythagore(offset.x + (width * HALF), offset.y + (length * HALF));
         this.relativeVertexes = new Array<Vector3>();
-        this.initialiseRelativeVertexes(width, length);
+        this.initialiseRelativeVertexes(width, length, offset);
     }
 
     public getNormals(): Array<Vector2> {
@@ -52,10 +52,18 @@ export class Collider extends Object3D {
         return Math.sqrt((x * x) + (y * y));
     }
 
-    private initialiseRelativeVertexes(width: number, length: number): void {
-        this.relativeVertexes.push(new Vector3(width * HALF, 0, length * HALF));
-        this.relativeVertexes.push(new Vector3(-width * HALF, 0, length * HALF));
-        this.relativeVertexes.push(new Vector3(-width * HALF, 0, -length * HALF));
-        this.relativeVertexes.push(new Vector3(width * HALF, 0, -length * HALF));
+    private initialiseRelativeVertexes(width: number, length: number, offset: Vector2): void {
+        this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
+                                               0,
+                                               offset.y + (length * HALF)));
+        this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
+                                               0,
+                                               offset.y + (length * HALF)));
+        this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
+                                               0,
+                                               offset.y - (length * HALF)));
+        this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
+                                               0,
+                                               offset.y - (length * HALF)));
     }
 }
