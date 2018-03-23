@@ -140,7 +140,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.lightManager.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
-        this.inputManager.registerKeyDown(13, () => this._hudLapResetSubject.next()); // FOR TEST PURPOSES
 
     }
 

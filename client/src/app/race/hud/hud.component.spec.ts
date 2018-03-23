@@ -51,9 +51,9 @@ describe("HudComponent", () => {
     });
 
     it("should increment global timer", () => {
-        const CENTISECONDS: number = 1;
-        const SECONDS: number = 0;
-        const MINUTES: number = 1;
+        const CENTISECONDS: number = 8;
+        const SECONDS: number = 12;
+        const MINUTES: number = 6;
         const DELTA_TIME: number = 60000 * MINUTES + 1000 * SECONDS + 10 * CENTISECONDS;
         component.globalTimer.update(DELTA_TIME);
         console.log(component.globalTimer.centiseconds);
