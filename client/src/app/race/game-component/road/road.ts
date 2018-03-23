@@ -3,7 +3,7 @@ import { Collider } from "../collision/collider";
 import { RigidBody } from "../rigid-body/rigid-body";
 import { DEFAULT_MASS } from "../../race.constants";
 
-const WALL_WIDTH: number = 10;
+const WALL_WIDTH: number = 2;
 
 class WallDimensions {
     public constructor(public length: number, public offset: Vector2) {}
