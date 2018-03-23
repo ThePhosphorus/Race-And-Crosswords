@@ -94,6 +94,7 @@ export class MatchManager {
         this.getPlayerById(playerId).socket.emit(msg.completedWord, confirmWord);
         if (confirmWord) {
             this.completedWords.push(w);
+            this.incerementScore(playerId);
             this.notifyOthers(playerId, msg.updateWord, w);
         }
     }
@@ -121,6 +122,11 @@ export class MatchManager {
         this._players.splice(id, 1);
         this.notifyOthers(id, msg.getGrid, this.Players);
 
+    }
+
+    public incerementScore(playerId: number): void {
+        this.getPlayerById(playerId).score++;
+        this.notifyAll(msg.getPlayers, this.Players);
     }
 
 }

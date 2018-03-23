@@ -77,8 +77,10 @@ export class CrosswordService {
             } else {
                 this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
                     this._gameManager.grid = grid;
-                this.commService.listenerReceivePlayers = (players: Player[]) => this._gameManager.players = players;
-                this._gameManager.currentPlayer = this.commService.returnName;
+                this.commService.listenerReceivePlayers = (players: Player[]) => {
+                    this._gameManager.players = players;
+                    this._gameManager.currentPlayer = this.commService.returnName;
+                };
                 this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
                     this.selectWordFromOtherPlayer(playerId, letterId, orientation);
                 this.commService.listenerReceiveUpdatedWord = (word: Word) =>
@@ -175,7 +177,9 @@ export class CrosswordService {
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     this.commService.completedWord(solvedWord);
                     this.commService.listenerIsCompletedFirst = (bool: boolean) => {
-                       if (bool) { this.disableWord(solvedWord); }
+                        if (bool) {
+                            this.disableWord(solvedWord);
+                        }
                     };
                 }
             }

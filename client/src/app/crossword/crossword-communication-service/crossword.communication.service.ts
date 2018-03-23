@@ -76,7 +76,6 @@ export class CrosswordCommunicationService {
     public joinMatch(matchName: string): void {
         this.socket.emit(socketMsg.joinMatch, matchName);
     }
-
     private socketReturnName(id: number): void {
         this.socket.emit(socketMsg.requestName, this.socketInfos.returnName);
     }
