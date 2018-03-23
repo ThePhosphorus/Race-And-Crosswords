@@ -93,7 +93,6 @@ export class MatchManager {
                 confirmWord = false;
             }
         });
-        this.getPlayerById(playerId).socket.emit(msg.completedWord, confirmWord);
         if (confirmWord) {
             this.completedWords.push(w);
             this.incerementScore(playerId);
