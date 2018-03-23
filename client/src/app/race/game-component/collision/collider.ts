@@ -1,4 +1,5 @@
 import { Vector3, Vector2, Object3D } from "three";
+import { RigidBody } from "../rigid-body/rigid-body";
 
 const HALF: number = 0.5;
 
@@ -7,7 +8,7 @@ export class Collider extends Object3D {
     private radius: number;
     private relativeVertexes: Vector3[];
 
-    public constructor(width: number, length: number, offset: Vector2 = new Vector2(0 , 0)) {
+    public constructor(width: number, length: number, offset: Vector2 = new Vector2(0, 0)) {
         super();
         this.radius = this.pythagore(offset.x + (width * HALF), offset.y + (length * HALF));
         this.relativeVertexes = new Array<Vector3>();
@@ -30,6 +31,11 @@ export class Collider extends Object3D {
 
         return normals;
     }
+
+    public get rigidBody(): RigidBody {
+        return this.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+    }
+
     public getAbsoluteVertexes2D(): Vector2[] {
         const vertexes: Array<Vector2> = new Array<Vector2>();
         for (const vertex of this.relativeVertexes) {
@@ -54,16 +60,16 @@ export class Collider extends Object3D {
 
     private initialiseRelativeVertexes(width: number, length: number, offset: Vector2): void {
         this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
-                                               0,
-                                               offset.y + (length * HALF)));
+            0,
+            offset.y + (length * HALF)));
         this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
-                                               0,
-                                               offset.y + (length * HALF)));
+            0,
+            offset.y + (length * HALF)));
         this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
-                                               0,
-                                               offset.y - (length * HALF)));
+            0,
+            offset.y - (length * HALF)));
         this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
-                                               0,
-                                               offset.y - (length * HALF)));
+            0,
+            offset.y - (length * HALF)));
     }
 }

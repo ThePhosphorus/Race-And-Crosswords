@@ -65,8 +65,8 @@ export class CollisionDetectorService {
     }
 
     private resolveCollision(collision: Collision): void {
-        const rb1: RigidBody = collision.coll1.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
-        const rb2: RigidBody = collision.coll2.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        const rb1: RigidBody = collision.coll1.rigidBody;
+        const rb2: RigidBody = collision.coll2.rigidBody;
 
         if (rb1 != null && rb2 != null) {
             const m1: number = rb1.mass;
