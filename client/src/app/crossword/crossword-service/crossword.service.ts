@@ -176,8 +176,8 @@ export class CrosswordService {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     this.commService.completedWord(solvedWord);
-                    this.commService.listenerIsCompletedFirst = (bool: boolean) => {
-                        if (bool) {
+                    this.commService.listenerIsCompletedFirst = (isFirst: boolean) => {
+                        if (isFirst) {
                             this.disableWord(solvedWord);
                         }
                     };
@@ -185,6 +185,7 @@ export class CrosswordService {
             }
         }
     }
+
     public writeChar(key: string): void {
         if (this._gridStateSubject.value.currentLetter != null) {
             if (key.match(/^[a-zA-z]$/i) != null) {
