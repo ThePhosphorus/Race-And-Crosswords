@@ -236,6 +236,19 @@ export class CrosswordService {
         return players;
     }
 
+    public getLetterDisabledPlayers(letterId: number): Array<PlayerId> {
+        const players: Array<PlayerId> = new Array<PlayerId>();
+
+        this._gameManager.solvedWordsObs.getValue().forEach((sw: SolvedWord) => {
+            const word: Word = this._gameManager.findWordFromLetter(sw.id, sw.orientation, false);
+            if (word != null && word.letters.find((l: Letter) => l.id === letterId) != null) {
+                players.push(sw.player);
+             }
+        });
+
+        return players;
+    }
+
     public selectWordFromOtherPlayer(playerId: PlayerId, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersHover = this._otherPlayersHover.find((oph: OtherPlayersHover) => oph.playerId === playerId);
         if (player == null) {

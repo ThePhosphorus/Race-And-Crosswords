@@ -11,7 +11,7 @@ const MAX_ANGLE: number = 360;
 export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
 export class SolvedWord {
-    public constructor(public id: number, orientation: Orientation, public player: PlayerId) {}
+    public constructor(public id: number, public orientation: Orientation, public player: PlayerId) {}
 }
 
 export class GameManager {
@@ -110,7 +110,7 @@ export class GameManager {
 
     public addSolvedWord(word: Word, playerId: PlayerId): boolean {
         this._solvedWords.value.push(
-            new SolvedWord(this._playerGrid.getValue().words.indexOf(word), Orientation.Across, playerId));
+            new SolvedWord(word.id, word.orientation, playerId));
 
         return this._solvedWords.value.length === this._solvedGrid.getValue().words.length;
     }
