@@ -60,6 +60,7 @@ export class InputLetterComponent implements OnInit {
                 "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
                 "background-color": bgColor
             };
+        }
 
     }
 }
