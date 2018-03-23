@@ -43,7 +43,7 @@ export class Collider extends Object3D {
     public getAbsoluteVertexes2D(): Vector2[] {
         const vertexes: Array<Vector2> = new Array<Vector2>();
         for (const vertex of this.relativeVertexes) {
-            const absoluteVertex3D: Vector3 = vertex.clone().applyMatrix4(this.matrixWorld);
+            const absoluteVertex3D: Vector3 = vertex.clone().applyMatrix4(this.matrixWorld.clone());
             vertexes.push(new Vector2(absoluteVertex3D.x, absoluteVertex3D.z));
         }
 
@@ -55,7 +55,7 @@ export class Collider extends Object3D {
     }
 
     public getAbsolutePosition(): Vector3 {
-        return this.parent.position.clone();
+        return this.position.clone();
     }
 
     private pythagore(x: number, y: number): number {
