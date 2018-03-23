@@ -43,5 +43,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.newGameLoad.emit(isNewGame);
     }
 
-    // TODO: Complete Logic
+    public getBGColor(player: number): {} {
+        return {"background-color" : this._crosswordService.getPlayerColor(player, false)};
+    }
 }

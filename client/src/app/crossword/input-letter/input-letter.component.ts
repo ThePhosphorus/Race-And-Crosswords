@@ -40,7 +40,7 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isHighlighted(): boolean {
-        return this._gridState.LIsHighlighted(this.id) || this._isOtherPlayerSelected;
+        return this.playerHiglightCSS !== {};
     }
 
     public isCurrentLetter(): boolean {
@@ -50,10 +50,8 @@ export class InputLetterComponent implements OnInit {
     public get playerHiglightCSS(): {} {
         let color: string = "white";
         let bgColor: string = "white";
-        this._isOtherPlayerSelected = true;
         const players: Array<PlayerId> = this._crosswordService.getLetterHighlightPlayers(this.id);
         if (players.length === 0) {
-            this._isOtherPlayerSelected = false;
 
             return {};
         } else if (players.length === 1) {
@@ -61,22 +59,29 @@ export class InputLetterComponent implements OnInit {
             bgColor = this._crosswordService.getPlayerColor(players[0], false);
 
             return {
+                "border-style" : "dotted",
+                "width" : "90%",
+                "height" : "90%",
+                "border-width": "0.2vmin",
                 "border-color": color,
                 "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
                 "background-color": bgColor
             };
         } else {
-            color = this._crosswordService.getPlayerColor(players[0], true);
-            const secondColor: string = this._crosswordService.getPlayerColor(players[1], true);
+            bgColor = this._crosswordService.getPlayerColor(players[1], true);
+            const secondBgColor: string = this._crosswordService.getPlayerColor(players[1], true);
+            const lineGradiant: string = "repeating-linear-gradient(45deg" +
+                        bgColor + "25%," + bgColor + "25%," + secondBgColor + "25%," + secondBgColor + "25%);";
 
             return {
-                "background-image": "repeating-linear-gradient(45deg" +
-                    color + "25%," + color + "25%," + secondColor + "25%," + secondColor + "25%);"
+                "border-style" : "dotted",
+                "width" : "90%",
+                "height" : "90%",
+                "border-width": "0.2vmin",
+                "border-color" : lineGradiant,
+                "background-image": lineGradiant
             };
         }
-
-
-
 
     }
 }

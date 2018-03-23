@@ -238,7 +238,6 @@ export class CrosswordService {
         this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
             if (oph.selectedLetters.indexOf(letterId) > -1) {
                 players.push(oph.playerId);
-                console.log("whatup wtf");
             }
         });
 
@@ -247,7 +246,6 @@ export class CrosswordService {
 
     public selectWordFromOtherPlayer(playerId: PlayerId, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersHover = this._otherPlayersHover.find((oph: OtherPlayersHover) => oph.playerId === playerId);
-        console.log("caca esti");
         if (player == null) {
             player = new OtherPlayersHover(playerId, []);
             this._otherPlayersHover.push(player);
