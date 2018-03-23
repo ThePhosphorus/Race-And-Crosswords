@@ -96,7 +96,7 @@ export class MatchManager {
         if (confirmWord) {
             this.completedWords.push(w);
             this.incerementScore(playerId);
-            this.notifyOthers(playerId, msg.completedWord, playerId, w);
+            this.notifyAll( msg.completedWord, playerId, w);
         }
     }
     public notifyOthers(playerId: number, socketMsg: string, ...args: {}[]): void {
