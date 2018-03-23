@@ -47,10 +47,21 @@ export class InputLetterComponent implements OnInit {
 
     public get playerHiglightCSS(): {} {
         let color: string = "white";
-        const player: PlayerId = this._crosswordService.getLetterHighlightPlayer(this.id);
+        const players: PlayerId[] = this._crosswordService.getLetterHighlightPlayers(this.id);
         if (this.isHighlighted) {
+            color = this.getPlayerColor(players[0]);
+            if (players.length > 1) {
+                const secondColor: string = this.getPlayerColor(players[1]);
+
+                return {
+                    "background-image": "repeating-linear-gradient(45deg" +
+                        color + "25%," + color + "25%," + secondColor + "25%," + secondColor + "25%);"
+                };
+            }
             color = this._crosswordService.getColorFromPlayer(player, true);
         }
+        const bgColor: string = this.getBGPlayerColor(players[0]);
+        if (players.length === 0) {
         const bgColor: string = this._crosswordService.getColorFromPlayer(player, false);
         if (player === null) {
             return {};
@@ -61,5 +72,6 @@ export class InputLetterComponent implements OnInit {
             "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
             "background-color": bgColor
         };
+
     }
 }

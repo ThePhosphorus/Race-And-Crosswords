@@ -229,19 +229,19 @@ export class CrosswordService {
         return null;
     }
 
-    public getLetterHighlightPlayer(letterId: number): PlayerId {
-        let player: PlayerId = null;
+    public getLetterHighlightPlayers(letterId: number): Array<PlayerId> {
+        const players: Array<PlayerId> = new Array<PlayerId>();
         if (this._gridStateSubject.getValue().LIsHighlighted(letterId)) {
-            player = this._gameManager.currentPlayerObs.getValue();
+            players.push( this._gameManager.currentPlayerObs.getValue());
         } else {
             this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
                 if (oph.selectedLetters.indexOf(letterId) > -1) {
-                    player = oph.playerId;
+                    players.push(oph.playerId);
                 }
             });
         }
 
-        return player;
+        return players;
     }
 
     public selectWordFromOtherPlayer(playerId: PlayerId, letterId: number, orientation: Orientation): void {
