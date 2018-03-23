@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { PlayerId } from "../../../../../common/communication/Player";
 import { GridState } from "../grid-state/grid-state";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Color } from "three";
 
 const RED_IN_STEELBLUE: number = 70;
 const BLUE_IN_STEELBLUE: number = 180;
@@ -80,22 +79,22 @@ export class InputLetterComponent implements OnInit {
     }
 
     public getPlayerColor(player: PlayerId): string {
-        let ratio: number = 0;
-        if (this._crosswordService.players.getValue().length > 0) {
-            ratio = player / (this._crosswordService.players.getValue().length);
+        let ratio: number = this._crosswordService.players.getValue().length;
+        if (ratio > 1) {
+            ratio = player / (ratio - 1);
         }
 
         const red: number = Math.round(RED_IN_STEELBLUE + (ratio * (RED_IN_ORANGE - RED_IN_STEELBLUE)));
         const blue: number = Math.round(BLUE_IN_STEELBLUE + (ratio * (BLUE_IN_ORANGE - BLUE_IN_STEELBLUE)));
-        const green: number =Math.round (GREEN_IN_STEELBLUE + (ratio * (GREEN_IN_ORANGE - GREEN_IN_STEELBLUE)));
+        const green: number = Math.round (GREEN_IN_STEELBLUE + (ratio * (GREEN_IN_ORANGE - GREEN_IN_STEELBLUE)));
 
         return ("rgb" + "(" + red.toString() + "," + green.toString() + "," + blue.toString() + ")");
     }
 
     public getBGPlayerColor(player: PlayerId): string {
-        let ratio: number = 0;
-        if (this._crosswordService.players.getValue().length > 0) {
-            ratio = player / (this._crosswordService.players.getValue().length - 1);
+        let ratio: number = this._crosswordService.players.getValue().length;
+        if (ratio > 1) {
+            ratio = player / (ratio - 1);
         }
 
         const red: number = Math.round(RED_IN_BGBLUE + (ratio * (RED_IN_BGORANGE - RED_IN_BGBLUE)));
