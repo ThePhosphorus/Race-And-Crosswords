@@ -37,6 +37,9 @@ export class CrosswordGameInfoComponent implements OnInit {
 
         this._crosswordService.players.subscribe((players: Array<Player>) => {
             this.players = players;
+            if (players.length > 1) {
+                this.showSearching.emit(false);
+            }
             // tslint:disable-next-line:no-magic-numbers
         }
         );

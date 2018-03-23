@@ -68,12 +68,11 @@ export class ModalNewGameComponent implements OnInit {
         this.commService.returnName = this.username;
 
         if (!this.isSinglePlayer) {
+            this.showSearching.emit(true);
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this._lvl);
-                this.showSearching.emit(true);
             } else {
                 this.commService.joinMatch(this.joinedPlayer);
-                this.showSearching.emit(false);
             }
         }
         this._crosswordService.newGame(this._lvl, this.isSinglePlayer);
