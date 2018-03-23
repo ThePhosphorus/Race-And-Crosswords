@@ -1,5 +1,5 @@
 <div class="input-letter" >
-  <button   [ngStyle]="playerHiglightCSS" type="button" (click)="select()"
+  <button   [ngStyle]="playerCSS" type="button" (click)="select()"
   [ngClass]="{'disabled': isDisabled(), 'hovered': isHovered() &&
               !isDisabled(), 'current': isCurrentLetter() }" >
     {{ letter | uppercase }}

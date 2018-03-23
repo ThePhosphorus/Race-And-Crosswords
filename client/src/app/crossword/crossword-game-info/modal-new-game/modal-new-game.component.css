@@ -43,7 +43,9 @@
 #noMatch {
     font-size: 90%;
     text-decoration: underline;
-    padding-bottom: 10%;
+    margin-bottom: 2%;
+    background-color:  rgb(175, 174, 174);
+    box-shadow:0vmin 0vmin 0.2vmin 0.3vmin rgb(175, 174, 174);
 }
 
 #cancelBtn {

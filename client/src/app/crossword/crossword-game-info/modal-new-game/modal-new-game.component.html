@@ -6,7 +6,7 @@
           <div class="card card-block w-100">
             <div id="playerSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
               <button class="btn btn-secondary w-100 m-0" (click)="showLevelChoice(true); isSinglePlayer = true;">
-                SINGLE
+                SINGLE PLAYER
               </button>
               <button (click)="showLevelChoice(false); isSinglePlayer = false;getMatches();" class="btn btn-secondary w-100 m-0">
                 MULTIPLAYER
@@ -14,7 +14,7 @@
             </div>
             <div id="listAvailable" [class.collapse]="!isCollapsedAvailablePlayer">
               <div class="card card-block mt-2 pr-2 pl-2  w-100">
-                Join A Game?
+                Play with a friend?
                 <table class="table w-100 mt-2 mb-0" id="AvailableTable">
 
                   <tbody >
@@ -29,7 +29,7 @@
 
                       </div>
                       <tr>
-                          <a id="noMatch" *ngIf="matches.length===0">Sorry, no one wants to play with you</a>
+                          <a id="noMatch" *ngIf="matches.length===0">Sorry, no one can play with you</a>
                       </tr>
                       <tr>
                           Or
