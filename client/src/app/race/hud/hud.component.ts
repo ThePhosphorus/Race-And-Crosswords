@@ -8,18 +8,27 @@ import { GameManagerService, CarInfos } from "../game-component/game-manager-ser
     styleUrls: ["./hud.component.css"]
 })
 export class HudComponent implements OnInit {
-    private globalTimer: Timer;
-    private lapTimer: Timer;
+    private _globalTimer: Timer;
+    private _lapTimer: Timer;
+    public lapCount: number;
+    public totalLap: number;
 
     public constructor(private gameManagerService: GameManagerService) {
-        this.globalTimer = new Timer();
-        this.lapTimer = new Timer();
+        this._globalTimer = new Timer();
+        this._lapTimer = new Timer();
+        this.lapCount = 1;
+        this.totalLap = 5;
 
     }
 
     public ngOnInit(): void {
         this.startChronometer();
-        this.gameManagerService.hudLapReset.subscribe(() => this.lapTimer.reset());
+        this.gameManagerService.hudLapReset.subscribe(() => this.nextLap());
+    }
+
+    private nextLap(): void {
+        this._lapTimer.reset();
+        this.lapCount++;
     }
 
     public get carInfos(): CarInfos {
@@ -28,8 +37,8 @@ export class HudComponent implements OnInit {
 
     private startChronometer(): void {
         this.gameManagerService.hudTimer.subscribe((t: number) => {
-            this.lapTimer.update(t);
-            this.globalTimer.update(t);
+            this._lapTimer.update(t);
+            this._globalTimer.update(t);
 
         });
 

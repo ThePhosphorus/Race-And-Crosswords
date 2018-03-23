@@ -1,4 +1,4 @@
-#hudBody{
+.hudBody{
     background-color: transparent;
     z-index: 10;
     position: absolute;
@@ -40,13 +40,7 @@
     color: whitesmoke;
     text-shadow: 0px 0px 1vmin black;
 }
-#rpm{
-    background-color: transparent;
-    z-index: 10;
-    position: absolute;
-    font-family: "HUD Font", 'Times New Roman', Times, serif;
-    line-height: 1;
-}
+
 
 @font-face {
     font-family: "Timer Font";
