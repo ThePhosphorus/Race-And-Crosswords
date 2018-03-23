@@ -8,12 +8,13 @@ import socketMsg from "../../../../../common/communication/socketTypes";
 import { InWaitMatch } from "../../../../../common/communication/Match";
 import { Player } from "../../../../../common/communication/Player";
 
+const DEFAULT_NAME: string =  "John C Doe";
+
 export class SocketToServerInfos {
     public constructor(
         public receivePlayersCallBack: Function,
         public receiveSelectCallBack: Function,
         public receiveGrid: Function,
-        public receiveUpdateWord: Function,
         public receiveIsCompletedWord: Function,
         public isFirst: boolean,
         public returnName: string
@@ -31,7 +32,7 @@ export class CrosswordCommunicationService {
     public constructor(private http: HttpClient) {
         this.showSearching = new EventEmitter<boolean>();
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, null, null, false, "John C Doe");
+        this.socketInfos = new SocketToServerInfos(null, null, null, null, false, DEFAULT_NAME);
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
@@ -63,11 +64,8 @@ export class CrosswordCommunicationService {
             this.execute(this.socketInfos.receiveGrid, this.realGrid(grid));
         });
 
-        this.socket.on(socketMsg.updateWord, (w: Word) =>
-            this.execute(this.socketInfos.receiveUpdateWord, w));
-
-        this.socket.on(socketMsg.completedWord, (isFirst: boolean) =>
-            this.execute(this.socketInfos.receiveIsCompletedWord, isFirst));
+        this.socket.on(socketMsg.completedWord, (playerId: number, word: Word) =>
+            this.execute(this.socketInfos.receiveIsCompletedWord, playerId, word));
 
     }
 
@@ -94,9 +92,6 @@ export class CrosswordCommunicationService {
         this.socketInfos.receiveGrid = func;
     }
 
-    public set listenerReceiveUpdatedWord(func: Function) {
-        this.socketInfos.receiveUpdateWord = func;
-    }
     public set listenerIsCompletedFirst(func: Function) {
         this.socketInfos.receiveIsCompletedWord = func;
     }

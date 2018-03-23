@@ -2,6 +2,8 @@ import { Player } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
 import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../common/communication/crossword-grid";
 
+const DEFAULT_NAME: string = "John Doe";
+
 type Socket = SocketIO.Socket;
 
 class SPlayer extends Player {
@@ -38,7 +40,7 @@ export class MatchManager {
 
     public addPlayer(socket: Socket): void {
         const id: number = this._players.length;
-        this._players.push(new SPlayer(id, "Jonh Doe", 0, socket));
+        this._players.push(new SPlayer(id, DEFAULT_NAME, 0, socket));
         this.registerActions(socket, id);
         this.askForName(this._players[id]);
     }
@@ -95,7 +97,7 @@ export class MatchManager {
         if (confirmWord) {
             this.completedWords.push(w);
             this.incerementScore(playerId);
-            this.notifyOthers(playerId, msg.updateWord, w);
+            this.notifyOthers(playerId, msg.completedWord, playerId, w);
         }
     }
     public notifyOthers(playerId: number, socketMsg: string, ...args: {}[]): void {

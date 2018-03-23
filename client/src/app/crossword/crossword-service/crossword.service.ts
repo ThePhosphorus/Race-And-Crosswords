@@ -83,7 +83,7 @@ export class CrosswordService {
                 };
                 this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
                     this.selectWordFromOtherPlayer(playerId, letterId, orientation);
-                this.commService.listenerReceiveUpdatedWord = (word: Word) =>
+                this.commService.listenerIsCompletedFirst = (word: Word) =>
                     this.disableWord(word);
             }
         }
@@ -176,11 +176,6 @@ export class CrosswordService {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     this.commService.completedWord(solvedWord);
-                    this.commService.listenerIsCompletedFirst = (isFirst: boolean) => {
-                        if (isFirst) {
-                            this.disableWord(solvedWord);
-                        }
-                    };
                 }
             }
         }

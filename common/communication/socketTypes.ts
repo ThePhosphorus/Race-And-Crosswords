@@ -12,7 +12,5 @@ export default  {
     getPlayers : "getPlayers",              // The client ask for the current players {}
                                             // The server send the list of current players {Server should send an array of players (Array<IPlayer>)}
     completedWord: "completedWord",         // Client send the newly completed word and receive a comfirmation of the points {Client send completed 
-                                            // word (Word), Server send confirmation that the client is first (boolean)}
-    updateWord: "updateWord",               // Server update client on newly resolved Word. {Server sends id of the player who completed the word (number)
-                                            // and the word completed}
+                                            // word (Word), Server sends the player who got the word (number) and the word}
 }
