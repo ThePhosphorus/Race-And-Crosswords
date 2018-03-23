@@ -3,6 +3,10 @@ import { PlayerId, Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 const INITIAL_GRID_SIZE: number = 10;
+const SATURAION: number = 44;
+const FRONT_LIGHTNESS: number = 49;
+const BACK_LIGHTNESS: number = 75;
+const MAX_ANGLE: number = 360;
 
 export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
@@ -143,5 +147,13 @@ export class GameManager {
         }
 
         return null;
+    }
+
+    // color algo from : http://geekymonkey.com/Programming/CSharp/RGB2HSL_HSL2RGB.htm
+    public getColorFromPlayer(playerId: PlayerId, isFrontGround: boolean): string {
+        const lightness: number = (isFrontGround) ? FRONT_LIGHTNESS : BACK_LIGHTNESS;
+        const hue: number = playerId * MAX_ANGLE / this._players.getValue().length;
+
+        return "hsl(" + hue + ", " + SATURAION + "%, " + lightness + "%)";
     }
 }

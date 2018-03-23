@@ -260,4 +260,8 @@ export class CrosswordService {
             );
         }
     }
+
+    public getColorFromPlayer(playerId: PlayerId, isFrontGround: boolean): string {
+        return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
+    }
 }
