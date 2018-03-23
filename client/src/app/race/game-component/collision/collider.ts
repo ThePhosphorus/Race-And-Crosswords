@@ -8,7 +8,7 @@ export class Collider extends Object3D {
     private radius: number;
     private relativeVertexes: Vector3[];
 
-    public constructor(width: number, length: number, offset: Vector2 = new Vector2(2.5, 2.5)) {
+    public constructor(width: number, length: number, offset: Vector2 = new Vector2(0, 0)) {
         super();
         this.translateX(offset.x);
         this.translateZ(offset.y);
