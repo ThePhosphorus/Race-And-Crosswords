@@ -7,7 +7,8 @@ import {
     PlaneGeometry,
     DoubleSide,
     MeshPhongMaterial,
-    Vector3
+    Vector3,
+    Object3D
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -101,8 +102,10 @@ export class GameManagerService extends Renderer {
         }
     }
 
-    public importTrack(meshs: Mesh[]): void {
-        this.scene.add(new Road(meshs));
+    public importTrack(meshs: Mesh[], walls: Object3D[]): void {
+        meshs.forEach((m) => this.scene.add(m));
+        console.log(walls);
+        walls.forEach((w) => this.scene.add(w));
     }
 
     private initKeyBindings(): void {

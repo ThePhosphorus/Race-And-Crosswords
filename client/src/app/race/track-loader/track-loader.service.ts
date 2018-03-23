@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Vector3, Mesh, PlaneGeometry, TextureLoader,
-    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial
+    Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial, Object3D
 } from "three";
 import { Vector3Struct, Track } from "../../../../../common/communication/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-constants/constants";
-import { DEFAULT_TRACK_WIDTH } from "../race.constants";
+import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS } from "../race.constants";
+import { Collider } from "../game-component/collision/collider";
+import { RigidBody } from "../game-component/rigid-body/rigid-body";
 
 const TRACK_PATH: string = "../../assets/textures/test.jpg";
 const LINE_PATH: string = "../../assets/textures/linefixed.bmp";
@@ -51,13 +53,43 @@ export class TrackLoaderService {
         return meshs;
     }
 
+    public static getTrackWalls(track: Track): Array<Object3D> {
+        const walls: Array<Object3D> = new Array<Object3D>();
+        for (let i: number = 0; i < track.points.length - 1; i++) {
+            const wall: Object3D = TrackLoaderService.getWall(
+                TrackLoaderService.toVector(track.points[i]),
+                TrackLoaderService.toVector(track.points[i + 1]));
+            walls.push(wall);
+        }
+
+        return walls;
+    }
+
+    public static getWall(pointA: Vector3, pointB: Vector3): Object3D {
+        const vecAB: Vector3 = pointB.clone().sub(pointA);
+        const distanceAB: number =  vecAB.length();
+        const wall1: Object3D = new Object3D();
+        const coll1: Collider = new Collider(2, distanceAB);
+        wall1.add(coll1);
+        wall1.add(new RigidBody(DEFAULT_MASS, true));
+
+        const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
+
+        wall1.position.copy(positionOfTheRoad);
+        wall1.lookAt(pointB);
+
+        return wall1;
+    }
+
     public static getTrackMaterial(width: number, length: number): MeshPhongMaterial {
         const texture: Texture = new TextureLoader().load(TRACK_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(width * FLOOR_RATIO, length * FLOOR_RATIO);
+
         return new MeshPhongMaterial({ map: texture, side: DoubleSide });
     }
+
     public static getFinishLineMaterial(width: number, length: number): MeshPhongMaterial {
         const texture: Texture = new TextureLoader().load(LINE_PATH);
         texture.wrapS = RepeatWrapping;
@@ -79,6 +111,7 @@ export class TrackLoaderService {
 
         return circleMesh;
     }
+
     public static getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
         const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH/4);
         geo.rotateX( - PI_OVER_2);
