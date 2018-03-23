@@ -15,8 +15,8 @@ export class RpmBarComponent {
     return Math.round(this._gameManagerService.playerInfos.speed * METER_TO_KM_SPEED_CONVERSION);
   }
 
-  public get gear(): number {
-    return this._gameManagerService.playerInfos.gear + 1;
+  public get gear(): string {
+    return this.speed >= 0 ? (this._gameManagerService.playerInfos.gear + 1).toString() : "R";
   }
   public get rpm(): number {
     return Math.round(this._gameManagerService.playerInfos.rpm);
