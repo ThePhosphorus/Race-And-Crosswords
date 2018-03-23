@@ -31,6 +31,7 @@ import {
     TOGGLE_SUNLIGHT_KEYCODE,
 } from "../../../global-constants/constants";
 import { LightManagerService } from "../light-manager/light-manager.service";
+import { Road } from "../road/road";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
@@ -101,7 +102,7 @@ export class GameManagerService extends Renderer {
     }
 
     public importTrack(meshs: Mesh[]): void {
-        meshs.forEach((m: Mesh) => this.scene.add(m));
+        this.scene.add(new Road(meshs));
     }
 
     private initKeyBindings(): void {
