@@ -35,6 +35,13 @@ export class HudComponent implements OnInit {
         return this.gameManagerService.playerInfos;
     }
 
+    public get globalTimer(): Timer {
+        return this._globalTimer;
+    }
+
+    public get lapTimer(): Timer {
+        return this._lapTimer;
+    }
     private startChronometer(): void {
         this.gameManagerService.hudTimer.subscribe((t: number) => {
             this._lapTimer.update(t);

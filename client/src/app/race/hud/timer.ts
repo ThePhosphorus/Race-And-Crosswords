@@ -14,12 +14,14 @@ export class Timer {
     }
 
     public update(t: number): void {
-        this._centiseconds += t /10;
+        this._centiseconds += (t /10) % 100;
+        this._seconds += Math.floor(t/1000) % 60;
+        this._minutes += Math.floor( t/60000);
         if (this._centiseconds >= 100) {
-            this._centiseconds = 0;
+            this._centiseconds -= 100;
             this._seconds++;
             if (this._seconds >= 60) {
-                this._seconds = 0;
+                this._seconds -= 60;
                 this._minutes++;
             }
 
