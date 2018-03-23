@@ -15,7 +15,7 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 class OtherPlayersHover {
     public constructor(
         public playerId: PlayerId,
-        public hoverdLetters: Array<number>,
+        public selectedLetters: Array<number>,
     ) { }
 }
 
@@ -176,8 +176,8 @@ export class CrosswordService {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     this.commService.completedWord(solvedWord);
-                    this.commService.listenerIsCompletedFirst = (bool: boolean) => {
-                        if (bool) {
+                    this.commService.listenerIsCompletedFirst = (isFirst: boolean) => {
+                        if (isFirst) {
                             this.disableWord(solvedWord);
                         }
                     };
@@ -185,6 +185,7 @@ export class CrosswordService {
             }
         }
     }
+
     public writeChar(key: string): void {
         if (this._gridStateSubject.value.currentLetter != null) {
             if (key.match(/^[a-zA-z]$/i) != null) {
@@ -234,7 +235,7 @@ export class CrosswordService {
             player = this._gameManager.currentPlayerObs.getValue();
         } else {
             this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
-                if (oph.hoverdLetters.indexOf(letterId) > -1) {
+                if (oph.selectedLetters.indexOf(letterId) > -1) {
                     player = oph.playerId;
                 }
             });
@@ -243,15 +244,20 @@ export class CrosswordService {
         return player;
     }
 
-    public selectWordFromOtherPlayer(playerId: PlayerId, wordId: number, orientation: Orientation): void {
+    public selectWordFromOtherPlayer(playerId: PlayerId, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersHover = this._otherPlayersHover.find((oph: OtherPlayersHover) => oph.playerId === playerId);
+
         if (player == null) {
             player = new OtherPlayersHover(playerId, []);
             this._otherPlayersHover.push(player);
         }
 
-        player.hoverdLetters = this._gameManager.findWordFromLetter(wordId, orientation, false).letters.map(
-            (letter: Letter) => letter.id
-        );
+        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, true);
+
+        if (word != null) {
+            player.selectedLetters = word.letters.map(
+                (letter: Letter) => letter.id
+            );
+        }
     }
 }

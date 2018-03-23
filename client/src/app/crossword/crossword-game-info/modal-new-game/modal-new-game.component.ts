@@ -33,6 +33,10 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.getMatches();
+    }
+
+    public getMatches(): void {
         this.commService.getMatches().subscribe((matches: Array<InWaitMatch>) => {
             this._matchesAvailable = matches;
         });

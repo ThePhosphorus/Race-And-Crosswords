@@ -115,7 +115,7 @@ export class MatchManager {
     }
 
     public recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
-            this.notifyOthers(playerId, msg.playerSelectTile, letterId, orientation);
+        this.notifyOthers(playerId, msg.playerSelectTile, playerId, letterId, orientation);
     }
 
     public playerLeave(id: number): void {
