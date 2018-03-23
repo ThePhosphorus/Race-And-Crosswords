@@ -41,17 +41,23 @@ export class InputLetterComponent implements OnInit {
         return this._gridState.LIsCurrentLetter(this.id);
     }
     public get playerCSS(): {} {
-        const players: Array<PlayerId> = this._crosswordService.getLetterDisabledPlayers(this.id);
+        const players: Array<PlayerId> = this._crosswordService.getLetterDisabledPlayers(this.false);
         if (players.length === 0) {
             return this.playerHiglightCSS;
         }
-        const color: string = this._crosswordService.getPlayerColor(players[0], true);
+        const color: string = this._crosswordService.getPlayerColor(players[0], false);
+        let color2: string = "white";
+        if (players.length > 1) {
+            color2 = this._crosswordService.getPlayerColor(players[1], false);
+        }
 
         return {
-            "color": color,
-            "border-style": "dotted",
-            "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
-            "background": "linear-gradient(90deg, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 0), #ccc"
+            "width": "90%",
+            "height": "90%",
+            "border-color": color2,
+            "border-width": "0.2vmin",
+            "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color ,
+            "background": "linear-gradient(45deg," + color + "50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 0)," + color2
         };
 
     }

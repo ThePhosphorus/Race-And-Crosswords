@@ -25,7 +25,7 @@ button {
 
 .disabled {
     background-color: darkgrey;
-    color: white;
+    color: #212529;
 }
 
 .current {
