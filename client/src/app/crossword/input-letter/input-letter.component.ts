@@ -41,12 +41,12 @@ export class InputLetterComponent implements OnInit {
         return this._gridState.LIsCurrentLetter(this.id);
     }
     public get playerCSS(): {} {
-        const players: Array<PlayerId> = this._crosswordService.getLetterDisabledPlayers(this.false);
+        const players: Array<PlayerId> = this._crosswordService.getLetterDisabledPlayers(this.id);
         if (players.length === 0) {
             return this.playerHiglightCSS;
         }
         const color: string = this._crosswordService.getPlayerColor(players[0], false);
-        let color2: string = "white";
+        let color2: string = "whitesmoke";
         if (players.length > 1) {
             color2 = this._crosswordService.getPlayerColor(players[1], false);
         }
@@ -57,7 +57,7 @@ export class InputLetterComponent implements OnInit {
             "border-color": color2,
             "border-width": "0.2vmin",
             "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color ,
-            "background": "linear-gradient(45deg," + color + "50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 0)," + color2
+            "background": "linear-gradient(45deg," + color + "50%, rgba(0,0,0,0) 50% ,rgba(0,0,0,0) 0)," + color2
         };
 
     }
