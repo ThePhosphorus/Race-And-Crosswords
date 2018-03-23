@@ -232,21 +232,22 @@ export class CrosswordService {
     public getLetterHighlightPlayers(letterId: number): Array<PlayerId> {
         const players: Array<PlayerId> = new Array<PlayerId>();
         if (this._gridStateSubject.getValue().LIsHighlighted(letterId)) {
-            players.push( this._gameManager.currentPlayerObs.getValue());
-        } else {
-            this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
-                if (oph.selectedLetters.indexOf(letterId) > -1) {
-                    players.push(oph.playerId);
-                }
-            });
+            players.push(this._gameManager.currentPlayerObs.getValue());
         }
+
+        this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
+            if (oph.selectedLetters.indexOf(letterId) > -1) {
+                players.push(oph.playerId);
+                console.log("whatup wtf");
+            }
+        });
 
         return players;
     }
 
     public selectWordFromOtherPlayer(playerId: PlayerId, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersHover = this._otherPlayersHover.find((oph: OtherPlayersHover) => oph.playerId === playerId);
-
+        console.log("caca esti");
         if (player == null) {
             player = new OtherPlayersHover(playerId, []);
             this._otherPlayersHover.push(player);
@@ -261,7 +262,7 @@ export class CrosswordService {
         }
     }
 
-    public getColorFromPlayer(playerId: PlayerId, isFrontGround: boolean): string {
+    public getPlayerColor(playerId: PlayerId, isFrontGround: boolean): string {
         return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
     }
 }
