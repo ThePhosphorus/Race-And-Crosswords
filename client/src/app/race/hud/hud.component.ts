@@ -26,7 +26,7 @@ export class HudComponent implements OnInit {
         this.gameManagerService.hudLapReset.subscribe(() => this.nextLap());
     }
 
-    private nextLap(): void {
+    public nextLap(): void {
         this._lapTimer.reset();
         this.lapCount++;
     }

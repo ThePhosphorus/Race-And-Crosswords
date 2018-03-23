@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
 
 import { HudComponent } from "./hud.component";
 import { GameManagerService } from "../game-component/game-manager-service/game_manager.service";
@@ -34,5 +34,13 @@ describe("HudComponent", () => {
 
   it("should create", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should increment lap count", inject([GameManagerService], (gameManager: GameManagerService) => {
+    const START_LAP_COUNT: number = 3;
+    component.lapCount = START_LAP_COUNT;
+    component.nextLap();
+    gameManager.update(10);
+    expect(component.lapCount).toBe(START_LAP_COUNT + 1);
   });
 });
