@@ -11,7 +11,7 @@ button {
     color: #212529;
     text-align: center;
     outline: none;
-    background-color: transparent;
+    background-color: whitesmoke;
     margin:0%;
     border-color: transparent;
     border-radius: 0%;
@@ -24,8 +24,8 @@ button {
 
 
 .disabled {
-    background-color: darkgrey;
-    color: #212529;
+    background-color: whitesmoke;
+    color: gray;
 }
 
 .current {
