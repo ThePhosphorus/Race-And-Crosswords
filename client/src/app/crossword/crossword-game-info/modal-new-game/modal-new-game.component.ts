@@ -13,7 +13,7 @@ export class ModalNewGameComponent implements OnInit {
     public isCollapsedAvailablePlayer: boolean;
     public showLevelGame: boolean;
     @Output() public showModal: EventEmitter<boolean>;
-
+    @Output() public showSearching: EventEmitter<boolean>;
     public username: string;
     private _lvl: Difficulty;
     public isSinglePlayer: boolean;
@@ -25,6 +25,7 @@ export class ModalNewGameComponent implements OnInit {
         this.isCollapsedAvailablePlayer = false;
         this.showLevelGame = false;
         this.showModal = new EventEmitter<boolean>();
+        this.showSearching = new EventEmitter<boolean>();
         this._lvl = null;
         this.username = null;
         this.isSinglePlayer = null;
@@ -69,12 +70,13 @@ export class ModalNewGameComponent implements OnInit {
         if (!this.isSinglePlayer) {
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this._lvl);
+                this.showSearching.emit(true);
             } else {
                 this.commService.joinMatch(this.joinedPlayer);
+                this.showSearching.emit(false);
             }
         }
         this._crosswordService.newGame(this._lvl, this.isSinglePlayer);
-
         this.closeGameOptions();
     }
 

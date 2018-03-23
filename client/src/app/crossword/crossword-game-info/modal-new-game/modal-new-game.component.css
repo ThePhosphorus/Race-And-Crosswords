@@ -7,13 +7,39 @@
 
 #newGame {
     border: #61b446 solid;
-    background-color: #61b446;
+    background-color: hsl(105, 44%, 49%);
     border-radius: 1vmin;
 }
 #newGame:hover{
     border: lightgrey solid;
 }
+#bodyOfMatches{
+    overflow-y: scroll;
+    max-height: 25vmin;
+    position: relative;
+    box-shadow: 0vmin 0vmin 0.2vmin 0.3vmin gray;
+}
+::-webkit-scrollbar {
+    width: 1vmin;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+    background: darkgray;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: grey;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #545555;
+}
+#bodyOfMatches tr{
+    border-radius: 10%;
+    display: block;
+}
 #difficultySelector .btn-secondary:focus {
     box-shadow: none;
 }
@@ -51,7 +77,9 @@
     box-shadow: inset 0vmin 0vmin 0.2vmin 0.3vmin lightgray;
     border:solid lightgrey;
     border-radius: 10%;
-
+}
+#body {
+    border-radius: 10%;
 }
 
 #easyBtn, .easy {

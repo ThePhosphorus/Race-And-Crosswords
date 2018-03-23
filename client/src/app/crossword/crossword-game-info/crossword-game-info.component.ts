@@ -10,7 +10,7 @@ import { Player } from "../../../../../common/communication/Player";
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
-    @Output() public newGameLoad: EventEmitter<boolean>;
+    @Output() public showSearching: EventEmitter<boolean>;
     public showModal: boolean;
     private _lvl: Difficulty;
     public players: Array<Player>;
@@ -23,7 +23,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
         this.showModal = true;
-        this.newGameLoad = new EventEmitter<boolean>();
+        this.showSearching = new EventEmitter<boolean>();
         this.players = new Array<Player>();
     }
 
@@ -35,12 +35,16 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
             this._lvl = difficulty);
 
-        this._crosswordService.players.subscribe((players: Array<Player>) =>
-            this.players = players);
-    }
-
-    public loadNewGame(isNewGame: boolean): void { // TODO: Remove
-        this.newGameLoad.emit(isNewGame);
+        this._crosswordService.players.subscribe((players: Array<Player>) => {
+            this.players = players;
+            // tslint:disable-next-line:no-magic-numbers
+            if (players.length < 2) {
+            this.showSearching.emit(true);
+            } else {
+            this.showSearching.emit(false);
+            }
+        }
+        );
     }
 
     public getBGColor(player: number): {} {

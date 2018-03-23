@@ -24,6 +24,14 @@
     margin-bottom: none;
     text-shadow: 0vmin 0vmin 0.5vmin whitesmoke;
 }
+#searching{
+    font-family: "Hints Font", 'Times New Roman', Times, serif;
+    font-size: 200%;
+    color:black;
+    opacity: 1 !important;
+    margin-bottom: none;
+    text-shadow: 0vmin 0vmin 0.5vmin whitesmoke;
+}
 #dots{
     font-family: "Hints Font", 'Times New Roman', Times, serif;
     overflow: hidden;
