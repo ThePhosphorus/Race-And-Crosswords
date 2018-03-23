@@ -13,20 +13,33 @@
     z-index: 2;
     top: 0;
     left: 0;
+    margin:0;
 
 }
 
 #loading{
-    font-family: "Hints Font", 'Times New Roman', Times, serif;
-    font-size: 400%;
+    font-family: "Loading Font", 'Times New Roman', Times, serif;
+    font-size: 250%;
+    overflow: hidden;
+    align-self: center;
+    width:19ch;
     color:black;
+    animation: typing 4s steps(19,end) 1s infinite  ;
+    white-space: nowrap;
+    margin: 0 auto;
     opacity: 1 !important;
     margin-bottom: none;
     text-shadow: 0vmin 0vmin 0.5vmin whitesmoke;
 }
 #searching{
-    font-family: "Hints Font", 'Times New Roman', Times, serif;
-    font-size: 200%;
+    font-family: "Loading Font", 'Times New Roman', Times, serif;
+    font-size: 250%;
+    overflow: hidden;
+    align-self: center;
+    width:21ch;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation: typing 4s steps(21,end) 1s infinite  ;
     color:black;
     opacity: 1 !important;
     margin-bottom: none;
@@ -54,6 +67,10 @@
 @font-face {
     font-family: "CrossWords Font";
     src: url("/assets/fonts/coffee+teademo-Regular.ttf") format("truetype")
+}
+@font-face {
+    font-family: "Loading Font";
+    src: url("/assets/fonts/Erika Type.ttf") format("truetype")
 }
 
 @keyframes typing {
