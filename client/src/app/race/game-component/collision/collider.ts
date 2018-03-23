@@ -1,4 +1,4 @@
-import { Vector3, Vector2, Object3D } from "three";
+import { Vector3, Vector2, Object3D, PlaneBufferGeometry, MeshBasicMaterial, Color, Mesh } from "three";
 import { RigidBody } from "../rigid-body/rigid-body";
 
 const HALF: number = 0.5;
@@ -13,6 +13,7 @@ export class Collider extends Object3D {
         this.radius = this.pythagore(offset.x + (width * HALF), offset.y + (length * HALF));
         this.relativeVertexes = new Array<Vector3>();
         this.initialiseRelativeVertexes(width, length, offset);
+        this.displayCollider(width, length, offset);
     }
 
     public getNormals(): Array<Vector2> {
@@ -71,5 +72,17 @@ export class Collider extends Object3D {
         this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
                                                0,
                                                offset.y - (length * HALF)));
+    }
+
+    public displayCollider(width: number, height: number, offset: Vector2): void {
+        const geometry: PlaneBufferGeometry = new PlaneBufferGeometry(width, height);
+        geometry.rotateX(-Math.PI / 2);
+        geometry.translate(offset.x, 2, offset.y);
+        const mat: MeshBasicMaterial = new MeshBasicMaterial();
+        mat.color = new Color("yellow");
+        const mesh: Mesh = new Mesh(geometry, mat);
+
+        this.add(mesh);
+
     }
 }
