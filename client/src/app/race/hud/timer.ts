@@ -19,7 +19,7 @@ export class Timer {
     public update(t: number): void {
         this._centiseconds += (t / MS_TO_CS) % S_TO_CS;
         this._seconds += Math.floor(t / S_TO_MS) % MIN_TO_S;
-        this._minutes += Math.floor( t / (S_TO_CS * MIN_TO_S));
+        this._minutes += Math.floor( t / (S_TO_MS * MIN_TO_S));
         if (this._centiseconds >= S_TO_CS) {
             this._centiseconds -= S_TO_CS;
             this._seconds++;
