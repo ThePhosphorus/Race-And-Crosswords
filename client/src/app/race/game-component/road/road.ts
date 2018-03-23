@@ -1,8 +1,9 @@
 import { Mesh, Object3D, PlaneGeometry, Vector2 } from "three";
 import { Collider } from "../collision/collider";
 import { RigidBody } from "../rigid-body/rigid-body";
+import { DEFAULT_MASS } from "../../race.constants";
 
-const WALL_WIDTH: number = 0.1;
+const WALL_WIDTH: number = 10;
 
 class WallDimensions {
     public constructor(public length: number, public offset: Vector2) {}
@@ -25,7 +26,7 @@ export class Road extends Object3D {
                 const next: Mesh = this.findNext(i);
                 const coll1: Collider = new Collider(WALL_WIDTH, this.calculateLeftWallDimension(this.meshs[i], prev, next).length);
                 const coll2: Collider = new Collider(WALL_WIDTH, this.calculateRightWallDimension(this.meshs[i], prev, next).length);
-                const rb: RigidBody = new RigidBody(1, true);
+                const rb: RigidBody = new RigidBody(DEFAULT_MASS, true);
                 this.meshs[i].add(rb, coll1, coll2);
             }
             this.add(this.meshs[i]);

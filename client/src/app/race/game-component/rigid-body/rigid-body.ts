@@ -31,9 +31,9 @@ export class RigidBody extends Object3D {
         return this._fixed;
     }
 
-    public constructor(mass: number, fixed?: boolean) {
+    public constructor(mass: number, fixed: boolean = false) {
         super();
-        this._fixed = fixed == null ? false : fixed;
+        this._fixed = fixed;
         this.torque = 0;
         this.forces = new Vector2(0, 0);
         this.frictionForce = new Vector2(0, 0);
@@ -64,6 +64,9 @@ export class RigidBody extends Object3D {
     }
 
     public applyCollision(contactAngle: number, otherMass: number, otherVelocity: Vector2): void {
+        if (this._fixed) {
+            return;
+        }
         contactAngle -= Math.PI * HALF;
         const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
