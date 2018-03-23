@@ -151,19 +151,15 @@ export class CrosswordService {
     }
 
     private disableWord(word: Word, playerId: PlayerId): void {
-        for (const orientation of Object.keys(Orientation)) {
             for (const letter of word.letters) {
                 this._gridStateSubject.value.disabledLetters.push(letter.id);
                 this._gameManager.setChar(letter.id, letter.char);
             }
-            if (orientation === this._gridStateSubject.value.currentOrientation) {
-                this.unselectWord();
-                if (this._gameManager.addSolvedWord(word, playerId)) {
-                    // show end game modal
-                }
+            this.unselectWord();
+            if (this._gameManager.addSolvedWord(word, playerId)) {
+                // show end game modal
             }
         }
-    }
 
     private verifyWords(): void {
         for (const orientation of Object.keys(Orientation)) {
