@@ -35,7 +35,7 @@ describe("RpmBarComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should disply right gear", () => {
-    expect(component).toBeTruthy();
-  });
+  it("should reset lap timer on nextLap()", () => {
+    });
+
 });

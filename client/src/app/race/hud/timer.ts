@@ -1,4 +1,7 @@
-
+const S_TO_MS: number = 1000;
+const MIN_TO_S: number = 60;
+const MS_TO_CS: number = 10;
+const S_TO_CS: number = 100;
 export class Timer {
     private _minutes: number;
     private _seconds: number;
@@ -14,14 +17,14 @@ export class Timer {
     }
 
     public update(t: number): void {
-        this._centiseconds += (t /10) % 100;
-        this._seconds += Math.floor(t/1000) % 60;
-        this._minutes += Math.floor( t/60000);
-        if (this._centiseconds >= 100) {
-            this._centiseconds -= 100;
+        this._centiseconds += (t / MS_TO_CS) % S_TO_CS;
+        this._seconds += Math.floor(t / S_TO_MS) % MIN_TO_S;
+        this._minutes += Math.floor( t / (S_TO_CS * MIN_TO_S));
+        if (this._centiseconds >= S_TO_CS) {
+            this._centiseconds -= S_TO_CS;
             this._seconds++;
-            if (this._seconds >= 60) {
-                this._seconds -= 60;
+            if (this._seconds >= MIN_TO_S) {
+                this._seconds -= MIN_TO_S;
                 this._minutes++;
             }
 
