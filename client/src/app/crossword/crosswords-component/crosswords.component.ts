@@ -10,8 +10,10 @@ import { CrosswordService } from "../crossword-service/crossword.service";
 })
 export class CrosswordsComponent {
     public loading: boolean;
+    public searching: boolean;
 
     public constructor() {
         this.loading = true;
+        this.searching = false;
     }
 }
