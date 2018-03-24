@@ -16,6 +16,7 @@ const LINE_PATH: string = "../../assets/textures/linefixed.bmp";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
+const START_Y_OFFSET: number = 0.02;
 const CORNER_NB_SEGMENTS: number = 20;
 
 @Injectable()
@@ -67,16 +68,20 @@ export class TrackLoaderService {
 
     public static getWall(pointA: Vector3, pointB: Vector3): Object3D {
         const vecAB: Vector3 = pointB.clone().sub(pointA);
+        const perp: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize().multiplyScalar(DEFAULT_TRACK_WIDTH * HALF);
         const distanceAB: number =  vecAB.length();
+
         const wall1: Object3D = new Object3D();
-        const coll1: Collider = new Collider(2, distanceAB);
-        wall1.add(coll1);
-        wall1.add(new RigidBody(DEFAULT_MASS, true));
+        const wall2: Object3D = new Object3D();
+        wall1.add(new Collider(2, distanceAB), new RigidBody(DEFAULT_MASS, true));
+        wall2.add(new Collider(2, distanceAB), new RigidBody(DEFAULT_MASS, true));
 
         const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
 
-        wall1.position.copy(positionOfTheRoad);
-        wall1.lookAt(pointB);
+        wall1.position.copy(positionOfTheRoad.clone().add(perp));
+        wall1.lookAt(pointB.add(perp));
+        wall2.position.copy(positionOfTheRoad.clone().add(perp.multiplyScalar(-1)));
+        wall2.lookAt(pointB.add(perp.multiplyScalar(-1)));
 
         return wall1;
     }
@@ -119,7 +124,7 @@ export class TrackLoaderService {
         const mesh: Mesh = new Mesh(geo, TrackLoaderService.getFinishLineMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
 
         mesh.position.copy(point);
-        mesh.position.setY(0.02);
+        mesh.position.setY(START_Y_OFFSET);
         mesh.lookAt(pointB);
 
         mesh.receiveShadow = true;
