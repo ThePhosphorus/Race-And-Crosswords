@@ -8,7 +8,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-constants/constants";
-import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS } from "../race.constants";
+import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS, DEFAULT_WALL_WIDTH } from "../race.constants";
 import { Collider } from "../game-component/collision/collider";
 import { RigidBody } from "../game-component/rigid-body/rigid-body";
 
@@ -19,7 +19,8 @@ const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
 const START_Y_OFFSET: number = 0.02;
 const CORNER_NB_SEGMENTS: number = 20;
-const WALL_WIDTH: number = 1.5;
+const FINISH_LINE_OPACITY: number = 0.2;
+const FINISH_LINE_LENGTH_RATIO: number = 4;
 
 @Injectable()
 export class TrackLoaderService {
@@ -78,11 +79,11 @@ export class TrackLoaderService {
         const vecBN: Vector3 = pointN.clone().sub(pointB);
 
         const perpAB: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
-            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (WALL_WIDTH * HALF)) * relativeOffset);
+            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (DEFAULT_WALL_WIDTH * HALF)) * relativeOffset);
         const perpPA: Vector3 = new Vector3(vecPA.z, vecPA.y, -vecPA.x).normalize()
-            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (WALL_WIDTH * HALF)) * relativeOffset);
+            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (DEFAULT_WALL_WIDTH * HALF)) * relativeOffset);
         const perpBN: Vector3 = new Vector3(vecBN.z, vecBN.y, -vecBN.x).normalize()
-            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (WALL_WIDTH * HALF)) * relativeOffset);
+            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (DEFAULT_WALL_WIDTH * HALF)) * relativeOffset);
 
         const p1: Vector3 = TrackLoaderService.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
                                                                 pointA.clone().add(perpAB), pointB.clone().add(perpAB));
@@ -91,7 +92,7 @@ export class TrackLoaderService {
                                                                 pointB.clone().add(perpBN), pointN.clone().add(perpBN));
         const vecP1P2: Vector3 = p2.clone().sub(p1);
         const wall: Object3D = new Object3D();
-        wall.add(new Collider(WALL_WIDTH, vecP1P2.length()),
+        wall.add(new Collider(DEFAULT_WALL_WIDTH, vecP1P2.length()),
                  new RigidBody(DEFAULT_MASS, true));
 
         wall.position.copy(p1.clone().add(vecP1P2.clone().multiplyScalar(HALF)));
@@ -133,10 +134,10 @@ export class TrackLoaderService {
         const texture: Texture = new TextureLoader().load(LINE_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
-        texture.repeat.set(width, length / 4);
+        texture.repeat.set(width, length / FINISH_LINE_LENGTH_RATIO);
         const mat: MeshPhongMaterial = new MeshPhongMaterial({ map: texture, side: DoubleSide });
         mat.transparent = true;
-        mat.opacity = 0.2;
+        mat.opacity = FINISH_LINE_OPACITY;
 
         return mat;
     }
@@ -152,7 +153,7 @@ export class TrackLoaderService {
     }
 
     public static getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
-        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH / 4);
+        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH / FINISH_LINE_LENGTH_RATIO);
         geo.rotateX(- PI_OVER_2);
 
         const mesh: Mesh = new Mesh(geo, TrackLoaderService.getFinishLineMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
