@@ -1,7 +1,7 @@
 <div id="track-list" *ngIf="!isInitialized" >
   <button *ngFor="let track of tracks"
             class="track-button"
-            (click)="init(track._id)">
+            [routerLink]="['/race', track._id]">
     <div class="title">
       <span>{{ track.name }}</span>
     </div>
