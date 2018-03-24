@@ -102,6 +102,9 @@ export class GameManagerService extends Renderer {
     }
 
     protected update(deltaTime: number): void {
+        if (deltaTime > 25) {
+            console.log(deltaTime);
+        }
         this._player.update(deltaTime);
         this._hudTimerSubject.next(deltaTime);
         this._aiControlledCars.forEach((car) => car.update(deltaTime));
