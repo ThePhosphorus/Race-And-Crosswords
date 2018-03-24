@@ -40,12 +40,15 @@ export class CrosswordGameInfoComponent implements OnInit {
             if (players.length > 1) {
                 this.showSearching.emit(false);
             }
-            // tslint:disable-next-line:no-magic-numbers
-        }
-        );
+        });
     }
 
     public getBGColor(player: number): {} {
         return {"background-color" : this._crosswordService.getPlayerColor(player, false)};
+    }
+
+    public loadNewGame(): void {
+        this.showModal = true;
+        this.showSearching.emit(true);
     }
 }
