@@ -129,12 +129,6 @@ describe("Engine", () => {
         expect(engine.currentGear).toBe(0);
     });
 
-    it("should not calculate rpm using a negative speed.", () => {
-        engine = new Engine();
-        engine.update(-10, 1);
-        expect(engine.rpm).toBe(engine["minimumRPM"]);
-    });
-
     it("should throw an error when wheel radius is invalid.", () => {
         engine = new Engine();
         expect(() => { engine.update(10, 0); }).toThrowError();
