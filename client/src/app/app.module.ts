@@ -16,6 +16,8 @@ import { CrosswordGameInfoComponent } from "./crossword/crossword-game-info/cros
 import { InputGridComponent } from "./crossword/input-grid/input-grid.component";
 import { DefinitionComponent } from "./crossword/definition/definition.component";
 import { InputLetterComponent } from "./crossword/input-letter/input-letter.component";
+import { HudComponent } from "./race/hud/hud.component";
+import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
 
 @NgModule({
     declarations: [
@@ -31,7 +33,9 @@ import { InputLetterComponent } from "./crossword/input-letter/input-letter.comp
         HomePageComponent,
         InputGridComponent,
         DefinitionComponent,
-        InputLetterComponent
+        InputLetterComponent,
+        HudComponent,
+        RpmBarComponent
     ],
     imports: [
         BrowserModule,

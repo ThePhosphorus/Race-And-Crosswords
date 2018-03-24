@@ -1,11 +1,15 @@
 #game-wrapper {
     width: 100%;
     height: 85vmin;
+    padding-left:1%;
+    padding-right:1%;
 }
 
 #container {
     width: 100%;
     height: 100%;
+    border: solid black;
+    align-items: center;
 }
 
 #track-list {
@@ -64,11 +68,4 @@
 
 .hidden {
     display: none;
-}
-
-ul {
-    position: absolute;
-    z-index: 10;
-    color: orange;
-    top: 1vmin;
 }

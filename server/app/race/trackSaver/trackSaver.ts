@@ -10,18 +10,18 @@ const TRACK_COLLECTION: string = "tracks";
 @injectable()
 export class TrackSaver extends WebService {
 
-    private dbClient: DbClient;
-    private collection: Collection;
+    private _dbClient: DbClient;
+    private _collection: Collection;
 
     public constructor() {
         super();
-        this.dbClient = new DbClient();
+        this._dbClient = new DbClient();
         this.routeName = "/saver";
     }
 
     private connect(): void {
-        if (this.dbClient.db != null) {
-            this.collection = this.dbClient.db.collection(TRACK_COLLECTION);
+        if (this._dbClient.db != null) {
+            this._collection = this._dbClient.db.collection(TRACK_COLLECTION);
         }
     }
 
@@ -78,32 +78,32 @@ export class TrackSaver extends WebService {
         this.connect();
         track._id = undefined;
 
-        return this.collection.insertOne(track);
+        return this._collection.insertOne(track);
     }
 
     private putTrack(id: string, track: Track): Promise<ReplaceWriteOpResult> {
         this.connect();
         delete track._id; // Because mongo db don't accept _id as a string
 
-        return this.collection.replaceOne({_id : new ObjectId(id)}, track);
+        return this._collection.replaceOne({_id : new ObjectId(id)}, track);
     }
 
     private getAllTracks(): Promise<Track[]> {
         this.connect();
 
-        return this.collection.find({}).toArray();
+        return this._collection.find({}).toArray();
     }
 
     private deleteTrack(id: string): Promise<DeleteWriteOpResultObject> {
         this.connect();
 
-        return this.collection.deleteOne({_id: new ObjectId(id)});
+        return this._collection.deleteOne({_id: new ObjectId(id)});
     }
 
     private getTrack(id: string): Promise<Track> {
         this.connect();
 
-        return this.collection.findOne({_id : new ObjectId(id)});
+        return this._collection.findOne({_id : new ObjectId(id)});
     }
 
     private incrementPlayTrack(id: string): Promise<UpdateWriteOpResult> {
