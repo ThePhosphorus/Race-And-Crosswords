@@ -8,7 +8,7 @@ import {
     Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, DOUBLE } from "../../../global-constants/constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, METER_TO_KM_SPEED_CONVERSION, DOUBLE } from "../../../global-constants/constants";
 import {
     DEFAULT_WHEELBASE,
     DEFAULT_MASS,
@@ -26,7 +26,6 @@ import { CameraManagerService } from "../../camera-manager-service/camera-manage
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 300;
-const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
@@ -35,8 +34,7 @@ const DEFAULT_FRICTION: number = 400000;
 const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
-const MIN_DRIFT_SPEED_M_S: number = 0.7;
-const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * MIN_DRIFT_SPEED_M_S;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -47,7 +45,6 @@ export class Car extends Object3D {
     private carLights: CarLights;
     private frictionCoefficient: number;
     private carSound: CarSounds;
-    private hasPenalty: boolean;
 
     public get currentGear(): number {
         return this.engine.currentGear;
@@ -145,11 +142,9 @@ export class Car extends Object3D {
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
         this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
-        if (!this.hasPenalty && this.carControl.hasHandbrakeOn) {
+        if (this.carControl.hasHandbrakeOn) {
             this.frictionCoefficient = HANDBRAKE_FRICTION;
             this.carLights.brake();
-        } else if (this.frictionCoefficient >= DEFAULT_FRICTION) {
-            this.hasPenalty = false;
         }
         this.updateDriftSound(this.frictionCoefficient);
 
@@ -268,7 +263,6 @@ export class Car extends Object3D {
     }
 
     private carPenalty(): void {
-        this.hasPenalty = true;
         this.frictionCoefficient = HANDBRAKE_FRICTION;
     }
 

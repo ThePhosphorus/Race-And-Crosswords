@@ -31,14 +31,16 @@ import {
     HANDBRAKE_KEYCODE,
     TOGGLE_SUNLIGHT_KEYCODE,
 } from "../../../global-constants/constants";
+import { Subject } from "rxjs/Subject";
+import { Observable } from "rxjs/Observable";
 import { LightManagerService } from "../light-manager/light-manager.service";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
-const OFF_ROAD_PATH: string = "../../assets/textures/dirt.jpg";
-const N_AI_CONTROLLED_CARS: number = 1;
-const SPACE_BETWEEN_CARS: number = 15;
+const OFF_ROAD_PATH: string = "../../assets/textures/OutOfBounds.jpg";
+const N_AI_CONTROLLED_CARS: number = 5;
+const SPACE_BETWEEN_CARS: number = 1;
 
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
@@ -52,8 +54,10 @@ export class CarInfos {
 
 @Injectable()
 export class GameManagerService extends Renderer {
-    private player: Car;
-    private aiControlledCars: Array<Car>;
+    private _player: Car;
+    private _aiControlledCars: Array<Car>;
+    private _hudTimerSubject: Subject<number>;
+    private _hudLapResetSubject: Subject<void>;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -62,17 +66,19 @@ export class GameManagerService extends Renderer {
                        private lightManager: LightManagerService ) {
 
         super(cameraManager, true);
-        this.player = new Car(this.cameraManager);
-        this.aiControlledCars = new Array<Car>();
+        this._hudTimerSubject = new Subject<number>();
+        this._hudLapResetSubject = new Subject<void>();
+        this._player = new Car(this.cameraManager);
+        this._aiControlledCars = new Array<Car>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this.aiControlledCars.push(new Car(this.cameraManager));
+            this._aiControlledCars.push(new Car(this.cameraManager));
         }
     }
 
     public get playerInfos(): CarInfos {
-        return new CarInfos(this.player.speed,
-                            this.player.currentGear,
-                            this.player.rpm);
+        return new CarInfos(this._player.speed,
+                            this._player.currentGear,
+                            this._player.rpm);
     }
 
     public async start(container: HTMLDivElement): Promise<void> {
@@ -84,20 +90,31 @@ export class GameManagerService extends Renderer {
         this.initScene();
         this.startRenderingLoop();
     }
+    public get hudTimer(): Observable<number> {
+        return this._hudTimerSubject.asObservable();
+    }
+    public get hudLapReset(): Observable<void> {
+        return this._hudLapResetSubject.asObservable();
+    }
+
+    public getDeltaTime(): Observable<number> {
+        return this._hudTimerSubject.asObservable();
+    }
 
     protected update(deltaTime: number): void {
-        this.player.update(deltaTime);
-        this.aiControlledCars.forEach((car) => car.update(deltaTime));
-        this.cameraTargetDirection = this.player.direction;
-        this.cameraTargetPosition = this.player.getPosition();
+        this._player.update(deltaTime);
+        this._hudTimerSubject.next(deltaTime);
+        this._aiControlledCars.forEach((car) => car.update(deltaTime));
+        this.cameraTargetDirection = this._player.direction;
+        this.cameraTargetPosition = this._player.getPosition();
         this.collisionDetector.detectCollisions(this.scene);
         this.lightManager.updateSunlight();
     }
 
     private async initCars(): Promise<void> {
-        await this.player.init(new Vector3(0, 0, 0), COLORS[0]);
-        for (let i: number = 0; i < this.aiControlledCars.length; i++) {
-            await this.aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), "pink");
+        await this._player.init(new Vector3(0, 0, 0), COLORS[0]);
+        for (let i: number = 0; i < this._aiControlledCars.length; i++) {
+            await this._aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), COLORS[1]);
         }
     }
 
@@ -107,24 +124,25 @@ export class GameManagerService extends Renderer {
     }
 
     private initKeyBindings(): void {
-        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this.player.carControl.accelerate());
-        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this.player.carControl.brake());
-        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this.player.carControl.steerLeft());
-        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this.player.carControl.steerRight());
+        this.inputManager.registerKeyDown(ACCELERATE_KEYCODE, () => this._player.carControl.accelerate());
+        this.inputManager.registerKeyDown(BRAKE_KEYCODE, () => this._player.carControl.brake());
+        this.inputManager.registerKeyDown(LEFT_KEYCODE, () => this._player.carControl.steerLeft());
+        this.inputManager.registerKeyDown(RIGHT_KEYCODE, () => this._player.carControl.steerRight());
         this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
         this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
         this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
         this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
         this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.lightManager.toggleNightMode());
-        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this.player.carControl.handBrake());
-        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this.player.carControl.releaseAccelerator());
-        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this.player.carControl.releaseBrakes());
-        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this.player.carControl.releaseSteeringLeft());
-        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this.player.carControl.releaseSteeringRight());
+        this.inputManager.registerKeyDown(HANDBRAKE_KEYCODE, () => this._player.carControl.handBrake());
+        this.inputManager.registerKeyUp(ACCELERATE_KEYCODE, () => this._player.carControl.releaseAccelerator());
+        this.inputManager.registerKeyUp(BRAKE_KEYCODE, () => this._player.carControl.releaseBrakes());
+        this.inputManager.registerKeyUp(LEFT_KEYCODE, () => this._player.carControl.releaseSteeringLeft());
+        this.inputManager.registerKeyUp(RIGHT_KEYCODE, () => this._player.carControl.releaseSteeringRight());
         this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.lightManager.toggleSunlight());
-        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this.player.carControl.releaseHandBrake());
+        this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
+
     }
 
     private initSoundManager(): void {
@@ -138,9 +156,9 @@ export class GameManagerService extends Renderer {
 
     private initScene(): void {
         this.scene.add(this.getFloor());
-        this.scene.add(this.player);
-        this.aiControlledCars.forEach((car) => this.scene.add(car));
-        this.lightManager.init(this.scene, this.player, this.aiControlledCars);
+        this.scene.add(this._player);
+        this._aiControlledCars.forEach((car) => this.scene.add(car));
+        this.lightManager.init(this.scene, this._player, this._aiControlledCars);
     }
 
     private getFloor(): Mesh {
@@ -158,5 +176,4 @@ export class GameManagerService extends Renderer {
 
         return plane;
     }
-
 }

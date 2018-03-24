@@ -3,7 +3,7 @@
 export const HALF: number = 0.5;
 export const DOUBLE: number = 2;
 export const TRIPLE: number = 3;
-export const AMBIENT_LIGHT_OPACITY: number = 0.65;
+export const AMBIENT_LIGHT_OPACITY: number = 1.1;
 export const AMBIENT_NIGHT_LIGHT_OPACITY: number = 0.3;
 export const WHITE: number = 0xFFFFFF;
 export const RED: number = 0xFF0000;
@@ -50,3 +50,10 @@ export const LEFT_CLICK_CODE: number = 0;
 export const MIDDLE_CLICK_CODE: number = 1;
 export const RIGHT_CLICK_CODE: number = 2;
 export const DELETE_KEY: number = 46;
+
+// timer constants
+export const CENTISECOND: number = 10;
+export const TWO_SECONDS: number = 2000;
+
+// physics constants
+export const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
