@@ -15,10 +15,11 @@ import { LINK_MINIMUM_POINTS } from "../track-editor.constants";
     providers: [TrackGenerator, CameraManagerService]
 })
 export class TrackEditorComponent implements AfterViewInit {
-    @ViewChild("editor")
     public id: string;
     public description: string;
     public name: string;
+
+    @ViewChild("editor")
     private _elem: ElementRef;
     private _previousName: string;
 
