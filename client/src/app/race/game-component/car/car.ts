@@ -35,6 +35,7 @@ const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
+const WALL_FRICTION: number = -20000;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -126,7 +127,7 @@ export class Car extends Object3D {
         this.engine.update(Math.abs(this.speed), DEFAULT_WHEEL_RADIUS);
 
         this.rigidBody.addForce(this.getLongitudinalForce());
-        this.rigidBody.setFrictionForce(this.getPerpendicularForce());
+        this.rigidBody.addFrictionForce(this.getPerpendicularForce());
         this.rigidBody.update(deltaTime);
 
         const R: number =
@@ -270,7 +271,7 @@ export class Car extends Object3D {
     }
 
     private wallPenalty(): void {
-        this.frictionCoefficient = HANDBRAKE_FRICTION;
+        this.rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
     }
 
     private initCarLights(): void {
