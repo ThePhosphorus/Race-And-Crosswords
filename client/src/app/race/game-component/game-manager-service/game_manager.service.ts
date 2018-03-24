@@ -65,7 +65,7 @@ export class GameManagerService extends Renderer {
                        private collisionDetector: CollisionDetectorService,
                        private lightManager: LightManagerService ) {
 
-        super(cameraManager, true);
+        super(cameraManager, false);
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
         this._player = new Car(this.cameraManager);
