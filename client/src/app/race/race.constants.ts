@@ -1,6 +1,6 @@
 // tslint:disable:no-magic-numbers
 
-export const DEFAULT_TRACK_WIDTH: number = 12;
+export const DEFAULT_TRACK_WIDTH: number = 18;
 export const DEFAULT_WALL_WIDTH: number = 1.5;
 export const PERS_CAMERA_ANGLE: number = 25;
 

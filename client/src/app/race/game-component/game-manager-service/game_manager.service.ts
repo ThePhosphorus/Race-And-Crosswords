@@ -39,8 +39,10 @@ const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
-const N_AI_CONTROLLED_CARS: number = 5;
-const SPACE_BETWEEN_CARS: number = 1;
+const N_AI_CONTROLLED_CARS: number = 10;
+const INITIAL_SPAWN_OFFSET: number = 7;
+const PARALLEL_SPAWN_OFFSET: number = 3;
+const SPACE_BETWEEN_CARS: number = 5;
 
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
@@ -112,9 +114,14 @@ export class GameManagerService extends Renderer {
     }
 
     private async initCars(): Promise<void> {
-        await this._player.init(new Vector3(0, 0, 0), COLORS[0]);
+        let offset: number = 0;
+        await this._player.init(new Vector3(INITIAL_SPAWN_OFFSET, 0, PARALLEL_SPAWN_OFFSET), COLORS[0]);
         for (let i: number = 0; i < this._aiControlledCars.length; i++) {
-            await this._aiControlledCars[i].init(new Vector3(-(i + 1) * SPACE_BETWEEN_CARS, 0, 0), COLORS[1]);
+            offset = i % 2 === 0 ? offset : offset + 1;
+            await this._aiControlledCars[i].init(new Vector3((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET,
+                                                             0,
+                                                             -Math.pow(-1, i) * PARALLEL_SPAWN_OFFSET),
+                                                 COLORS[(i + 1) % COLORS.length]);
         }
     }
 
