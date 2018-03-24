@@ -1,5 +1,8 @@
-import { Vector3, Vector2, Object3D } from "three";
+import { Vector3, Vector2, Object3D, PlaneBufferGeometry, MeshBasicMaterial, Color, Mesh } from "three";
+import { RigidBody } from "../rigid-body/rigid-body";
 
+const SHOW_COLLIDERS: boolean = false; // Allow to debug colliders by displaying a square above them
+const COLLIDER_DISPLAY_HEIGHT: number = 0.2;
 const HALF: number = 0.5;
 
 export class Collider extends Object3D {
@@ -12,6 +15,9 @@ export class Collider extends Object3D {
         this._radius = this.pythagore(width * HALF, length * HALF);
         this._relativeVertices = new Array<Vector3>();
         this.initialiseRelativeVertices(width, length);
+        if (SHOW_COLLIDERS) {
+            this.displayCollider(width, length);
+        }
     }
 
     public getNormals(): Array<Vector2> {
@@ -30,6 +36,11 @@ export class Collider extends Object3D {
 
         return normals;
     }
+
+    public get rigidBody(): RigidBody {
+        return this.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+    }
+
     public getAbsoluteVertices2D(): Vector2[] {
         const vertices: Array<Vector2> = new Array<Vector2>();
         for (const vertex of this._relativeVertices) {
@@ -53,9 +64,21 @@ export class Collider extends Object3D {
     }
 
     private initialiseRelativeVertices(width: number, length: number): void {
-        this._relativeVertices.push(new Vector3(width * HALF, 0, length * HALF));
-        this._relativeVertices.push(new Vector3(-width * HALF, 0, length * HALF));
-        this._relativeVertices.push(new Vector3(-width * HALF, 0, -length * HALF));
-        this._relativeVertices.push(new Vector3(width * HALF, 0, -length * HALF));
+        this._relativeVertices.push(new Vector3((width * HALF), 0, (length * HALF)));
+        this._relativeVertices.push(new Vector3(-(width * HALF), 0, (length * HALF)));
+        this._relativeVertices.push(new Vector3(-(width * HALF), 0, -(length * HALF)));
+        this._relativeVertices.push(new Vector3((width * HALF), 0, -(length * HALF)));
+    }
+
+    // For debug purposes
+    public displayCollider(width: number, height: number): void {
+        const geometry: PlaneBufferGeometry = new PlaneBufferGeometry(width, height);
+        geometry.rotateX(-Math.PI / 2);
+        geometry.translate(0, COLLIDER_DISPLAY_HEIGHT, 0);
+        const mat: MeshBasicMaterial = new MeshBasicMaterial();
+        mat.color = new Color("yellow");
+        const mesh: Mesh = new Mesh(geometry, mat);
+
+        this.add(mesh);
     }
 }

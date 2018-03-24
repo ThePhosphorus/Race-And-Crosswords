@@ -35,6 +35,7 @@ const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
+const WALL_FRICTION: number = -20000;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -108,8 +109,8 @@ export class Car extends Object3D {
         this._mesh.add(this._rigidBody);
         this.add(this._mesh);
         this.initCarLights();
-        this._carSound = new CarSounds(this._mesh, this.cameraManager.audioListener);
-        this._rigidBody.addCollisionObserver(() => this.onCollision());
+        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
+        this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 
     private getSteeringDirection(): number {
@@ -126,7 +127,7 @@ export class Car extends Object3D {
         this._engine.update(Math.abs(this.speed), DEFAULT_WHEEL_RADIUS);
 
         this._rigidBody.addForce(this.getLongitudinalForce());
-        this._rigidBody.setFrictionForce(this.getPerpendicularForce());
+        this._rigidBody.addFrictionForce(this.getPerpendicularForce());
         this._rigidBody.update(deltaTime);
 
         const R: number =
@@ -159,7 +160,6 @@ export class Car extends Object3D {
         const accelerationForce: Vector2 = this.direction2D;
         resultingForce.add(dragForce).add(rollingResistance);
         if (this.carControl.isAcceleratorPressed) {
-
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
             this.turnOffRearLights();
@@ -249,9 +249,13 @@ export class Car extends Object3D {
         this._carLights.toggleFrontLight();
     }
 
-    private onCollision(): void {
+    private onCollision(otherRb: RigidBody): void {
         this.collisionSound();
-        this.carPenalty();
+        if (otherRb.fixed) {
+            this.wallPenalty();
+        } else {
+            this.carPenalty();
+        }
     }
 
     private collisionSound(): void {
@@ -268,6 +272,10 @@ export class Car extends Object3D {
 
     private carPenalty(): void {
         this._frictionCoefficient = HANDBRAKE_FRICTION;
+    }
+
+    private wallPenalty(): void {
+        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
     }
 
     private initCarLights(): void {

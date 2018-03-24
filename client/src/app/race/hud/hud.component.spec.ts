@@ -9,6 +9,7 @@ import { CollisionDetectorService } from "../game-component/collision/collision-
 import { LightManagerService } from "../game-component/light-manager/light-manager.service";
 import { RpmBarComponent } from "./rpm-bar/rpm-bar.component";
 
+// tslint:disable:no-magic-numbers
 describe("HudComponent", () => {
     let component: HudComponent;
     let fixture: ComponentFixture<HudComponent>;
@@ -42,7 +43,7 @@ describe("HudComponent", () => {
         const SECONDS: number = 6;
         const MINUTES: number = 3;
         const CENTISECONDS: number = 12;
-        const DELTA_TIME: number = 60000 * MINUTES + 1000 * SECONDS + 10 * CENTISECONDS;
+        const DELTA_TIME: number = MINUTES * 60000 + SECONDS * 1000 + CENTISECONDS * 10;
         component.lapTimer.update(DELTA_TIME);
         component.nextLap();
         expect(component.lapTimer.centiseconds).toBe(0);
@@ -54,11 +55,8 @@ describe("HudComponent", () => {
         const CENTISECONDS: number = 8;
         const SECONDS: number = 12;
         const MINUTES: number = 6;
-        const DELTA_TIME: number = 60000 * MINUTES + 1000 * SECONDS + 10 * CENTISECONDS;
+        const DELTA_TIME: number = MINUTES * 60000 + SECONDS * 1000 + CENTISECONDS * 10;
         component.globalTimer.update(DELTA_TIME);
-        console.log(component.globalTimer.centiseconds);
-        console.log(component.globalTimer.seconds);
-        console.log(component.globalTimer.minutes);
         expect(component.globalTimer.centiseconds).toBeCloseTo(CENTISECONDS);
         expect(component.globalTimer.seconds).toBeCloseTo(SECONDS);
         expect(component.globalTimer.minutes).toBeCloseTo(MINUTES);

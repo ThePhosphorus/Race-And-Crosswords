@@ -72,6 +72,6 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
     private loadTrack(id: string): void {
         this._trackLoader.loadOne(id).subscribe((track: Track) =>
-            this._gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track)));
+            this._gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track), TrackLoaderService.getTrackWalls(track)));
     }
 }
