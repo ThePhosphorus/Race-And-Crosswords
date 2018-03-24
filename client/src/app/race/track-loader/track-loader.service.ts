@@ -18,7 +18,7 @@ const CORNER_NB_SEGMENTS: number = 20;
 
 @Injectable()
 export class TrackLoaderService {
-    public constructor(private http: HttpClient) {}
+    public constructor(private _http: HttpClient) {}
 
     public static toVector(vector: Vector3Struct): Vector3 {
         return new Vector3(vector.x, vector.y, vector.z);
@@ -114,10 +114,10 @@ export class TrackLoaderService {
     }
 
     public loadAll(): Observable<Track[]> {
-        return this.http.get<Track[]>(TRACK_SAVER_URL + "all");
+        return this._http.get<Track[]>(TRACK_SAVER_URL + "all");
     }
 
     public loadOne(id: string): Observable<Track> {
-        return this.http.get<Track>(TRACK_SAVER_URL + id);
+        return this._http.get<Track>(TRACK_SAVER_URL + id);
     }
 }

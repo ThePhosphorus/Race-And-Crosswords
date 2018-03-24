@@ -28,22 +28,22 @@ import {
 } from "./lights-constants";
 
 export class CarLights extends Object3D {
-    private frontLight: SpotLight;
-    private brakeLights: Array<SpotLight>;
+    private _frontLight: SpotLight;
+    private _brakeLights: Array<SpotLight>;
     public constructor() {
         super();
-        this.brakeLights = new Array<SpotLight>();
+        this._brakeLights = new Array<SpotLight>();
         this.initFrontLight();
         this.initBrakeLights();
     }
 
     private initFrontLight(): void {
-        this.frontLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
-        this.frontLight.penumbra = FRONT_LIGHT_PENUMBRA;
-        this.frontLight.position.copy(FRONT_LIGHT_POSITION);
-        this.frontLight.target.position.copy(FRONT_LIGHT_TARGET);
-        this.add(this.frontLight);
-        this.add(this.frontLight.target);
+        this._frontLight = new SpotLight(FRONT_LIGHT_COLOR, 0, FAR_LIGHT_DISTANCE);
+        this._frontLight.penumbra = FRONT_LIGHT_PENUMBRA;
+        this._frontLight.position.copy(FRONT_LIGHT_POSITION);
+        this._frontLight.target.position.copy(FRONT_LIGHT_TARGET);
+        this.add(this._frontLight);
+        this.add(this._frontLight.target);
     }
 
     private initBrakeLights(): void {
@@ -60,7 +60,7 @@ export class CarLights extends Object3D {
         brakeLightLeft.target.position.copy(target);
         this.add(brakeLightLeft);
         this.add(brakeLightLeft.target);
-        this.brakeLights.push(brakeLightLeft);
+        this._brakeLights.push(brakeLightLeft);
     }
     private initCenterLight(): void {
         const brakeLightCenter: SpotLight = new SpotLight(RED, 0, FAR_LIGHT_DISTANCE, FRONT_LIGHT_ANGLE);
@@ -69,39 +69,39 @@ export class CarLights extends Object3D {
         brakeLightCenter.target.position.copy(BACK_LIGHT_TARGET);
         this.add(brakeLightCenter);
         this.add(brakeLightCenter.target);
-        this.brakeLights.push(brakeLightCenter);
+        this._brakeLights.push(brakeLightCenter);
     }
     public toggleFrontLight(): void {
-        this.frontLight.intensity = (this.frontLight.intensity === 0 ? FRONT_LIGHT_INTENSITY : 0);
+        this._frontLight.intensity = (this._frontLight.intensity === 0 ? FRONT_LIGHT_INTENSITY : 0);
     }
 
     public brake(): void {
-        this.brakeLights.forEach((smallLight) => {
-            if (smallLight !== this.brakeLights[0]) {
+        this._brakeLights.forEach((smallLight) => {
+            if (smallLight !== this._brakeLights[0]) {
                 smallLight.intensity = SMALL_LIGHT_INTENSITY;
             }});
-        this.brakeLights[0].intensity = BACK_LIGHT_INTENSITY;
+        this._brakeLights[0].intensity = BACK_LIGHT_INTENSITY;
     }
 
     public releaseBrakes(): void {
-        this.brakeLights.forEach((brakeLight) => { brakeLight.intensity = 0; });
+        this._brakeLights.forEach((brakeLight) => { brakeLight.intensity = 0; });
     }
 
     public reverse(): void {
-        this.brakeLights.forEach((smallLight) => {
-            if (smallLight !== this.brakeLights[0]) {
+        this._brakeLights.forEach((smallLight) => {
+            if (smallLight !== this._brakeLights[0]) {
                 smallLight.color = new Color(WHITE);
                 smallLight.intensity = SMALL_LIGHT_INTENSITY;
             }});
-        this.brakeLights[0].intensity = 0;
+        this._brakeLights[0].intensity = 0;
     }
 
     public releaseReverse(): void {
-        this.brakeLights.forEach((smallLight) => {
-            if (smallLight !== this.brakeLights[0]) {
+        this._brakeLights.forEach((smallLight) => {
+            if (smallLight !== this._brakeLights[0]) {
                 smallLight.color = new Color(RED);
                 smallLight.intensity = 0;
             }});
-        this.brakeLights[0].intensity = 0;
+        this._brakeLights[0].intensity = 0;
     }
 }

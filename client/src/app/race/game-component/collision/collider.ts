@@ -4,13 +4,13 @@ const HALF: number = 0.5;
 
 export class Collider extends Object3D {
 
-    private radius: number;
-    private relativeVertexes: Vector3[];
+    private _radius: number;
+    private _relativeVertices: Vector3[];
 
     public constructor(width: number, length: number) {
         super();
-        this.radius = this.pythagore(width * HALF, length * HALF);
-        this.relativeVertexes = new Array<Vector3>();
+        this._radius = this.pythagore(width * HALF, length * HALF);
+        this._relativeVertices = new Array<Vector3>();
         this.initialiseRelativeVertexes(width, length);
     }
 
@@ -32,7 +32,7 @@ export class Collider extends Object3D {
     }
     public getAbsoluteVertexes2D(): Vector2[] {
         const vertexes: Array<Vector2> = new Array<Vector2>();
-        for (const vertex of this.relativeVertexes) {
+        for (const vertex of this._relativeVertices) {
             const absoluteVertex3D: Vector3 = vertex.clone().applyMatrix4(this.parent.matrix);
             vertexes.push(new Vector2(absoluteVertex3D.x, absoluteVertex3D.z));
         }
@@ -41,7 +41,7 @@ export class Collider extends Object3D {
     }
 
     public getBroadRadius(): number {
-        return this.radius;
+        return this._radius;
     }
 
     public getAbsolutePosition(): Vector3 {
@@ -53,9 +53,9 @@ export class Collider extends Object3D {
     }
 
     private initialiseRelativeVertexes(width: number, length: number): void {
-        this.relativeVertexes.push(new Vector3(width * HALF, 0, length * HALF));
-        this.relativeVertexes.push(new Vector3(-width * HALF, 0, length * HALF));
-        this.relativeVertexes.push(new Vector3(-width * HALF, 0, -length * HALF));
-        this.relativeVertexes.push(new Vector3(width * HALF, 0, -length * HALF));
+        this._relativeVertices.push(new Vector3(width * HALF, 0, length * HALF));
+        this._relativeVertices.push(new Vector3(-width * HALF, 0, length * HALF));
+        this._relativeVertices.push(new Vector3(-width * HALF, 0, -length * HALF));
+        this._relativeVertices.push(new Vector3(width * HALF, 0, -length * HALF));
     }
 }

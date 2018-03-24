@@ -6,12 +6,12 @@ import { WebService } from "../../webServices";
 @injectable()
 export class Lexical extends WebService {
 
-    private datamuse: Datamuse;
+    private _datamuse: Datamuse;
 
     constructor() {
         super();
         this.routeName = "/lexical";
-        this.datamuse = new Datamuse();
+        this._datamuse = new Datamuse();
     }
 
     protected defineRoutes(): void {
@@ -23,7 +23,7 @@ export class Lexical extends WebService {
             const constraint: string = req.body["constraint"];
             const isEasy: boolean = req.body["easy"];
 
-            this.datamuse.getWord(constraint, isEasy).then((word: string) => {
+            this._datamuse.getWord(constraint, isEasy).then((word: string) => {
                 res.setHeader("Content-Type", "application/json");
                 res.send(word);
             });
@@ -32,7 +32,7 @@ export class Lexical extends WebService {
         this._router.post("/query-definitions", (req: Request, res: Response, next: NextFunction) => {
             const word: string = req.body["word"];
 
-            this.datamuse.getDefinitions(word).then((words: string) => {
+            this._datamuse.getDefinitions(word).then((words: string) => {
                 res.setHeader("Content-Type", "application/json");
                 res.send(words);
             });

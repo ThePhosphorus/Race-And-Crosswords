@@ -24,8 +24,8 @@ export class TargetInfos {
 export class CameraManagerService {
 
     private _cameraArray: Array<CameraContainer>;
-    private selectedCameraIndex: number;
-    private targetInfos: TargetInfos;
+    private _selectedCameraIndex: number;
+    private _targetInfos: TargetInfos;
     private _audioListener: AudioListener;
 
     public constructor() {
@@ -35,21 +35,21 @@ export class CameraManagerService {
     }
 
     private initMembers(): void {
-        this.targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+        this._targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
         this._audioListener = new AudioListener();
-        this.selectedCameraIndex = 0;
+        this._selectedCameraIndex = 0;
         this._cameraArray = new Array<CameraContainer>();
     }
 
     private initCameraArray(): void {
         const perspContainer: PerspectiveCameraContainer =
-            new PerspectiveCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+            new PerspectiveCameraContainer(this._audioListener, this._targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
 
         const orthoContainer: OrthographicCameraContainer =
-            new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+            new OrthographicCameraContainer(this._audioListener, this._targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
 
         const hoodContainer: HoodCamContainer =
-            new HoodCamContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+            new HoodCamContainer(this._audioListener, this._targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
         this._cameraArray.push(hoodContainer);
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
@@ -60,7 +60,7 @@ export class CameraManagerService {
     }
 
     public updateTargetInfos(infos: TargetInfos): void {
-        this.targetInfos.copy(infos);
+        this._targetInfos.copy(infos);
     }
 
     public update(deltaTime: number, ): void {
@@ -76,7 +76,7 @@ export class CameraManagerService {
     }
 
     private get selectedCamera(): CameraContainer {
-        return this._cameraArray[this.selectedCameraIndex];
+        return this._cameraArray[this._selectedCameraIndex];
     }
 
     public get position(): Vector3 {
@@ -102,8 +102,8 @@ export class CameraManagerService {
     // Input manager callbacks
     public switchCamera(): void {
         this.selectedCamera.removeAudioListener();
-        this.selectedCameraIndex += 1;
-        this.selectedCameraIndex %= this._cameraArray.length;
+        this._selectedCameraIndex += 1;
+        this._selectedCameraIndex %= this._cameraArray.length;
         this.selectedCamera.addAudioListener();
     }
 
@@ -134,7 +134,7 @@ export class CameraManagerService {
 
     public set cameraType(type: CameraType) {
         this._cameraArray.forEach((container: CameraContainer, index: number) => {
-            if (container.type === type) { this.selectedCameraIndex = index; }
+            if (container.type === type) { this._selectedCameraIndex = index; }
         });
     }
 
