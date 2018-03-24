@@ -1,8 +1,9 @@
 import { Vector3, Vector2, Object3D, PlaneBufferGeometry, MeshBasicMaterial, Color, Mesh } from "three";
 import { RigidBody } from "../rigid-body/rigid-body";
 
-const HALF: number = 0.5;
+const SHOW_COLLIDERS: boolean = true; // Allow to debug colliders by displaying a square above them
 const COLLIDER_DISPLAY_HEIGHT: number = 0.2;
+const HALF: number = 0.5;
 
 export class Collider extends Object3D {
 
@@ -14,7 +15,9 @@ export class Collider extends Object3D {
         this.radius = this.pythagore(width * HALF, length * HALF);
         this.relativeVertexes = new Array<Vector3>();
         this.initialiseRelativeVertexes(width, length);
-        this.displayCollider(width, length);
+        if (SHOW_COLLIDERS) {
+            this.displayCollider(width, length);
+        }
     }
 
     public getNormals(): Array<Vector2> {
