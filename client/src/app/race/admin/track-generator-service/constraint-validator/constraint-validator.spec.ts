@@ -1,11 +1,10 @@
 import { ConstraintValidator } from "./constraint-validator";
 import { Vector3 } from "three";
-import { TWICE_TRACK_WIDTH } from "../../../race.constants";
-import { DOUBLE } from "../../../../global-constants/constants";
+import { DEFAULT_TRACK_WIDTH } from "../../../race.constants";
 
 /* tslint:disable:no-magic-numbers */
 
-const minTrackLength: number = DOUBLE * TWICE_TRACK_WIDTH;
+const minTrackLength: number = DEFAULT_TRACK_WIDTH * 2;
 describe("ConstraintValidatorService", () => {
     const service: ConstraintValidator = new ConstraintValidator();
 
@@ -34,7 +33,7 @@ describe("ConstraintValidatorService", () => {
     it("should return false when track is too short", () => {
         const points: Array<Vector3> = new Array<Vector3>();
         points.push(new Vector3(0, 0, 0));
-        points.push(new Vector3(TWICE_TRACK_WIDTH / 2, 0, 0));
+        points.push(new Vector3(minTrackLength / 2, 0, 0));
         service.points = points;
 
         expect(service.validateLine(points[0], points[1])).toBeFalsy();
@@ -45,7 +44,7 @@ describe("ConstraintValidatorService", () => {
         points.push(new Vector3(0, 0, 0));
         points.push(new Vector3(minTrackLength * 2, 0, 0));
         points.push(new Vector3(minTrackLength * 2, 0, minTrackLength));
-        points.push(new Vector3(minTrackLength, 0, TWICE_TRACK_WIDTH / 4));
+        points.push(new Vector3(minTrackLength, 0, minTrackLength / 4));
         service.points = points;
 
         expect(service.validateLine(points[0], points[1])).toBeFalsy();
