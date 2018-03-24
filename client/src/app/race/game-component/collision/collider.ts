@@ -1,7 +1,7 @@
 import { Vector3, Vector2, Object3D, PlaneBufferGeometry, MeshBasicMaterial, Color, Mesh } from "three";
 import { RigidBody } from "../rigid-body/rigid-body";
 
-const SHOW_COLLIDERS: boolean = true; // Allow to debug colliders by displaying a square above them
+const SHOW_COLLIDERS: boolean = false; // Allow to debug colliders by displaying a square above them
 const COLLIDER_DISPLAY_HEIGHT: number = 0.2;
 const HALF: number = 0.5;
 
