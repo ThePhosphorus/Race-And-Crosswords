@@ -80,6 +80,7 @@ export class TrackLoaderService {
 
         const perp: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
             .multiplyScalar(DEFAULT_TRACK_WIDTH * HALF * relativeOffset);
+        const direction: Vector3 = vecAB.clone().normalize();
         const distanceAB: number =  vecAB.length();
 
         const wall: Object3D = new Object3D();
@@ -88,7 +89,8 @@ export class TrackLoaderService {
 
         const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
 
-        wall.position.copy(positionOfTheRoad.clone().add(perp));
+        wall.position.copy(positionOfTheRoad.clone().add(perp).add(direction.clone().multiplyScalar(-prevOffset))
+                                                              .add(direction.clone().multiplyScalar(nextOffset)));
         wall.lookAt(pointB.clone().add(perp));
 
         return wall;
