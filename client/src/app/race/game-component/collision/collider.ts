@@ -2,18 +2,19 @@ import { Vector3, Vector2, Object3D, PlaneBufferGeometry, MeshBasicMaterial, Col
 import { RigidBody } from "../rigid-body/rigid-body";
 
 const HALF: number = 0.5;
+const COLLIDER_DISPLAY_HEIGHT: number = 0.2;
 
 export class Collider extends Object3D {
 
     private radius: number;
     private relativeVertexes: Vector3[];
 
-    public constructor(width: number, length: number, offset: Vector2 = new Vector2(0, 0)) {
+    public constructor(width: number, length: number) {
         super();
-        this.radius = this.pythagore(offset.x + (width * HALF), offset.y + (length * HALF));
+        this.radius = this.pythagore(width * HALF, length * HALF);
         this.relativeVertexes = new Array<Vector3>();
-        this.initialiseRelativeVertexes(width, length, offset);
-        this.displayCollider(width, length, offset);
+        this.initialiseRelativeVertexes(width, length);
+        this.displayCollider(width, length);
     }
 
     public getNormals(): Array<Vector2> {
@@ -59,30 +60,22 @@ export class Collider extends Object3D {
         return Math.sqrt((x * x) + (y * y));
     }
 
-    private initialiseRelativeVertexes(width: number, length: number, offset: Vector2): void {
-        this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
-                                               0,
-                                               offset.y + (length * HALF)));
-        this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
-                                               0,
-                                               offset.y + (length * HALF)));
-        this.relativeVertexes.push(new Vector3(offset.x - (width * HALF),
-                                               0,
-                                               offset.y - (length * HALF)));
-        this.relativeVertexes.push(new Vector3(offset.x + (width * HALF),
-                                               0,
-                                               offset.y - (length * HALF)));
+    private initialiseRelativeVertexes(width: number, length: number): void {
+        this.relativeVertexes.push(new Vector3((width * HALF), 0, (length * HALF)));
+        this.relativeVertexes.push(new Vector3(-(width * HALF), 0, (length * HALF)));
+        this.relativeVertexes.push(new Vector3(-(width * HALF), 0, -(length * HALF)));
+        this.relativeVertexes.push(new Vector3((width * HALF), 0, -(length * HALF)));
     }
 
-    public displayCollider(width: number, height: number, offset: Vector2): void {
+    // For debug purposes
+    public displayCollider(width: number, height: number): void {
         const geometry: PlaneBufferGeometry = new PlaneBufferGeometry(width, height);
         geometry.rotateX(-Math.PI / 2);
-        geometry.translate(offset.x, 2, offset.y);
+        geometry.translate(0, COLLIDER_DISPLAY_HEIGHT, 0);
         const mat: MeshBasicMaterial = new MeshBasicMaterial();
         mat.color = new Color("yellow");
         const mesh: Mesh = new Mesh(geometry, mat);
 
         this.add(mesh);
-
     }
 }
