@@ -52,10 +52,7 @@ export class GameComponent implements OnDestroy, AfterViewInit {
     public ngAfterViewInit(): void {
         this._inputManager.resetBindings();
         this._inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-        this._gameManagerService
-            .start(this.containerRef.nativeElement)
-            .then(/* do nothing */)
-            .catch((err) => console.error(err));
+        this._gameManagerService.start(this.containerRef.nativeElement);
     }
 
     public get carInfos(): CarInfos {
