@@ -44,7 +44,7 @@ export class LightManagerService {
     }
     public  updateSunlight(): void {
         const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET * HALF);
-        this._directionalLight.target = this._player["mesh"];
+        this._directionalLight.target = this._player.mesh;
         this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 

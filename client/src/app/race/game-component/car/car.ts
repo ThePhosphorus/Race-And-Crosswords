@@ -241,6 +241,10 @@ export class Car extends Object3D {
         return this._mesh.position;
     }
 
+    public get mesh(): Object3D {
+        return this._mesh;
+    }
+
     public toggleNightLight(): void {
         this._carLights.toggleFrontLight();
     }
