@@ -67,6 +67,7 @@ export class RigidBody extends Object3D {
         if (this._fixed) {
             return;
         }
+        console.log("COLLISION");
         contactAngle -= Math.PI * HALF;
         const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
