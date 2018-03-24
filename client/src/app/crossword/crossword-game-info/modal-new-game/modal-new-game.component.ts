@@ -56,7 +56,7 @@ export class ModalNewGameComponent implements OnInit {
         return (this.isSinglePlayer !== null &&
                 this.username !== null &&
                 this.username !== "" &&
-                this._lvl !== null) || (this.joinedPlayer !== null);
+                this._lvl !== null);
     }
 
     public closeGameOptions(): void {
@@ -79,8 +79,9 @@ export class ModalNewGameComponent implements OnInit {
         this.closeGameOptions();
     }
 
-    public joinMatch(match: string): void {
-        this.joinedPlayer = match;
+    public joinMatch(match: InWaitMatch): void {
+        this.joinedPlayer = match.name;
+        this._lvl = match.difficulty;
     }
 
     public showLevelChoice(bool: boolean): void {

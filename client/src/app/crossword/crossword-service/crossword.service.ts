@@ -76,7 +76,7 @@ export class CrosswordService {
             if (isSinglePlayer) {
                 this.setUpSingleplayer(difficulty);
             } else {
-                this.setUpMultiplayer();
+                this.setUpMultiplayer(difficulty);
             }
         }
     }
@@ -90,7 +90,9 @@ export class CrosswordService {
         });
     }
 
-    private setUpMultiplayer(): void {
+    private setUpMultiplayer(diff: Difficulty): void {
+        this._gameManager.difficulty = diff;
+
         this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 
