@@ -121,7 +121,7 @@ export class TrackLoaderService {
         return new Vector3(intersectionX, p1.y, intersectionY);
     }
 
-    public static getTrackMaterial(width: number, length: number): MeshPhongMaterial {
+    private static getTrackMaterial(width: number, length: number): MeshPhongMaterial {
         const texture: Texture = new TextureLoader().load(TRACK_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
@@ -130,7 +130,7 @@ export class TrackLoaderService {
         return new MeshPhongMaterial({ map: texture, side: DoubleSide });
     }
 
-    public static getFinishLineMaterial(width: number, length: number): MeshPhongMaterial {
+    private static getFinishLineMaterial(width: number, length: number): MeshPhongMaterial {
         const texture: Texture = new TextureLoader().load(LINE_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
@@ -142,7 +142,7 @@ export class TrackLoaderService {
         return mat;
     }
 
-    public static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
+    private static getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
         const circleGeo: CircleGeometry = new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, CORNER_NB_SEGMENTS);
         circleGeo.rotateX(- PI_OVER_2);
         const circleMesh: Mesh = new Mesh(circleGeo, TrackLoaderService.getTrackMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
@@ -152,7 +152,7 @@ export class TrackLoaderService {
         return circleMesh;
     }
 
-    public static getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
+    private static getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
         const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH / FINISH_LINE_LENGTH_RATIO);
         geo.rotateX(- PI_OVER_2);
 
@@ -167,7 +167,7 @@ export class TrackLoaderService {
         return mesh;
     }
 
-    public static getRoad(pointA: Vector3, pointB: Vector3, width?: number): Mesh {
+    private static getRoad(pointA: Vector3, pointB: Vector3, width?: number): Mesh {
         const trackWidth: number = width ? width : DEFAULT_TRACK_WIDTH;
         const vecAB: Vector3 = pointB.clone().sub(pointA);
         const distanceAB: number = vecAB.length();
