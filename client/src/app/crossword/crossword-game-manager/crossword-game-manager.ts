@@ -149,7 +149,6 @@ export class GameManager {
         return null;
     }
 
-    // color algo from : http://geekymonkey.com/Programming/CSharp/RGB2HSL_HSL2RGB.htm
     public getColorFromPlayer(playerId: number, isFrontGround: boolean): string {
         const lightness: number = (isFrontGround) ? FRONT_LIGHTNESS : BACK_LIGHTNESS;
         const hue: number = playerId * MAX_ANGLE / this._players.getValue().length;

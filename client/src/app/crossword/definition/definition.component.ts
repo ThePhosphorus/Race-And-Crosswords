@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter, Word, Orientation, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
-import { SolvedWord } from "../crossword-game-manager/crossword-game-manager";
+import { GridState } from "../grid-state/grid-state";
 
 class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}
@@ -13,39 +13,44 @@ class DisplayedDefinition {
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-    private _wordGrid: Word[];
+    private _gridState: GridState;
     private _cheatmode: boolean;
-    private _solvedWords: SolvedWord[]; // TODO: Check if it can go in crossword Service
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
+    private gridSize: number;
 
     public constructor(private _crosswordService: CrosswordService) {
+        this._crosswordService.gridStateObs.subscribe((gs: GridState) =>
+            this._gridState = gs);
+
         this._cheatmode = false;
-        this._wordGrid = null;
-        this._solvedWords = [];
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
+        this.gridSize = 1;
     }
 
     public ngOnInit(): void {
         this._crosswordService.solvedGrid.subscribe((grid: CrosswordGrid) => {
+            this.gridSize = grid.size;
             this.acrossDefinitions = new Array<DisplayedDefinition>();
             this.downDefinitions = new Array<DisplayedDefinition>();
-            this._wordGrid = grid.words;
+            const wordGrid: Array<Word> = grid.words;
+            wordGrid.sort((a: Word, b: Word) => a.id - b.id);
 
-            for (let i: number = 0; i < this._wordGrid.length; i++) {
-                const definition: DisplayedDefinition = this.wordToDefinition(this._wordGrid[i], i);
+            wordGrid.forEach((w: Word) => {
+                const definition: DisplayedDefinition =
+                this.wordToDefinition(w, w.id);
 
-                if (this._wordGrid[i].orientation === Orientation.Across) {
+                if (w.orientation === Orientation.Across) {
                     this.acrossDefinitions.push(definition);
                 } else {
                     this.downDefinitions.push(definition);
                 }
-            }
-        });
+            });
 
-        this._crosswordService.solvedWords.subscribe((solvedWords: SolvedWord[]) => {
-            this._solvedWords = solvedWords;
+            this.acrossDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id - b.id);
+            this.downDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id % this.gridSize - b.id % this.gridSize);
+
         });
     }
 
@@ -64,35 +69,23 @@ export class DefinitionComponent implements OnInit {
 
     public get cheatMode(): boolean { return this._cheatmode; }
 
-    public isWordSolved(id: number): boolean {      // Take in orientation, and maybe do it in crossWord service
-        return this._solvedWords.map((solvedWord: SolvedWord) => solvedWord.id).indexOf(id) > -1;
+    public isWordSolved(id: number, orientation: Orientation): boolean {
+        return this._crosswordService.wordIsSelected(id, orientation);
     }
 
-    public select(index: number, orientation: string): void {
-        this._crosswordService.setSelectedWord(this.findWordByIndex(index, orientation));
+    public getRowCOl(id: number, orientation: Orientation): number {
+        return (orientation === Orientation.Across) ? Math.floor(id / this.gridSize) : id % this.gridSize;
     }
 
-    public hover(index: number, orientation: string): void {
-        this._crosswordService.setHoveredWord(this.findWordByIndex(index, orientation));
+    public select(index: number, orientation: Orientation): void {
+        this._crosswordService.setSelectedWord(index, orientation);
+    }
+
+    public hover(index: number, orientation: Orientation): void {
+        this._crosswordService.setHoveredWord(index, orientation);
     }
 
     public unHover(): void {
-        this._crosswordService.setHoveredWord(null);
-    }
-
-    private findWordByIndex(index: number, orientation: string): Word {  // TODO: Put it someWhere more appropriate
-        let targetWord: Word;
-        for (const word of this._wordGrid) {
-            if (word.orientation === orientation) {
-                if (index > 0) {
-                    index--;
-                } else {
-                    targetWord = word;
-                    break;
-                }
-            }
-        }
-
-        return targetWord;
+        this._crosswordService.setHoveredWord(null, null);
     }
 }
