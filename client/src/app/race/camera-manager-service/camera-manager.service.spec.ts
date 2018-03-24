@@ -33,11 +33,7 @@ describe("CameraManagerService", () => {
      inject([CameraManagerService], (manager: CameraManagerService) => {
             manager.cameraType = CameraType.Perspective;
             manager.switchCamera();
-            expect(manager.cameraType).toBe(CameraType.Orthographic);
-            manager.switchCamera();
-            expect(manager.cameraType).toBe(CameraType.Perspective); // Doing multiple switch to see if come and go works
-            manager.switchCamera();
-            expect(manager.cameraType).toBe(CameraType.Orthographic);
+            expect(manager.cameraType === CameraType.Perspective).toBeFalsy();
         })
     );
 
