@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, HostListener, OnDestroy } from "@angular/core";
+import { Component, ElementRef, ViewChild, HostListener, OnDestroy, AfterViewInit } from "@angular/core";
 import { GameManagerService, CarInfos } from "./game-manager-service/game_manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "./sound-manager-service/sound-manager.service";
@@ -25,12 +25,11 @@ const FULLSCREEN_KEYCODE: number = 70; // F
         LightManagerService
     ]
 })
-export class GameComponent implements OnDestroy {
+export class GameComponent implements OnDestroy, AfterViewInit {
 
     @ViewChild("container")
     private containerRef: ElementRef;
     public tracks: Track[];
-    public isInitialized: boolean = false;
 
     public constructor(
         private _gameManagerService: GameManagerService,
@@ -38,12 +37,11 @@ export class GameComponent implements OnDestroy {
         private _trackLoader: TrackLoaderService,
         private _route: ActivatedRoute,
         private _inputManager: InputManagerService) {
-            this._trackLoader.loadAll().subscribe((ts: Track[]) => this.tracks = ts);
-            // this._route.params.map((p) => p.id).subscribe((id: string) => {
-            //     if (id) {
-            //         this.loadTrack(id);
-            //     }
-            // });
+            this._route.params.map((p) => p.id).subscribe((id: string) => {
+                if (id) {
+                    this.loadTrack(id);
+                }
+            });
         }
 
     @HostListener("window:resize", ["$event"])
@@ -51,13 +49,9 @@ export class GameComponent implements OnDestroy {
         this._gameManagerService.onResize();
     }
 
-    public init(id: string): void {
-        const track: Track = this.tracks.find((t) => t._id === id);
-        this.isInitialized = true;
+    public ngAfterViewInit(): void {
         this._inputManager.resetBindings();
         this._inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-        this._gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track),
-                                             TrackLoaderService.getTrackWalls(track));
         this._gameManagerService
             .start(this.containerRef.nativeElement)
             .then(/* do nothing */)

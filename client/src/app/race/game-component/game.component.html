@@ -1,21 +1,6 @@
 <div class="row mt-5">
   <div class="col mt-3" id="game-wrapper">
     <div #container id="container">
-        <div id="track-list" *ngIf="!isInitialized" >
-          <button *ngFor="let track of tracks"
-                    class="track-button"
-                    (click)="init(track._id)">
-            <div class="title">
-              <span>{{ track.name }}</span>
-            </div>
-            <div class="description">
-              <span>{{ track.description }}</span>
-            </div>
-            <div class="playCounter">
-              <span>Played : {{ track.nbPlayed }} times.</span>
-            </div>
-          </button>
-        </div>
       <app-hud></app-hud>
     </div>
   </div>
