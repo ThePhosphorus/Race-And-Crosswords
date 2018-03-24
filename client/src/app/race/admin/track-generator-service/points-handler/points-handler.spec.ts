@@ -11,7 +11,7 @@ import { InputManagerService } from "../../../input-manager-service/input-manage
 
 describe("PointsHandler for TrackGeneratorService", () => {
     const inputManager: InputManagerService = new InputManagerService();
-    const cameraManager: CameraManagerService = new CameraManagerService(inputManager);
+    const cameraManager: CameraManagerService = new CameraManagerService();
     const trackGen: TrackGenerator = new TrackGenerator(cameraManager, inputManager);
 
     beforeEach(async () => {
