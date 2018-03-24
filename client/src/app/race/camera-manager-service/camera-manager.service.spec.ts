@@ -43,7 +43,6 @@ describe("CameraManagerService", () => {
 
   it("should zoom in",
      inject([CameraManagerService], (manager: CameraManagerService) => {
-        manager.init();
         const cameraDistance: number = manager.cameraDistanceToCar;
         manager.zoomIn();
         manager.update(5);
@@ -52,7 +51,6 @@ describe("CameraManagerService", () => {
 
   it("should zoom out",
      inject([CameraManagerService], (manager: CameraManagerService) => {
-        manager.init();
         const cameraDistance: number = manager.cameraDistanceToCar;
         manager.zoomOut();
         manager.update(1);

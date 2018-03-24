@@ -1,7 +1,7 @@
 import { Engine } from "./engine";
 import {
-    DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, DEFAULT_DOWNSHIFT_RPM,
-    DEFAULT_MINIMUM_RPM, DEFAULT_SHIFT_RPM, DEFAULT_MAX_RPM, DEFAULT_TRANSMISSION_EFFICIENCY
+    DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO,
+    DEFAULT_MINIMUM_RPM, DEFAULT_MAX_RPM,
 } from "../../race.constants";
 
 /* tslint:disable: no-magic-numbers */
@@ -25,68 +25,6 @@ describe("Engine", () => {
         expect(engine).toBeDefined();
         expect(engine.currentGear).toBe(0);
         expect(engine.rpm).toBeGreaterThanOrEqual(minimumRPM);
-    });
-
-    it("should use default gear ratios when invalid data is provided", () => {
-        let gearRatios: number[] = [];
-        engine = new Engine(gearRatios);
-        expect(engine).toBeDefined();
-        expect(engine["gearRatios"]).toBe(DEFAULT_GEAR_RATIOS);
-
-        gearRatios = [-7, 2];
-        engine = new Engine(gearRatios);
-        expect(engine).toBeDefined();
-        expect(engine["gearRatios"]).toBe(DEFAULT_GEAR_RATIOS);
-    });
-
-    it("should use default rpm values when one value is invalid", () => {
-        engine = new Engine(DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, 0);
-        expect(engine).toBeDefined();
-        expect(engine["downshiftRPM"]).toBe(DEFAULT_DOWNSHIFT_RPM);
-        expect(engine["minimumRPM"]).toBe(DEFAULT_MINIMUM_RPM);
-        expect(engine["shiftRPM"]).toBe(DEFAULT_SHIFT_RPM);
-
-        engine = new Engine(DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, DEFAULT_DOWNSHIFT_RPM, -2);
-        expect(engine).toBeDefined();
-        expect(engine["downshiftRPM"]).toBe(DEFAULT_DOWNSHIFT_RPM);
-        expect(engine["minimumRPM"]).toBe(DEFAULT_MINIMUM_RPM);
-        expect(engine["shiftRPM"]).toBe(DEFAULT_SHIFT_RPM);
-
-        engine = new Engine(
-            DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO,
-            DEFAULT_DOWNSHIFT_RPM, DEFAULT_MINIMUM_RPM, -100);
-
-        expect(engine).toBeDefined();
-        expect(engine["downshiftRPM"]).toBe(DEFAULT_DOWNSHIFT_RPM);
-        expect(engine["minimumRPM"]).toBe(DEFAULT_MINIMUM_RPM);
-        expect(engine["shiftRPM"]).toBe(DEFAULT_SHIFT_RPM);
-    });
-
-    it("should use default rpm values when shiftRPM < downshiftRPM", () => {
-        engine = new Engine(
-            DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, DEFAULT_DOWNSHIFT_RPM,
-            DEFAULT_DOWNSHIFT_RPM, DEFAULT_DOWNSHIFT_RPM - 10);
-
-        expect(engine).toBeDefined();
-        expect(engine["downshiftRPM"]).toBe(DEFAULT_DOWNSHIFT_RPM);
-        expect(engine["minimumRPM"]).toBe(DEFAULT_MINIMUM_RPM);
-        expect(engine["shiftRPM"]).toBe(DEFAULT_SHIFT_RPM);
-    });
-
-    it("should use default transmissionEfficiency when value is invalid", () => {
-        engine = new Engine(
-            DEFAULT_GEAR_RATIOS, DEFAULT_DRIVE_RATIO, DEFAULT_DOWNSHIFT_RPM,
-            DEFAULT_DOWNSHIFT_RPM, DEFAULT_DOWNSHIFT_RPM, 0);
-
-        expect(engine).toBeDefined();
-        expect(engine["transmissionEfficiency"]).toBe(DEFAULT_TRANSMISSION_EFFICIENCY);
-    });
-
-    it("should use default drive ration when invalid values are provided", () => {
-        const gearRatios: number[] = DEFAULT_GEAR_RATIOS;
-        engine = new Engine(gearRatios, -2);
-        expect(engine).toBeDefined();
-        expect(engine["driveRatio"]).toBe(DEFAULT_DRIVE_RATIO);
     });
 
     it("should have a higher torque when rpm is higher.", () => {
