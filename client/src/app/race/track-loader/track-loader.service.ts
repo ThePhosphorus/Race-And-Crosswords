@@ -57,23 +57,34 @@ export class TrackLoaderService {
     public static getTrackWalls(track: Track): Array<Object3D> {
         const walls: Array<Object3D> = new Array<Object3D>();
         for (let i: number = 0; i < track.points.length - 1; i++) {
+            const p3Index: number = (i + 2) === track.points.length ? 1 : (i + 2);
+            const p0Index: number = (i - 1) === -1 ? (track.points.length - 2) : (i - 1);
+            const p0: Vector3 = TrackLoaderService.toVector(track.points[p0Index]); // Previous
             const p1: Vector3 = TrackLoaderService.toVector(track.points[i]);
             const p2: Vector3 = TrackLoaderService.toVector(track.points[i + 1]);
-            walls.push(TrackLoaderService.getSegmentWall(p1, p2, -1));
-            walls.push(TrackLoaderService.getSegmentWall(p1, p2, 1));
+            const p3: Vector3 = TrackLoaderService.toVector(track.points[p3Index]); // Next
+            walls.push(TrackLoaderService.getSegmentWall(p0, p1, p2, p3, -1));
+            walls.push(TrackLoaderService.getSegmentWall(p0, p1, p2, p3, 1));
         }
 
         return walls;
     }
 
-    public static getSegmentWall(pointA: Vector3, pointB: Vector3, relativeOffset: number): Object3D {
+    public static getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, pointN: Vector3, relativeOffset: number): Object3D {
+        const vecPA: Vector3 = pointA.clone().sub(pointP);
         const vecAB: Vector3 = pointB.clone().sub(pointA);
+        const vecBN: Vector3 = pointN.clone().sub(pointB);
+
+        const prevOffset: number = -(vecPA.angleTo(vecAB) / PI_OVER_2) * DEFAULT_TRACK_WIDTH * HALF * relativeOffset;
+        const nextOffset: number = -(vecAB.angleTo(vecBN) / PI_OVER_2) * DEFAULT_TRACK_WIDTH * HALF * relativeOffset;
+
         const perp: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
             .multiplyScalar(DEFAULT_TRACK_WIDTH * HALF * relativeOffset);
         const distanceAB: number =  vecAB.length();
 
         const wall: Object3D = new Object3D();
-        wall.add(new Collider(2, distanceAB - DEFAULT_TRACK_WIDTH), new RigidBody(DEFAULT_MASS, true));
+        wall.add(new Collider(2, distanceAB - (nextOffset) - (prevOffset)),
+                 new RigidBody(DEFAULT_MASS, true));
 
         const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
 
