@@ -57,33 +57,30 @@ export class TrackLoaderService {
     public static getTrackWalls(track: Track): Array<Object3D> {
         const walls: Array<Object3D> = new Array<Object3D>();
         for (let i: number = 0; i < track.points.length - 1; i++) {
-            const wall: Object3D = TrackLoaderService.getWall(
-                TrackLoaderService.toVector(track.points[i]),
-                TrackLoaderService.toVector(track.points[i + 1]));
-            walls.push(wall);
+            const p1: Vector3 = TrackLoaderService.toVector(track.points[i]);
+            const p2: Vector3 = TrackLoaderService.toVector(track.points[i + 1]);
+            walls.push(TrackLoaderService.getSegmentWall(p1, p2, -1));
+            walls.push(TrackLoaderService.getSegmentWall(p1, p2, 1));
         }
 
         return walls;
     }
 
-    public static getWall(pointA: Vector3, pointB: Vector3): Object3D {
+    public static getSegmentWall(pointA: Vector3, pointB: Vector3, relativeOffset: number): Object3D {
         const vecAB: Vector3 = pointB.clone().sub(pointA);
-        const perp: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize().multiplyScalar(DEFAULT_TRACK_WIDTH * HALF);
+        const perp: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
+            .multiplyScalar(DEFAULT_TRACK_WIDTH * HALF * relativeOffset);
         const distanceAB: number =  vecAB.length();
 
-        const wall1: Object3D = new Object3D();
-        const wall2: Object3D = new Object3D();
-        wall1.add(new Collider(2, distanceAB), new RigidBody(DEFAULT_MASS, true));
-        wall2.add(new Collider(2, distanceAB), new RigidBody(DEFAULT_MASS, true));
+        const wall: Object3D = new Object3D();
+        wall.add(new Collider(2, distanceAB - DEFAULT_TRACK_WIDTH), new RigidBody(DEFAULT_MASS, true));
 
         const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
 
-        wall1.position.copy(positionOfTheRoad.clone().add(perp));
-        wall1.lookAt(pointB.add(perp));
-        wall2.position.copy(positionOfTheRoad.clone().add(perp.multiplyScalar(-1)));
-        wall2.lookAt(pointB.add(perp.multiplyScalar(-1)));
+        wall.position.copy(positionOfTheRoad.clone().add(perp));
+        wall.lookAt(pointB.clone().add(perp));
 
-        return wall1;
+        return wall;
     }
 
     public static getTrackMaterial(width: number, length: number): MeshPhongMaterial {
@@ -118,7 +115,7 @@ export class TrackLoaderService {
     }
 
     public static getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
-        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH/4);
+        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH / 4);
         geo.rotateX( - PI_OVER_2);
 
         const mesh: Mesh = new Mesh(geo, TrackLoaderService.getFinishLineMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
