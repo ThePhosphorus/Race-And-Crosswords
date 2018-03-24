@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { PlayerId } from "../../../../../common/communication/Player";
 import { GridState } from "../grid-state/grid-state";
 import { CrosswordService } from "../crossword-service/crossword.service";
 
@@ -9,12 +8,10 @@ import { CrosswordService } from "../crossword-service/crossword.service";
     styleUrls: ["./input-letter.component.css"]
 })
 export class InputLetterComponent implements OnInit {
-    @Input() public letter: string; // TODO: Get object from service and not trough @Input() (We already know the id)
     @Input() public id: number;
     private _gridState: GridState;
 
     public constructor(private _crosswordService: CrosswordService) {
-        this.letter = "	 ";
         this.id = 1;
         this._gridState = new GridState();
     }
@@ -23,6 +20,10 @@ export class InputLetterComponent implements OnInit {
         this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
             this._gridState = gridState;
         });
+    }
+
+    public get letter(): string {
+        return this._crosswordService.getChar(this.id);
     }
 
     public select(): void {
@@ -41,7 +42,7 @@ export class InputLetterComponent implements OnInit {
         return this._gridState.LIsCurrentLetter(this.id);
     }
     public get playerCSS(): {} {
-        const players: Array<PlayerId> = this._crosswordService.getLetterDisabledPlayers(this.id);
+        const players: Array<number> = this._crosswordService.getLetterDisabledPlayers(this.id);
         if (players.length === 0) {
             return this.playerHiglightCSS;
         }
@@ -64,7 +65,7 @@ export class InputLetterComponent implements OnInit {
     public get playerHiglightCSS(): {} {
         let color: string = "white";
         let bgColor: string = "white";
-        const players: Array<PlayerId> = this._crosswordService.getLetterHighlightPlayers(this.id);
+        const players: Array<number> = this._crosswordService.getLetterHighlightPlayers(this.id);
         if (players.length === 0) {
             return {};
         } else {

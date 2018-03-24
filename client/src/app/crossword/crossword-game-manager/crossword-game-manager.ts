@@ -1,5 +1,5 @@
 import { Difficulty, CrosswordGrid, Word, Letter, Orientation } from "../../../../../common/communication/crossword-grid";
-import { PlayerId, Player } from "../../../../../common/communication/Player";
+import { Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 const INITIAL_GRID_SIZE: number = 10;
@@ -11,7 +11,7 @@ const MAX_ANGLE: number = 360;
 export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
 export class SolvedWord {
-    public constructor(public id: number, public orientation: Orientation, public player: PlayerId) {}
+    public constructor(public id: number, public orientation: Orientation, public player: number) {}
 }
 
 export class GameManager {
@@ -33,10 +33,10 @@ export class GameManager {
         this.initializeEmptyGrid();
     }
 
-    public newGame(): void {
+    public newGame(difficulty: Difficulty): void {
         this._solvedGrid.next(new CrosswordGrid());
-        this._currentPlayer.next(PlayerId.PLAYER1);
-        this._difficulty.next(Difficulty.Easy);
+        this._currentPlayer.next(0);
+        this._difficulty.next(difficulty);
     }
 
     public get difficultyObs(): BehaviorSubject<Difficulty> {
@@ -47,7 +47,7 @@ export class GameManager {
         return this._solvedWords;
     }
 
-    public get currentPlayerObs(): BehaviorSubject<PlayerId> {
+    public get currentPlayerObs(): BehaviorSubject<number> {
         return this._currentPlayer;
     }
 
@@ -108,7 +108,7 @@ export class GameManager {
         this._difficulty.next(difficulty);
     }
 
-    public addSolvedWord(word: Word, playerId: PlayerId): boolean {
+    public addSolvedWord(word: Word, playerId: number): boolean {
         this._solvedWords.value.push(
             new SolvedWord(word.id, word.orientation, playerId));
 
@@ -150,7 +150,7 @@ export class GameManager {
     }
 
     // color algo from : http://geekymonkey.com/Programming/CSharp/RGB2HSL_HSL2RGB.htm
-    public getColorFromPlayer(playerId: PlayerId, isFrontGround: boolean): string {
+    public getColorFromPlayer(playerId: number, isFrontGround: boolean): string {
         const lightness: number = (isFrontGround) ? FRONT_LIGHTNESS : BACK_LIGHTNESS;
         const hue: number = playerId * MAX_ANGLE / this._players.getValue().length;
 

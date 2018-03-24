@@ -3,7 +3,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { InputLetterComponent } from "./input-letter.component";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import { PlayerId } from "../../../../../common/communication/Player";
+import { number } from "../../../../../common/communication/Player";
 
 describe("InputLetterComponent", () => {
     let component: InputLetterComponent;
@@ -28,9 +28,9 @@ describe("InputLetterComponent", () => {
         expect(component).toBeTruthy();
     });
     it("players should have different backgroundcolor", () => {
-        expect(component.getBGPlayerColor(PlayerId.PLAYER1)).not.toBe(component.getBGPlayerColor(PlayerId.PLAYER2));
+        expect(component.getBGPlayerColor(number.PLAYER1)).not.toBe(component.getBGPlayerColor(number.PLAYER2));
     });
     it("players should have different color", () => {
-        expect(component.getPlayerColor(PlayerId.PLAYER1)).not.toBe(component.getPlayerColor(PlayerId.PLAYER2));
+        expect(component.getPlayerColor(number.PLAYER1)).not.toBe(component.getPlayerColor(number.PLAYER2));
     });
 });

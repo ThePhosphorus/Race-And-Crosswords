@@ -1,5 +1,4 @@
 import { Orientation } from "../../../../../common/communication/crossword-grid";
-import { PlayerId } from "../../../../../common/communication/Player";
 
 export class GridState {
     public currentOrientation: Orientation;
@@ -7,7 +6,7 @@ export class GridState {
     public selectedLetters: number[];
     public hoveredLetters: number[];
     public disabledLetters: number[];
-    public currentPlayer: PlayerId;
+    public currentPlayer: number;
 
     public constructor() {
         this.currentOrientation = Orientation.Across;

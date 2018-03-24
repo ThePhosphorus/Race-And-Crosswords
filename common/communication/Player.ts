@@ -5,7 +5,3 @@ export class Player {
         public score:number
         ) {}
 }
-
-export enum PlayerId {
-    PLAYER1, PLAYER2
-}
