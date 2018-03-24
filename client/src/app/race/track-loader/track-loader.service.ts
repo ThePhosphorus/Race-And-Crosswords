@@ -18,7 +18,7 @@ const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
 const START_Y_OFFSET: number = 0.02;
 const CORNER_NB_SEGMENTS: number = 20;
-const WALL_WIDTH: number = 2;
+const WALL_WIDTH: number = 1.5;
 
 @Injectable()
 export class TrackLoaderService {
@@ -76,8 +76,11 @@ export class TrackLoaderService {
         const vecAB: Vector3 = pointB.clone().sub(pointA);
         const vecBN: Vector3 = pointN.clone().sub(pointB);
 
-        const prevOffset: number = -(vecPA.angleTo(vecAB) / PI_OVER_2) * DEFAULT_TRACK_WIDTH * HALF * relativeOffset;
-        const nextOffset: number = -(vecAB.angleTo(vecBN) / PI_OVER_2) * DEFAULT_TRACK_WIDTH * HALF * relativeOffset;
+        const prevTurn: number = -vecPA.clone().cross(vecAB).normalize().y;
+        const nextTurn: number = -vecAB.clone().cross(vecBN).normalize().y;
+
+        const prevOffset: number = -(vecPA.angleTo(vecAB) / PI_OVER_2) * DEFAULT_TRACK_WIDTH * HALF * relativeOffset * prevTurn;
+        const nextOffset: number = -(vecAB.angleTo(vecBN) / PI_OVER_2) * DEFAULT_TRACK_WIDTH * HALF * relativeOffset * nextTurn;
 
         const perp: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
             .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (WALL_WIDTH * HALF)) * relativeOffset);
@@ -90,8 +93,8 @@ export class TrackLoaderService {
 
         const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
 
-        wall.position.copy(positionOfTheRoad.clone().add(perp).add(direction.clone().multiplyScalar(prevOffset))
-                                                              .add(direction.clone().multiplyScalar(-nextOffset)));
+        wall.position.copy(positionOfTheRoad.clone().add(perp).add(direction.clone().multiplyScalar(prevOffset * prevTurn))
+                                                              .add(direction.clone().multiplyScalar(-nextOffset * nextTurn)));
         wall.lookAt(pointB.clone().add(perp));
 
         return wall;
