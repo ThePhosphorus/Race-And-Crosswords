@@ -25,9 +25,9 @@ export class LightManagerService {
     private _directionalLight: DirectionalLight;
     private _dayAmbientLight: AmbientLight;
     private _nightAmbientLight: AmbientLight;
-    private scene: Scene;
-    private player: Car;
-    private aiControlledCars: Array<Car>;
+    private _scene: Scene;
+    private _player: Car;
+    private _aiControlledCars: Array<Car>;
     public constructor() {
             this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
             this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
@@ -35,31 +35,31 @@ export class LightManagerService {
             this._isShadowMode = false;
          }
     public init(scene: Scene, player: Car, aiControlledCars: Array<Car>): void {
-        this.scene = scene;
-        this.player = player;
-        this.aiControlledCars = aiControlledCars;
-        this.scene.add(this._dayAmbientLight);
+        this._scene = scene;
+        this._player = player;
+        this._aiControlledCars = aiControlledCars;
+        this._scene.add(this._dayAmbientLight);
         this.loadSkybox(BACKGROUND_PATH);
         this.loadSunlight();
     }
     public  updateSunlight(): void {
         const sunlightoffSet: Vector3 = new Vector3(0, DIRECTIONAL_LIGHT_OFFSET, -DIRECTIONAL_LIGHT_OFFSET * HALF);
-        this._directionalLight.target = this.player["mesh"];
-        this._directionalLight.position.copy((this.player.getPosition().clone().add(sunlightoffSet)));
+        this._directionalLight.target = this._player.mesh;
+        this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 
     public toggleSunlight(): void {
-        if (this.scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
-            this.scene.remove(this._directionalLight);
+        if (this._scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
+            this._scene.remove(this._directionalLight);
             this._isShadowMode = false;
         } else if (!this._isNightMode) {
-            this.scene.add(this._directionalLight);
+            this._scene.add(this._directionalLight);
             this._isShadowMode = true;
         }
     }
 
     public loadSkybox(path: string): void {
-        this.scene.background = new CubeTextureLoader()
+        this._scene.background = new CubeTextureLoader()
             .setPath(path)
             .load([
                 "posx.png",
@@ -72,25 +72,25 @@ export class LightManagerService {
     }
     public toggleNightMode(): void {
 
-        this.player.toggleNightLight();
-        this.aiControlledCars.forEach((aiCar) => {
+        this._player.toggleNightLight();
+        this._aiControlledCars.forEach((aiCar) => {
             aiCar.toggleNightLight();
         });
         if (this._isNightMode) {
-            this.scene.remove(this._nightAmbientLight);
-            this.scene.add(this._dayAmbientLight);
+            this._scene.remove(this._nightAmbientLight);
+            this._scene.add(this._dayAmbientLight);
             this.loadSkybox(BACKGROUND_PATH);
             this._isNightMode = false;
             if (this._isShadowMode) {
-                this.scene.add(this._directionalLight);
+                this._scene.add(this._directionalLight);
             }
         } else {
-            this.scene.remove(this._dayAmbientLight);
-            this.scene.add(this._nightAmbientLight);
+            this._scene.remove(this._dayAmbientLight);
+            this._scene.add(this._nightAmbientLight);
             this.loadSkybox(NIGHT_BACKGROUND_PATH);
             this._isNightMode = true;
             if (this._isShadowMode) {
-                this.scene.remove(this._directionalLight);
+                this._scene.remove(this._directionalLight);
             }
         }
     }

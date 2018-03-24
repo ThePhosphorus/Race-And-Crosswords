@@ -9,22 +9,22 @@ const musicpath: string = "dejavu.ogg";
 @Injectable()
 export class SoundManagerService {
 
-    private audioListener: AudioListener;
-    private startSound: GlobalSoundFacade;
-    private music: GlobalSoundFacade;
+    private _audioListener: AudioListener;
+    private _startSound: GlobalSoundFacade;
+    private _music: GlobalSoundFacade;
 
     public constructor() {
     }
 
     public startRace(): void {
-          this.startSound = new GlobalSoundFacade(this.audioListener, false, START_VOLUME);
-          this.startSound.init(startpath).then(() => this.startSound.play());
-          this.music = new GlobalSoundFacade(this.audioListener, true, MUSIC_VOLUME);
-          this.music.init(musicpath).then(() => this.music.play());
+          this._startSound = new GlobalSoundFacade(this._audioListener, false, START_VOLUME);
+          this._startSound.init(startpath).then(() => this._startSound.play());
+          this._music = new GlobalSoundFacade(this._audioListener, true, MUSIC_VOLUME);
+          this._music.init(musicpath).then(() => this._music.play());
     }
 
     public init(audioListener: AudioListener): void {
-        this.audioListener = audioListener;
+        this._audioListener = audioListener;
     }
 
     public stopAllSounds(): void {

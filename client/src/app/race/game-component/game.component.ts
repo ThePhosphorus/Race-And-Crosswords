@@ -31,12 +31,12 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     private containerRef: ElementRef;
 
     public constructor(
-        private gameManagerService: GameManagerService,
-        private soundManager: SoundManagerService,
-        private trackLoader: TrackLoaderService,
-        private route: ActivatedRoute,
-        private inputManager: InputManagerService) {
-            this.route.params.map((p) => p.id).subscribe((id: string) => {
+        private _gameManagerService: GameManagerService,
+        private _soundManager: SoundManagerService,
+        private _trackLoader: TrackLoaderService,
+        private _route: ActivatedRoute,
+        private _inputManager: InputManagerService) {
+            this._route.params.map((p) => p.id).subscribe((id: string) => {
                 if (id) {
                     this.loadTrack(id);
                 }
@@ -45,24 +45,24 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {
-        this.gameManagerService.onResize();
+        this._gameManagerService.onResize();
     }
 
     public ngAfterViewInit(): void {
-        this.inputManager.resetBindings();
-        this.inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-        this.gameManagerService
+        this._inputManager.resetBindings();
+        this._inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
+        this._gameManagerService
             .start(this.containerRef.nativeElement)
             .then(/* do nothing */)
             .catch((err) => console.error(err));
     }
 
     public get carInfos(): CarInfos {
-        return this.gameManagerService.playerInfos;
+        return this._gameManagerService.playerInfos;
     }
 
     public ngOnDestroy(): void {
-        this.soundManager.stopAllSounds();
+        this._soundManager.stopAllSounds();
     }
 
     private fullscreen(): void {
@@ -71,7 +71,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     }
 
     private loadTrack(id: string): void {
-        this.trackLoader.loadOne(id).subscribe((track: Track) =>
-            this.gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track), TrackLoaderService.getTrackWalls(track)));
+        this._trackLoader.loadOne(id).subscribe((track: Track) =>
+            this._gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track), TrackLoaderService.getTrackWalls(track)));
     }
 }

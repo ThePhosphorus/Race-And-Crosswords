@@ -16,20 +16,20 @@ import { LINK_MINIMUM_POINTS } from "../track-editor.constants";
 })
 export class TrackEditorComponent implements AfterViewInit {
     @ViewChild("editor")
-    private elem: ElementRef;
     public id: string;
     public description: string;
     public name: string;
-    private previousName: string;
+    private _elem: ElementRef;
+    private _previousName: string;
 
     public constructor(
         public trackGenerator: TrackGenerator,
-        private trackLoader: TrackLoaderService,
-        private trackSaver: TrackSaverService,
-        private route: ActivatedRoute,
-        private router: Router
+        private _trackLoader: TrackLoaderService,
+        private _trackSaver: TrackSaverService,
+        private _route: ActivatedRoute,
+        private _router: Router
     ) {
-        this.route.params.map((p) => p.id).subscribe((id: string) => {
+        this._route.params.map((p) => p.id).subscribe((id: string) => {
             if (id) {
                 this.id = id;
                 this.getTrack(id);
@@ -41,7 +41,7 @@ export class TrackEditorComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.trackGenerator.setContainer(this.elem.nativeElement);
+        this.trackGenerator.setContainer(this._elem.nativeElement);
     }
 
     @HostListener("window:resize", ["$event"])
@@ -74,9 +74,9 @@ export class TrackEditorComponent implements AfterViewInit {
     }
 
     private getTrack(id: string): void {
-        this.trackLoader.loadOne(id).subscribe((track: Track) => {
+        this._trackLoader.loadOne(id).subscribe((track: Track) => {
             this.name = track.name;
-            this.previousName = track.name;
+            this._previousName = track.name;
             this.description = track.description;
             this.trackGenerator.loadTrack(track.points.map((value: Vector3Struct) => TrackLoaderService.toVector(value)));
         });
@@ -85,10 +85,10 @@ export class TrackEditorComponent implements AfterViewInit {
     public saveTrack(): void {
         const points: Vector3[] = this.trackGenerator.saveTrack();
         if (this.testTrack(points)) {
-            this.trackSaver.save(
-                (this.previousName && this.name === this.previousName) ? this.id : null,
+            this._trackSaver.save(
+                (this._previousName && this.name === this._previousName) ? this.id : null,
                 this.name, this.description, points
-                ).subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/tracks"]); } });
+                ).subscribe((bool: boolean) => { if (bool) { this._router.navigate(["/admin/tracks"]); } });
         }
     }
 
@@ -113,7 +113,7 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public deleteTrack(): void {
         if (this.id && confirm("Delete track?")) {
-            this.trackSaver.delete(this.id).subscribe((bool: boolean) => { if (bool) { this.router.navigate(["/admin/tracks"]); } });
+            this._trackSaver.delete(this.id).subscribe((bool: boolean) => { if (bool) { this._router.navigate(["/admin/tracks"]); } });
         }
     }
 }

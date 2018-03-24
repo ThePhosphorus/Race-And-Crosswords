@@ -12,12 +12,12 @@ const DEFAULT_GRID_SIZE: number = 10;
 @injectable()
 export class Grid extends WebService {
 
-    private gridGenerator: GridGenerator;
+    private _gridGenerator: GridGenerator;
 
     constructor() {
         super();
         this.routeName = "/grid";
-        this.gridGenerator = new GridGenerator();
+        this._gridGenerator = new GridGenerator();
     }
 
     protected defineRoutes(): void {
@@ -30,7 +30,7 @@ export class Grid extends WebService {
                                             : DEFAULT_GRID_SIZE;
 
             res.setHeader("Content-Type", "application/json");
-            this.gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
+            this._gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
         });
     }
 }

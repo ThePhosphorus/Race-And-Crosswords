@@ -1,5 +1,5 @@
 import { Engine } from "./engine";
-import { Vector3, Vector2 } from "three";
+import { Vector3 } from "three";
 import { Car } from "./car";
 import { TestBed, inject } from "@angular/core/testing";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -39,26 +39,6 @@ describe("Car", () => {
         expect(car.speed).toBeGreaterThan(initialSpeed);
     });
 
-    it("should decelerate when brake is pressed", () => {
-        // Remove rolling resistance and drag force so the only force slowing down the car is the brakes.
-        car["getRollingResistance"] = () => {
-            return new Vector2(0, 0);
-        };
-
-        car["getDragForce"] = () => {
-            return new Vector2(0, 0);
-        };
-
-        car.carControl.accelerate();
-        car.update(MS_BETWEEN_FRAMES);
-        car.carControl.releaseAccelerator();
-
-        const initialSpeed: number = car.speed;
-        car.carControl.brake();
-        car.update(MS_BETWEEN_FRAMES);
-        expect(car.speed).toBeLessThan(initialSpeed);
-    });
-
     it("should decelerate without brakes", () => {
         car.carControl.accelerate();
         car.update(MS_BETWEEN_FRAMES);
@@ -76,10 +56,4 @@ describe("Car", () => {
         car.update(MS_BETWEEN_FRAMES * 2);
         expect(car.direction.equals(initialDirection)).toBeTruthy();
     });
-
-    it("should use default engine parameter when none is provided",
-       inject([CameraManagerService], (cameraManager: CameraManagerService) =>  {
-            car = new Car(cameraManager);
-            expect(car["engine"]).toBeDefined();
-    }));
 });

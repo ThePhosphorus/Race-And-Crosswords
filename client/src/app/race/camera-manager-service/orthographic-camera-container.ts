@@ -11,14 +11,14 @@ import {
 
 export class OrthographicCameraContainer extends CameraContainer {
     private _orthoCamera: OrthographicCamera;
-    private aspectRatio: number;
+    private _aspectRatio: number;
 
     public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
         super(audioListener, targetInfos, cameraDistance, zoomLimit, CameraType.Orthographic);
-        this.aspectRatio = INITIAL_ASPECT_RATIO;
+        this._aspectRatio = INITIAL_ASPECT_RATIO;
         this._orthoCamera = new OrthographicCamera(
-            -cameraDistance * this.aspectRatio,
-            cameraDistance * this.aspectRatio,
+            -cameraDistance * this._aspectRatio,
+            cameraDistance * this._aspectRatio,
             cameraDistance,
             -cameraDistance,
             NEAR_CLIPPING_PLANE,
@@ -47,10 +47,10 @@ export class OrthographicCameraContainer extends CameraContainer {
 
     public onResize(aspectRatio?: number): void {
         if (aspectRatio) {
-            this.aspectRatio = aspectRatio;
+            this._aspectRatio = aspectRatio;
         }
-        this._orthoCamera.left = -this.cameraDistance * this.aspectRatio;
-        this._orthoCamera.right = this.cameraDistance * this.aspectRatio;
+        this._orthoCamera.left = -this.cameraDistance * this._aspectRatio;
+        this._orthoCamera.right = this.cameraDistance * this._aspectRatio;
         this._orthoCamera.top = this.cameraDistance;
         this._orthoCamera.bottom = -this.cameraDistance;
         this._orthoCamera.updateProjectionMatrix();

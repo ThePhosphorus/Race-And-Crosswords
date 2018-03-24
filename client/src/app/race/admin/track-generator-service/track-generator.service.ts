@@ -19,12 +19,12 @@ const MAX_ZOOM: number = 200;
 
 @Injectable()
 export class TrackGenerator extends Renderer {
+    public points: PointsHandler;
     private _gridHelper: GridHelper;
     private _dragPoints: PointsSpan;
     private onMouseMoveListner: EventListenerObject;
     private onMouseTranslateListner: EventListenerObject;
     private _translateStartingPosition: Vector3;
-    public points: PointsHandler;
     private constraintValidator: ConstraintValidator;
 
     public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {

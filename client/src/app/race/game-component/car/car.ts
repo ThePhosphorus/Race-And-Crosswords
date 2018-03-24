@@ -40,26 +40,26 @@ const WALL_FRICTION: number = -20000;
 export class Car extends Object3D {
     public carControl: CarControl;
 
-    private readonly engine: Engine;
-    private mesh: Object3D;
-    private rigidBody: RigidBody;
-    private carLights: CarLights;
-    private frictionCoefficient: number;
-    private carSound: CarSounds;
+    private readonly _engine: Engine;
+    private _mesh: Object3D;
+    private _rigidBody: RigidBody;
+    private _carLights: CarLights;
+    private _frictionCoefficient: number;
+    private _carSound: CarSounds;
 
     public get currentGear(): number {
-        return this.engine.currentGear;
+        return this._engine.currentGear;
     }
 
     public get rpm(): number {
-        return this.engine.rpm;
+        return this._engine.rpm;
     }
 
     public get direction(): Vector3 {
         const rotationMatrix: Matrix4 = new Matrix4();
         const carDirection: Vector3 = new Vector3(0, 0, -1);
 
-        rotationMatrix.extractRotation(this.mesh.matrix);
+        rotationMatrix.extractRotation(this._mesh.matrix);
         carDirection.applyMatrix4(rotationMatrix);
 
         return carDirection;
@@ -70,7 +70,7 @@ export class Car extends Object3D {
     }
 
     public get speed(): number {
-        return this.mesh == null ? 0 : this.rigidBody.velocity.clone().dot(this.direction2D);
+        return this._mesh == null ? 0 : this._rigidBody.velocity.clone().dot(this.direction2D);
     }
 
     public constructor(
@@ -79,10 +79,10 @@ export class Car extends Object3D {
         mass: number = DEFAULT_MASS
     ) {
         super();
-        this.rigidBody = new RigidBody(mass);
-        this.engine = engine;
+        this._rigidBody = new RigidBody(mass);
+        this._engine = engine;
         this.carControl = new CarControl();
-        this.frictionCoefficient = DEFAULT_FRICTION;
+        this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
     // TODO: move loading code outside of car class.
@@ -99,18 +99,18 @@ export class Car extends Object3D {
     }
 
     public async init(position: Vector3, color: string): Promise<void> {
-        this.mesh = await this.load(color);
-        this.mesh.position.set(position.x, position.y, position.z);
-        this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
-        this.mesh.translateY(CAR_Y_OFFSET);
+        this._mesh = await this.load(color);
+        this._mesh.position.set(position.x, position.y, position.z);
+        this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
+        this._mesh.translateY(CAR_Y_OFFSET);
 
-        const box: Box3 = new Box3().setFromObject(this.mesh);
-        this.mesh.add(new Collider(box.getSize().z, box.getSize().x));
-        this.mesh.add(this.rigidBody);
-        this.add(this.mesh);
+        const box: Box3 = new Box3().setFromObject(this._mesh);
+        this._mesh.add(new Collider(box.getSize().z, box.getSize().x));
+        this._mesh.add(this._rigidBody);
+        this.add(this._mesh);
         this.initCarLights();
-        this.carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
-        this.rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
+        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
+        this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 
     private getSteeringDirection(): number {
@@ -124,32 +124,32 @@ export class Car extends Object3D {
 
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
-        this.engine.update(Math.abs(this.speed), DEFAULT_WHEEL_RADIUS);
+        this._engine.update(Math.abs(this.speed), DEFAULT_WHEEL_RADIUS);
 
-        this.rigidBody.addForce(this.getLongitudinalForce());
-        this.rigidBody.addFrictionForce(this.getPerpendicularForce());
-        this.rigidBody.update(deltaTime);
+        this._rigidBody.addForce(this.getLongitudinalForce());
+        this._rigidBody.addFrictionForce(this.getPerpendicularForce());
+        this._rigidBody.update(deltaTime);
 
         const R: number =
             DEFAULT_WHEELBASE /
             Math.sin(this.getSteeringDirection() * deltaTime);
         const omega: number = this.speed / R;
-        this.mesh.rotateY(omega);
-        this.carSound.updateRPM(this.engine.rpm);
+        this._mesh.rotateY(omega);
+        this._carSound.updateRPM(this._engine.rpm);
     }
 
     private getPerpendicularForce(): Vector2 {
         const direction: Vector2 = this.direction2D;
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
-        const perpSpeedComponent: number = this.rigidBody.velocity.clone().normalize().dot(perpDirection);
-        this.frictionCoefficient = Math.min(this.frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
+        const perpSpeedComponent: number = this._rigidBody.velocity.clone().normalize().dot(perpDirection);
+        this._frictionCoefficient = Math.min(this._frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
         if (this.carControl.hasHandbrakeOn) {
-            this.frictionCoefficient = HANDBRAKE_FRICTION;
-            this.carLights.brake();
+            this._frictionCoefficient = HANDBRAKE_FRICTION;
+            this._carLights.brake();
         }
-        this.updateDriftSound(this.frictionCoefficient);
+        this.updateDriftSound(this._frictionCoefficient);
 
-        return perpDirection.multiplyScalar(-perpSpeedComponent * this.frictionCoefficient);
+        return perpDirection.multiplyScalar(-perpSpeedComponent * this._frictionCoefficient);
     }
 
     private getLongitudinalForce(): Vector2 {
@@ -165,11 +165,11 @@ export class Car extends Object3D {
             this.turnOffRearLights();
         } else if (this.carControl.isBraking && this.isGoingForward()) {
             resultingForce.add(this.getBrakeForce());
-            this.carLights.releaseReverse();
-            this.carLights.brake();
+            this._carLights.releaseReverse();
+            this._carLights.brake();
         } else if (this.carControl.isBraking) {
-            this.carLights.releaseBrakes();
-            this.carLights.reverse();
+            this._carLights.releaseBrakes();
+            this._carLights.reverse();
             if (Math.abs(this.speed) < DOUBLE * METER_TO_KM_SPEED_CONVERSION) {
                 accelerationForce.multiplyScalar(tractionForce);
                 resultingForce.sub(accelerationForce);
@@ -181,8 +181,8 @@ export class Car extends Object3D {
         return resultingForce;
     }
     private turnOffRearLights(): void {
-        this.carLights.releaseBrakes();
-        this.carLights.releaseReverse();
+        this._carLights.releaseBrakes();
+        this._carLights.releaseReverse();
     }
     private getRollingResistance(): Vector2 {
         const tirePressure: number = 1;
@@ -193,7 +193,7 @@ export class Car extends Object3D {
             (Math.pow(this.speed * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
         /* tslint:enable:no-magic-numbers */
 
-        return this.direction2D.multiplyScalar(Math.sign(this.speed) * rollingCoefficient * this.rigidBody.mass * GRAVITY);
+        return this.direction2D.multiplyScalar(Math.sign(this.speed) * rollingCoefficient * this._rigidBody.mass * GRAVITY);
     }
 
     private getDragForce(): Vector2 {
@@ -216,7 +216,7 @@ export class Car extends Object3D {
         const force: number = this.getEngineForce();
         const maxForce: number =
             DEFAULT_FRICTION_COEFFICIENT *
-            this.rigidBody.mass *
+            this._rigidBody.mass *
             WHEEL_DISTRIBUTION *
             GRAVITY;
 
@@ -225,12 +225,12 @@ export class Car extends Object3D {
 
     private getBrakeForce(): Vector2 {
         return this.isGoingForward ?
-            this.direction2D.multiplyScalar(Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this.rigidBody.mass * GRAVITY) :
+            this.direction2D.multiplyScalar(Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this._rigidBody.mass * GRAVITY) :
             new Vector2(0, 0);
     }
 
     private getEngineForce(): number {
-        return this.engine.getDriveTorque() / DEFAULT_WHEEL_RADIUS;
+        return this._engine.getDriveTorque() / DEFAULT_WHEEL_RADIUS;
     }
 
     private isGoingForward(): boolean {
@@ -238,11 +238,15 @@ export class Car extends Object3D {
     }
 
     public getPosition(): Vector3 {
-        return this.mesh.position;
+        return this._mesh.position;
+    }
+
+    public get mesh(): Object3D {
+        return this._mesh;
     }
 
     public toggleNightLight(): void {
-        this.carLights.toggleFrontLight();
+        this._carLights.toggleFrontLight();
     }
 
     private onCollision(otherRb: RigidBody): void {
@@ -255,27 +259,27 @@ export class Car extends Object3D {
     }
 
     private collisionSound(): void {
-        this.carSound.playCollision();
+        this._carSound.playCollision();
     }
 
     private updateDriftSound(factor: number): void {
         if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED) {
-            this.carSound.startDrift();
-        } else if (this.carSound.drift.isPlaying()) {
-            this.carSound.releaseDrift();
+            this._carSound.startDrift();
+        } else if (this._carSound.drift.isPlaying()) {
+            this._carSound.releaseDrift();
         }
     }
 
     private carPenalty(): void {
-        this.frictionCoefficient = HANDBRAKE_FRICTION;
+        this._frictionCoefficient = HANDBRAKE_FRICTION;
     }
 
     private wallPenalty(): void {
-        this.rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
+        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
     }
 
     private initCarLights(): void {
-        this.carLights = new CarLights();
-        this.mesh.add(this.carLights);
+        this._carLights = new CarLights();
+        this._mesh.add(this._carLights);
     }
 }

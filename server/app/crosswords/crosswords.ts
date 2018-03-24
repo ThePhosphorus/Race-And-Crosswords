@@ -9,7 +9,7 @@ import { WebService } from "../webServices";
 @injectable()
 export class Crosswords extends WebService {
 
-    public constructor(@inject(Types.Lexical) private lexical: Lexical, @inject(Types.Grid) private grid: Grid) {
+    public constructor(@inject(Types.Lexical) private _lexical: Lexical, @inject(Types.Grid) private _grid: Grid) {
         super();
         this.routeName = "/crosswords";
     }
@@ -17,7 +17,7 @@ export class Crosswords extends WebService {
     protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("Crosswords endpoint"));
 
-        this.addSubService(this.lexical);
-        this.addSubService(this.grid);
+        this.addSubService(this._lexical);
+        this.addSubService(this._grid);
     }
 }
