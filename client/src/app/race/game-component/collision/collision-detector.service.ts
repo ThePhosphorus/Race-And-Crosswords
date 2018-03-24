@@ -71,16 +71,13 @@ export class CollisionDetectorService {
         const rb2: RigidBody = collision.coll2.rigidBody;
 
         if (rb1 != null && rb2 != null) {
-            const m1: number = rb1.mass;
-            const m2: number = rb2.mass;
-
-            const v1: Vector2 = rb1.velocity.clone();
-            const v2: Vector2 = rb2.velocity.clone();
-
             this.antiOverlap(collision, rb1, rb2);
 
-            rb1.applyCollision(collision.contactAngle, m2, v2);
-            rb2.applyCollision(collision.contactAngle, m1, v1);
+            const initialVelocity1: Vector2 = rb1.velocity.clone();
+            const initialVelocity2: Vector2 = rb2.velocity.clone();
+
+            rb1.applyCollision(collision.contactAngle, rb2, initialVelocity2);
+            rb2.applyCollision(collision.contactAngle, rb1, initialVelocity1);
         }
     }
 

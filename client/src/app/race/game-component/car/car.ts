@@ -109,7 +109,7 @@ export class Car extends Object3D {
         this.add(this.mesh);
         this.initCarLights();
         this.carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
-        this.rigidBody.addCollisionObserver(() => this.onCollision());
+        this.rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 
     private getSteeringDirection(): number {
@@ -159,7 +159,6 @@ export class Car extends Object3D {
         const accelerationForce: Vector2 = this.direction2D;
         resultingForce.add(dragForce).add(rollingResistance);
         if (this.carControl.isAcceleratorPressed) {
-
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
             this.turnOffRearLights();
@@ -245,9 +244,13 @@ export class Car extends Object3D {
         this.carLights.toggleFrontLight();
     }
 
-    private onCollision(): void {
+    private onCollision(otherRb: RigidBody): void {
         this.collisionSound();
-        this.carPenalty();
+        if (otherRb.fixed) {
+            this.wallPenalty();
+        } else {
+            this.carPenalty();
+        }
     }
 
     private collisionSound(): void {
@@ -263,6 +266,10 @@ export class Car extends Object3D {
     }
 
     private carPenalty(): void {
+        this.frictionCoefficient = HANDBRAKE_FRICTION;
+    }
+
+    private wallPenalty(): void {
         this.frictionCoefficient = HANDBRAKE_FRICTION;
     }
 

@@ -13,7 +13,7 @@ export class RigidBody extends Object3D {
     private _velocity: Vector2;
     private _angularVelocity: number;
     private _mass: number;
-    private collisionObservers: Array<() => void>;
+    private collisionObservers: Array<(otherRb: RigidBody) => void>;
 
     public get mass(): number {
         return this._mass;
@@ -59,14 +59,16 @@ export class RigidBody extends Object3D {
         this.torque += torque;
     }
 
-    public addCollisionObserver(callback: () => void): void {
+    public addCollisionObserver(callback: (otherRb: RigidBody) => void): void {
         this.collisionObservers.push(callback);
     }
 
-    public applyCollision(contactAngle: number, otherMass: number, otherVelocity: Vector2): void {
+    public applyCollision(contactAngle: number, otherRb: RigidBody, otherVelocity: Vector2): void {
         if (this._fixed) {
             return;
         }
+        const otherMass: number = otherRb.mass;
+
         contactAngle -= Math.PI * HALF;
         const vx: number = ((this._velocity.length() * Math.cos(this._velocity.angle() - contactAngle) *
             (this._mass - otherMass) +
@@ -80,7 +82,7 @@ export class RigidBody extends Object3D {
             (this.mass + otherMass)) * Math.sin(contactAngle) + this._velocity.length() *
             Math.sin(this._velocity.angle() - contactAngle) * Math.cos(contactAngle);
         this._velocity = new Vector2(vx, vy);
-        this.onCollision();
+        this.onCollision(otherRb);
     }
 
     public update(deltaTime: number): void {
@@ -134,7 +136,7 @@ export class RigidBody extends Object3D {
             frictionCausedVelocity : frictionCausedVelocity.setLength(-projectedVelocity));
     }
 
-    private onCollision(): void {
-       this.collisionObservers.forEach((collisionObserver) => collisionObserver());
+    private onCollision(otherRb: RigidBody): void {
+       this.collisionObservers.forEach((collisionObserver) => collisionObserver(otherRb));
     }
 }
