@@ -6,14 +6,14 @@ const TWICE: number = 2;
 
 export class RigidBody extends Object3D {
 
-    private _fixed: boolean;
-    private forces: Vector2;
-    private frictionForce: Vector2;
-    private torque: number;
+    private _isFixed: boolean;
+    private _forces: Vector2;
+    private _frictionForce: Vector2;
+    private _torque: number;
     private _velocity: Vector2;
     private _angularVelocity: number;
     private _mass: number;
-    private collisionObservers: Array<(otherRb: RigidBody) => void>;
+    private _collisionObservers: Array<(otherRb: RigidBody) => void>;
 
     public get mass(): number {
         return this._mass;
@@ -28,43 +28,43 @@ export class RigidBody extends Object3D {
     }
 
     public get fixed(): boolean {
-        return this._fixed;
+        return this._isFixed;
     }
 
     public constructor(mass: number, fixed: boolean = false) {
         super();
-        this._fixed = fixed;
-        this.torque = 0;
-        this.forces = new Vector2(0, 0);
-        this.frictionForce = new Vector2(0, 0);
+        this._isFixed = fixed;
+        this._torque = 0;
+        this._forces = new Vector2(0, 0);
+        this._frictionForce = new Vector2(0, 0);
         this._velocity = new Vector2(0, 0);
         this._angularVelocity = 0;
         this._mass = mass;
-        this.collisionObservers = new Array<() => void>();
+        this._collisionObservers = new Array<() => void>();
     }
 
     public addForce(force: Vector2): void {
         if (force != null) {
-            this.forces.add(force);
+            this._forces.add(force);
         }
     }
 
     public addFrictionForce(force: Vector2): void {
         if (force != null) {
-            this.frictionForce.add(force);
+            this._frictionForce.add(force);
         }
     }
 
     public addTorque(torque: number): void {
-        this.torque += torque;
+        this._torque += torque;
     }
 
     public addCollisionObserver(callback: (otherRb: RigidBody) => void): void {
-        this.collisionObservers.push(callback);
+        this._collisionObservers.push(callback);
     }
 
     public applyCollision(contactAngle: number, otherRb: RigidBody, otherVelocity: Vector2): void {
-        if (this._fixed) {
+        if (this._isFixed) {
             return;
         }
         const otherMass: number = otherRb.mass;
@@ -89,15 +89,15 @@ export class RigidBody extends Object3D {
         if (!(this.parent instanceof Object3D)) {
             return;
         }
-        if (this._fixed) {
-            this.forces = new Vector2();
-            this.torque = 0;
+        if (this._isFixed) {
+            this._forces = new Vector2();
+            this._torque = 0;
 
             return;
         }
 
-        this._velocity.add(this.getDeltaVelocity(this.forces, deltaTime));
-        this._angularVelocity += this.getDeltaAngularVelocity(this.torque, deltaTime);
+        this._velocity.add(this.getDeltaVelocity(this._forces, deltaTime));
+        this._angularVelocity += this.getDeltaAngularVelocity(this._torque, deltaTime);
 
         // Round down to 0 if speed is too small
         this._velocity.setLength(this._velocity.length() <= MINIMUM_SPEED ? 0 : this._velocity.length());
@@ -111,9 +111,9 @@ export class RigidBody extends Object3D {
         const deltaAngle: number = this._angularVelocity * deltaTime;
         this.parent.rotateY(deltaAngle);
 
-        this.forces = new Vector2(0, 0);
-        this.torque = 0;
-        this.frictionForce = new Vector2(0, 0);
+        this._forces = new Vector2(0, 0);
+        this._torque = 0;
+        this._frictionForce = new Vector2(0, 0);
     }
 
     private getDeltaVelocity(force: Vector2, deltaTime: number): Vector2 {
@@ -129,7 +129,7 @@ export class RigidBody extends Object3D {
     }
 
     private applyFrictionForce(deltaTime: number): void {
-        const frictionCausedVelocity: Vector2 = this.getDeltaVelocity(this.frictionForce, deltaTime);
+        const frictionCausedVelocity: Vector2 = this.getDeltaVelocity(this._frictionForce, deltaTime);
         const projectedVelocity: number = this._velocity.clone().dot(frictionCausedVelocity.clone().normalize());
         const projectedNewVelocity: number = frictionCausedVelocity.length() + projectedVelocity;
         this._velocity.add(Math.sign(projectedNewVelocity) === Math.sign(projectedVelocity) ?
@@ -137,6 +137,6 @@ export class RigidBody extends Object3D {
     }
 
     private onCollision(otherRb: RigidBody): void {
-       this.collisionObservers.forEach((collisionObserver) => collisionObserver(otherRb));
+       this._collisionObservers.forEach((collisionObserver) => collisionObserver(otherRb));
     }
 }
