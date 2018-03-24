@@ -3,11 +3,12 @@ import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/communication/track";
 
 @Component({
-    selector: "app-track-list",
-    templateUrl: "./track-list.component.html",
-    styleUrls: ["./track-list.component.css"]
+    selector: "app-game-menu",
+    templateUrl: "./game-menu.component.html",
+    styleUrls: ["./game-menu.component.css"],
+    providers: [TrackLoaderService]
 })
-export class TrackListComponent {
+export class GameMenuComponent {
 
     private tracks: Array<Track>;
 
