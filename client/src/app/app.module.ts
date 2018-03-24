@@ -17,6 +17,7 @@ import { InputGridComponent } from "./crossword/input-grid/input-grid.component"
 import { DefinitionComponent } from "./crossword/definition/definition.component";
 import { InputLetterComponent } from "./crossword/input-letter/input-letter.component";
 import { ModalNewGameComponent } from "./crossword/crossword-game-info/modal-new-game/modal-new-game.component";
+import { TileColorDirective } from "./crossword/input-letter/tile-color.directive";
 
 @NgModule({
     declarations: [
@@ -33,7 +34,8 @@ import { ModalNewGameComponent } from "./crossword/crossword-game-info/modal-new
         InputGridComponent,
         DefinitionComponent,
         InputLetterComponent,
-        ModalNewGameComponent
+        ModalNewGameComponent,
+        TileColorDirective
     ],
     imports: [
         BrowserModule,

@@ -3,7 +3,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { InputLetterComponent } from "./input-letter.component";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
-import { number } from "../../../../../common/communication/Player";
 
 describe("InputLetterComponent", () => {
     let component: InputLetterComponent;

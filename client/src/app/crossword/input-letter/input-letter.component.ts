@@ -31,7 +31,7 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isDisabled(): boolean {
-        return this._gridState.LIsDisabled(this.id);
+        return this._crosswordService.getLetterDisabledPlayers(this.id).length > 0;
     }
 
     public isHovered(): boolean {
@@ -41,47 +41,8 @@ export class InputLetterComponent implements OnInit {
     public isCurrentLetter(): boolean {
         return this._gridState.LIsCurrentLetter(this.id);
     }
-    public get playerCSS(): {} {
-        const players: Array<number> = this._crosswordService.getLetterDisabledPlayers(this.id);
-        if (players.length === 0) {
-            return this.playerHiglightCSS;
-        }
-        const color: string = this._crosswordService.getPlayerColor(players[0], false);
-        let color2: string = "whitesmoke";
-        if (players.length > 1) {
-            color2 = this._crosswordService.getPlayerColor(players[1], false);
-        }
 
-        return {
-            "width": "90%",
-            "height": "90%",
-            "border-color": color2,
-            "border-width": "0.2vmin",
-            "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color ,
-            "background": "linear-gradient(45deg," + color + "50%, rgba(0,0,0,0) 50% ,rgba(0,0,0,0) 0)," + color2
-        };
-
-    }
-    public get playerHiglightCSS(): {} {
-        let color: string = "white";
-        let bgColor: string = "white";
-        const players: Array<number> = this._crosswordService.getLetterHighlightPlayers(this.id);
-        if (players.length === 0) {
-            return {};
-        } else {
-            color = this._crosswordService.getPlayerColor(players[0], true);
-            bgColor = this._crosswordService.getPlayerColor(players[0], false);
-
-            return {
-                "border-style": "dotted",
-                "width": "90%",
-                "height": "90%",
-                "border-width": "0.2vmin",
-                "border-color": color,
-                "box-shadow": "0vmin 0vmin 0vmin 0.4vmin " + color + ",inset 0vmin 0vmin 1.5vmin " + color,
-                "background-color": bgColor
-            };
-        }
-
+    public isSelected(): boolean {
+        return this._crosswordService.getLetterHighlightPlayers(this.id).length > 0;
     }
 }

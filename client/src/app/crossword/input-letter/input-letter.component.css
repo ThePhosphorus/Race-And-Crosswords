@@ -24,8 +24,22 @@ button {
 
 
 .disabled {
-    background-color: whitesmoke;
-    color: gray;
+    width: 90%;
+    height: 90%;
+    border-color: var(--color2, white);
+    border-width: 0.2vmin;
+    box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color,white);
+    background: linear-gradient(45deg, var(--color, white) 50%, rgba(0,0,0,0) 50% ,rgba(0,0,0,0) 0), var(--color2,white);
+}
+
+.selected {
+    border-style: dotted;
+    width: 90%;
+    height: 90%;
+    border-width: 0.2vmin;
+    border-color: var(--color, white);
+    box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color, white), inset 0vmin 0vmin 1.5vmin var(--color, white);
+    background-color: var(--bgColor, white);
 }
 
 .current {
