@@ -40,7 +40,7 @@ const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
-const N_AI_CONTROLLED_CARS: number = 10;
+const N_AI_CONTROLLED_CARS: number = 1;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
 
