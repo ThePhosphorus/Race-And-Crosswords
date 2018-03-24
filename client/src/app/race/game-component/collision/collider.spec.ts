@@ -11,20 +11,20 @@ describe("Collider", () => {
         expect(collider).toBeTruthy();
     });
 
-    it("should have correct absolute vertexes", () => {
+    it("should have correct absolute vertices", () => {
         const collider: Collider = new Collider(COLLIDER_WIDTH, COLLIDER_LENGTH);
         const object: Object3D = new Object3D();
         object.add(collider);
-        const oldColliderVertexes: Vector2[] = collider.getAbsoluteVertexes2D();
+        const oldColliderVertices: Vector2[] = collider.getAbsoluteVertices2D();
         const objectMovement: Vector2 = new Vector2(100, 50);
         object.translateX(objectMovement.x);
         object.translateZ(objectMovement.y);
         object.updateMatrixWorld(true);
-        const newColliderVertexes: Vector2[] = collider.getAbsoluteVertexes2D();
+        const newColliderVertices: Vector2[] = collider.getAbsoluteVertices2D();
 
-        for (let i: number = 0; i < oldColliderVertexes.length; i++) {
-            const vertexMouvement: Vector2 = newColliderVertexes[i].clone().sub(oldColliderVertexes[i]);
-            expect(newColliderVertexes[i] !== oldColliderVertexes[i]).toBeTruthy();
+        for (let i: number = 0; i < oldColliderVertices.length; i++) {
+            const vertexMouvement: Vector2 = newColliderVertices[i].clone().sub(oldColliderVertices[i]);
+            expect(newColliderVertices[i] !== oldColliderVertices[i]).toBeTruthy();
             expect(vertexMouvement).toEqual(objectMovement);
         }
 
@@ -34,12 +34,12 @@ describe("Collider", () => {
         const collider: Collider = new Collider(COLLIDER_WIDTH, COLLIDER_LENGTH);
         const object: Object3D = new Object3D();
         object.add(collider);
-        const colliderVertexes: Vector2[] = collider.getAbsoluteVertexes2D();
+        const colliderVertices: Vector2[] = collider.getAbsoluteVertices2D();
         const colliderNormals: Vector2[] = collider.getNormals();
 
         for (let i: number = 0; i < colliderNormals.length; i++) {
-            const vertex2: Vector2 = i < colliderVertexes.length - 1 ? colliderVertexes[i + 1] : colliderVertexes[0];
-            const line: Vector2 = colliderVertexes[i].clone().sub(vertex2);
+            const vertex2: Vector2 = i < colliderVertices.length - 1 ? colliderVertices[i + 1] : colliderVertices[0];
+            const line: Vector2 = colliderVertices[i].clone().sub(vertex2);
 
             const dotProduct: number = Math.abs(line.dot(colliderNormals[i]));
 

@@ -11,15 +11,15 @@ export class Collider extends Object3D {
         super();
         this._radius = this.pythagore(width * HALF, length * HALF);
         this._relativeVertices = new Array<Vector3>();
-        this.initialiseRelativeVertexes(width, length);
+        this.initialiseRelativeVertices(width, length);
     }
 
     public getNormals(): Array<Vector2> {
         const normals: Array<Vector2> = new Array<Vector2>();
-        const vertexes: Array<Vector2> = this.getAbsoluteVertexes2D();
-        for (let i: number = 0; i < vertexes.length; i++) {
-            const vertex1: Vector2 = vertexes[i];
-            const vertex2: Vector2 = i < vertexes.length - 1 ? vertexes[i + 1] : vertexes[0];
+        const vertices: Array<Vector2> = this.getAbsoluteVertices2D();
+        for (let i: number = 0; i < vertices.length; i++) {
+            const vertex1: Vector2 = vertices[i];
+            const vertex2: Vector2 = i < vertices.length - 1 ? vertices[i + 1] : vertices[0];
             const edge: Vector2 = vertex1.clone().sub(vertex2).normalize();
             const normal: Vector2 = new Vector2(
                 edge.y,
@@ -30,14 +30,14 @@ export class Collider extends Object3D {
 
         return normals;
     }
-    public getAbsoluteVertexes2D(): Vector2[] {
-        const vertexes: Array<Vector2> = new Array<Vector2>();
+    public getAbsoluteVertices2D(): Vector2[] {
+        const vertices: Array<Vector2> = new Array<Vector2>();
         for (const vertex of this._relativeVertices) {
             const absoluteVertex3D: Vector3 = vertex.clone().applyMatrix4(this.parent.matrix);
-            vertexes.push(new Vector2(absoluteVertex3D.x, absoluteVertex3D.z));
+            vertices.push(new Vector2(absoluteVertex3D.x, absoluteVertex3D.z));
         }
 
-        return vertexes;
+        return vertices;
     }
 
     public getBroadRadius(): number {
@@ -52,7 +52,7 @@ export class Collider extends Object3D {
         return Math.sqrt((x * x) + (y * y));
     }
 
-    private initialiseRelativeVertexes(width: number, length: number): void {
+    private initialiseRelativeVertices(width: number, length: number): void {
         this._relativeVertices.push(new Vector3(width * HALF, 0, length * HALF));
         this._relativeVertices.push(new Vector3(-width * HALF, 0, length * HALF));
         this._relativeVertices.push(new Vector3(-width * HALF, 0, -length * HALF));
