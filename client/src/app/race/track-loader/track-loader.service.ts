@@ -24,11 +24,7 @@ const FINISH_LINE_LENGTH_RATIO: number = 4;
 
 @Injectable()
 export class TrackLoaderService {
-<<<<<<< HEAD
     public constructor(private _http: HttpClient) {}
-=======
-    public constructor(private http: HttpClient) { }
->>>>>>> develop
 
     public static toVector(vector: Vector3Struct): Vector3 {
         return new Vector3(vector.x, vector.y, vector.z);
