@@ -73,7 +73,7 @@ export class TrackLoaderService {
         return walls;
     }
 
-    public static getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, pointN: Vector3, relativeOffset: number): Object3D {
+    private static getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, pointN: Vector3, relativeOffset: number): Object3D {
         const vecPA: Vector3 = pointA.clone().sub(pointP);
         const vecAB: Vector3 = pointB.clone().sub(pointA);
         const vecBN: Vector3 = pointN.clone().sub(pointB);
@@ -101,7 +101,7 @@ export class TrackLoaderService {
         return wall;
     }
 
-    public static findIntersection(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): Vector3 {
+    private static findIntersection(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): Vector3 {
         if (p2.equals(p3)) {
             return p2.clone();
         }
