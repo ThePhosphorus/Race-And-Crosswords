@@ -8,8 +8,7 @@ export class RigidBody extends Object3D {
 
     private _isFixed: boolean;
     private _forces: Vector2;
-    private _frictionForce: Vector2;
-    private _torque: number;
+    private _frictionForces: Vector2;
     private _velocity: Vector2;
     private _angularVelocity: number;
     private _mass: number;
@@ -34,9 +33,8 @@ export class RigidBody extends Object3D {
     public constructor(mass: number, fixed: boolean = false) {
         super();
         this._isFixed = fixed;
-        this._torque = 0;
         this._forces = new Vector2(0, 0);
-        this._frictionForce = new Vector2(0, 0);
+        this._frictionForces = new Vector2(0, 0);
         this._velocity = new Vector2(0, 0);
         this._angularVelocity = 0;
         this._mass = mass;
@@ -51,12 +49,8 @@ export class RigidBody extends Object3D {
 
     public addFrictionForce(force: Vector2): void {
         if (force != null) {
-            this._frictionForce.add(force);
+            this._frictionForces.add(force);
         }
-    }
-
-    public addTorque(torque: number): void {
-        this._torque += torque;
     }
 
     public addCollisionObserver(callback: (otherRb: RigidBody) => void): void {
@@ -91,13 +85,11 @@ export class RigidBody extends Object3D {
         }
         if (this._isFixed) {
             this._forces = new Vector2();
-            this._torque = 0;
 
             return;
         }
 
         this._velocity.add(this.getDeltaVelocity(this._forces, deltaTime));
-        this._angularVelocity += this.getDeltaAngularVelocity(this._torque, deltaTime);
 
         // Round down to 0 if speed is too small
         this._velocity.setLength(this._velocity.length() <= MINIMUM_SPEED ? 0 : this._velocity.length());
@@ -112,16 +104,11 @@ export class RigidBody extends Object3D {
         this.parent.rotateY(deltaAngle);
 
         this._forces = new Vector2(0, 0);
-        this._torque = 0;
-        this._frictionForce = new Vector2(0, 0);
+        this._frictionForces = new Vector2(0, 0);
     }
 
     private getDeltaVelocity(force: Vector2, deltaTime: number): Vector2 {
         return this.getAcceleration(force).multiplyScalar(deltaTime);
-    }
-
-    private getDeltaAngularVelocity(torque: number, deltaTime: number): number {
-        return torque * deltaTime;
     }
 
     private getAcceleration(force: Vector2): Vector2 {
@@ -129,7 +116,7 @@ export class RigidBody extends Object3D {
     }
 
     private applyFrictionForce(deltaTime: number): void {
-        const frictionCausedVelocity: Vector2 = this.getDeltaVelocity(this._frictionForce, deltaTime);
+        const frictionCausedVelocity: Vector2 = this.getDeltaVelocity(this._frictionForces, deltaTime);
         const projectedVelocity: number = this._velocity.clone().dot(frictionCausedVelocity.clone().normalize());
         const projectedNewVelocity: number = frictionCausedVelocity.length() + projectedVelocity;
         this._velocity.add(Math.sign(projectedNewVelocity) === Math.sign(projectedVelocity) ?
