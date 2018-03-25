@@ -45,6 +45,7 @@ const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const N_AI_CONTROLLED_CARS: number = 2;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
+const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
 
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
@@ -120,12 +121,14 @@ export class GameManagerService extends Renderer {
     }
 
     public initTrack(): void {
-        this._gameConfiguration.trackMeshs.forEach((m) => this.scene.add(m));
-        this._gameConfiguration.trackWalls.forEach((w) => this.scene.add(w));
+        if (this._gameConfiguration.trackMeshs != null && this._gameConfiguration.trackWalls != null) {
+            this._gameConfiguration.trackMeshs.forEach((m) => this.scene.add(m));
+            this._gameConfiguration.trackWalls.forEach((w) => this.scene.add(w));
+        }
     }
 
     private async initCars(): Promise<void> {
-        const points: Array<Vector3Struct> = this._gameConfiguration.track.points;
+        const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
         const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
             .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
