@@ -1,6 +1,6 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { GameManager } from "./crossword-game-manager";
-import { CrosswordGrid, Difficulty } from "../../../../../common/communication/crossword-grid";
+import { CrosswordGrid, Difficulty, Word, Letter, Orientation } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
 
 // tslint:disable:no-magic-numbers
@@ -43,4 +43,34 @@ describe("CrosswordGameManager", () => {
         expect(service.currentPlayerObs.getValue()).toBe(player);
     }));
 
+    it("should add a solved word and return if it's the last one", inject([GameManager], (service: GameManager) => {
+        const wordA: Word = new Word();
+        wordA.letters = [new Letter("w", 0), new Letter("o", 1), new Letter("r", 2), new Letter("d", 3)];
+        wordA.id = 0;
+        wordA.orientation = Orientation.Across;
+
+        const wordD: Word = new Word();
+        wordD.letters = [new Letter("w", 0), new Letter("i", 4), new Letter("n", 8), new Letter("g", 12)];
+        wordD.id = 0;
+        wordD.orientation = Orientation.Down;
+
+        const grid: CrosswordGrid = new CrosswordGrid();
+        grid.size = 4;
+        grid.words.push(wordA);
+        grid.words.push(wordD);
+
+        wordA.letters.forEach((l: Letter) => grid.grid[l.id] = l);
+        wordD.letters.forEach((l: Letter) => grid.grid[l.id] = l)   ;
+
+        service.grid = grid;
+
+        const pastSolvedWordsLength: number = service.solvedWordsObs.getValue().length;
+
+        expect(service.addSolvedWord(wordD, 0)).toBeFalsy();
+        expect(service.solvedWordsObs.getValue().length).toBe(pastSolvedWordsLength + 1);
+
+        expect(service.addSolvedWord(wordD, 0)).toBeTruthy();
+        expect(service.solvedWordsObs.getValue().length).toBe(pastSolvedWordsLength + 2);
+
+    }));
 });
