@@ -17,7 +17,6 @@ export class CrosswordGameInfoComponent implements OnInit {
     public isCollapsedPlayer: boolean;
     public isCollapsedLevel: boolean;
     public showLevel: boolean;
-    public isEndGame: boolean;
 
     public constructor(private _crosswordService: CrosswordService) {
         this._lvl = null;
@@ -26,7 +25,10 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.showModal = true;
         this.showSearching = new EventEmitter<boolean>();
         this.players = new Array<Player>();
-        this.isEndGame = true;
+    }
+
+    public get isEndGame(): boolean {
+        return this._crosswordService.isGameOver;
     }
 
     public get lvl(): Difficulty {
@@ -44,6 +46,8 @@ export class CrosswordGameInfoComponent implements OnInit {
             }
         });
     }
+
+    public ngOnUpdate
 
     public getBGColor(player: number): {} {
         return {"background-color" : this._crosswordService.getPlayerColor(player, false)};
