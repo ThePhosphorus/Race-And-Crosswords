@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: "app-modal-end-game",
@@ -7,10 +7,15 @@ import { Component, OnInit } from "@angular/core";
 })
 
 export class ModalEndGameComponent implements OnInit {
-
-  public constructor() { }
+  @Output() public showModal: EventEmitter<boolean>;
+  public constructor() {
+    this.showModal = new EventEmitter<boolean>();
+   }
 
   public ngOnInit(): void {
   }
 
+  public closeGameOptions(): void {
+    this.showModal.emit(false);
+  }
 }

@@ -2,6 +2,11 @@
     border-radius: 10%;
 }
 
+#cancelBtn {
+    background-color: #b44646;
+    border: #813232;
+}
+
 .modal-content {
     font-family: "Button Font", 'Times New Roman', Times, serif;
     border: #212529 solid 2vmin;

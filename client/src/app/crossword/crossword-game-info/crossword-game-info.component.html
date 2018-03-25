@@ -17,7 +17,7 @@
     <div id="levelMod" class="modal fade w-100" tabindex="-1" [class.show]="showModal">
         <app-modal-new-game *ngIf="!isEndGame" (showSearching)="showSearching.emit($event)" (showModal)="showModal=($event)">
         </app-modal-new-game>
-        <app-modal-end-game *ngIf="isEndGame"></app-modal-end-game>
+        <app-modal-end-game *ngIf="isEndGame" (showModal)="showModal=($event)"></app-modal-end-game>
     </div>
     <div class="row justify-content-center mt-1 mb-2">
         <div class="col ">

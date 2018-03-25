@@ -26,7 +26,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.showModal = true;
         this.showSearching = new EventEmitter<boolean>();
         this.players = new Array<Player>();
-        this.isEndGame = false;
+        this.isEndGame = true;
     }
 
     public get lvl(): Difficulty {
