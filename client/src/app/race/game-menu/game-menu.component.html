@@ -1,14 +1,56 @@
 <div class="row mt-5">
-  <div class="mt-4" id="track-list" *ngIf="!isInitialized" >
+  <div class="mt-4" id="track-list" *ngIf="!isInitialized">
     <button class="track-button" [routerLink]="['/race', 'empty']">
-      <span class="title">No track</span><br><br>
+      <span class="title">No track</span>
+      <br>
+      <br>
     </button>
-    <button *ngFor="let track of tracks"
-              class="track-button"
-              [routerLink]="['/race', track._id]">
-      <span class="title">{{ track.name }}</span><br>
-      <!-- <span class="description">{{ track.description }}</span> -->
+    <button *ngFor="let track of tracks" class="track-button" (click)="open(track)">
+      <span class="title">{{ track.name }}</span>
+      <br>
       <span class="playCounter">Played : {{ track.nbPlayed == null ? 0 : track.nbPlayed }} times.</span>
     </button>
+  </div>
+</div>
+
+<div class="details" [ngClass]="{'show': hasDetailsOpen}" (click)="close()">
+  <div class="details-content">
+    <div class="card-deck">
+      <div class="card">
+        <div class="card-header text-center"><h5>Highscores</h5></div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+      </div>
+      <div class="card">
+        <img class="card-img-top" src="http://i0.kym-cdn.com/entries/icons/original/000/005/608/nyan-cat-01-625x450.jpg">
+        <div class="card-body">
+          <h3 class="card-title">{{openedTrack.name}}</h3>
+          <h5 class="card-title">Played: {{openedTrack.nbPlayed == null ? 0 : openedTrack.nbPlayed}}</h5>
+          <p class="card-text">{{openedTrack.description}}</p>
+        </div>
+        <div class="card-footer text-right">
+          <a class="btn btn-lg btn-light" (click)="close()">Return</a>
+          <a class="btn btn-lg btn-success" [routerLink]="['/race', 'openedTrack._id']">Play</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
