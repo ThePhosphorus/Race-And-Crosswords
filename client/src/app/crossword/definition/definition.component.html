@@ -8,7 +8,7 @@
       </thead>
       <tr *ngFor="let item of acrossDefinitions; let row = index">
         <td (mouseenter)="hover(row, 'Across')" (mouseleave)="unHover()" (click)="select(row, 'Across')"
-        [ngClass]="isWordSolved(item.id) ? 'disabled' : 'enabled'">{{ row + 1 }}. {{ cheatMode ? item.word : item.definition}}</td>
+        [ngClass]="isWordSolved(item.id) ? 'disabled' : 'enabled'">{{ row + 1 }}. {{ _cheatMode ? item.word : item.definition}}</td>
       </tr>
     </table>
   </div>
@@ -21,7 +21,7 @@
       </thead>
       <tr *ngFor="let item of downDefinitions;let row= index">
         <td (mouseenter)="hover(row, 'Down')" (mouseleave)="unHover()" (click)="select(row, 'Down')"
-        [ngClass]="isWordSolved(item.id) ? 'disabled' : 'enabled'">{{ row + 1 }}. {{ cheatMode ? item.word : item.definition}}</td>
+        [ngClass]="isWordSolved(item.id) ? 'disabled' : 'enabled'">{{ row + 1 }}. {{ _cheatMode ? item.word : item.definition}}</td>
       </tr>
     </table>
   </div>
