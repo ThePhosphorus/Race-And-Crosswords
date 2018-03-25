@@ -6,7 +6,6 @@ import { DbClient } from "../../mongo/DbClient";
 import {
     Collection,
     InsertOneWriteOpResult,
-    ReplaceWriteOpResult,
     ObjectId,
     DeleteWriteOpResultObject,
     UpdateWriteOpResult
