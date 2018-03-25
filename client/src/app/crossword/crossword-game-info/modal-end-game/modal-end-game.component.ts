@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { CrosswordService } from "../../crossword-service/crossword.service";
 
 @Component({
   selector: "app-modal-end-game",
@@ -9,16 +10,18 @@ import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 export class ModalEndGameComponent implements OnInit {
   @Output() public showModal: EventEmitter<boolean>;
   @Output() public configureNewGame: EventEmitter<void>;
-  public isVictorious: boolean;
-  public isMultiplayer: boolean;
 
-  public constructor() {
+  public constructor(private _crosswordService: CrosswordService) {
     this.showModal = new EventEmitter<boolean>();
     this.configureNewGame = new EventEmitter<void>();
-    this.isVictorious = true;
-    this.isMultiplayer = true;
   }
 
+  public get isVictorious(): boolean {
+    return this._crosswordService.isTopPlayer;
+  }
+  public get isMultiplayer(): boolean {
+    return ! this._crosswordService.isSinglePlayer;
+  }
   public ngOnInit(): void {
   }
 
@@ -29,4 +32,5 @@ export class ModalEndGameComponent implements OnInit {
   public configureGame(): void {
     this.configureNewGame.emit();
   }
+
 }
