@@ -39,4 +39,11 @@ export class GridState {
         this.currentOrientation = this.currentOrientation === Orientation.Down ?
             Orientation.Across : Orientation.Down;
     }
+
+    public unselect(): void {
+        this.currentLetter = null;
+        this.selectedLetters = [];
+        this.hoveredLetters = [];
+        this.currentOrientation = Orientation.Across;
+    }
 }

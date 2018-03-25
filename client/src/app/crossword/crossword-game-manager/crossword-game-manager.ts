@@ -43,6 +43,7 @@ export class GameManager {
         this._solvedWords.next(new Array<SolvedWord>());
         this._currentPlayer.next(0);
         this._difficulty.next(difficulty);
+        this.initializeEmptyGrid();
     }
 
     public get difficultyObs(): BehaviorSubject<Difficulty> {
@@ -118,7 +119,7 @@ export class GameManager {
         this._solvedWords.value.push(
             new SolvedWord(word.id, word.orientation, playerId));
 
-        return this._solvedWords.value.length === this._solvedGrid.getValue().words.length;
+        return this._solvedWords.getValue().length === this._solvedGrid.getValue().words.length;
     }
 
     private relinkLetters(crosswordGrid: CrosswordGrid): void {
