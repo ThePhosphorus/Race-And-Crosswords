@@ -1,25 +1,29 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { GameMenuComponent } from "./game-menu.component";
+import { TrackLoaderService } from "../track-loader/track-loader.service";
+import { RouterModule } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
 
-import { TrackListComponent } from './track-list.component';
+describe("GameMenuComponent", () => {
+    let component: GameMenuComponent;
+    let fixture: ComponentFixture<GameMenuComponent>;
 
-describe('TrackListComponent', () => {
-  let component: TrackListComponent;
-  let fixture: ComponentFixture<TrackListComponent>;
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [GameMenuComponent],
+            providers: [TrackLoaderService, HttpClient],
+            imports: [RouterModule]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TrackListComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(() => {
+        fixture = TestBed.createComponent(GameMenuComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TrackListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });
