@@ -3,7 +3,14 @@ import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import { Track } from "../../../../common/communication/track";
 import { DbClient } from "../../mongo/DbClient";
-import { Collection, InsertOneWriteOpResult, ReplaceWriteOpResult, ObjectId, DeleteWriteOpResultObject, UpdateWriteOpResult } from "mongodb";
+import {
+    Collection,
+    InsertOneWriteOpResult,
+    ReplaceWriteOpResult,
+    ObjectId,
+    DeleteWriteOpResultObject,
+    UpdateWriteOpResult
+} from "mongodb";
 
 const TRACK_COLLECTION: string = "tracks";
 
@@ -33,7 +40,7 @@ export class TrackSaver extends WebService {
     }
 
     private getReq(): void {
-        this._router.get("/",  (req: Request, res: Response, next: NextFunction) => {
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("TrackSaver End Point");
         });
 
@@ -63,7 +70,7 @@ export class TrackSaver extends WebService {
     private postReq(): void {
         this._router.post("/", (req: Request, res: Response, next: NextFunction) => {
             const track: Track = req.body["track"];
-            this.postTrack(track).then( (result: InsertOneWriteOpResult) => res.send(result));
+            this.postTrack(track).then((result: InsertOneWriteOpResult) => res.send(result));
         });
     }
 
@@ -85,7 +92,7 @@ export class TrackSaver extends WebService {
         this.connect();
         delete track._id; // Because mongo db don't accept _id as a string
 
-        return this._collection.replaceOne({_id : new ObjectId(id)}, track);
+        return this._collection.replaceOne({ _id: new ObjectId(id) }, track);
     }
 
     private getAllTracks(): Promise<Track[]> {
@@ -97,18 +104,18 @@ export class TrackSaver extends WebService {
     private deleteTrack(id: string): Promise<DeleteWriteOpResultObject> {
         this.connect();
 
-        return this._collection.deleteOne({_id: new ObjectId(id)});
+        return this._collection.deleteOne({ _id: new ObjectId(id) });
     }
 
     private getTrack(id: string): Promise<Track> {
         this.connect();
 
-        return this._collection.findOne({_id : new ObjectId(id)});
+        return this._collection.findOne({ _id: new ObjectId(id) });
     }
 
     private incrementPlayTrack(id: string): Promise<UpdateWriteOpResult> {
         this.connect();
 
-        return this.collection.updateOne({_id : new ObjectId(id)}, { $inc : { nbPlayed : 1 }});
+        return this._collection.updateOne({ _id: new ObjectId(id) }, { $inc: { nbPlayed: 1 } });
     }
 }
