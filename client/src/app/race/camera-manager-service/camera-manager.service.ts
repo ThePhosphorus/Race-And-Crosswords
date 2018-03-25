@@ -3,11 +3,10 @@ import { Vector3, Camera, AudioListener } from "three";
 import { CameraContainer, ZoomLimit } from "./camera-container";
 import { PerspectiveCameraContainer } from "./perspective-camera-container";
 import { OrthographicCameraContainer } from "./orthographic-camera-container";
-import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { CameraType } from "../../global-constants/constants";
+import { HoodCamContainer } from "./hood-cam-container";
 
 const INITIAL_CAMERA_DISTANCE: number = 10;
-const TOGGLE_CAMERA_EFFECT_MODE: number = 88; // x
 
 export class TargetInfos {
     public constructor(
@@ -25,45 +24,43 @@ export class TargetInfos {
 export class CameraManagerService {
 
     private _cameraArray: Array<CameraContainer>;
-    private selectedCameraIndex: number;
-    private targetInfos: TargetInfos;
+    private _selectedCameraIndex: number;
+    private _targetInfos: TargetInfos;
     private _audioListener: AudioListener;
 
-    public constructor(private inputManager: InputManagerService) {
-        this.init();
-    }
-
-    public init(): void {
+    public constructor() {
         this.initMembers();
-        this.inputManager.resetBindings();
         this.initCameraArray();
         this.initAudioListener();
     }
 
     private initMembers(): void {
-        this.targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+        this._targetInfos = new TargetInfos(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
         this._audioListener = new AudioListener();
-        this.selectedCameraIndex = 0;
+        this._selectedCameraIndex = 0;
         this._cameraArray = new Array<CameraContainer>();
     }
 
     private initCameraArray(): void {
         const perspContainer: PerspectiveCameraContainer =
-            new PerspectiveCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
-        this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => perspContainer.toggleEffect());
+            new PerspectiveCameraContainer(this._audioListener, this._targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
 
         const orthoContainer: OrthographicCameraContainer =
-            new OrthographicCameraContainer(this._audioListener, this.targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+            new OrthographicCameraContainer(this._audioListener, this._targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+
+        const hoodContainer: HoodCamContainer =
+            new HoodCamContainer(this._audioListener, this._targetInfos, INITIAL_CAMERA_DISTANCE, new ZoomLimit());
+        this._cameraArray.push(hoodContainer);
         this._cameraArray.push(perspContainer);
         this._cameraArray.push(orthoContainer);
     }
 
     private initAudioListener(): void {
-        this.selectedCamera.addAudioListener();
+        this._cameraArray[1].addAudioListener();
     }
 
     public updateTargetInfos(infos: TargetInfos): void {
-        this.targetInfos.copy(infos);
+        this._targetInfos.copy(infos);
     }
 
     public update(deltaTime: number, ): void {
@@ -79,7 +76,7 @@ export class CameraManagerService {
     }
 
     private get selectedCamera(): CameraContainer {
-        return this._cameraArray[this.selectedCameraIndex];
+        return this._cameraArray[this._selectedCameraIndex];
     }
 
     public get position(): Vector3 {
@@ -105,9 +102,13 @@ export class CameraManagerService {
     // Input manager callbacks
     public switchCamera(): void {
         this.selectedCamera.removeAudioListener();
-        this.selectedCameraIndex += 1;
-        this.selectedCameraIndex %= this._cameraArray.length;
+        this._selectedCameraIndex += 1;
+        this._selectedCameraIndex %= this._cameraArray.length;
         this.selectedCamera.addAudioListener();
+    }
+
+    public toggleCameraEffect(): void {
+        this.selectedCamera.toggleEffectMode();
     }
 
     public zoomIn(): void {
@@ -133,7 +134,7 @@ export class CameraManagerService {
 
     public set cameraType(type: CameraType) {
         this._cameraArray.forEach((container: CameraContainer, index: number) => {
-            if (container.type === type) { this.selectedCameraIndex = index; }
+            if (container.type === type) { this._selectedCameraIndex = index; }
         });
     }
 

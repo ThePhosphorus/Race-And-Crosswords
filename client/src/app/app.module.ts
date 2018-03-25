@@ -18,6 +18,8 @@ import { DefinitionComponent } from "./crossword/definition/definition.component
 import { InputLetterComponent } from "./crossword/input-letter/input-letter.component";
 import { ModalNewGameComponent } from "./crossword/crossword-game-info/modal-new-game/modal-new-game.component";
 import { TileColorDirective } from "./crossword/input-letter/tile-color.directive";
+import { HudComponent } from "./race/hud/hud.component";
+import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
 
 @NgModule({
     declarations: [
@@ -35,7 +37,9 @@ import { TileColorDirective } from "./crossword/input-letter/tile-color.directiv
         DefinitionComponent,
         InputLetterComponent,
         ModalNewGameComponent,
-        TileColorDirective
+        TileColorDirective,
+        HudComponent,
+        RpmBarComponent
     ],
     imports: [
         BrowserModule,

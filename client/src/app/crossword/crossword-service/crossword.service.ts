@@ -1,11 +1,14 @@
 import { Injectable } from "@angular/core";
-import { Difficulty, CrosswordGrid, Orientation, Word, Letter } from "../../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
 import { GridState } from "../grid-state/grid-state";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player } from "../../../../../common/communication/Player";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 // Put true tu use mock grid instead of generated one
 const USE_MOCK_GRID: boolean = false;
