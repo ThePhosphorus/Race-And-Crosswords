@@ -16,7 +16,7 @@ export class ModalEndGameComponent implements OnInit {
     this.showModal = new EventEmitter<boolean>();
     this.configureNewGame = new EventEmitter<void>();
     this.isVictorious = true;
-    this.isMultiplayer = false;
+    this.isMultiplayer = true;
   }
 
   public ngOnInit(): void {
