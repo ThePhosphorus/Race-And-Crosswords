@@ -125,22 +125,27 @@ export class GameManagerService extends Renderer {
     }
 
     private async initCars(): Promise<void> {
-        let offset: number = 0;
         const points: Array<Vector3Struct> = this._gameConfiguration.track.points;
-        const spawnPosition: Vector3 = TrackLoaderService.toVector(points[0]);
+        const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
         const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
             .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
-        const perpSpawnDirection: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x);
+        const perpOffset: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
+            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+        const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
-        await this._player.init(spawnPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
-                                                     .add(perpSpawnDirection.clone().multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2)),
-                                COLORS[0]);
+        const playerSpawnPoint: Vector3 = startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
+            .add(perpOffset);
+        await this._player.init(playerSpawnPoint, COLORS[0]);
+        this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
+
+        let offset: number = 0;
         for (let i: number = 0; i < this._aiControlledCars.length; i++) {
             offset = i % 2 === 0 ? offset : offset + 1;
-            await this._aiControlledCars[i].init(
-                spawnPosition.clone().add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
-                                     .add(perpSpawnDirection.clone().multiplyScalar(Math.pow(-1, i) * DEFAULT_TRACK_WIDTH / 2 / 2)),
-                COLORS[(i + 1) % COLORS.length]);
+            const spawn: Vector3 = startPosition.clone()
+                                        .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
+                                        .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
+            await this._aiControlledCars[i].init(spawn, COLORS[(i + 1) % COLORS.length]);
+            this._aiControlledCars[i].mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }
 
