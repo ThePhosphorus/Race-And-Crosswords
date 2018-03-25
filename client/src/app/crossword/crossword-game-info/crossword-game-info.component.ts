@@ -47,8 +47,6 @@ export class CrosswordGameInfoComponent implements OnInit {
         });
     }
 
-    public ngOnUpdate
-
     public getBGColor(player: number): {} {
         return {"background-color" : this._crosswordService.getPlayerColor(player, false)};
     }
