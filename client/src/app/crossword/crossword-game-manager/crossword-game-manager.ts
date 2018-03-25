@@ -1,6 +1,9 @@
-import { Difficulty, CrosswordGrid, Word, Letter, Orientation } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Orientation, Difficulty } from "../../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Word } from "../../../../../common/crossword/word";
 
 const INITIAL_GRID_SIZE: number = 10;
 const SATURAION: number = 44;

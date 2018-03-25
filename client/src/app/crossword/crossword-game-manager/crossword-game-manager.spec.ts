@@ -1,7 +1,10 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { GameManager } from "./crossword-game-manager";
-import { CrosswordGrid, Difficulty, Word, Letter, Orientation } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 // tslint:disable:no-magic-numbers
 describe("CrosswordGameManager", () => {

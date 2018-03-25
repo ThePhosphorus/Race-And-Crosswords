@@ -1,4 +1,4 @@
-import { Orientation } from "../../../../../common/communication/crossword-grid";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
 
 export class GridState {
     public currentOrientation: Orientation;

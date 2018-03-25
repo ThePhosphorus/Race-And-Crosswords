@@ -1,4 +1,4 @@
-import { Difficulty } from './crossword-grid';
+import { Difficulty } from '../crossword/enums-constants';
 
 export class InWaitMatch {
     public constructor(
