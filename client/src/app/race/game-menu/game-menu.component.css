@@ -1,12 +1,10 @@
 #track-list {
-    display: inline-flex;
-    justify-content: center;
     position: absolute;
     top: 50px;
 	left: 75px;
 	right: 75px;
 	padding: 50px 40px 30px 40px;
-	/* text-align: center; */
+	text-align: center;
 	line-height: 175px;
 	background-color: steelblue;
     animation: pulse 4s infinite;
@@ -27,21 +25,6 @@
     line-height: 2rem;
 }
 
-.track-button .title {
-    font-size: 2rem;
-}
-
-.track-button .desription {
-    font-size: 1rem;
-}
-
-.track-button .playCounter {
-    font-size: 0.5rem;
-    position: absolute;
-    bottom: 5%;
-    left: 0%;
-}
-
 .track-button:active {
 	box-shadow: none;
 	top: 8px;
@@ -50,6 +33,18 @@
 
 .track-button:hover {
 	background-color: #d0d0d0;
+}
+
+.track-button .title {
+    font-size: 1.7rem;
+}
+
+.track-button .desription {
+    font-size: 1rem;
+}
+
+.track-button .playCounter {
+    font-size: 1.2rem;
 }
 
 .hidden {

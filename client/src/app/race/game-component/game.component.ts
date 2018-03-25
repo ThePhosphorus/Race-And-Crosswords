@@ -10,6 +10,7 @@ import { Track } from "../../../../../common/communication/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
+const EMPTY_TRACK_ID: string = "empty";
 
 @Component({
     moduleId: module.id,
@@ -38,7 +39,7 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         private _route: ActivatedRoute,
         private _inputManager: InputManagerService) {
             this._route.params.map((p) => p.id).subscribe((id: string) => {
-                if (id) {
+                if (id != null && id !== EMPTY_TRACK_ID) {
                     this.loadTrack(id);
                 }
             });

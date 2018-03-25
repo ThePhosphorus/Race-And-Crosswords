@@ -1,15 +1,14 @@
-<div id="track-list" *ngIf="!isInitialized" >
-  <button *ngFor="let track of tracks"
-            class="track-button"
-            [routerLink]="['/race', track._id]">
-    <div class="title">
-      <span>{{ track.name }}</span>
-    </div>
-    <div class="description">
-      <span>{{ track.description }}</span>
-    </div>
-    <div class="playCounter">
-      <span>Played : {{ track.nbPlayed }} times.</span>
-    </div>
-  </button>
+<div class="row mt-5">
+  <div class="mt-4" id="track-list" *ngIf="!isInitialized" >
+    <button class="track-button" [routerLink]="['/race', 'empty']">
+      <span class="title">No track</span><br><br>
+    </button>
+    <button *ngFor="let track of tracks"
+              class="track-button"
+              [routerLink]="['/race', track._id]">
+      <span class="title">{{ track.name }}</span><br>
+      <!-- <span class="description">{{ track.description }}</span> -->
+      <span class="playCounter">Played : {{ track.nbPlayed == null ? 0 : track.nbPlayed }} times.</span>
+    </button>
+  </div>
 </div>
