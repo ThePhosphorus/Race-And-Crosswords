@@ -40,7 +40,7 @@ const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
-const N_AI_CONTROLLED_CARS: number = 1;
+const N_AI_CONTROLLED_CARS: number = 5;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
 
@@ -124,13 +124,20 @@ export class GameManagerService extends Renderer {
 
     private async initCars(): Promise<void> {
         let offset: number = 0;
-        await this._player.init(new Vector3(INITIAL_SPAWN_OFFSET, 0, DEFAULT_TRACK_WIDTH / 2 / 2), COLORS[0]);
+        const spawnPosition: Vector3 = this._gameConfiguration.trackMeshs[0].position.clone();
+        const spawnDirection: Vector3 = this._gameConfiguration.trackMeshs[this._gameConfiguration.trackMeshs.length - 3].position.clone()
+            .sub(this._gameConfiguration.trackMeshs[this._gameConfiguration.trackMeshs.length - 2].position.clone()).normalize();
+        const perpSpawnDirection: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x);
+
+        await this._player.init(spawnPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
+                                                     .add(perpSpawnDirection.clone().multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2)),
+                                COLORS[0]);
         for (let i: number = 0; i < this._aiControlledCars.length; i++) {
             offset = i % 2 === 0 ? offset : offset + 1;
-            await this._aiControlledCars[i].init(new Vector3((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET,
-                                                             0,
-                                                             -Math.pow(-1, i) * DEFAULT_TRACK_WIDTH / 2 / 2),
-                                                 COLORS[(i + 1) % COLORS.length]);
+            await this._aiControlledCars[i].init(
+                spawnPosition.clone().add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
+                                     .add(perpSpawnDirection.clone().multiplyScalar(Math.pow(-1, i) * DEFAULT_TRACK_WIDTH / 2 / 2)),
+                COLORS[(i + 1) % COLORS.length]);
         }
     }
 
