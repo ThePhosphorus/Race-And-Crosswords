@@ -3,7 +3,8 @@ import { GameMenuComponent } from "./game-menu.component";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { Track, Vector3Struct } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
+import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 
 describe("GameMenuComponent", () => {
     let component: GameMenuComponent;

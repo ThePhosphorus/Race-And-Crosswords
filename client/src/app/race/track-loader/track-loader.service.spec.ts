@@ -1,9 +1,10 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { TrackLoaderService } from "./track-loader.service";
 import { HttpClientModule } from "@angular/common/http/";
-import { Track, Vector3Struct } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
 import { Mesh, Object3D } from "three";
 import { DEFAULT_TRACK_WIDTH, DEFAULT_WALL_WIDTH } from "../race.constants";
+import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 
 /* tslint:disable:no-magic-numbers */
 describe("Track Loader", () => {

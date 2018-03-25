@@ -1,3 +1,6 @@
+import { Highscore } from "./highscore";
+import { Vector3Struct } from "./vector3-struct";
+
 export class Track {
     public constructor (
         public _id: string,
@@ -6,20 +9,5 @@ export class Track {
         public points: Vector3Struct[],
         public nbPlayed: number,
         public highscores?: Array<Highscore>
-    ){}
-}
-
-export class Highscore {
-    public constructor (
-        public name: string,
-        public time: number
-    ) {}
-}
-
-export class Vector3Struct {
-    public constructor (
-        public x: number,
-        public y: number,
-        public z: number
     ){}
 }

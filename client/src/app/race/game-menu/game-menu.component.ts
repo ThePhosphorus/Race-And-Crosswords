@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
-import { Track } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
 
 @Component({
     selector: "app-game-menu",

@@ -6,7 +6,7 @@ import { CollisionDetectorService } from "./collision/collision-detector.service
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
-import { Track } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
 
 const FULLSCREEN_KEYCODE: number = 70; // F

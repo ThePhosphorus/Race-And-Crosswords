@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
-import { Track } from "../../../../common/communication/track";
+import { Track } from "../../../../common/race/track";
 import { DbClient } from "../../mongo/DbClient";
 import {
     Collection,

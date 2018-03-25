@@ -3,7 +3,7 @@ import {
     Vector3, Mesh, PlaneGeometry, TextureLoader,
     Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial, Object3D
 } from "three";
-import { Vector3Struct, Track } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
@@ -11,6 +11,7 @@ import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-const
 import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS, DEFAULT_WALL_WIDTH } from "../race.constants";
 import { Collider } from "../game-component/collision/collider";
 import { RigidBody } from "../game-component/rigid-body/rigid-body";
+import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 
 const TRACK_PATH: string = "../../assets/textures/test.jpg";
 const LINE_PATH: string = "../../assets/textures/linefixed.bmp";
