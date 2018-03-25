@@ -113,12 +113,6 @@ export class GameManagerService extends Renderer {
         this.lightManager.updateSunlight();
     }
 
-    // public importTrack(meshs: Mesh[]): void {
-    //     meshs.forEach((m: Mesh) => this.scene.add(m));
-    //     this._car.carMesh.position.copy(meshs[0].position);
-    //     this._car.carMesh.lookAt(meshs[1].position);
-    // }
-
     public importTrack(meshs: Mesh[], walls: Object3D[]): void {
         meshs.forEach((m) => this.scene.add(m));
         walls.forEach((w) => this.scene.add(w));
