@@ -26,15 +26,20 @@ export class CrosswordService {
     private _gridState: BehaviorSubject<GridState>;
     private _otherPlayersHover: Array<OtherPlayersHover>;
     private _isSinglePlayer: boolean;
+    private _isGameOver: boolean;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._otherPlayersHover = new Array<OtherPlayersHover>();
         this._isSinglePlayer = true;
+        this._isGameOver = false;
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
+    }
+    public get isGameOver(): boolean {
+        return this._isGameOver;
     }
 
     public get currentPlayer(): BehaviorSubject<number> {
@@ -73,6 +78,7 @@ export class CrosswordService {
         if (!USE_MOCK_GRID) {
             this._isSinglePlayer = isSinglePlayer;
             this._gameManager.newGame(difficulty);
+            this._isGameOver = false;
 
             if (isSinglePlayer) {
                 this.setUpSingleplayer(difficulty);
@@ -181,7 +187,7 @@ export class CrosswordService {
             }
             this.unselectWord();
             if (this._gameManager.addSolvedWord(word, playerId)) {
-                // show end game modal
+                this._isGameOver = true;
             }
     }
 

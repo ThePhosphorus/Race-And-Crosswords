@@ -26,7 +26,7 @@ export class ModalEndGameComponent implements OnInit {
     this.showModal.emit(false);
   }
 
-  public startNewGame(): void {
+  public configureGame(): void {
     this.configureNewGame.emit();
   }
 }
