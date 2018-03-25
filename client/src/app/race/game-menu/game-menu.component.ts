@@ -10,7 +10,7 @@ import { Track } from "../../../../../common/communication/track";
 })
 export class GameMenuComponent {
 
-    private tracks: Array<Track>;
+    public tracks: Array<Track>;
     public openedTrack: Track;
     public hasDetailsOpen: boolean;
 

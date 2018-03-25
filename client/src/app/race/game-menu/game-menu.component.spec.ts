@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { GameMenuComponent } from "./game-menu.component";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
-import { RouterModule } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
+import { RouterTestingModule } from "@angular/router/testing";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { Track, Vector3Struct } from "../../../../../common/communication/track";
 
 describe("GameMenuComponent", () => {
     let component: GameMenuComponent;
@@ -12,7 +13,7 @@ describe("GameMenuComponent", () => {
         TestBed.configureTestingModule({
             declarations: [GameMenuComponent],
             providers: [TrackLoaderService, HttpClient],
-            imports: [RouterModule]
+            imports: [HttpClientModule, RouterTestingModule]
         })
             .compileComponents();
     }));
@@ -25,5 +26,21 @@ describe("GameMenuComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should open track", () => {
+        const tempTrack: Track = new Track("id", "name", "description", new Array<Vector3Struct>(), 0);
+        component.open(tempTrack);
+        expect(component.hasDetailsOpen).toBeTruthy();
+        expect(component.openedTrack).toBe(tempTrack);
+    });
+
+    it("should close track", () => {
+        const tempTrack: Track = new Track("id", "name", "description", new Array<Vector3Struct>(), 0);
+        component.open(tempTrack);
+        expect(component.hasDetailsOpen).toBeTruthy();
+        component.close();
+        expect(component.hasDetailsOpen).toBeFalsy();
+        expect(component.openedTrack).toBe(null);
     });
 });
