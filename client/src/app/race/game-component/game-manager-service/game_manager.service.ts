@@ -35,6 +35,8 @@ import { Observable } from "rxjs/Observable";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
 import { GameConfiguration } from "../game-configuration/game-configuration";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
@@ -124,9 +126,10 @@ export class GameManagerService extends Renderer {
 
     private async initCars(): Promise<void> {
         let offset: number = 0;
-        const spawnPosition: Vector3 = this._gameConfiguration.trackMeshs[0].position.clone();
-        const spawnDirection: Vector3 = this._gameConfiguration.trackMeshs[this._gameConfiguration.trackMeshs.length - 3].position.clone()
-            .sub(this._gameConfiguration.trackMeshs[this._gameConfiguration.trackMeshs.length - 2].position.clone()).normalize();
+        const points: Array<Vector3Struct> = this._gameConfiguration.track.points;
+        const spawnPosition: Vector3 = TrackLoaderService.toVector(points[0]);
+        const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
+            .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
         const perpSpawnDirection: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x);
 
         await this._player.init(spawnPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
