@@ -38,6 +38,9 @@ export class GameManager {
 
     public newGame(difficulty: Difficulty): void {
         this._solvedGrid.next(new CrosswordGrid());
+        this._playerGrid.next(new CrosswordGrid());
+        this._players.next(new Array<Player>());
+        this._solvedWords.next(new Array<SolvedWord>());
         this._currentPlayer.next(0);
         this._difficulty.next(difficulty);
     }
