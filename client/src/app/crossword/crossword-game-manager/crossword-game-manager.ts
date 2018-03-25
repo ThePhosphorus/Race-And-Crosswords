@@ -75,8 +75,8 @@ export class GameManager {
     }
 
     public get topPlayer(): Player {
-        let topPlayer: Player = this._players.value[this._currentPlayer.value];
-        for (const player of this._players.value) {
+        let topPlayer: Player = this.myPlayer;
+        for (const player of this._players.getValue()) {
             if (player.score > topPlayer.score) {
                 topPlayer = player;
             }
