@@ -87,4 +87,6 @@ export class ModalNewGameComponent implements OnInit {
     public isDiff( diff: Difficulty): boolean {
         return diff === this.lvl;
     }
+
+
 }

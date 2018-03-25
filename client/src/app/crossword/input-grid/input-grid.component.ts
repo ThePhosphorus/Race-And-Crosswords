@@ -23,6 +23,8 @@ export class InputGridComponent implements OnInit {
             if (crosswordGrid.words.length > 0) {
                 this.makeTwoDimensionGrid(crosswordGrid);
                 this.showLoading.emit(false);
+            } else {
+                this.showLoading.emit(true);
             }
         });
     }
