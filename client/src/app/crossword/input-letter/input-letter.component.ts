@@ -31,7 +31,7 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isDisabled(): boolean {
-        return this._crosswordService.getLetterDisabledPlayers(this.id).length > 0;
+        return this._gridState.LIsDisabled(this.id);
     }
 
     public isHovered(): boolean {

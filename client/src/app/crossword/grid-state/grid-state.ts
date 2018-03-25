@@ -6,7 +6,6 @@ export class GridState {
     public selectedLetters: number[];
     public hoveredLetters: number[];
     public disabledLetters: number[];
-    public currentPlayer: number;
 
     public constructor() {
         this.currentOrientation = Orientation.Across;
@@ -14,7 +13,6 @@ export class GridState {
         this.selectedLetters = [];
         this.hoveredLetters = [];
         this.disabledLetters = [];
-        this.currentPlayer = 1;
     }
 
     public LIsDisabled(letterId: number): boolean {

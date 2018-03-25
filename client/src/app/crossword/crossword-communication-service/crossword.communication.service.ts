@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
@@ -27,10 +27,8 @@ export class CrosswordCommunicationService {
 
     private socket: SocketIOClient.Socket;
     private socketInfos: SocketToServerInfos;
-    private showSearching: EventEmitter<boolean>;
 
     public constructor(private http: HttpClient) {
-        this.showSearching = new EventEmitter<boolean>();
         this.createSocket();
         this.socketInfos = new SocketToServerInfos(null, null, null, null, false, DEFAULT_NAME);
     }
