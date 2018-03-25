@@ -21,3 +21,19 @@
 .modal-footer {
     border: none;
 }
+
+#rematchSelector .btn-secondary:hover {
+    box-shadow: none;
+    border: lightgrey solid;
+}
+
+#rematchSelector .active {
+    text-decoration-line: underline;
+    border: solid rgb(97, 96, 96);
+}
+
+#rematchSelector {
+    border: none;
+    font-size: 10vmin;
+    background-color: transparent;
+}
