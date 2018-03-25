@@ -1,4 +1,4 @@
-import { Orientation } from "../../../../../common/communication/crossword-grid";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
 
 export class GridState {
     public currentOrientation: Orientation;
@@ -38,5 +38,12 @@ export class GridState {
     public switchOrientation(): void {
         this.currentOrientation = this.currentOrientation === Orientation.Down ?
             Orientation.Across : Orientation.Down;
+    }
+
+    public unselect(): void {
+        this.currentLetter = null;
+        this.selectedLetters = [];
+        this.hoveredLetters = [];
+        this.currentOrientation = Orientation.Across;
     }
 }

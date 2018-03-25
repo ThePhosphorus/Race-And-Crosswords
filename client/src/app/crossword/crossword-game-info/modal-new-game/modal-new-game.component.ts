@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-import { Difficulty } from "../../../../../../common/communication/crossword-grid";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
+import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
 @Component({
     selector: "app-modal-new-game",

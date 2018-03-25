@@ -3,8 +3,10 @@ import { HttpClientModule } from "@angular/common/http";
 import { CrosswordGameInfoComponent } from "./crossword-game-info.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Difficulty } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
+import { Difficulty } from "../../../../../common/crossword/enums-constants";
+import { ModalNewGameComponent } from "./modal-new-game/modal-new-game.component";
+import { FormsModule } from "@angular/forms";
 
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
@@ -12,8 +14,8 @@ describe("CrosswordGameInfoComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule],
-            declarations: [CrosswordGameInfoComponent],
+            imports: [HttpClientModule, FormsModule],
+            declarations: [CrosswordGameInfoComponent, ModalNewGameComponent],
             providers: [CrosswordCommunicationService, CrosswordService]
         })
             .compileComponents();

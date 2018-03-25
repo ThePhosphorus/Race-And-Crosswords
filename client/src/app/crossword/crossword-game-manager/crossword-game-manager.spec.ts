@@ -1,7 +1,10 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { GameManager } from "./crossword-game-manager";
-import { CrosswordGrid, Difficulty } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 // tslint:disable:no-magic-numbers
 describe("CrosswordGameManager", () => {
@@ -11,24 +14,24 @@ describe("CrosswordGameManager", () => {
         });
     });
 
-    it("should be created", inject([GameManager], (service: GameManager) => {
-        expect(service).toBeTruthy();
+    it("should be created", inject([GameManager], (gameManager: GameManager) => {
+        expect(gameManager).toBeTruthy();
     }));
 
-    it("should clear the grid when creating a new game", inject([GameManager], (service: GameManager) => {
+    it("should clear the grid when creating a new game", inject([GameManager], (gameManager: GameManager) => {
         const newGrid: CrosswordGrid = new CrosswordGrid();
         newGrid.size = 5;
-        service.grid = newGrid;
-        service.newGame(Difficulty.Easy);
-        expect(service.solvedGridObs.getValue()).not.toBe(newGrid);
-        expect(service.solvedGridObs.getValue()).toBe(new CrosswordGrid());
+        gameManager.grid = newGrid;
+        gameManager.newGame(Difficulty.Easy);
+        expect(gameManager.solvedGridObs.getValue()).not.toBe(newGrid);
+        expect(gameManager.solvedGridObs.getValue()).toBe(new CrosswordGrid());
     }));
 
-    it("should put the right difficulty when creating a new game", inject([GameManager], (service: GameManager) => {
+    it("should put the right difficulty when creating a new game", inject([GameManager], (gameManager: GameManager) => {
         const diff: Difficulty = Difficulty.Medium;
-        service.newGame(diff);
+        gameManager.newGame(diff);
 
-        expect(service.difficultyObs.getValue()).toBe(diff);
+        expect(gameManager.difficultyObs.getValue()).toBe(diff);
     }));
 
     it("should be able set players", inject([GameManager], (service: GameManager) => {
@@ -43,4 +46,40 @@ describe("CrosswordGameManager", () => {
         expect(service.currentPlayerObs.getValue()).toBe(player);
     }));
 
+    it("should add a solved word and return if it's the last one", inject([GameManager], (gameManager: GameManager) => {
+        const wordA: Word = new Word();
+        wordA.letters = [new Letter("w", 0), new Letter("o", 1), new Letter("r", 2), new Letter("d", 3)];
+        wordA.id = 0;
+        wordA.orientation = Orientation.Across;
+
+        const wordD: Word = new Word();
+        wordD.letters = [new Letter("w", 0), new Letter("i", 4), new Letter("n", 8), new Letter("g", 12)];
+        wordD.id = 0;
+        wordD.orientation = Orientation.Down;
+
+        const grid: CrosswordGrid = new CrosswordGrid();
+        grid.size = 4;
+        grid.words.push(wordA);
+        grid.words.push(wordD);
+
+        wordA.letters.forEach((l: Letter) => grid.grid[l.id] = l);
+        wordD.letters.forEach((l: Letter) => grid.grid[l.id] = l)   ;
+
+        gameManager.grid = grid;
+
+        const pastSolvedWordsLength: number = gameManager.solvedWordsObs.getValue().length;
+
+        expect(gameManager.addSolvedWord(wordD, 0)).toBeFalsy();
+        expect(gameManager.solvedWordsObs.getValue().length).toBe(pastSolvedWordsLength + 1);
+
+        expect(gameManager.addSolvedWord(wordD, 0)).toBeTruthy();
+        expect(gameManager.solvedWordsObs.getValue().length).toBe(pastSolvedWordsLength + 2);
+    }));
+
+    it("should be able to set and get a character", inject([GameManager], (gameManager: GameManager) => {
+        const id: number = 20;
+        const letter: string = "a";
+        gameManager.setChar(id, letter);
+        expect(gameManager.getChar(id)).toBe(letter);
+    }));
 });

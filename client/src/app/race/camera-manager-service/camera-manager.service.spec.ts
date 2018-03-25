@@ -33,17 +33,12 @@ describe("CameraManagerService", () => {
      inject([CameraManagerService], (manager: CameraManagerService) => {
             manager.cameraType = CameraType.Perspective;
             manager.switchCamera();
-            expect(manager.cameraType).toBe(CameraType.Orthographic);
-            manager.switchCamera();
-            expect(manager.cameraType).toBe(CameraType.Perspective); // Doing multiple switch to see if come and go works
-            manager.switchCamera();
-            expect(manager.cameraType).toBe(CameraType.Orthographic);
+            expect(manager.cameraType === CameraType.Perspective).toBeFalsy();
         })
     );
 
   it("should zoom in",
      inject([CameraManagerService], (manager: CameraManagerService) => {
-        manager.init();
         const cameraDistance: number = manager.cameraDistanceToCar;
         manager.zoomIn();
         manager.update(5);
@@ -52,7 +47,6 @@ describe("CameraManagerService", () => {
 
   it("should zoom out",
      inject([CameraManagerService], (manager: CameraManagerService) => {
-        manager.init();
         const cameraDistance: number = manager.cameraDistanceToCar;
         manager.zoomOut();
         manager.update(1);

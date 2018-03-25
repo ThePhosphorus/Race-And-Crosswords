@@ -31,6 +31,4 @@ describe("DefinitionComponent", () => {
         component.toogleCheatMode();
         expect(component.cheatMode).toEqual(!pastCheatmodeState);
     });
-
-
 });

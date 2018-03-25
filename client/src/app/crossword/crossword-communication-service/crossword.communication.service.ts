@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
 import { connect } from "socket.io-client";
 import socketMsg from "../../../../../common/communication/socketTypes";
 import { InWaitMatch } from "../../../../../common/communication/Match";
 import { Player } from "../../../../../common/communication/Player";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
 
 const DEFAULT_NAME: string =  "John C Doe";
 

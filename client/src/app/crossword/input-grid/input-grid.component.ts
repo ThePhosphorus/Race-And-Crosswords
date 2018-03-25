@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, Output, EventEmitter } from "@angular/core";
-import { CrosswordGrid, Letter } from "../../../../../common/communication/crossword-grid";
 import { CrosswordService } from "../crossword-service/crossword.service";
+import { Letter } from "../../../../../common/crossword/letter";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 
 @Component({
     selector: "app-input-grid",

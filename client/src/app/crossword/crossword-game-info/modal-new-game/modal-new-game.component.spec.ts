@@ -1,8 +1,12 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ModalNewGameComponent } from "./modal-new-game.component";
-import { Difficulty } from "../../../../../../common/communication/crossword-grid";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
+import { Difficulty } from "../../../../../../common/crossword/enums-constants";
+import { FormsModule } from "@angular/forms";
+import { CrosswordService } from "../../crossword-service/crossword.service";
+import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
+import { HttpClientModule } from "@angular/common/http";
 
 describe("ModalNewGameComponent", () => {
     let component: ModalNewGameComponent;
@@ -10,7 +14,9 @@ describe("ModalNewGameComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-        declarations: [ ModalNewGameComponent ]
+            imports: [FormsModule, HttpClientModule],
+            providers: [CrosswordService, CrosswordCommunicationService],
+            declarations: [ ModalNewGameComponent ]
         })
         .compileComponents();
     }));

@@ -1,9 +1,10 @@
-import { TestBed, inject, async } from "@angular/core/testing";
+import { TestBed, inject } from "@angular/core/testing";
 import { CrosswordService } from "./crossword.service";
-import { Difficulty, CrosswordGrid, Orientation, Word, Letter } from "../../../../../common/communication/crossword-grid";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http/";
-import { GameManager, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 // tslint:disable:no-magic-numbers
 describe("CrosswordService", () => {
@@ -26,24 +27,32 @@ describe("CrosswordService", () => {
         expect(commService.listenerReceiveGrid).toBeDefined();
         expect(commService.listenerReceivePlayers).toBeDefined();
         expect(commService.listenerReceiveSelect).toBeDefined();
-        expect(commService.listenerReceiveUpdatedWord).toBeDefined();
     }));
 
     it("should select a word", inject([CrosswordService], (service: CrosswordService) => {
         service.newGame(Difficulty.Easy, false);
-        const index: number = 0;
-        const pastLength: number = service.gridStateObs.getValue.length;
+        const index: number = 0; // tile 0 shoud be at a crossroad
         service.setSelectedLetter(index);
-        expect( service.gridStateObs.getValue.length).toBeGreaterThanOrEqual(pastLength);
+        expect( service.wordIsSelected(index, Orientation.Across)).toBeTruthy();
+        expect( service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
 
+        service.setSelectedLetter(index);
+        expect( service.wordIsSelected(index, Orientation.Down)).toBeTruthy();
+        expect( service.wordIsSelected(index, Orientation.Across)).toBeFalsy();
+
+        service.unselectWord();
+        expect( service.wordIsSelected(index, Orientation.Across)).toBeFalsy();
+        expect( service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
     }));
 
-    it("should select a word", inject([CrosswordService], (service: CrosswordService) => {
+    it("should Hover a word", inject([CrosswordService], (service: CrosswordService) => {
         service.newGame(Difficulty.Easy, false);
         const word: Word = new Word();
-        const pastLength: number = service.gridStateObs.getValue.length;
-        service.setHoveredWord(word);
-        expect( service.gridStateObs.getValue.length).toBeGreaterThanOrEqual(pastLength);
+        word.id = 0;
+        word.orientation = Orientation.Across;
+        word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 4), new Letter("", 3)];
 
+        service.setHoveredWord(word.id, word.orientation);
+        word.letters.forEach((l: Letter) => expect(service.gridStateObs.getValue().LIsHovered(l.id)));
     }));
 });
