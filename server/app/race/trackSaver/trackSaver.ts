@@ -58,7 +58,7 @@ export class TrackSaver extends WebService {
         this._router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
             const id: string = req.params.id;
             const track: Track = req.body["track"];
-            this.putTrack(id, track).then((result: ReplaceWriteOpResult) => res.send(result));
+            this.putTrack(id, track).then((result: UpdateWriteOpResult) => res.send(result));
         });
 
         this._router.put("/play/:id", (req: Request, res: Response, next: NextFunction) => {
@@ -88,11 +88,12 @@ export class TrackSaver extends WebService {
         return this._collection.insertOne(track);
     }
 
-    private putTrack(id: string, track: Track): Promise<ReplaceWriteOpResult> {
+    private putTrack(id: string, track: Track): Promise<UpdateWriteOpResult> {
         this.connect();
         delete track._id; // Because mongo db don't accept _id as a string
 
-        return this._collection.replaceOne({ _id: new ObjectId(id) }, track);
+        return this._collection.updateOne({_id: new ObjectId(id)},
+                                          {$set: {points: track.points, name: track.name, description: track.description}});
     }
 
     private getAllTracks(): Promise<Track[]> {
