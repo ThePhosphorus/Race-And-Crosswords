@@ -7,8 +7,7 @@ import {
     PlaneGeometry,
     DoubleSide,
     MeshPhongMaterial,
-    Vector3,
-    Object3D
+    Vector3
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -35,6 +34,7 @@ import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
+import { GameConfiguration } from "../game-configuration/game-configuration";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
@@ -60,14 +60,15 @@ export class GameManagerService extends Renderer {
     private _aiControlledCars: Array<Car>;
     private _hudTimerSubject: Subject<number>;
     private _hudLapResetSubject: Subject<void>;
+    private _gameConfiguration: GameConfiguration;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
                        private collisionDetector: CollisionDetectorService,
                        private lightManager: LightManagerService ) {
-
         super(cameraManager, false);
+        this._gameConfiguration = new GameConfiguration();
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
         this._player = new Car(this.cameraManager);
@@ -83,15 +84,6 @@ export class GameManagerService extends Renderer {
                             this._player.rpm);
     }
 
-    public async start(container: HTMLDivElement): Promise<void> {
-        this.init(container);
-        this.initKeyBindings();
-        this.initSoundManager();
-        this.initCameraManager();
-        await this.initCars();
-        this.initScene();
-        this.startRenderingLoop();
-    }
     public get hudTimer(): Observable<number> {
         return this._hudTimerSubject.asObservable();
     }
@@ -101,6 +93,18 @@ export class GameManagerService extends Renderer {
 
     public getDeltaTime(): Observable<number> {
         return this._hudTimerSubject.asObservable();
+    }
+
+    public async start(container: HTMLDivElement, config: GameConfiguration): Promise<void> {
+        this._gameConfiguration = config;
+        this.init(container);
+        this.initKeyBindings();
+        this.initSoundManager();
+        this.initCameraManager();
+        this.initTrack();
+        await this.initCars();
+        this.initScene();
+        this.startRenderingLoop();
     }
 
     protected update(deltaTime: number): void {
@@ -113,9 +117,9 @@ export class GameManagerService extends Renderer {
         this.lightManager.updateSunlight();
     }
 
-    public importTrack(meshs: Mesh[], walls: Object3D[]): void {
-        meshs.forEach((m) => this.scene.add(m));
-        walls.forEach((w) => this.scene.add(w));
+    public initTrack(): void {
+        this._gameConfiguration.trackMeshs.forEach((m) => this.scene.add(m));
+        this._gameConfiguration.trackWalls.forEach((w) => this.scene.add(w));
     }
 
     private async initCars(): Promise<void> {
