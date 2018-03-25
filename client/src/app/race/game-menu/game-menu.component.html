@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="details" [ngClass]="{'show': hasDetailsOpen}" (click)="close()">
+<div *ngIf="openedTrack" class="details" [ngClass]="{'show': hasDetailsOpen}" (click)="close()">
   <div class="details-content">
     <div class="card-deck">
       <div class="card">
@@ -29,14 +29,6 @@
           <li class="list-group-item">Dapibus ac facilisis in</li>
           <li class="list-group-item">Vestibulum at eros</li>
           <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Vestibulum at eros</li>
         </ul>
       </div>
       <div class="card">
@@ -48,7 +40,7 @@
         </div>
         <div class="card-footer text-right">
           <a class="btn btn-lg btn-light" (click)="close()">Return</a>
-          <a class="btn btn-lg btn-success" [routerLink]="['/race', 'openedTrack._id']">Play</a>
+          <a class="btn btn-lg btn-success" [routerLink]="['/race', openedTrack._id]">Play</a>
         </div>
       </div>
     </div>
