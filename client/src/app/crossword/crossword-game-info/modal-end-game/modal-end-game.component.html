@@ -4,7 +4,7 @@
         <div class="modal-body">
             <div class="card card-block w-100">
                 <div id="rematchSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
-                    <button class="btn btn-secondary w-100 m-0">
+                    <button class="btn btn-secondary w-100 m-0" (click)="startNewGame()">
                           {{ isMultiplayer ? "REMATCH" : "REPLAY" }}
                         </button>
                     <button class="btn btn-secondary w-100 m-0" (click)="configureGame()">

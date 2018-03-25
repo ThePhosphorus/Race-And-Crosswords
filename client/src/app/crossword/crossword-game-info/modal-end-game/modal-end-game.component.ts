@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { CrosswordService } from "../../crossword-service/crossword.service";
+import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
 @Component({
   selector: "app-modal-end-game",
@@ -31,6 +32,13 @@ export class ModalEndGameComponent implements OnInit {
 
   public configureGame(): void {
     this.configureNewGame.emit();
+  }
+
+  public startNewGame(): void {
+    const isSinglePlayer: boolean = this._crosswordService.isSinglePlayer;
+    const difficulty: Difficulty = this._crosswordService.difficulty.getValue();
+    this._crosswordService.newGame(difficulty, isSinglePlayer);
+    this.closeGameOptions();
   }
 
 }
