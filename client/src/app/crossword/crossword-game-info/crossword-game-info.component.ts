@@ -45,6 +45,9 @@ export class CrosswordGameInfoComponent implements OnInit {
             this._lvl = difficulty);
 
         this._crosswordService.players.subscribe((players: Array<Player>) => {
+            if (players.length < this.players.length) {
+                this._crosswordService.isGameOver = true;
+            }
             this.players = players;
             if (players.length > 1) {
                 this.showSearching.emit(false);

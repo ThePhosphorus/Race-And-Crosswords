@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output} from "@angular/core";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
@@ -14,15 +14,20 @@ export class ModalEndGameComponent implements OnInit {
   @Output() public showModal: EventEmitter<boolean>;
   @Output() public configureNewGame: EventEmitter<void>;
   public isWaitingRematch: boolean;
+  private _isDisconnected: boolean;
   private _players: Array<Player>;
 
   public constructor(private _crosswordService: CrosswordService, private _commService: CrosswordCommunicationService) {
     this.showModal = new EventEmitter<boolean>();
     this.configureNewGame = new EventEmitter<void>();
     this.isWaitingRematch = false;
+    this._isDisconnected = false;
     this._players = new Array<Player>();
   }
 
+  public get isDisconnected(): boolean {
+    return this._isDisconnected;
+  }
   public get players(): Array<Player> {
     return this._players;
   }
@@ -34,6 +39,9 @@ export class ModalEndGameComponent implements OnInit {
   }
   public ngOnInit(): void {
     this._crosswordService.players.subscribe((players: Array<Player>) => {
+      if (players.length < 2) {
+        this._isDisconnected = true;
+      }
       this._players = players;
       if (players.length > 1 && this.isWaitingRematch) {
           this.verifyRematchPlayers();
@@ -46,6 +54,7 @@ export class ModalEndGameComponent implements OnInit {
   }
 
   public configureGame(): void {
+    this._isDisconnected = false;
     this.configureNewGame.emit();
   }
 
