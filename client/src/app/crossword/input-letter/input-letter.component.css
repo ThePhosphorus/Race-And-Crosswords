@@ -11,37 +11,36 @@ button {
     color: #212529;
     text-align: center;
     outline: none;
-    background-color: transparent;
+    background-color: whitesmoke;
     margin:0%;
-    border: none;
-    padding: 0%;
+    border-color: transparent;
     border-radius: 0%;
+
 }
 
-.highlight-player-1 {
-
-    background-color: #b6cee2 !important;
-    border-style: dotted;
-    width:90% ;
-    height: 90%;
-    box-shadow: 0 0 0 0.4vmin steelblue,inset 0 0 1vmin steelblue ;
-    border-width: 0.2vmin;
-    border-color: steelblue!important;
+.input-letter {
+    display: inherit;
 }
 
-.highlight-player-2 {
-    background-color: #dbb1a3 !important;
-    border-style: dotted;
-    width:90% ;
-    height: 90%;
-    box-shadow: 0 0 0 0.4vmin #b46146,inset 0 0 1.5vmin #b46146 ;
-    border-width: 0.2vmin;
-    border-color: #b46146!important;
-}
 
 .disabled {
-    background-color: darkgrey;
-    color: white;
+    width: 90%;
+    height: 90%;
+    color:rgb(105, 104, 104);
+    border-color: var(--color2, white);
+    border-width: 0.2vmin;
+    box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color,white);
+    background: linear-gradient(45deg, var(--color, white) 50%, rgba(0,0,0,0) 50% ,rgba(0,0,0,0) 0), var(--color2,white);
+}
+
+.selected {
+    border-style: dotted;
+    width: 90%;
+    height: 90%;
+    border-width: 0.2vmin;
+    border-color: var(--color, white);
+    box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color, white), inset 0vmin 0vmin 1.5vmin var(--color, white);
+    background-color: var(--bgColor, white);
 }
 
 .current {

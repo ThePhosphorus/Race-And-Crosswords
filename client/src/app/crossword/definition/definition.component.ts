@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { GridState } from "../grid-state/grid-state";
 import { Word } from "../../../../../common/crossword/word";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
-import { DisplayService } from "../display-service/display.service";
 
-class DisplayedDefinition {
+export class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}
 }
 
@@ -16,42 +16,50 @@ class DisplayedDefinition {
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-    private _wordGrid: Word[];
+    private _gridState: GridState;
     private _cheatmode: boolean;
-    private _solvedWords: number[];
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
+    private gridSize: number;
 
-    public constructor(private _crosswordService: CrosswordService, private _displayService: DisplayService) {
+    public constructor(private _crosswordService: CrosswordService) {
+        this._crosswordService.gridStateObs.subscribe((gs: GridState) =>
+            this._gridState = gs);
+
         this._cheatmode = false;
-        this._wordGrid = null;
-        this._solvedWords = [];
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
+        this.gridSize = 1;
     }
 
     public ngOnInit(): void {
-        this._crosswordService.grid.subscribe((grid: CrosswordGrid) => {
+        this._crosswordService.solvedGrid.subscribe((grid: CrosswordGrid) => {
+            this.gridSize = grid.size;
             this.acrossDefinitions = new Array<DisplayedDefinition>();
             this.downDefinitions = new Array<DisplayedDefinition>();
-            this._wordGrid = grid.words;
-            for (let i: number = 0; i < this._wordGrid.length; i++) {
-                const definition: DisplayedDefinition = this.wordToDefinition(this._wordGrid[i], i);
-                if (this._wordGrid[i].orientation === Orientation.Across) {
+            const wordGrid: Array<Word> = grid.words;
+            wordGrid.sort((a: Word, b: Word) => a.id - b.id);
+
+            wordGrid.forEach((w: Word) => {
+                const definition: DisplayedDefinition =
+                this.wordToDefinition(w);
+
+                if (w.orientation === Orientation.Across) {
                     this.acrossDefinitions.push(definition);
                 } else {
                     this.downDefinitions.push(definition);
                 }
-            }
-        });
-        this._crosswordService.solvedWords.subscribe((solvedWords: number[]) => {
-            this._solvedWords = solvedWords;
+            });
+
+            this.acrossDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id - b.id);
+            this.downDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id % this.gridSize - b.id % this.gridSize);
+
         });
     }
 
-    private wordToDefinition(word: Word, id: number): DisplayedDefinition {
+    public wordToDefinition(word: Word): DisplayedDefinition {
         return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1)),
-                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), id);
+                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), word.id);
     }
 
     private upperFirstLetter(str: string): string {
@@ -64,35 +72,24 @@ export class DefinitionComponent implements OnInit {
 
     public get cheatMode(): boolean { return this._cheatmode; }
 
-    public isWordSolved(id: number): boolean {
-        return this._solvedWords.indexOf(id) > -1;
+    public isWordSolved(id: number, orientation: Orientation): boolean {
+        return this._crosswordService.wordIsSolved(id, orientation);
     }
 
-    public select(index: number, orientation: string): void {
-        this._displayService.setSelectedWord(this.findWordByIndex(index, orientation));
+    public getRowCOl(id: number, orientation: Orientation): number {
+        return (orientation === Orientation.Across) ? Math.floor(id / this.gridSize) : id % this.gridSize;
     }
 
-    public hover(index: number, orientation: string): void {
-        this._displayService.setHoveredWord(this.findWordByIndex(index, orientation));
+    public select(index: number, orientation: Orientation, event: MouseEvent): void {
+        this._crosswordService.setSelectedWord(index, orientation);
+        event.stopPropagation();
+    }
+
+    public hover(index: number, orientation: Orientation): void {
+        this._crosswordService.setHoveredWord(index, orientation);
     }
 
     public unHover(): void {
-        this._displayService.setHoveredWord(null);
-    }
-
-    private findWordByIndex(index: number, orientation: string): Word {
-        let targetWord: Word;
-        for (const word of this._wordGrid) {
-            if (word.orientation === orientation) {
-                if (index > 0) {
-                    index--;
-                } else {
-                    targetWord = word;
-                    break;
-                }
-            }
-        }
-
-        return targetWord;
+        this._crosswordService.setHoveredWord(null, null);
     }
 }

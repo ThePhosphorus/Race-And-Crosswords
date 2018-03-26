@@ -23,7 +23,7 @@ export abstract class CameraContainer {
         private _audioListener: AudioListener,
         protected _targetInfos: TargetInfos,
         protected cameraDistance: number,
-        private zoomLimit: ZoomLimit,
+        private _zoomLimit: ZoomLimit,
         public readonly type: CameraType
     ) {
         this.zoom = 0;
@@ -42,12 +42,12 @@ export abstract class CameraContainer {
      }
 
     public updateZoomLimit(zoomLimit: ZoomLimit): void {
-        this.zoomLimit = zoomLimit;
+        this._zoomLimit = zoomLimit;
     }
 
     public scrollZoom(deltaZoom: number): void {
-        if ((deltaZoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
-         (deltaZoom > 0 && this.cameraDistance < this.zoomLimit.max)) {
+        if ((deltaZoom < 0 && this.cameraDistance > this._zoomLimit.min) ||
+         (deltaZoom > 0 && this.cameraDistance < this._zoomLimit.max)) {
             this.cameraDistance += deltaZoom;
         }
     }
@@ -73,8 +73,8 @@ export abstract class CameraContainer {
      }
 
     public checkZoom(): boolean {
-        return (this.zoom < 0 && this.cameraDistance > this.zoomLimit.min) ||
-        (this.zoom > 0 && this.cameraDistance < this.zoomLimit.max);
+        return (this.zoom < 0 && this.cameraDistance > this._zoomLimit.min) ||
+        (this.zoom > 0 && this.cameraDistance < this._zoomLimit.max);
      }
 
     public update(deltaTime: number): void {
@@ -89,4 +89,5 @@ export abstract class CameraContainer {
     public abstract position(): Vector3;
     public abstract onResize(aspectRatio: number): void;
     protected abstract fixUpdate(deltaTime: number): void;
+    public abstract toggleEffectMode(): void;
  }

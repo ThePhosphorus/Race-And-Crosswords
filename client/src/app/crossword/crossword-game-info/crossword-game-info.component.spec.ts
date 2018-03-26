@@ -1,9 +1,12 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { HttpClientModule } from "@angular/common/http";
 import { CrosswordGameInfoComponent } from "./crossword-game-info.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
+import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
+import { ModalNewGameComponent } from "./modal-new-game/modal-new-game.component";
+import { FormsModule } from "@angular/forms";
 
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
@@ -11,8 +14,8 @@ describe("CrosswordGameInfoComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule],
-            declarations: [CrosswordGameInfoComponent],
+            imports: [HttpClientModule, FormsModule],
+            declarations: [CrosswordGameInfoComponent, ModalNewGameComponent],
             providers: [CrosswordCommunicationService, CrosswordService]
         })
             .compileComponents();
@@ -28,9 +31,16 @@ describe("CrosswordGameInfoComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should change level", () => {
-        const diff: Difficulty = Difficulty.Easy;
-        component.changeLevel(diff);
-        expect(component.lvl).toBe(diff);
-    });
+    it("should receive a promise for Difficulty", inject([CrosswordService], (service: CrosswordService) => {
+        service.difficulty.subscribe( (difficulty: Difficulty) => {
+          expect(difficulty).toBeDefined();
+        });
+    }));
+
+    it("should receive a promise for players", inject([CrosswordService], (service: CrosswordService) => {
+        service.players.subscribe( (players: Array<Player>) => {
+          expect(players).toBeDefined();
+        });
+    }));
+
 });

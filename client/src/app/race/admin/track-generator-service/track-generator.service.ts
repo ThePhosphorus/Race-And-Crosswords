@@ -6,7 +6,16 @@ import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { ZoomLimit } from "../../camera-manager-service/camera-container";
-import { CameraType, AMBIENT_LIGHT_OPACITY, WHITE } from "../../../global-constants/constants";
+import {
+    CameraType,
+    AMBIENT_LIGHT_OPACITY,
+    WHITE, ZOOM_IN_KEYCODE,
+    ZOOM_OUT_KEYCODE,
+    DELETE_KEY,
+    LEFT_CLICK_CODE,
+    MIDDLE_CLICK_CODE,
+    RIGHT_CLICK_CODE
+} from "../../../global-constants/constants";
 import {
     LINK_MINIMUM_POINTS, PointsSpan, ZOOM_FACTOR, GRID_DIMENSION, GRID_DIVISIONS,
     GRID_PRIMARY_COLOR, GRID_SECONDARY_COLOR, STARTING_CAMERA_HEIGHT, WHITE_MATERIAL,
@@ -16,23 +25,15 @@ import {
 const LINE_STR_PREFIX: string = "Line to ";
 const MIN_ZOOM: number = 10;
 const MAX_ZOOM: number = 200;
-const LEFT_CLICK_CODE: number = 0;
-const MIDDLE_CLICK_CODE: number = 1;
-const RIGHT_CLICK_CODE: number = 2;
-
-// Keycodes
-const ZOOM_IN_KEYCODE: number = 187; // +
-const ZOOM_OUT_KEYCODE: number = 189; // -
-const DELETE_KEY: number = 46;
 
 @Injectable()
 export class TrackGenerator extends Renderer {
+    public points: PointsHandler;
     private _gridHelper: GridHelper;
     private _dragPoints: PointsSpan;
     private onMouseMoveListner: EventListenerObject;
     private onMouseTranslateListner: EventListenerObject;
     private _translateStartingPosition: Vector3;
-    public points: PointsHandler;
     private constraintValidator: ConstraintValidator;
 
     public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {

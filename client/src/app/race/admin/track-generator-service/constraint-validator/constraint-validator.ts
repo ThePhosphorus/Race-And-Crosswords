@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import { TWICE_TRACK_WIDTH, DEFAULT_TRACK_WIDTH } from "../../../race.constants";
+import { DEFAULT_TRACK_WIDTH, DEFAULT_WALL_WIDTH } from "../../../race.constants";
 
 const MINIMUM_ANGLE: number = 2.35619;
 const LAST_POINT_INDEX: number = 2;
@@ -48,7 +48,7 @@ export class ConstraintValidator {
     }
 
     private validateLength(v: Vector3): boolean {
-        return v != null && v.length() > TWICE_TRACK_WIDTH;
+        return v != null && v.length() > DEFAULT_TRACK_WIDTH + (DEFAULT_WALL_WIDTH * 2) * 2;
     }
 
     private validateAngle(v1: Vector3, v2: Vector3): boolean {

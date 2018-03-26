@@ -1,8 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
+import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
-const INITIAL_GRID_SIZE: number = 10;
-const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 
 @Component({
     selector: "app-crossword-game-info",
@@ -11,24 +10,61 @@ const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
+    @Output() public showSearching: EventEmitter<boolean>;
+    public showModal: boolean;
     private _lvl: Difficulty;
-    public nbPlayers: number;
-    public isCollapsedPlayer: boolean = false;
-    public isCollapsedLevel: boolean = false;
+    public players: Array<Player>;
+    public isCollapsedPlayer: boolean;
+    public isCollapsedLevel: boolean;
+    public showLevel: boolean;
 
     public constructor(private _crosswordService: CrosswordService) {
-        this._lvl = Difficulty.Easy;
+        this._lvl = null;
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
+        this.showModal = true;
+        this.showSearching = new EventEmitter<boolean>();
+        this.players = new Array<Player>();
+    }
+
+    public get isEndGame(): boolean {
+        const bool: boolean = this._crosswordService.isGameOver;
+        if (bool) {
+            this.loadNewGame();
+        }
+
+        return bool;
+    }
+
+    public get lvl(): Difficulty {
+        return this._lvl;
     }
 
     public ngOnInit(): void {
-        this.nbPlayers = 1;
+        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
+            this._lvl = difficulty);
+
+        this._crosswordService.players.subscribe((players: Array<Player>) => {
+            if (players.length < this.players.length) {
+                this._crosswordService.isGameOver = true;
+            }
+            this.players = players;
+            if (players.length > 1) {
+                this.showSearching.emit(false);
+            }
+        });
     }
 
-    public get lvl(): Difficulty { return this._lvl; }
-    public changeLevel(lvl: Difficulty): void {
-        this._lvl = lvl;
-        this._crosswordService.newGame(this._lvl, INITIAL_GRID_SIZE, INITIAL_BLACK_TILES_RATIO);
+    public getBGColor(player: number): {} {
+        return { "background-color": this._crosswordService.getPlayerColor(player, false) };
+    }
+
+    public loadNewGame(): void {
+        this.showModal = true;
+        this.showSearching.emit(false);
+    }
+
+    public configureNewGame(): void {
+        this._crosswordService.isGameOver = false;
     }
 }

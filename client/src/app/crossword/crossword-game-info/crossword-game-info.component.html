@@ -1,67 +1,44 @@
 <div class="container " ng-controller="CollapseDemoCtrl">
-  <div class="row mb-0 " id="info">
-    <div class="col-lg-7 w-100 pr-0 pl-0 pb-0" id="nbPlayers">
-      <button type="button" class="btn pb-0 w-100" (click)="isCollapsedPlayer =!isCollapsedPlayer">
-        <p *ngIf="nbPlayers == 1">
+    <div class="row mb-0 " id="info">
+        <div class="col-lg-7 w-100 pr-0 pl-0 pb-0" id="nbPlayers">
+            <button type="button" class="btn pb-0 w-100" (click)="isCollapsedPlayer =!isCollapsedPlayer">
+        <p *ngIf="players.length === 1">
           ▼ SINGLE PLAYER ▼
         </p>
-        <p *ngIf="nbPlayers !== 1">
-          ▼ {{nbPlayers}} PLAYERS ▼
+        <p *ngIf="players.length !== 1">
+          ▼ {{players.length}} PLAYERS ▼
         </p>
       </button>
+        </div>
+        <div class="col-lg-5 w-100 " id="level">
+            <button type="button" class="btn pb-0 w-100" data-toggle="modal" data-target="#myModal" (click)="loadNewGame()" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':'true'}">NEW GAME</button>
+        </div>
     </div>
-    <div class="col-lg-5 w-100 " id="level">
-      <button type="button" data-toogle="modal" data-target="#levelMod" class="btn pb-0 w-100" (click)="showLevel =!showLevel " *ngIf="lvl" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':true}">NEW GAME</button>
+    <div id="levelMod"class="modal fade w-100" tabindex="-1" [class.show]="showModal">
+        <app-modal-new-game *ngIf="!isEndGame" (showSearching)="showSearching.emit($event)" (showModal)="showModal=($event)">
+        </app-modal-new-game>
+        <app-modal-end-game *ngIf="isEndGame" (showModal)="showModal=($event)" (configureNewGame)="configureNewGame()"></app-modal-end-game>
     </div>
-  </div>
-
-  <div id="levelMod" class="modal fade" tabindex="-1"   [class.show]="!showLevel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <h5 class="modal-title" id="modalLabel">Difficulty Level</h5>
-        <div class="modal-body">
-          <div class="card card-block w-100">
-            <div id="difficultySelector" class="btn-group btn-group-block w-100 " data-toggle="buttons">
-              <button class="btn btn-secondary w-100 m-0" [class.active]="lvl == 'Difficulty.Easy'" id="easyBtn" (click)="changeLevel('Difficulty.Easy');showLevel =!showLevel">
-                EASY
-              </button>
-              <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="lvl == 'Difficulty.Medium'" (click)="changeLevel('Difficulty.Medium'); showLevel =!showLevel">
-                MEDIUM
-              </button>
-              <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="lvl == 'Difficulty.Hard'" (click)="changeLevel('Difficulty.Hard'); showLevel =!showLevel">
-                HARD
-              </button>
+    <div class="row justify-content-center mt-1 mb-2">
+        <div class="col ">
+            <div id="list1" [class.collapse]="!isCollapsedPlayer">
+                <div class="card card-block w-100">
+                    <table class="table table-sm mb-0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col" id="player">PLAYER</th>
+                                <th scope="col" id="result">SCORE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr [ngStyle]="getBGColor(player.id)" *ngFor="let player of players">
+                                <th scope="row" id="player">{{ player.name }}</th>
+                                <td id="result">{{ player.score }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-
-  <div class="row justify-content-center mt-1 mb-2">
-    <div class="col ">
-      <div id="list1" [class.collapse]="!isCollapsedPlayer">
-        <div class="card card-block w-100">
-          <table class="table table-sm mb-0">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col" id="player">PLAYER</th>
-                <th scope="col" id="result">SCORE</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr id="player1">
-                <th scope="row" id="player">Player1</th>
-                <td id="result">Score1</td>
-              </tr>
-              <tr id="player2">
-                <th scope="row" id="player">Player2</th>
-                <td id="result">Score2</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

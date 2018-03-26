@@ -1,0 +1,123 @@
+#difficultySelector {
+    border: none;
+    font-size: 10vmin;
+    background-color: transparent;
+}
+
+
+#newGame {
+    border: #61b446 solid;
+    background-color: hsl(105, 44%, 49%);
+    border-radius: 1vmin;
+}
+#newGame:hover{
+    border: lightgrey solid;
+}
+#bodyOfMatches{
+    overflow-y: auto;
+    max-height: 25vmin;
+    position: relative;
+}
+::-webkit-scrollbar {
+    width: 1vmin;
+}
+
+::-webkit-scrollbar-track {
+    background: darkgray;
+}
+
+::-webkit-scrollbar-thumb {
+    background: grey;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #545555;
+}
+#bodyOfMatches p{
+    border-radius: 10%;
+    display: block;
+}
+#difficultySelector .btn-secondary:focus {
+    box-shadow: none;
+}
+#noMatch {
+    font-size: 90%;
+    text-decoration: underline;
+    margin-bottom: 2%;
+    background-color:  rgb(175, 174, 174);
+    box-shadow:0vmin 0vmin 0.2vmin 0.3vmin rgb(175, 174, 174);
+}
+
+#cancelBtn {
+    background-color: #b44646 ;
+    border: #813232;
+}
+
+
+#playBtn {
+    background-color: steelblue  solid;
+    border: rgb(47, 90, 124);
+}
+
+#username {
+    display: inline-block;
+}
+
+#difficultySelector .btn-secondary:hover {
+    box-shadow: none;
+    border: lightgrey solid;
+}
+
+#difficultySelector .active {
+    text-decoration-line: underline;
+    border: solid rgb(97, 96, 96);
+}
+
+#AvailableTable {
+    border: none;
+}
+
+#listPlayer:hover {
+    box-shadow: inset 0vmin 0vmin 0.2vmin 0.3vmin lightgray;
+    border:solid lightgrey;
+    border-radius: 10%;
+}
+#body {
+    border-radius: 10%;
+}
+
+#easyBtn, .easy {
+    background-color: #61b446;
+    border: #61b446 solid;
+}
+
+#mediumBtn, .medium {
+    background-color: #b4b446;
+    border: #b4b446 solid;
+}
+
+#hardBtn, .hard {
+    background-color: #b44646;
+    border: #b44646 solid;
+}
+
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    background-color: transparent;
+    border: none;
+}
+
+.modal-content {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    border: #212529 solid 2vmin;
+    background-color: lightgrey;
+}
+
+#modalLabel {
+    font-size: 200%;
+    margin: 3vmin;
+}
+
+.modal-footer {
+    border: none;
+}

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { GridState, DisplayService } from "../display-service/display.service";
+import { GridState } from "../grid-state/grid-state";
+import { CrosswordService } from "../crossword-service/crossword.service";
 
 @Component({
     selector: "app-input-letter",
@@ -7,47 +8,42 @@ import { GridState, DisplayService } from "../display-service/display.service";
     styleUrls: ["./input-letter.component.css"]
 })
 export class InputLetterComponent implements OnInit {
-    @Input() public letter: string;
     @Input() public id: number;
     private _gridState: GridState;
 
-    public constructor(private _displayService: DisplayService) {
-        this.letter = "	 ";
+    public constructor(private _crosswordService: CrosswordService) {
         this.id = 1;
         this._gridState = new GridState();
     }
 
     public ngOnInit(): void {
-        this._displayService.gridState.subscribe((gridState: GridState) => {
+        this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
             this._gridState = gridState;
         });
     }
 
-    public select(): void {
-        this._displayService.setSelectedLetter(this.id);
+    public get letter(): string {
+        return this._crosswordService.getChar(this.id);
+    }
+
+    public select(event: MouseEvent): void {
+        this._crosswordService.setSelectedLetter(this.id);
+        event.stopPropagation();
     }
 
     public isDisabled(): boolean {
-        return this._gridState.disabledLetters.indexOf(this.id) > -1;
+        return this._gridState.LIsDisabled(this.id);
     }
 
     public isHovered(): boolean {
-        return this._gridState.hoveredLetters.indexOf(this.id) > -1;
-    }
-
-    public isHighlighted(): boolean {
-        return this._gridState.highlightedLetters.indexOf(this.id) > -1;
+        return this._gridState.LIsHovered(this.id);
     }
 
     public isCurrentLetter(): boolean {
-        return this._gridState.currentLetter === this.id;
+        return this._gridState.LIsCurrentLetter(this.id);
     }
 
-    public isPlayer1(): boolean {
-        return this._gridState.currentPlayer === 1;
-    }
-
-    public isPlayer2(): boolean {
-        return this._gridState.currentPlayer === 2;
+    public isSelected(): boolean {
+        return this._crosswordService.getLetterSelectPlayers(this.id).length > 0;
     }
 }
