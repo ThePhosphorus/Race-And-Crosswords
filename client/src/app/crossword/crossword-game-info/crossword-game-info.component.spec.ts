@@ -7,6 +7,7 @@ import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
 import { ModalNewGameComponent } from "./modal-new-game/modal-new-game.component";
 import { FormsModule } from "@angular/forms";
+import { ModalEndGameComponent } from "./modal-end-game/modal-end-game.component";
 
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
@@ -15,7 +16,7 @@ describe("CrosswordGameInfoComponent", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule, FormsModule],
-            declarations: [CrosswordGameInfoComponent, ModalNewGameComponent],
+            declarations: [CrosswordGameInfoComponent, ModalNewGameComponent, ModalEndGameComponent],
             providers: [CrosswordCommunicationService, CrosswordService]
         })
             .compileComponents();

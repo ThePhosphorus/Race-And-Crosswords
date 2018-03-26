@@ -10,6 +10,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { ModalNewGameComponent } from "../crossword-game-info/modal-new-game/modal-new-game.component";
 import { TileColorDirective } from "../input-letter/tile-color.directive";
 import { FormsModule } from "@angular/forms";
+import { ModalEndGameComponent } from "../crossword-game-info/modal-end-game/modal-end-game.component";
 
 describe("CrosswordsComponent", () => {
   let component: CrosswordsComponent;
@@ -19,7 +20,7 @@ describe("CrosswordsComponent", () => {
     TestBed.configureTestingModule({
       declarations: [ CrosswordsComponent, CrosswordGameInfoComponent,
                       InputGridComponent, InputLetterComponent,
-                      DefinitionComponent, ModalNewGameComponent, TileColorDirective],
+                      DefinitionComponent, ModalNewGameComponent, TileColorDirective, ModalEndGameComponent],
       imports: [HttpClientModule, FormsModule],
       providers: [ CrosswordCommunicationService, CrosswordService ]
     })
