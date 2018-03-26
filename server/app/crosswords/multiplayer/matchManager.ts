@@ -89,7 +89,7 @@ export class MatchManager {
 
         socket.on(msg.disconnect, () => this.playerLeave(id));
         socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
-        socket.on(msg.rematch, () => this.rematch());
+        socket.on(msg.rematch, () => this.rematch(id));
     }
 
     public verifyFirst(w: Word, playerId: number): void {
@@ -144,15 +144,20 @@ export class MatchManager {
         this.notifyAll(msg.getGrid, this.grid);
     }
 
-    public rematch(): void {
-        this.completedWords = new Array<Word>();
-        this.resetScores();
-        this.getNewGrid();
+    public rematch(id: number): void {
+        this.getPlayerById(id).wantsRematch = true;
+        this.notifyAll(msg.getPlayers, this.Players);
+        if (this._players.find((player: Player) => !player.wantsRematch) == null) {
+            this.completedWords = new Array<Word>();
+            this.resetPlayers();
+            this.getNewGrid();
+        }
     }
 
-    public resetScores(): void {
+    public resetPlayers(): void {
         this.Players.forEach((player: Player) => {
             player.score = 0;
+            player.wantsRematch = false;
         });
     }
 
