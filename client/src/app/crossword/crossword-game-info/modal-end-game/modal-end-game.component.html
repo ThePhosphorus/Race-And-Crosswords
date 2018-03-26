@@ -6,8 +6,8 @@
           <p>{{ isDisconnected? "Play a similar game alone or start a new game?" : isVictorious ? "Play a silimar game or spice it up?" : "Get your revenge or start a new Game?" }}</p>
             <div class="card card-block w-100">
                 <div id="rematchSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
-                    <button class="btn btn-secondary w-100 m-0" (click)="replay()" >
-                          {{  isDisconnected? "PLAY ALONE" : isVictorious ? "REPLAY" : "REMATCH" }}
+                    <button class="btn btn-secondary w-100 m-0" [disabled]="isDisconnected"(click)="replay()" >
+                          {{ isVictorious ? "REPLAY" : "REMATCH" }}
                         </button>
                     <button class="btn btn-secondary w-100 m-0" (click)="configureGame()">
                          START FRESH
