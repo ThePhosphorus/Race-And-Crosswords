@@ -41,7 +41,7 @@ export class MatchManager {
     }
 
     public addPlayer(socket: Socket): void {
-        const id: number = this._players.length;
+        const id: number = this.generateid();
         this._players.push(new SPlayer(id, DEFAULT_NAME, 0, socket));
         this.registerActions(socket, id);
         this.askForName(this._players[id]);
@@ -130,6 +130,13 @@ export class MatchManager {
     public incerementScore(playerId: number): void {
         this.getPlayerById(playerId).score++;
         this.notifyAll(msg.getPlayers, this.Players);
+    }
+
+    private generateid(): number {
+        // Reassign player Ids
+        this._players.forEach((sp: SPlayer, index: number) => sp.id = index);
+
+        return this._players.length;
     }
 
 }
