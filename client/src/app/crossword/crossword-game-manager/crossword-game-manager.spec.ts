@@ -45,7 +45,7 @@ describe("CrosswordGameManager", () => {
         expect(service.playersObs.getValue()).toBe(players);
 
         const player: number = 1;
-        service.currentPlayer = players[player].name;
+        service.currentPlayer = player;
         expect(service.currentPlayerObs.getValue()).toBe(player);
     }));
 

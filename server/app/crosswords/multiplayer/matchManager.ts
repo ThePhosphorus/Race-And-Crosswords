@@ -184,7 +184,11 @@ export class MatchManager {
     private sendPlayers(): void {
         this._players.forEach((sp: SPlayer) => {
             const players: Array<Player> = this.Players;
-            players.sort((a: Player, b: Player) => (a.id === sp.id) ? -1 : 0);
+            const player: Player = players[sp.id];
+
+            players.splice(sp.id, 1);
+            players.unshift(player);
+
             sp.socket.emit(msg.getPlayers, players);
         });
     }
