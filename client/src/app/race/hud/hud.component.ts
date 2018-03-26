@@ -8,8 +8,8 @@ import { GameManagerService, CarInfos } from "../game-component/game-manager-ser
     styleUrls: ["./hud.component.css"]
 })
 export class HudComponent implements OnInit {
-    private _globalTimer: Timer;
-    private _lapTimer: Timer;
+    public _globalTimer: Timer;
+    public _lapTimer: Timer;
     public lapCount: number;
     public totalLap: number;
 
