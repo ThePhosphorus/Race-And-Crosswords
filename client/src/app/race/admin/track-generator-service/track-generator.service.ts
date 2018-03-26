@@ -15,7 +15,7 @@ import {
     LEFT_CLICK_CODE,
     MIDDLE_CLICK_CODE,
     RIGHT_CLICK_CODE
-    } from "../../../global-constants/constants";
+} from "../../../global-constants/constants";
 import {
     LINK_MINIMUM_POINTS, PointsSpan, ZOOM_FACTOR, GRID_DIMENSION, GRID_DIVISIONS,
     GRID_PRIMARY_COLOR, GRID_SECONDARY_COLOR, STARTING_CAMERA_HEIGHT, WHITE_MATERIAL,

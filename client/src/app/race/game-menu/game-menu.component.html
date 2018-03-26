@@ -8,27 +8,28 @@
     <button *ngFor="let track of tracks" class="track-button" (click)="open(track)">
       <span class="title">{{ track.name }}</span>
       <br>
-      <span class="playCounter">Played : {{ track.nbPlayed == null ? 0 : track.nbPlayed }} times.</span>
+      <span class="playCounter">Played {{ track.nbPlayed == null ? 0 : track.nbPlayed }} times</span>
     </button>
   </div>
 </div>
 
-<div *ngIf="openedTrack" class="details" [ngClass]="{'show': hasDetailsOpen}" (click)="close()">
+<div class="details" [ngClass]="{'show': hasDetailsOpen}" (click)="close()">
   <div class="details-content" (click)="$event.stopPropagation()">
     <div class="card-deck">
       <div class="card">
         <div class="card-header text-center"><h5>Highscores</h5></div>
-        <ul *ngIf="openedTrack.highscores" class="list-group list-group-flush">
+        <ul *ngIf="openTrack && openedTrack.highscores" class="list-group list-group-flush">
           <li *ngFor="let score of openedTrack.highscores" class="list-group-item">{{score.username}}: &nbsp; {{score.time}}</li>
         </ul>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div #preview id="preview"></div>
+        <div *ngIf="openedTrack" class="card-body">
           <h3 class="card-title">{{openedTrack.name}}</h3>
-          <h5 class="card-title">Played: {{openedTrack.nbPlayed == null ? 0 : openedTrack.nbPlayed}}</h5>
+          <h5 class="card-title">Played {{openedTrack.nbPlayed == null ? 0 : openedTrack.nbPlayed}} times</h5>
           <p class="card-text">{{openedTrack.description}}</p>
         </div>
-        <div class="card-footer text-right">
+        <div *ngIf="openedTrack"  class="card-footer text-right">
           <a class="btn btn-lg btn-light" (click)="close()">Return</a>
           <a class="btn btn-lg btn-success" [routerLink]="['/race', openedTrack._id]">Play</a>
         </div>

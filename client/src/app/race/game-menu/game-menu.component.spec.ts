@@ -9,6 +9,11 @@ import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 describe("GameMenuComponent", () => {
     let component: GameMenuComponent;
     let fixture: ComponentFixture<GameMenuComponent>;
+    const points: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0),
+                                          new Vector3Struct(1, 0, 0),
+                                          new Vector3Struct(1, 0, 1),
+                                          new Vector3Struct(0, 0, 1),
+                                          new Vector3Struct(0, 0, 0)];
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -30,14 +35,14 @@ describe("GameMenuComponent", () => {
     });
 
     it("should open track", () => {
-        const tempTrack: Track = new Track("id", "name", "description", new Array<Vector3Struct>(), 0);
+        const tempTrack: Track = new Track("id", "name", "description", points, 0);
         component.open(tempTrack);
         expect(component.hasDetailsOpen).toBeTruthy();
         expect(component.openedTrack).toBe(tempTrack);
     });
 
     it("should close track", () => {
-        const tempTrack: Track = new Track("id", "name", "description", new Array<Vector3Struct>(), 0);
+        const tempTrack: Track = new Track("id", "name", "description", points, 0);
         component.open(tempTrack);
         expect(component.hasDetailsOpen).toBeTruthy();
         component.close();
