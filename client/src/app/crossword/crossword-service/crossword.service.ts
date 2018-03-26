@@ -106,6 +106,8 @@ export class CrosswordService {
             this._gameManager.grid = grid;
 
         this.commService.listenerReceivePlayers = (players: Player[]) => {
+            console.log(players);
+
             this._gameManager.players = players;
             this._gameManager.currentPlayer = players[0].id;
         };
