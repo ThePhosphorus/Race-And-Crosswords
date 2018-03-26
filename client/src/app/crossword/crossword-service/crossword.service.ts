@@ -200,9 +200,10 @@ export class CrosswordService {
     }
 
     private verifyWords(): void {
+        const currentLetter: number = this._gridState.value.currentLetter;
         for (const orientation of Object.keys(Orientation)) {
-            const playerWord: Word = this._gameManager.findWordFromLetter(this._gridState.value.currentLetter, orientation, false);
-            const solvedWord: Word = this._gameManager.findWordFromLetter(this._gridState.value.currentLetter, orientation, true);
+            const playerWord: Word = this._gameManager.findWordFromLetter(currentLetter, orientation, false);
+            const solvedWord: Word = this._gameManager.findWordFromLetter(currentLetter, orientation, true);
             if (playerWord != null) {
                 if (playerWord.toString() === solvedWord.toString()) {
                         if (this._isSinglePlayer) {
