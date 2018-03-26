@@ -3,7 +3,7 @@ import {
     Vector3, Mesh, PlaneGeometry, TextureLoader,
     Texture, RepeatWrapping, DoubleSide, CircleGeometry, MeshPhongMaterial, Object3D
 } from "three";
-import { Vector3Struct, Track } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
@@ -11,10 +11,12 @@ import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-const
 import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS, DEFAULT_WALL_WIDTH } from "../race.constants";
 import { Collider } from "../game-component/collision/collider";
 import { RigidBody } from "../game-component/rigid-body/rigid-body";
+import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 
 const TRACK_PATH: string = "../../assets/textures/test.jpg";
 const LINE_PATH: string = "../../assets/textures/linefixed.bmp";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
+const TRACK_SAVER_INCPLAY_URL: string = TRACK_SAVER_URL + "play/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
 const START_Y_OFFSET: number = 0.02;
@@ -192,5 +194,9 @@ export class TrackLoaderService {
 
     public loadOne(id: string): Observable<Track> {
         return this._http.get<Track>(TRACK_SAVER_URL + id);
+    }
+
+    public playTrack(id: string): Observable<void> {
+        return this._http.put<void>(TRACK_SAVER_INCPLAY_URL + id, null);
     }
 }

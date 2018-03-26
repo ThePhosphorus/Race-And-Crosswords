@@ -1,0 +1,45 @@
+#body {
+    border-radius: 10%;
+}
+
+#exitBtn {
+    background-color: #b44646;
+    border: #813232;
+}
+
+.modal-content {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    border: #212529 solid 2vmin;
+    background-color: lightgrey;
+}
+
+#modalLabel {
+    font-size: 200%;
+    margin: 3vmin;
+}
+
+.modal-footer {
+    border: none;
+}
+
+
+#rematchSelector .btn-secondary:hover {
+    box-shadow: none;
+}
+
+#rematchSelector .active {
+    text-decoration-line: underline;
+    outline: solid rgb(97, 96, 96);
+}
+
+#rematchSelector {
+    border: none;
+    font-size: 10vmin;
+    background-color: transparent;
+}
+
+.card {
+    font-family: "Button Font", 'Times New Roman', Times, serif;
+    background-color: transparent;
+    border: none;
+}

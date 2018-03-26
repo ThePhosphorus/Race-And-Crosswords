@@ -6,11 +6,12 @@ import { GameComponent } from "./race/game-component/game.component";
 import { TrackEditorComponent } from "./race/admin/track-editor/track-editor.component";
 import { TrackListComponent } from "./race/admin/track-list/track-list.component";
 import { AdminComponent } from "./race/admin/admin.component";
+import { GameMenuComponent } from "./race/game-menu/game-menu.component";
 
 const routes: Routes = [
   { path: "" , redirectTo: "/home-page", pathMatch: "full" },
   { path : "home-page", component: HomePageComponent},
-  { path: "race", component: GameComponent },
+  { path: "race", component: GameMenuComponent },
   { path: "race/:id", component: GameComponent },
   { path: "crosswords", component: CrosswordsComponent },
   { path: "admin", component: AdminComponent,

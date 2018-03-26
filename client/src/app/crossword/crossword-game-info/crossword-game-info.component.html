@@ -1,7 +1,7 @@
 <div class="container " ng-controller="CollapseDemoCtrl">
-  <div class="row mb-0 " id="info">
-    <div class="col-lg-7 w-100 pr-0 pl-0 pb-0" id="nbPlayers">
-      <button type="button" class="btn pb-0 w-100" (click)="isCollapsedPlayer =!isCollapsedPlayer">
+    <div class="row mb-0 " id="info">
+        <div class="col-lg-7 w-100 pr-0 pl-0 pb-0" id="nbPlayers">
+            <button type="button" class="btn pb-0 w-100" (click)="isCollapsedPlayer =!isCollapsedPlayer">
         <p *ngIf="players.length === 1">
           ▼ SINGLE PLAYER ▼
         </p>
@@ -9,35 +9,36 @@
           ▼ {{players.length}} PLAYERS ▼
         </p>
       </button>
-    </div>
-    <div class="col-lg-5 w-100 " id="level">
-      <button type="button" class="btn pb-0 w-100" data-toggle="modal" data-target="#myModal" (click)="loadNewGame()" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':'true'}">NEW GAME</button>
-    </div>
-  </div>
-  <div id="levelMod" class="modal fade w-100" tabindex="-1" [class.show]="showModal">
-    <app-modal-new-game (showSearching)="showSearching.emit($event)" (showModal)="showModal=($event)">
-    </app-modal-new-game>
-  </div>
-  <div class="row justify-content-center mt-1 mb-2">
-    <div class="col ">
-      <div id="list1" [class.collapse]="!isCollapsedPlayer">
-        <div class="card card-block w-100">
-          <table class="table table-sm mb-0">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col" id="player">PLAYER</th>
-                <th scope="col" id="result">SCORE</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr [ngStyle]="getBGColor(player.id)" *ngFor="let player of players">
-                <th scope="row" id="player">{{ player.name }}</th>
-                <td id="result">{{ player.score }}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
-      </div>
+        <div class="col-lg-5 w-100 " id="level">
+            <button type="button" class="btn pb-0 w-100" data-toggle="modal" data-target="#myModal" (click)="loadNewGame()" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':'true'}">NEW GAME</button>
+        </div>
     </div>
-  </div>
+    <div id="levelMod"class="modal fade w-100" tabindex="-1" [class.show]="showModal">
+        <app-modal-new-game *ngIf="!isEndGame" (showSearching)="showSearching.emit($event)" (showModal)="showModal=($event)">
+        </app-modal-new-game>
+        <app-modal-end-game *ngIf="isEndGame" (showModal)="showModal=($event)" (configureNewGame)="configureNewGame()"></app-modal-end-game>
+    </div>
+    <div class="row justify-content-center mt-1 mb-2">
+        <div class="col ">
+            <div id="list1" [class.collapse]="!isCollapsedPlayer">
+                <div class="card card-block w-100">
+                    <table class="table table-sm mb-0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col" id="player">PLAYER</th>
+                                <th scope="col" id="result">SCORE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr [ngStyle]="getBGColor(player.id)" *ngFor="let player of players">
+                                <th scope="row" id="player">{{ player.name }}</th>
+                                <td id="result">{{ player.score }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

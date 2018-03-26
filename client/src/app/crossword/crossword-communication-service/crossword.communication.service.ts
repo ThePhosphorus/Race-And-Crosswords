@@ -10,7 +10,7 @@ import { Difficulty, Orientation } from "../../../../../common/crossword/enums-c
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Word } from "../../../../../common/crossword/word";
 
-const DEFAULT_NAME: string =  "John C Doe";
+const DEFAULT_NAME: string = "John C Doe";
 
 export class SocketToServerInfos {
     public constructor(
@@ -66,6 +66,10 @@ export class CrosswordCommunicationService {
         this.socket.on(socketMsg.completedWord, (playerId: number, word: Word) =>
             this.execute(this.socketInfos.receiveIsCompletedWord, playerId, word));
 
+    }
+
+    public rematch(): void {
+        this.socket.emit(socketMsg.rematch);
     }
 
     public createMatch(difficulty: Difficulty): void {

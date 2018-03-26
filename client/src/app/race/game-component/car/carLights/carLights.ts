@@ -51,7 +51,7 @@ export class CarLights extends Object3D {
         this.initSmallLight(EXT_LEFT_LIGHT_POSITION, EXT_LEFT_LIGHT_TARGET);
         this.initSmallLight(INT_LEFT_LIGHT_POSITION, INT_LEFT_LIGHT_TARGET);
         this.initSmallLight(INT_RIGHT_LIGHT_POSITION, INT_RIGHT_LIGHT_TARGET);
-        this.initSmallLight(EXT_RIGHT_LIGHT_POSITION.add(POSITION_OFFSET), EXT_RIGHT_LIGHT_TARGET.sub(TARGET_OFFSET));
+        this.initSmallLight(EXT_RIGHT_LIGHT_POSITION.clone().add(POSITION_OFFSET), EXT_RIGHT_LIGHT_TARGET.clone().sub(TARGET_OFFSET));
     }
 
     private initSmallLight(position: Vector3, target: Vector3): void {

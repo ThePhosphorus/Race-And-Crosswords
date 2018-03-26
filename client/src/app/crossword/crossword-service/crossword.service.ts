@@ -25,15 +25,24 @@ export class CrosswordService {
     private _gridState: BehaviorSubject<GridState>;
     private _otherPlayersHover: Array<OtherPlayersHover>;
     private _isSinglePlayer: boolean;
+    public isGameOver: boolean;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._otherPlayersHover = new Array<OtherPlayersHover>();
         this._isSinglePlayer = true;
+        this.isGameOver = false;
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
+    }
+
+    public get isTopPlayer(): boolean {
+        return this._gameManager.topPlayer === this._gameManager.myPlayer;
+    }
+    public get isSinglePlayer(): boolean {
+        return this._isSinglePlayer;
     }
 
     public get currentPlayer(): BehaviorSubject<number> {
@@ -72,6 +81,8 @@ export class CrosswordService {
         if (!USE_MOCK_GRID) {
             this._isSinglePlayer = isSinglePlayer;
             this._gameManager.newGame(difficulty);
+            this.isGameOver = false;
+            this._gridState.next(new GridState());
 
             if (isSinglePlayer) {
                 this.setUpSingleplayer(difficulty);
@@ -180,14 +191,15 @@ export class CrosswordService {
         }
         this.unselectWord();
         if (this._gameManager.addSolvedWord(word, playerId)) {
-            // show end game modal
+            this.isGameOver = true;
         }
     }
 
     private verifyWords(): void {
+        const currentLetter: number = this._gridState.value.currentLetter;
         for (const orientation of Object.keys(Orientation)) {
-            const playerWord: Word = this._gameManager.findWordFromLetter(this._gridState.value.currentLetter, orientation, false);
-            const solvedWord: Word = this._gameManager.findWordFromLetter(this._gridState.value.currentLetter, orientation, true);
+            const playerWord: Word = this._gameManager.findWordFromLetter(currentLetter, orientation, false);
+            const solvedWord: Word = this._gameManager.findWordFromLetter(currentLetter, orientation, true);
             if (playerWord != null) {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
@@ -303,5 +315,8 @@ export class CrosswordService {
         });
 
         return isSelected;
+    }
+    public resetGrid(): void {
+        this._gameManager.grid = new CrosswordGrid();
     }
 }

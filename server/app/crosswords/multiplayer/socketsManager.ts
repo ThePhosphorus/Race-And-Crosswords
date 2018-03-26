@@ -4,13 +4,9 @@ import { injectable } from "inversify";
 import { MatchManager } from "./matchManager";
 import msg from "../../../../common/communication/socketTypes";
 import { InWaitMatch } from "../../../../common/communication/Match";
-import { GRID_GENERATION_SERVICE_URL } from "../../constants";
-import * as Request from "request-promise-native";
 import { Difficulty } from "../../../../common/crossword/enums-constants";
-import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
 
 type Socket = SocketIO.Socket;
-const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
 
 @injectable()
 export class SocketsManager {
@@ -33,13 +29,10 @@ export class SocketsManager {
 
     public async createMatch(socket: Socket, diff: Difficulty): Promise<void> {
         const newMatch: MatchManager = new MatchManager(socket, diff);
-        const link: string = GET_10X10_GRID_LINK + "&difficulty=" + diff;
 
-        await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
-            newMatch.grid = grid);
+        await newMatch.getNewGrid();
 
         this._inWaitMatchs.push(newMatch);
-        socket.emit(msg.getGrid, newMatch.grid);
     }
 
     public joinMatch(socket: Socket, joinName: string): void {

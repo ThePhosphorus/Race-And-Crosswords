@@ -3,8 +3,11 @@ import msg from "../../../../common/communication/socketTypes";
 import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
 import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
 import { Word } from "../../../../common/crossword/word";
+import * as Request from "request-promise-native";
+import { GRID_GENERATION_SERVICE_URL } from "../../constants";
 
 const DEFAULT_NAME: string = "John Doe";
+const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
 
 type Socket = SocketIO.Socket;
 
@@ -86,6 +89,7 @@ export class MatchManager {
 
         socket.on(msg.disconnect, () => this.playerLeave(id));
         socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
+        socket.on(msg.rematch, () => this.rematch(id));
     }
 
     public verifyFirst(w: Word, playerId: number): void {
@@ -114,7 +118,7 @@ export class MatchManager {
     }
 
     public get Players(): Array<Player> {
-        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name, sp.score));
+        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name, sp.score, sp.wantsRematch));
     }
 
     public recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
@@ -129,6 +133,32 @@ export class MatchManager {
 
     public incerementScore(playerId: number): void {
         this.getPlayerById(playerId).score++;
+        this.notifyAll(msg.getPlayers, this.Players);
+    }
+
+    public async getNewGrid(): Promise<void> {
+        const link: string = GET_10X10_GRID_LINK + "&difficulty=" + this._difficulty;
+        await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
+            this.grid = grid);
+
+        this.notifyAll(msg.getGrid, this.grid);
+    }
+
+    public rematch(id: number): void {
+        this.getPlayerById(id).wantsRematch = true;
+        this.notifyAll(msg.getPlayers, this.Players);
+        if (this._players.find((player: Player) => !player.wantsRematch) == null) {
+            this.completedWords = new Array<Word>();
+            this.getNewGrid();
+            this.resetPlayers();
+        }
+    }
+
+    public resetPlayers(): void {
+        this._players.forEach((player: SPlayer) => {
+            player.score = 0;
+            player.wantsRematch = false;
+        });
         this.notifyAll(msg.getPlayers, this.Players);
     }
 

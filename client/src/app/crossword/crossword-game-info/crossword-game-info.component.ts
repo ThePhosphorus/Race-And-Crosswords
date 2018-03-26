@@ -27,6 +27,15 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.players = new Array<Player>();
     }
 
+    public get isEndGame(): boolean {
+        const bool: boolean = this._crosswordService.isGameOver;
+        if (bool) {
+            this.loadNewGame();
+        }
+
+        return bool;
+    }
+
     public get lvl(): Difficulty {
         return this._lvl;
     }
@@ -36,6 +45,9 @@ export class CrosswordGameInfoComponent implements OnInit {
             this._lvl = difficulty);
 
         this._crosswordService.players.subscribe((players: Array<Player>) => {
+            if (players.length < this.players.length) {
+                this._crosswordService.isGameOver = true;
+            }
             this.players = players;
             if (players.length > 1) {
                 this.showSearching.emit(false);
@@ -44,11 +56,15 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public getBGColor(player: number): {} {
-        return {"background-color" : this._crosswordService.getPlayerColor(player, false)};
+        return { "background-color": this._crosswordService.getPlayerColor(player, false) };
     }
 
     public loadNewGame(): void {
         this.showModal = true;
         this.showSearching.emit(false);
+    }
+
+    public configureNewGame(): void {
+        this._crosswordService.isGameOver = false;
     }
 }

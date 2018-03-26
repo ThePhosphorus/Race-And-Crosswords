@@ -7,6 +7,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { ReversePipe } from "./reverse-pipe/reverse.pipe";
 import { GameComponent } from "./race/game-component/game.component";
+import { GameMenuComponent } from "./race/game-menu/game-menu.component";
 import { TrackEditorComponent } from "./race/admin/track-editor/track-editor.component";
 import { TrackListComponent } from "./race/admin/track-list/track-list.component";
 import { AdminComponent } from "./race/admin/admin.component";
@@ -20,6 +21,7 @@ import { ModalNewGameComponent } from "./crossword/crossword-game-info/modal-new
 import { TileColorDirective } from "./crossword/input-letter/tile-color.directive";
 import { HudComponent } from "./race/hud/hud.component";
 import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
+import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end-game/modal-end-game.component";
 
 @NgModule({
     declarations: [
@@ -39,6 +41,8 @@ import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
         ModalNewGameComponent,
         TileColorDirective,
         HudComponent,
+        ModalEndGameComponent,
+        GameMenuComponent,
         RpmBarComponent
     ],
     imports: [

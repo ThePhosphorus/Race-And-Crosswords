@@ -74,6 +74,17 @@ export class GameManager {
         return this._players.getValue()[this._currentPlayer.getValue()];
     }
 
+    public get topPlayer(): Player {
+        let topPlayer: Player = this.myPlayer;
+        for (const player of this._players.getValue()) {
+            if (player.score > topPlayer.score) {
+                topPlayer = player;
+            }
+        }
+
+        return topPlayer;
+    }
+
     public set grid(crosswordGrid: CrosswordGrid) {
         const solvedGrid: CrosswordGrid = crosswordGrid;
         this.relinkLetters(solvedGrid);
