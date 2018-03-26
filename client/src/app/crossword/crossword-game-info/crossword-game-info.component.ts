@@ -53,6 +53,6 @@ export class CrosswordGameInfoComponent implements OnInit {
 
     public loadNewGame(): void {
         this.showModal = true;
-        this.showSearching.emit(true);
+        this.showSearching.emit(false);
     }
 }

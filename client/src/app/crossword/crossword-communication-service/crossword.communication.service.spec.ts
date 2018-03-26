@@ -1,7 +1,7 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { CrosswordCommunicationService } from "./crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
-import {CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
 
 // tslint:disable:no-magic-numbers

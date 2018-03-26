@@ -21,7 +21,7 @@
                       <div class="list-group w-100" id="bodyOfMatches">
                       <tr *ngFor="let match of matches" >
                           <a id= "listPlayer"class="list-group  w-100 m-0" (click)="joinMatch(match); showLevelChoice(true)"
-                                  [ngClass]="{'easy': match.difficulty == 'Difficulty.Easy', 'medium': match.difficulty == 'Difficulty.Medium', 'hard': match.difficulty == 'Difficulty.Hard'}">
+                                  [ngClass]="match.difficulty | lowercase">
                              {{match.name}} - {{match.difficulty}}
                       </a>
 

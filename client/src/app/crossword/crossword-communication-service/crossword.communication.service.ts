@@ -18,7 +18,6 @@ export class SocketToServerInfos {
         public receiveSelectCallBack: Function,
         public receiveGrid: Function,
         public receiveIsCompletedWord: Function,
-        public isFirst: boolean,
         public returnName: string
 
     ) { }
@@ -32,7 +31,7 @@ export class CrosswordCommunicationService {
 
     public constructor(private http: HttpClient) {
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, null, false, DEFAULT_NAME);
+        this.socketInfos = new SocketToServerInfos(null, null, null, null, DEFAULT_NAME);
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
@@ -101,9 +100,6 @@ export class CrosswordCommunicationService {
     }
     public get returnName(): string {
         return this.socketInfos.returnName;
-    }
-    public get isFirstCompleted(): boolean {
-        return this.socketInfos.isFirst;
     }
 
     public notifySelect(letterId: number, orientation: Orientation): void {
