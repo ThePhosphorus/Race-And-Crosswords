@@ -33,7 +33,7 @@ export class CrosswordService {
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._otherPlayersHover = new Array<OtherPlayersHover>();
         this._isSinglePlayer = true;
-        this._isGameOver = true;
+        this._isGameOver = false;
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
@@ -204,8 +204,7 @@ export class CrosswordService {
             const playerWord: Word = this._gameManager.findWordFromLetter(this._gridState.value.currentLetter, orientation, false);
             const solvedWord: Word = this._gameManager.findWordFromLetter(this._gridState.value.currentLetter, orientation, true);
             if (playerWord != null) {
-                if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
-                    solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
+                if (playerWord.toString() === solvedWord.toString()) {
                         if (this._isSinglePlayer) {
                             this.disableWord(playerWord, this._gameManager.currentPlayerObs.getValue());
                         } else {
