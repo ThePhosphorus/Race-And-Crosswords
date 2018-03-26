@@ -40,7 +40,7 @@ import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end
         ModalNewGameComponent,
         TileColorDirective,
         HudComponent,
-        RpmBarComponent
+        RpmBarComponent,
         ModalEndGameComponent
     ],
     imports: [
