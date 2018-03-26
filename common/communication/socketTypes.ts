@@ -13,4 +13,5 @@ export default  {
                                             // The server send the list of current players {Server should send an array of players (Array<IPlayer>)}
     completedWord: "completedWord",         // Client send the newly completed word and receive a comfirmation of the points {Client send completed 
                                             // word (Word), Server sends the player who got the word (number) and the word}
+    rematch: "rematch"                      // Restart a multiplayer match with the same settings (resetting scores)
 }

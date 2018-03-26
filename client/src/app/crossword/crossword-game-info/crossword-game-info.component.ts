@@ -28,7 +28,12 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public get isEndGame(): boolean {
-        return this._crosswordService.isGameOver;
+        const bool: boolean = this._crosswordService.isGameOver;
+        if (bool) {
+            this.loadNewGame();
+        }
+
+        return bool;
     }
 
     public get lvl(): Difficulty {
@@ -48,7 +53,7 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public getBGColor(player: number): {} {
-        return {"background-color" : this._crosswordService.getPlayerColor(player, false)};
+        return { "background-color": this._crosswordService.getPlayerColor(player, false) };
     }
 
     public loadNewGame(): void {

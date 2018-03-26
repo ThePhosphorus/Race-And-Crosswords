@@ -3,8 +3,11 @@ import msg from "../../../../common/communication/socketTypes";
 import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
 import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
 import { Word } from "../../../../common/crossword/word";
+import * as Request from "request-promise-native";
+import { GRID_GENERATION_SERVICE_URL } from "../../constants";
 
 const DEFAULT_NAME: string = "John Doe";
+const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";
 
 type Socket = SocketIO.Socket;
 
@@ -86,6 +89,7 @@ export class MatchManager {
 
         socket.on(msg.disconnect, () => this.playerLeave(id));
         socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
+        socket.on(msg.rematch, () => this.rematch());
     }
 
     public verifyFirst(w: Word, playerId: number): void {
@@ -130,6 +134,26 @@ export class MatchManager {
     public incerementScore(playerId: number): void {
         this.getPlayerById(playerId).score++;
         this.notifyAll(msg.getPlayers, this.Players);
+    }
+
+    public async getNewGrid(): Promise<void> {
+        const link: string = GET_10X10_GRID_LINK + "&difficulty=" + this._difficulty;
+        await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
+            this.grid = grid);
+
+        this.notifyAll(msg.getGrid, this.grid);
+    }
+
+    public rematch(): void {
+        this.completedWords = new Array<Word>();
+        this.resetScores();
+        this.getNewGrid();
+    }
+
+    public resetScores(): void {
+        this.Players.forEach((player: Player) => {
+            player.score = 0;
+        });
     }
 
 }
