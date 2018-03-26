@@ -23,7 +23,7 @@ export class GridState {
         return this.hoveredLetters.indexOf(letterId) > -1;
     }
 
-    public LIsHighlighted(letterId: number): boolean {
+    public LIsSelected(letterId: number): boolean {
         return this.selectedLetters.indexOf(letterId) > -1;
     }
 

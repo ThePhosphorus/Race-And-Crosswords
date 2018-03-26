@@ -90,9 +90,7 @@ export class CrosswordService {
             });
     }
 
-    public setUpMultiplayer(diff: Difficulty): void {
-        this._gameManager.difficulty = diff;
-
+    private setUpMultiplayer(diff: Difficulty): void {
         this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 
@@ -249,7 +247,7 @@ export class CrosswordService {
 
     public getLetterHighlightPlayers(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
-        if (this._gridState.getValue().LIsHighlighted(letterId)) {
+        if (this._gridState.getValue().LIsSelected(letterId)) {
             players.push(this._gameManager.currentPlayerObs.getValue());
         }
 

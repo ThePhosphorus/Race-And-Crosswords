@@ -114,10 +114,6 @@ export class GameManager {
         this._playerGrid.value.grid[index].char = char;
     }
 
-    public set difficulty(difficulty: Difficulty) {
-        this._difficulty.next(difficulty);
-    }
-
     public addSolvedWord(word: Word, playerId: number): boolean {
         this._solvedWords.value.push(
             new SolvedWord(word.id, word.orientation, playerId));

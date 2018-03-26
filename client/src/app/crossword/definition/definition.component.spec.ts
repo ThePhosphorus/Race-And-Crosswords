@@ -1,8 +1,12 @@
 import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { DefinitionComponent } from "./definition.component";
+import { DefinitionComponent, DisplayedDefinition } from "./definition.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
+// tslint:disable:no-magic-numbers
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 
 describe("DefinitionComponent", () => {
@@ -27,10 +31,25 @@ describe("DefinitionComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
     it("should switch cheat mode", () => {
         const pastCheatmodeState: boolean = component.cheatMode;
         component.toogleCheatMode();
         expect(component.cheatMode).toEqual(!pastCheatmodeState);
+    });
+
+    it("should create a Display deffinition right", () => {
+        const word: Word = new Word();
+        word.id = 0;
+        word.definitions = ["n def0", "n Def1"];
+        word.letters = [new Letter("W", 0), new Letter("o", 1), new Letter("r", 2) , new Letter("d", 3)];
+        word.orientation = Orientation.Across;
+
+        const displayDef: DisplayedDefinition = component.wordToDefinition(word);
+
+        expect(displayDef.id).toBe(word.id);
+        expect(displayDef.word).toBe(word.toString());
+        expect(displayDef.definition).toBe("Def0");
     });
     it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
         service.playerGrid.subscribe( (grid: CrosswordGrid) => {
