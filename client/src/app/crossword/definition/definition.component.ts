@@ -80,8 +80,9 @@ export class DefinitionComponent implements OnInit {
         return (orientation === Orientation.Across) ? Math.floor(id / this.gridSize) : id % this.gridSize;
     }
 
-    public select(index: number, orientation: Orientation): void {
+    public select(index: number, orientation: Orientation, event: MouseEvent): void {
         this._crosswordService.setSelectedWord(index, orientation);
+        event.stopPropagation();
     }
 
     public hover(index: number, orientation: Orientation): void {
