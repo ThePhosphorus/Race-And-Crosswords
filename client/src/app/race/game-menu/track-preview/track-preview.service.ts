@@ -3,15 +3,16 @@ import { Renderer } from "../../renderer/renderer";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { Track } from "../../../../../../common/race/track";
 import { CameraType } from "../../../global-constants/constants";
-import { AmbientLight, Vector3, Scene, Geometry, Line } from "three";
+import { AmbientLight, Vector3, Scene, Mesh, Color } from "three";
 import {
     WHITE,
     AMBIENT_LIGHT_OPACITY,
-    STARTING_CAMERA_HEIGHT,
-    LINE_MATERIAL
+    STARTING_CAMERA_HEIGHT
 } from "../../admin/track-editor.constants";
-import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
+
+const BACKGROUND_COLOR: number = 0x4682B4;
+const HEIGHT_RATIO: number = 0.8;
 
 @Injectable()
 export class TrackPreviewService extends Renderer {
@@ -24,33 +25,26 @@ export class TrackPreviewService extends Renderer {
         this.cameraManager.cameraType = CameraType.Orthographic;
         this.cameraManager.cameraDistanceToCar = STARTING_CAMERA_HEIGHT;
         this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
+        this.scene.background = new Color(BACKGROUND_COLOR);
     }
 
     public displayPreview(track: Track): void {
+        this._scene = new Scene();
+        this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
+        this.scene.background = new Color(BACKGROUND_COLOR);
         const avgPoint: Vector3 = new Vector3(0, 0, 0);
         let height: number = 0;
-        let lastPos: Vector3;
-        track.points.forEach((point: Vector3Struct) => {
-            const vecPoint: Vector3 = TrackLoaderService.toVector(point);
-            avgPoint.add(vecPoint.clone().multiplyScalar(1 / track.points.length));
-            height = Math.max(height, vecPoint.length());
-            this.createLine(lastPos, vecPoint);
-            lastPos = vecPoint;
+        const meshs: Array<Mesh> =  TrackLoaderService.getTrackMeshs(track);
+        meshs.forEach((m) => {
+            this.scene.add(m);
+            avgPoint.add(m.position.clone().multiplyScalar(1 / meshs.length));
+            height = Math.max(height, m.position.length());
         });
         this.cameraTargetPosition.copy(avgPoint);
-        this.cameraManager.cameraDistanceToCar = height;
+        this.cameraManager.cameraDistanceToCar = height * HEIGHT_RATIO;
     }
 
     public resetDisplay(): void {
         this._scene = new Scene();
-    }
-
-    private createLine(from: Vector3, to: Vector3): void {
-        if (!from) {
-            return;
-        }
-        const lineG: Geometry = new Geometry();
-        lineG.vertices.push(from, to);
-        this.scene.add(new Line(lineG, LINE_MATERIAL));
     }
 }
