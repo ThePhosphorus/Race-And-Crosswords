@@ -38,11 +38,11 @@ export class SocketsManager {
     public joinMatch(socket: Socket, joinName: string): void {
         this._inWaitMatchs.forEach((m: MatchManager, index: number) => {
             if (!m.gotPlayers) {
-                this._inWaitMatchs.slice(index, 1);
+                this._inWaitMatchs.splice(index, 1);
             } else if (m.PlayerOne === joinName) {
                 m.addPlayer(socket);
                 socket.emit(msg.getGrid, m.grid);
-                this._inWaitMatchs.slice(index, 1);
+                this._inWaitMatchs.splice(index, 1);
             }
         });
     }
@@ -51,7 +51,7 @@ export class SocketsManager {
         const matchs: Array<InWaitMatch> = new Array<InWaitMatch>();
         this._inWaitMatchs.forEach((m: MatchManager, index: number) => {
             if (!m.gotPlayers) {
-                this._inWaitMatchs.slice(index, 1);
+                this._inWaitMatchs.splice(index, 1);
             } else if (m.PlayerOne != null) {
                 matchs.push(new InWaitMatch(m.PlayerOne, m.difficulty));
             }
