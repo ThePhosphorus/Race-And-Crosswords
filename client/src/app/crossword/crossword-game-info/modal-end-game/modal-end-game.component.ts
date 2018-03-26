@@ -75,7 +75,7 @@ export class ModalEndGameComponent implements OnInit {
 
   public newGame(): void {
     const difficulty: Difficulty = this._crosswordService.difficulty.getValue();
-    this._crosswordService.newGame(difficulty, this.isSinglePlayer);
+    this._crosswordService.newGame(difficulty, (this.isSinglePlayer));
     this.closeModal();
   }
 
