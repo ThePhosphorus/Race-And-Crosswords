@@ -246,7 +246,7 @@ export class CrosswordService {
 
     public getLetterHighlightPlayers(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
-        if (this._gridState.getValue().LIsHighlighted(letterId)) {
+        if (this._gridState.getValue().LIsSelected(letterId)) {
             players.push(this._gameManager.currentPlayerObs.getValue());
         }
 
