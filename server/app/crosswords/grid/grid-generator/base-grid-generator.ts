@@ -4,8 +4,8 @@ import { DatamuseWord } from "../../../../../common/communication/datamuse-word"
 import { Word } from "../../../../../common/crossword/word";
 import { Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
-import { ICrosswordGrid } from "../../../../../common/crossword/I-crossword-grid";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { SCrosswordGrid } from "../scrossword-grid/scrossword-grid";
 
 export const CONSTRAINT_CHAR: string = "?";
 
@@ -13,14 +13,14 @@ export abstract class BaseGridGenerator {
 
     protected externalCommunications: ExternalCommunications;
     protected emptyGridGenerator: EmptyGridGenerator;
-    protected crossword: CrosswordGrid;
+    protected crossword: SCrosswordGrid;
     protected notPlacedWords: Word[];
 
     public constructor() {
         this.externalCommunications = new ExternalCommunications();
     }
 
-    public async getNewGrid(difficulty: Difficulty, size: number): Promise<ICrosswordGrid> {
+    public async getNewGrid(difficulty: Difficulty, size: number): Promise<CrosswordGrid> {
         this.emptyGridGenerator = new EmptyGridGenerator();
         this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);
