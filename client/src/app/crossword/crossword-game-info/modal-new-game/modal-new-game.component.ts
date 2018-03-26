@@ -24,8 +24,7 @@ export class ModalNewGameComponent implements OnInit {
 
     public constructor(
             private _crosswordService: CrosswordService,
-            private commService: CrosswordCommunicationService,
-            private router: Router
+            private commService: CrosswordCommunicationService
         ) {
             this.isCollapsedAvailablePlayer = false;
             this.showLevelGame = false;
