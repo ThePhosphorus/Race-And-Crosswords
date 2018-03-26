@@ -26,8 +26,9 @@ export class InputLetterComponent implements OnInit {
         return this._crosswordService.getChar(this.id);
     }
 
-    public select(): void {
+    public select(event: MouseEvent): void {
         this._crosswordService.setSelectedLetter(this.id);
+        event.stopPropagation();
     }
 
     public isDisabled(): boolean {
@@ -43,6 +44,6 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isSelected(): boolean {
-        return this._crosswordService.getLetterHighlightPlayers(this.id).length > 0;
+        return this._crosswordService.getLetterSelectPlayers(this.id).length > 0;
     }
 }

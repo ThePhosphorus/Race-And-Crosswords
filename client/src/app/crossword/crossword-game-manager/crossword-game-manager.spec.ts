@@ -24,7 +24,10 @@ describe("CrosswordGameManager", () => {
         gameManager.grid = newGrid;
         gameManager.newGame(Difficulty.Easy);
         expect(gameManager.solvedGridObs.getValue()).not.toBe(newGrid);
-        expect(gameManager.solvedGridObs.getValue()).toBe(new CrosswordGrid());
+        const grid: CrosswordGrid = new CrosswordGrid();
+        expect(gameManager.solvedGridObs.getValue().grid.length).toBe(grid.grid.length);
+        expect(gameManager.solvedGridObs.getValue().size).toBe(grid.size);
+        expect(gameManager.solvedGridObs.getValue().words.length).toBe(grid.words.length);
     }));
 
     it("should put the right difficulty when creating a new game", inject([GameManager], (gameManager: GameManager) => {
@@ -35,7 +38,7 @@ describe("CrosswordGameManager", () => {
     }));
 
     it("should be able set players", inject([GameManager], (service: GameManager) => {
-        const players: Player[] = [new Player(0, "Alpha", 0), new Player(0, "Beta", 0), new Player(0, "Charlie", 0)];
+        const players: Player[] = [new Player(0, "Alpha", 0), new Player(1, "Beta", 0), new Player(2, "Charlie", 0)];
         service.players = players;
 
         expect(service.playersObs.getValue().length).toBe(players.length);
@@ -81,5 +84,11 @@ describe("CrosswordGameManager", () => {
         const letter: string = "a";
         gameManager.setChar(id, letter);
         expect(gameManager.getChar(id)).toBe(letter);
+    }));
+
+    it("should get different colors, for different players", inject([GameManager], (gameManager: GameManager) => {
+        gameManager.players = [new Player(0, "a", 0), new Player(1, "b", 0)];
+        expect(gameManager.getColorFromPlayer(0, true)).not.toBe(gameManager.getColorFromPlayer(1, true));
+        expect(gameManager.getColorFromPlayer(0, false)).not.toBe(gameManager.getColorFromPlayer(1, false));
     }));
 });

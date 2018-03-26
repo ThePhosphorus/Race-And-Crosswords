@@ -6,7 +6,7 @@ import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
 
-class DisplayedDefinition {
+export class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number) {}
 }
 
@@ -42,7 +42,7 @@ export class DefinitionComponent implements OnInit {
 
             wordGrid.forEach((w: Word) => {
                 const definition: DisplayedDefinition =
-                this.wordToDefinition(w, w.id);
+                this.wordToDefinition(w);
 
                 if (w.orientation === Orientation.Across) {
                     this.acrossDefinitions.push(definition);
@@ -57,9 +57,9 @@ export class DefinitionComponent implements OnInit {
         });
     }
 
-    private wordToDefinition(word: Word, id: number): DisplayedDefinition {
+    public wordToDefinition(word: Word): DisplayedDefinition {
         return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1)),
-                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), id);
+                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), word.id);
     }
 
     private upperFirstLetter(str: string): string {
@@ -73,15 +73,16 @@ export class DefinitionComponent implements OnInit {
     public get cheatMode(): boolean { return this._cheatmode; }
 
     public isWordSolved(id: number, orientation: Orientation): boolean {
-        return this._crosswordService.wordIsSelected(id, orientation);
+        return this._crosswordService.wordIsSolved(id, orientation);
     }
 
     public getRowCOl(id: number, orientation: Orientation): number {
         return (orientation === Orientation.Across) ? Math.floor(id / this.gridSize) : id % this.gridSize;
     }
 
-    public select(index: number, orientation: Orientation): void {
+    public select(index: number, orientation: Orientation, event: MouseEvent): void {
         this._crosswordService.setSelectedWord(index, orientation);
+        event.stopPropagation();
     }
 
     public hover(index: number, orientation: Orientation): void {
