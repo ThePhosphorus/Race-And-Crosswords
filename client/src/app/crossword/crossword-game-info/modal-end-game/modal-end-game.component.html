@@ -17,7 +17,7 @@
                         <div class="list-group w-100" id="bodyOfMatches">
                             <div *ngFor="let player of players">
                                 <div id="listPlayer" class="list-group  w-100 m-0">
-                                    {{player.name}} - {{player.isWaitingRematch ? "READY" : "HESITATING"}}
+                                    {{player.name}} - {{player.wantsRematch ? "READY" : "HESITATING"}}
                                 </div>
                             </div>
                         </div>

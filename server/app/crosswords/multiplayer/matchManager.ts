@@ -155,10 +155,11 @@ export class MatchManager {
     }
 
     public resetPlayers(): void {
-        this.Players.forEach((player: Player) => {
+        this._players.forEach((player: SPlayer) => {
             player.score = 0;
             player.wantsRematch = false;
         });
+        this.notifyAll(msg.getPlayers, this.Players);
     }
 
 }

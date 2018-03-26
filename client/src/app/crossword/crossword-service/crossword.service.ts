@@ -33,7 +33,7 @@ export class CrosswordService {
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._otherPlayersHover = new Array<OtherPlayersHover>();
         this._isSinglePlayer = true;
-        this.isGameOver = true;
+        this.isGameOver = false;
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
