@@ -3,10 +3,11 @@ import * as http from "http";
 import { injectable } from "inversify";
 import { MatchManager } from "./matchManager";
 import msg from "../../../../common/communication/socketTypes";
-import { Difficulty, CrosswordGrid } from "../../../../common/communication/crossword-grid";
 import { InWaitMatch } from "../../../../common/communication/Match";
 import { GRID_GENERATION_SERVICE_URL } from "../../constants";
 import * as Request from "request-promise-native";
+import { Difficulty } from "../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
 
 type Socket = SocketIO.Socket;
 const GET_10X10_GRID_LINK: string = GRID_GENERATION_SERVICE_URL + "?size=10";

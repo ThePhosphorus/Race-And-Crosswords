@@ -1,6 +1,8 @@
 import { Player } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
-import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../common/communication/crossword-grid";
+import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
+import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
+import { Word } from "../../../../common/crossword/word";
 
 const DEFAULT_NAME: string = "John Doe";
 

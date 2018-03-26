@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CrosswordGrid, Difficulty, Orientation, Word } from "../../../../../common/communication/crossword-grid";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../global-constants/constants";
 import { connect } from "socket.io-client";
 import socketMsg from "../../../../../common/communication/socketTypes";
 import { InWaitMatch } from "../../../../../common/communication/Match";
 import { Player } from "../../../../../common/communication/Player";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Word } from "../../../../../common/crossword/word";
 
 const DEFAULT_NAME: string =  "John C Doe";
 
@@ -16,7 +18,6 @@ export class SocketToServerInfos {
         public receiveSelectCallBack: Function,
         public receiveGrid: Function,
         public receiveIsCompletedWord: Function,
-        public isFirst: boolean,
         public returnName: string
 
     ) { }
@@ -30,7 +31,7 @@ export class CrosswordCommunicationService {
 
     public constructor(private http: HttpClient) {
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, null, false, DEFAULT_NAME);
+        this.socketInfos = new SocketToServerInfos(null, null, null, null, DEFAULT_NAME);
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
@@ -99,9 +100,6 @@ export class CrosswordCommunicationService {
     }
     public get returnName(): string {
         return this.socketInfos.returnName;
-    }
-    public get isFirstCompleted(): boolean {
-        return this.socketInfos.isFirst;
     }
 
     public notifySelect(letterId: number, orientation: Orientation): void {

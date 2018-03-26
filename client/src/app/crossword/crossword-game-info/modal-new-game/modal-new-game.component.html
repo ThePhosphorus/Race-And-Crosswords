@@ -21,7 +21,7 @@
                       <div class="list-group w-100" id="bodyOfMatches">
                       <tr *ngFor="let match of matches" >
                           <a id= "listPlayer"class="list-group  w-100 m-0" (click)="joinMatch(match); showLevelChoice(true)"
-                                  [ngClass]="{'easy': match.difficulty == 'Difficulty.Easy', 'medium': match.difficulty == 'Difficulty.Medium', 'hard': match.difficulty == 'Difficulty.Hard'}">
+                                  [ngClass]="match.difficulty | lowercase">
                              {{match.name}} - {{match.difficulty}}
                       </a>
 
@@ -48,13 +48,13 @@
             <div id="difficultySelector" [class.collapse]="username == null || joinedPlayer != null">
               <div class="card card-block pr-2 pl-2 mt-2  w-100">
                 <div class="btn-group btn-group-block w-100 " data-toggle="buttons">
-                  <button class="btn btn-secondary w-100 m-0" [class.active]="isDiff('Difficulty.Easy')" id="easyBtn" (click)="changeLevel('Difficulty.Easy')">
+                  <button class="btn btn-secondary w-100 m-0" [class.active]="isDiff('Difficulty.Easy')" id="easyBtn" (click)="lvl = 'Easy'">
                     EASY
                   </button>
-                  <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="isDiff('Difficulty.Medium')" (click)="changeLevel('Difficulty.Medium')">
+                  <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="isDiff('Difficulty.Medium')" (click)="lvl = 'Medium'">
                     MEDIUM
                   </button>
-                  <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="isDiff('Difficulty.Hard')" (click)="changeLevel('Difficulty.Hard');">
+                  <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="isDiff('Difficulty.Hard')" (click)="lvl = 'Hard';">
                     HARD
                   </button>
                 </div>

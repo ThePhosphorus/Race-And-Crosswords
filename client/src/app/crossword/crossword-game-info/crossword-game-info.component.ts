@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Difficulty } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
+import { Difficulty } from "../../../../../common/crossword/enums-constants";
 
 @Component({
     selector: "app-crossword-game-info",
@@ -49,6 +49,6 @@ export class CrosswordGameInfoComponent implements OnInit {
 
     public loadNewGame(): void {
         this.showModal = true;
-        this.showSearching.emit(true);
+        this.showSearching.emit(false);
     }
 }

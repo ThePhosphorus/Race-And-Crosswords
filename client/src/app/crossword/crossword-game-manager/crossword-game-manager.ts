@@ -1,6 +1,9 @@
-import { Difficulty, CrosswordGrid, Word, Letter, Orientation } from "../../../../../common/communication/crossword-grid";
 import { Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Orientation, Difficulty } from "../../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Word } from "../../../../../common/crossword/word";
 
 const INITIAL_GRID_SIZE: number = 10;
 const SATURAION: number = 44;
@@ -35,8 +38,12 @@ export class GameManager {
 
     public newGame(difficulty: Difficulty): void {
         this._solvedGrid.next(new CrosswordGrid());
+        this._playerGrid.next(new CrosswordGrid());
+        this._players.next(new Array<Player>());
+        this._solvedWords.next(new Array<SolvedWord>());
         this._currentPlayer.next(0);
         this._difficulty.next(difficulty);
+        this.initializeEmptyGrid();
     }
 
     public get difficultyObs(): BehaviorSubject<Difficulty> {
@@ -112,7 +119,7 @@ export class GameManager {
         this._solvedWords.value.push(
             new SolvedWord(word.id, word.orientation, playerId));
 
-        return this._solvedWords.value.length === this._solvedGrid.getValue().words.length;
+        return this._solvedWords.getValue().length === this._solvedGrid.getValue().words.length;
     }
 
     private relinkLetters(crosswordGrid: CrosswordGrid): void {

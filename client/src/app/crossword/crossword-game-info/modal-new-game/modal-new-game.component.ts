@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-import { Difficulty } from "../../../../../../common/communication/crossword-grid";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
+import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
 @Component({
     selector: "app-modal-new-game",
@@ -15,7 +15,7 @@ export class ModalNewGameComponent implements OnInit {
     @Output() public showModal: EventEmitter<boolean>;
     @Output() public showSearching: EventEmitter<boolean>;
     public username: string;
-    private _lvl: Difficulty;
+    public lvl: Difficulty;
     public isSinglePlayer: boolean;
     public joinedPlayer: string;
 
@@ -26,7 +26,7 @@ export class ModalNewGameComponent implements OnInit {
         this.showLevelGame = false;
         this.showModal = new EventEmitter<boolean>();
         this.showSearching = new EventEmitter<boolean>();
-        this._lvl = null;
+        this.lvl = null;
         this.username = null;
         this.isSinglePlayer = null;
         this.joinedPlayer = null;
@@ -47,16 +47,11 @@ export class ModalNewGameComponent implements OnInit {
         return this._matchesAvailable;
     }
 
-    public get lvl(): Difficulty { return this._lvl; }
-    public changeLevel(lvl: Difficulty): void {
-        this._lvl = lvl;
-    }
-
     public get isReadyToPlay(): boolean {
         return (this.isSinglePlayer !== null &&
                 this.username !== null &&
                 this.username !== "" &&
-                this._lvl !== null);
+                this.lvl !== null);
     }
 
     public closeGameOptions(): void {
@@ -70,18 +65,18 @@ export class ModalNewGameComponent implements OnInit {
         if (!this.isSinglePlayer) {
             this.showSearching.emit(true);
             if (this.joinedPlayer === null) {
-                this.commService.createMatch(this._lvl);
+                this.commService.createMatch(this.lvl);
             } else {
                 this.commService.joinMatch(this.joinedPlayer);
             }
         }
-        this._crosswordService.newGame(this._lvl, this.isSinglePlayer);
+        this._crosswordService.newGame(this.lvl, this.isSinglePlayer);
         this.closeGameOptions();
     }
 
     public joinMatch(match: InWaitMatch): void {
         this.joinedPlayer = match.name;
-        this._lvl = match.difficulty;
+        this.lvl = match.difficulty;
     }
 
     public showLevelChoice(bool: boolean): void {
@@ -90,6 +85,8 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public isDiff( diff: Difficulty): boolean {
-        return diff === this._lvl;
+        return diff === this.lvl;
     }
+
+
 }
