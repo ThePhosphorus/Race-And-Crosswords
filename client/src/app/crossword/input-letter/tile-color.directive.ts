@@ -36,7 +36,7 @@ export class TileColorDirective implements AfterContentChecked {
         const colors: Array<string> = new Array<string>();
         const players: number[] = (this.isDisabled) ?
             this.crosswordService.getLetterDisabledPlayers(this.letterId) :
-            this.crosswordService.getLetterHighlightPlayers(this.letterId);
+            this.crosswordService.getLetterSelectPlayers(this.letterId);
 
         if (players.length > 0) {
             colors[COLOR_1] = this.crosswordService.getPlayerColor(

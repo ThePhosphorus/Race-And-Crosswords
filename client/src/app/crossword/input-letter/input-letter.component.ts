@@ -44,6 +44,6 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isSelected(): boolean {
-        return this._crosswordService.getLetterHighlightPlayers(this.id).length > 0;
+        return this._crosswordService.getLetterSelectPlayers(this.id).length > 0;
     }
 }
