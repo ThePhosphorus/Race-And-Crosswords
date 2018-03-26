@@ -1,29 +1,26 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
+import { GameInfoService } from "./game-info.service";
 
 @Component({
     selector: "app-crossword-game-info",
     templateUrl: "./crossword-game-info.component.html",
-    styleUrls: ["./crossword-game-info.component.css"]
+    styleUrls: ["./crossword-game-info.component.css"],
+    providers: [GameInfoService]
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
-    @Output() public showSearching: EventEmitter<boolean>;
-    public showModal: boolean;
     private _lvl: Difficulty;
     public players: Array<Player>;
     public isCollapsedPlayer: boolean;
     public isCollapsedLevel: boolean;
-    public showLevel: boolean;
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService, private _infoService: GameInfoService) {
         this._lvl = null;
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
-        this.showModal = true;
-        this.showSearching = new EventEmitter<boolean>();
         this.players = new Array<Player>();
     }
 
@@ -34,6 +31,9 @@ export class CrosswordGameInfoComponent implements OnInit {
         }
 
         return bool;
+    }
+    public get showModal(): boolean {
+        return this._infoService.showModal;
     }
 
     public get lvl(): Difficulty {
@@ -50,7 +50,7 @@ export class CrosswordGameInfoComponent implements OnInit {
             }
             this.players = players;
             if (players.length > 1) {
-                this.showSearching.emit(false);
+                this._infoService.showSearching.emit(false);
             }
         });
     }
@@ -60,8 +60,8 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public loadNewGame(): void {
-        this.showModal = true;
-        this.showSearching.emit(false);
+        this._infoService.showModal = true;
+        this._infoService.showSearching.emit(false);
     }
 
     public configureNewGame(): void {

@@ -14,6 +14,6 @@ export class CrosswordsComponent {
 
     public constructor() {
         this.loading = true;
-        this.searching = false;
+        this.searching =true;
     }
 }
