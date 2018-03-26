@@ -246,6 +246,7 @@ export class CrosswordService {
         return null;
     }
 
+            });
     public getLetterHighlightPlayers(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
         if (this._gridState.getValue().LIsHighlighted(letterId)) {
@@ -255,7 +256,6 @@ export class CrosswordService {
         this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
             if (oph.selectedLetters.indexOf(letterId) > -1) {
                 players.push(oph.playerId);
-            }
         });
 
         return players;
