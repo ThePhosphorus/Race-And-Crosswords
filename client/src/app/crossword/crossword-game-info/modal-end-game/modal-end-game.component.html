@@ -1,14 +1,16 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <h5 class="modal-title" id="modalLabel">{{ isDisconnected? "Player Coward" : isVictorious ? "MuchWow" : "Such eliter8" }}</h5>
+        <h5 class="modal-title" id="modalLabel">{{ isDisconnected? "Oops!" : isVictorious ? "WOW" : "Too bad" }}</h5>
         <div class="modal-body">
+          <p>{{ isDisconnected? "Your friend just left" : isVictorious ? "You are the ultimate WordCrosser" : "Sadly, you should enhance your vocabulary" }}</p>
+          <p>{{ isDisconnected? "Play a similar game alone or start a new game?" : isVictorious ? "Play a silimar game or spice it up?" : "Get your revenge or start a new Game?" }}</p>
             <div class="card card-block w-100">
                 <div id="rematchSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
-                    <button class="btn btn-secondary w-100 m-0" (click)="replay()" [disabled]="isDisconnected">
-                          {{ !isSinglePlayer ? "REMATCH" : "REPLAY" }}
+                    <button class="btn btn-secondary w-100 m-0" (click)="replay()" >
+                          {{  isDisconnected? "PLAY ALONE" : isVictorious ? "REPLAY" : "REMATCH" }}
                         </button>
                     <button class="btn btn-secondary w-100 m-0" (click)="configureGame()">
-                          {{ !isSinglePlayer ? "COWER" : "CONFIGURE" }}
+                         START FRESH
                         </button>
                 </div>
                 <div id="playerList" [class.collapse]="!isWaitingRematch">

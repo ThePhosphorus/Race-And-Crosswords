@@ -102,7 +102,9 @@ table td, table th {
 }
 #levelMod.show {
     display: block;
+    background-color: rgba(105, 105, 105, 0.089);
 }
+
 @font-face {
     font-family: "Button Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")

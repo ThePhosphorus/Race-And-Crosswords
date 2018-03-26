@@ -14,7 +14,7 @@
             <button type="button" class="btn pb-0 w-100" data-toggle="modal" data-target="#myModal" (click)="loadNewGame()" [ngClass]="{'easy': lvl == 'Difficulty.Easy', 'medium': lvl == 'Difficulty.Medium', 'hard': lvl == 'Difficulty.Hard', 'easy':'true'}">NEW GAME</button>
         </div>
     </div>
-    <div id="levelMod" class="modal fade w-100" tabindex="-1" [class.show]="showModal">
+    <div id="levelMod"class="modal fade w-100" tabindex="-1" [class.show]="showModal">
         <app-modal-new-game *ngIf="!isEndGame" (showSearching)="showSearching.emit($event)" (showModal)="showModal=($event)">
         </app-modal-new-game>
         <app-modal-end-game *ngIf="isEndGame" (showModal)="showModal=($event)" (configureNewGame)="configureNewGame()"></app-modal-end-game>
