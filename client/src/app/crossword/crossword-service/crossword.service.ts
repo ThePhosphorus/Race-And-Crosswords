@@ -13,7 +13,7 @@ import { Letter } from "../../../../../common/crossword/letter";
 const USE_MOCK_GRID: boolean = false;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
-const LETTER_RANGE: RegExp = /^[a-zA-z]$/i;
+const INPUT_REGEX: RegExp = /^[a-z]$/i;
 
 class OtherPlayersHover {
     public constructor(public playerId: number, public selectedLetters: Array<number>) { }
@@ -215,7 +215,7 @@ export class CrosswordService {
 
     public writeChar(key: string): void {
         if (this._gridState.value.currentLetter != null) {
-            if (key.match(LETTER_RANGE) != null) {
+            if (key.match(INPUT_REGEX) != null) {
                 let nextLetterId: number;
                 this._gameManager.setChar(this._gridState.value.currentLetter, key.toLowerCase());
                 this.verifyWords();
