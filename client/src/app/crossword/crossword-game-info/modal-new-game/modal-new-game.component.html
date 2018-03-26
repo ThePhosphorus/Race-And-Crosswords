@@ -62,7 +62,7 @@
           </div>
           <div class="modal-footer m-0">
               <button type="button" id="playBtn" [disabled]="!isReadyToPlay" (click)="createNewGame()  "class="btn btn-primary">Play</button>
-              <button id="cancelBtn" type="button"(click)="closeGameOptions()" class="btn btn-secondary" >Cancel</button>
+              <button id="cancelBtn" type="button"(click)="closeGameOptions(true)" class="btn btn-secondary" >Cancel</button>
           </div>
       </div>
     </div>
