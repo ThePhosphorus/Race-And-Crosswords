@@ -13,7 +13,7 @@ export class CrosswordsComponent {
     public searching: boolean;
 
     public constructor() {
-        this.loading = false;
+        this.loading = true;
         this.searching = false;
     }
 }

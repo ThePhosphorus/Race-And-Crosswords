@@ -3,6 +3,7 @@ import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-modal-new-game",
@@ -21,17 +22,21 @@ export class ModalNewGameComponent implements OnInit {
 
     private _matchesAvailable: Array<InWaitMatch>;
 
-    public constructor(private _crosswordService: CrosswordService, private commService: CrosswordCommunicationService) {
-        this.isCollapsedAvailablePlayer = false;
-        this.showLevelGame = false;
-        this.showModal = new EventEmitter<boolean>();
-        this.showSearching = new EventEmitter<boolean>();
-        this.lvl = null;
-        this.username = null;
-        this.isSinglePlayer = null;
-        this.joinedPlayer = null;
-        this._matchesAvailable = [];
-    }
+    public constructor(
+            private _crosswordService: CrosswordService,
+            private commService: CrosswordCommunicationService,
+            private router: Router
+        ) {
+            this.isCollapsedAvailablePlayer = false;
+            this.showLevelGame = false;
+            this.showModal = new EventEmitter<boolean>();
+            this.showSearching = new EventEmitter<boolean>();
+            this.lvl = null;
+            this.username = null;
+            this.isSinglePlayer = null;
+            this.joinedPlayer = null;
+            this._matchesAvailable = [];
+         }
 
     public ngOnInit(): void {
         this.getMatchesFromServer();
@@ -57,6 +62,7 @@ export class ModalNewGameComponent implements OnInit {
     public closeGameOptions(): void {
         this.showModal.emit(false);
         this.username = null;
+        this.router.navigate(["/"]);
     }
 
     public createNewGame(): void {
