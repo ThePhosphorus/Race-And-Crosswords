@@ -28,8 +28,8 @@
                       </tr>
 
                       </div>
-                      <tr>
-                          <a id="noMatch" *ngIf="matches.length===0">Sorry, no one can play with you</a>
+                      <tr *ngIf="matches.length===0">
+                          <a id="noMatch" >Sorry, no one can play with you</a>
                       </tr>
                       <tr>
                           Or
