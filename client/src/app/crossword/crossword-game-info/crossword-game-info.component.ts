@@ -60,4 +60,8 @@ export class CrosswordGameInfoComponent implements OnInit {
         this.showModal = true;
         this.showSearching.emit(false);
     }
+
+    public configureNewGame(): void {
+        this._crosswordService.isGameOver = false;
+    }
 }
