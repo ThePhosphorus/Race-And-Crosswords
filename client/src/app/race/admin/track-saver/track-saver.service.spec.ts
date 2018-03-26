@@ -1,6 +1,6 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { TrackSaverService } from "./track-saver.service";
-import { Track } from "../../../../../../common/communication/track";
+import { Track } from "../../../../../../common/race/track";
 import { Vector3 } from "three";
 import { HttpClientModule } from "@angular/common/http/";
 

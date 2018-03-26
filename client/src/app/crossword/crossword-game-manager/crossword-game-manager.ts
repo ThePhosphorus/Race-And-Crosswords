@@ -14,7 +14,7 @@ const MAX_ANGLE: number = 360;
 export const EMPTY_TILE_CHARACTER: string = "\xa0\xa0";
 
 export class SolvedWord {
-    public constructor(public id: number, public orientation: Orientation, public player: number) {}
+    public constructor(public id: number, public orientation: Orientation, public player: number) { }
 }
 
 export class GameManager {
@@ -30,7 +30,7 @@ export class GameManager {
         this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
         this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._currentPlayer = new BehaviorSubject<number>(0);
-        this._difficulty =  new BehaviorSubject<Difficulty>(Difficulty.Easy);
+        this._difficulty = new BehaviorSubject<Difficulty>(Difficulty.Easy);
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
         this.initializeEmptyGrid();
@@ -89,12 +89,15 @@ export class GameManager {
         const solvedGrid: CrosswordGrid = crosswordGrid;
         this.relinkLetters(solvedGrid);
 
-        const playerGrid: CrosswordGrid = JSON.parse(JSON.stringify(crosswordGrid));
+        let playerGrid: CrosswordGrid = new CrosswordGrid();
+        playerGrid = JSON.parse(JSON.stringify(crosswordGrid));
         this.relinkLetters(playerGrid);
 
         playerGrid.grid.forEach((letter: Letter) => {
-            if (!letter.isBlackTile) {
-                letter.char = EMPTY_TILE_CHARACTER;
+            if (letter !== null) {
+                if (!letter.isBlackTile) {
+                    letter.char = EMPTY_TILE_CHARACTER;
+                }
             }
         });
 
@@ -102,7 +105,7 @@ export class GameManager {
         this._solvedGrid.next(solvedGrid);
     }
 
-    public set players( players: Player[]) {
+    public set players(players: Player[]) {
         this._players.next(players);
     }
 
@@ -120,10 +123,6 @@ export class GameManager {
 
     public setChar(index: number, char: string): void {
         this._playerGrid.value.grid[index].char = char;
-    }
-
-    public set difficulty(difficulty: Difficulty) {
-        this._difficulty.next(difficulty);
     }
 
     public addSolvedWord(word: Word, playerId: number): boolean {

@@ -7,10 +7,10 @@ import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } 
 export abstract class Renderer {
     private _container: HTMLDivElement;
     private _webGlRenderer: WebGLRenderer;
-    private _scene: Scene;
     private _lastDate: number;
     private _stats: Stats;
     private _cameraManager: CameraManagerService;
+    protected _scene: Scene;
     protected cameraTargetPosition: Vector3;
     protected cameraTargetDirection: Vector3;
 

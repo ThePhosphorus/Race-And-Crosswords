@@ -35,10 +35,9 @@ describe("ModalNewGameComponent", () => {
         component.isCollapsedAvailablePlayer = false;
         component.showLevelChoice(true);
         expect(component.showLevelGame).toBeTruthy();
-        expect(component.isCollapsedAvailablePlayer).toBeTruthy();
-        expect(component.showLevelGame).toBeTruthy();
-        component.showLevelChoice(false);
         expect(component.isCollapsedAvailablePlayer).not.toBeTruthy();
+        component.showLevelChoice(false);
+        expect(component.isCollapsedAvailablePlayer).toBeTruthy();
         expect(component.showLevelGame).not.toBeTruthy();
     });
 

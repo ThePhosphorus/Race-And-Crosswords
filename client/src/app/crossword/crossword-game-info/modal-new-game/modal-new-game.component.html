@@ -5,10 +5,10 @@
       <div class="modal-body">
           <div class="card card-block w-100">
             <div id="playerSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
-              <button class="btn btn-secondary w-100 m-0" (click)="showLevelChoice(true); isSinglePlayer = true;">
+              <button class="btn btn-secondary w-100 m-0" (click)="chooseMode(true)">
                 SINGLE PLAYER
               </button>
-              <button (click)="showLevelChoice(false); isSinglePlayer = false;getMatches();" class="btn btn-secondary w-100 m-0">
+              <button (click)="chooseMode(false)" class="btn btn-secondary w-100 m-0">
                 MULTIPLAYER
               </button>
             </div>
@@ -20,7 +20,7 @@
                   <tbody >
                       <div class="list-group w-100" id="bodyOfMatches">
                       <tr *ngFor="let match of matches" >
-                          <a id= "listPlayer"class="list-group  w-100 m-0" (click)="joinMatch(match); showLevelChoice(true)"
+                          <a id= "listPlayer"class="list-group  w-100 m-0" (click)="joinMatch(match)"
                                   [ngClass]="match.difficulty | lowercase">
                              {{match.name}} - {{match.difficulty}}
                       </a>
@@ -28,8 +28,8 @@
                       </tr>
 
                       </div>
-                      <tr>
-                          <a id="noMatch" *ngIf="matches.length===0">Sorry, no one can play with you</a>
+                      <tr *ngIf="matches.length===0">
+                          <a id="noMatch" >Sorry, no one can play with you</a>
                       </tr>
                       <tr>
                           Or

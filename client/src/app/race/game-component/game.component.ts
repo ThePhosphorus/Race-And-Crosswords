@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, HostListener, OnDestroy } from "@angular/core";
+import { Component, ElementRef, ViewChild, HostListener, OnDestroy, AfterViewInit } from "@angular/core";
 import { GameManagerService, CarInfos } from "./game-manager-service/game_manager.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { SoundManagerService } from "./sound-manager-service/sound-manager.service";
@@ -6,10 +6,12 @@ import { CollisionDetectorService } from "./collision/collision-detector.service
 import { InputManagerService } from "../input-manager-service/input-manager.service";
 import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
-import { Track } from "../../../../../common/communication/track";
+import { Track } from "../../../../../common/race/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
+import { GameConfiguration } from "./game-configuration/game-configuration";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
+const EMPTY_TRACK_ID: string = "empty";
 
 @Component({
     moduleId: module.id,
@@ -25,23 +27,18 @@ const FULLSCREEN_KEYCODE: number = 70; // F
         LightManagerService
     ]
 })
-export class GameComponent implements AfterViewInit, OnDestroy {
+export class GameComponent implements OnDestroy, AfterViewInit {
 
     @ViewChild("container")
     private containerRef: ElementRef;
+    public tracks: Track[];
 
     public constructor(
         private _gameManagerService: GameManagerService,
         private _soundManager: SoundManagerService,
         private _trackLoader: TrackLoaderService,
         private _route: ActivatedRoute,
-        private _inputManager: InputManagerService) {
-            this._route.params.map((p) => p.id).subscribe((id: string) => {
-                if (id) {
-                    this.loadTrack(id);
-                }
-            });
-        }
+        private _inputManager: InputManagerService) {}
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {
@@ -51,10 +48,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     public ngAfterViewInit(): void {
         this._inputManager.resetBindings();
         this._inputManager.registerKeyDown(FULLSCREEN_KEYCODE, () => this.fullscreen());
-        this._gameManagerService
-            .start(this.containerRef.nativeElement)
-            .then(/* do nothing */)
-            .catch((err) => console.error(err));
+        this._route.params.map((p) => p.id).subscribe((id: string) => this.loadTrack(id));
     }
 
     public get carInfos(): CarInfos {
@@ -65,13 +59,22 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         this._soundManager.stopAllSounds();
     }
 
+    private loadTrack(id: string): void {
+        if (id != null && id !== EMPTY_TRACK_ID) {
+            this._trackLoader.loadOne(id).subscribe((track: Track) => {
+                const gameConfig: GameConfiguration = new GameConfiguration(track,
+                                                                            TrackLoaderService.getTrackMeshs(track),
+                                                                            TrackLoaderService.getTrackWalls(track));
+                this._gameManagerService.start(this.containerRef.nativeElement, gameConfig);
+                this._trackLoader.playTrack(id).subscribe();
+            });
+        } else {
+            this._gameManagerService.start(this.containerRef.nativeElement, new GameConfiguration());
+        }
+    }
+
     private fullscreen(): void {
         this.containerRef.nativeElement.webkitRequestFullscreen();
         this.onResize();
-    }
-
-    private loadTrack(id: string): void {
-        this._trackLoader.loadOne(id).subscribe((track: Track) =>
-            this._gameManagerService.importTrack(TrackLoaderService.getTrackMeshs(track), TrackLoaderService.getTrackWalls(track)));
     }
 }

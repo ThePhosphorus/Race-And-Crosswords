@@ -7,8 +7,7 @@ import {
     PlaneGeometry,
     DoubleSide,
     MeshPhongMaterial,
-    Vector3,
-    Object3D
+    Vector3
 } from "three";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
@@ -35,14 +34,18 @@ import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
+import { GameConfiguration } from "../game-configuration/game-configuration";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
-const N_AI_CONTROLLED_CARS: number = 1;
+const N_AI_CONTROLLED_CARS: number = 2;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
+const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
 
 const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
@@ -60,14 +63,15 @@ export class GameManagerService extends Renderer {
     private _aiControlledCars: Array<Car>;
     private _hudTimerSubject: Subject<number>;
     private _hudLapResetSubject: Subject<void>;
+    private _gameConfiguration: GameConfiguration;
 
     public constructor(private cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
                        private collisionDetector: CollisionDetectorService,
                        private lightManager: LightManagerService ) {
-
         super(cameraManager, false);
+        this._gameConfiguration = new GameConfiguration();
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
         this._player = new Car(this.cameraManager);
@@ -83,15 +87,6 @@ export class GameManagerService extends Renderer {
                             this._player.rpm);
     }
 
-    public async start(container: HTMLDivElement): Promise<void> {
-        this.init(container);
-        this.initKeyBindings();
-        this.initSoundManager();
-        this.initCameraManager();
-        await this.initCars();
-        this.initScene();
-        this.startRenderingLoop();
-    }
     public get hudTimer(): Observable<number> {
         return this._hudTimerSubject.asObservable();
     }
@@ -101,6 +96,18 @@ export class GameManagerService extends Renderer {
 
     public getDeltaTime(): Observable<number> {
         return this._hudTimerSubject.asObservable();
+    }
+
+    public async start(container: HTMLDivElement, config: GameConfiguration): Promise<void> {
+        this._gameConfiguration = config;
+        this.init(container);
+        this.initKeyBindings();
+        this.initSoundManager();
+        this.initCameraManager();
+        this.initTrack();
+        await this.initCars();
+        this.initScene();
+        this.startRenderingLoop();
     }
 
     protected update(deltaTime: number): void {
@@ -113,21 +120,36 @@ export class GameManagerService extends Renderer {
         this.lightManager.updateSunlight();
     }
 
-    private async initCars(): Promise<void> {
-        let offset: number = 0;
-        await this._player.init(new Vector3(INITIAL_SPAWN_OFFSET, 0, DEFAULT_TRACK_WIDTH / 2 / 2), COLORS[0]);
-        for (let i: number = 0; i < this._aiControlledCars.length; i++) {
-            offset = i % 2 === 0 ? offset : offset + 1;
-            await this._aiControlledCars[i].init(new Vector3((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET,
-                                                             0,
-                                                             -Math.pow(-1, i) * DEFAULT_TRACK_WIDTH / 2 / 2),
-                                                 COLORS[(i + 1) % COLORS.length]);
+    public initTrack(): void {
+        if (this._gameConfiguration.trackMeshs != null && this._gameConfiguration.trackWalls != null) {
+            this._gameConfiguration.trackMeshs.forEach((m) => this.scene.add(m));
+            this._gameConfiguration.trackWalls.forEach((w) => this.scene.add(w));
         }
     }
 
-    public importTrack(meshs: Mesh[], walls: Object3D[]): void {
-        meshs.forEach((m) => this.scene.add(m));
-        walls.forEach((w) => this.scene.add(w));
+    private async initCars(): Promise<void> {
+        const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
+        const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
+        const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
+            .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
+        const perpOffset: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
+            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+        const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
+
+        const playerSpawnPoint: Vector3 = startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
+            .add(perpOffset);
+        await this._player.init(playerSpawnPoint, COLORS[0]);
+        this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
+
+        let offset: number = 0;
+        for (let i: number = 0; i < this._aiControlledCars.length; i++) {
+            offset = i % 2 === 0 ? offset : offset + 1;
+            const spawn: Vector3 = startPosition.clone()
+                                        .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
+                                        .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
+            await this._aiControlledCars[i].init(spawn, COLORS[(i + 1) % COLORS.length]);
+            this._aiControlledCars[i].mesh.lookAt(spawn.clone().add(lookAtOffset));
+        }
     }
 
     private initKeyBindings(): void {

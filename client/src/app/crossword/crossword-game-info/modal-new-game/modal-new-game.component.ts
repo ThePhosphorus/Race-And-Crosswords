@@ -34,10 +34,10 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.getMatches();
+        this.getMatchesFromServer();
     }
 
-    public getMatches(): void {
+    public getMatchesFromServer(): void {
         this.commService.getMatches().subscribe((matches: Array<InWaitMatch>) => {
             this._matchesAvailable = matches;
         });
@@ -77,6 +77,7 @@ export class ModalNewGameComponent implements OnInit {
     public joinMatch(match: InWaitMatch): void {
         this.joinedPlayer = match.name;
         this.lvl = match.difficulty;
+        this.showLevelChoice(true);
     }
 
     public showLevelChoice(bool: boolean): void {
@@ -86,6 +87,15 @@ export class ModalNewGameComponent implements OnInit {
 
     public isDiff( diff: Difficulty): boolean {
         return diff === this.lvl;
+    }
+
+    public chooseMode(isSinglePlayer: boolean): void {
+        this.isSinglePlayer = isSinglePlayer;
+        this.showLevelChoice(isSinglePlayer);
+
+        if (!isSinglePlayer) {
+            this.getMatchesFromServer();
+        }
     }
 
 }
