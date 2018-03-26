@@ -31,7 +31,6 @@ describe("CrosswordService", () => {
 
         const index: number = 0; // tile 0 shoud be at a crossroad
         service.setSelectedLetter(index);
-        console.log(service.gridStateObs.getValue().selectedLetters);
 
         expect(service.gridStateObs.getValue().LIsSelected(index)).toBeTruthy();
 

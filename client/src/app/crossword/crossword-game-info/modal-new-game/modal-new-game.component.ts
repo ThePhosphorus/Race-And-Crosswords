@@ -34,10 +34,10 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.getMatches();
+        this.getMatchesFromServer();
     }
 
-    public getMatches(): void {
+    public getMatchesFromServer(): void {
         this.commService.getMatches().subscribe((matches: Array<InWaitMatch>) => {
             this._matchesAvailable = matches;
         });
@@ -94,7 +94,7 @@ export class ModalNewGameComponent implements OnInit {
         this.showLevelChoice(isSinglePlayer);
 
         if (!isSinglePlayer) {
-            this.getMatches();
+            this.getMatchesFromServer();
         }
     }
 
