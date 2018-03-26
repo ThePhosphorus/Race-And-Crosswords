@@ -118,7 +118,7 @@ export class MatchManager {
     }
 
     public get Players(): Array<Player> {
-        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name, sp.score));
+        return this._players.map((sp: SPlayer) => new Player(sp.id, sp.name, sp.score, sp.wantsRematch));
     }
 
     public recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
@@ -149,8 +149,8 @@ export class MatchManager {
         this.notifyAll(msg.getPlayers, this.Players);
         if (this._players.find((player: Player) => !player.wantsRematch) == null) {
             this.completedWords = new Array<Word>();
-            this.resetPlayers();
             this.getNewGrid();
+            this.resetPlayers();
         }
     }
 
