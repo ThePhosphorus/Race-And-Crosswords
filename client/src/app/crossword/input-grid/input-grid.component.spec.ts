@@ -34,7 +34,7 @@ describe("InputGridComponent", () => {
     });
 
     it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
-        service.playerGrid.subscribe( (grid: CrosswordGrid) => {
+        service.gameManager.playerGridObs.subscribe( (grid: CrosswordGrid) => {
           expect(grid).toBeDefined();
         });
     }));
