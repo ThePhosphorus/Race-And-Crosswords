@@ -185,14 +185,14 @@ export class CrosswordService {
     }
 
     private disableWord(word: Word, playerId: number): void {
-            for (const letter of word.letters) {
-                this._gridState.value.disabledLetters.push(letter.id);
-                this._gameManager.setChar(letter.id, letter.char);
-            }
-            this.unselectWord();
-            if (this._gameManager.addSolvedWord(word, playerId)) {
-                this.isGameOver = true;
-            }
+        for (const letter of word.letters) {
+            this._gridState.value.disabledLetters.push(letter.id);
+            this._gameManager.setChar(letter.id, letter.char);
+        }
+        this.unselectWord();
+        if (this._gameManager.addSolvedWord(word, playerId)) {
+            this.isGameOver = true;
+        }
     }
 
     private verifyWords(): void {
@@ -315,5 +315,8 @@ export class CrosswordService {
         });
 
         return isSelected;
+    }
+    public resetGrid(): void {
+        this._gameManager.grid = new CrosswordGrid();
     }
 }
