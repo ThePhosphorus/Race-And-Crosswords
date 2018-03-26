@@ -6,7 +6,16 @@ import { Injectable } from "@angular/core";
 import { PointsHandler } from "./points-handler/points-handler";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { ZoomLimit } from "../../camera-manager-service/camera-container";
-import { CameraType, AMBIENT_LIGHT_OPACITY, WHITE, ZOOM_IN_KEYCODE, ZOOM_OUT_KEYCODE, DELETE_KEY, LEFT_CLICK_CODE, MIDDLE_CLICK_CODE, RIGHT_CLICK_CODE } from "../../../global-constants/constants";
+import {
+    CameraType,
+    AMBIENT_LIGHT_OPACITY,
+    WHITE, ZOOM_IN_KEYCODE,
+    ZOOM_OUT_KEYCODE,
+    DELETE_KEY,
+    LEFT_CLICK_CODE,
+    MIDDLE_CLICK_CODE,
+    RIGHT_CLICK_CODE
+} from "../../../global-constants/constants";
 import {
     LINK_MINIMUM_POINTS, PointsSpan, ZOOM_FACTOR, GRID_DIMENSION, GRID_DIVISIONS,
     GRID_PRIMARY_COLOR, GRID_SECONDARY_COLOR, STARTING_CAMERA_HEIGHT, WHITE_MATERIAL,
@@ -83,7 +92,7 @@ export class TrackGenerator extends Renderer {
             }
 
             const newPoint: Mesh = this.createDot(new Vector2(event.offsetX, event.offsetY),
-                                                  (this.points.length > 0) ? this.points.top.position : null);
+                (this.points.length > 0) ? this.points.top.position : null);
 
             this.points.push(newPoint);
             this.points.updateStartingPosition();
