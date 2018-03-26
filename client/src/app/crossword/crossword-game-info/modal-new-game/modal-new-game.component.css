@@ -14,7 +14,7 @@
     border: lightgrey solid;
 }
 #bodyOfMatches{
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 25vmin;
     position: relative;
 }

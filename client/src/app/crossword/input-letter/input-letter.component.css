@@ -26,6 +26,7 @@ button {
 .disabled {
     width: 90%;
     height: 90%;
+    color:rgb(105, 104, 104);
     border-color: var(--color2, white);
     border-width: 0.2vmin;
     box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color,white);
