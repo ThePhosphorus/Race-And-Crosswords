@@ -107,7 +107,7 @@ export class MatchManager {
         const player: SPlayer = this.getPlayerById(id);
         if (player != null) {
         player.name = name;
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
         }
     }
 
@@ -147,17 +147,17 @@ export class MatchManager {
 
     private playerLeave(id: number): void {
         this._players.splice(id, 1);
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
     }
 
     private incerementScore(playerId: number): void {
         this.getPlayerById(playerId).score++;
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
     }
 
     private rematch(id: number): void {
         this.getPlayerById(id).wantsRematch = true;
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
 
         if (this._players.find((player: Player) => !player.wantsRematch) == null) {
             this.completedWords = new Array<Word>();
@@ -171,7 +171,7 @@ export class MatchManager {
         player.score = 0;
         player.wantsRematch = false;
         });
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
     }
 
     private generateid(): number {
@@ -179,5 +179,13 @@ export class MatchManager {
         this._players.forEach((sp: SPlayer, index: number) => (sp.id = index));
 
         return this._players.length;
+    }
+
+    private sendPlayers(): void {
+        this._players.forEach((sp: SPlayer) => {
+            const players: Array<Player> = this.Players;
+            players.sort((a: Player, b: Player) => (a.id === sp.id) ? -1 : 0);
+            sp.socket.emit(msg.getPlayers, players);
+        });
     }
 }

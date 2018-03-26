@@ -107,7 +107,7 @@ export class CrosswordService {
 
         this.commService.listenerReceivePlayers = (players: Player[]) => {
             this._gameManager.players = players;
-            this._gameManager.currentPlayer = this.commService.returnName;
+            this._gameManager.currentPlayer = players[0].id;
         };
         this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
             this.selectWordFromOtherPlayer(playerId, letterId, orientation);

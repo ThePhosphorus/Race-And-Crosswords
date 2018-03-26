@@ -3,8 +3,8 @@ import { DatamuseWord } from "../../../../../common/communication/datamuse-word"
 import * as Request from "request-promise-native";
 import { LEXICAL_SERVICE_URL } from "../../../constants";
 
-const LEXICAL_REQUEST_WORDS: string = "/query-word";
-const LEXICAL_TEST_WORD: string = "/query-definitions";
+const LEXICAL_REQUEST_WORDS: string = "query-word/";
+const LEXICAL_TEST_WORD: string = "query-definitions/";
 
 export class ExternalCommunications {
     public async getWordsFromServer(constraint: string, word: Word, isEasyWord: boolean): Promise<DatamuseWord> {
