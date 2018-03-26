@@ -25,14 +25,13 @@
                              {{match.name}} - {{match.difficulty}}
                       </a>
 
-                    </p>
                       </div>
                       <tr *ngIf="matches.length===0">
                           <a id="noMatch" >Sorry, no one can play with you</a>
                       </tr>
                       <tr>
                           Or
-                      </p>
+                      </tr>
                     <p>
                       <button id="newGame" (click)="showLevelChoice(true); joinedPlayer = null" class="btn btn-secondary  m-2 w-75 m-0">
                         CREATE A GAME
