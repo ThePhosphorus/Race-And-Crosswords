@@ -92,8 +92,6 @@ export class CrosswordService {
     }
 
     private setUpMultiplayer(diff: Difficulty): void {
-        this._gameManager.difficulty = diff;
-
         this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 

@@ -82,4 +82,10 @@ describe("CrosswordGameManager", () => {
         gameManager.setChar(id, letter);
         expect(gameManager.getChar(id)).toBe(letter);
     }));
+
+    it("should get different colors, for different players", inject([GameManager], (gameManager: GameManager) => {
+        gameManager.players = [new Player(0, "a", 0), new Player(1, "b", 0)];
+        expect(gameManager.getColorFromPlayer(0, true)).not.toBe(gameManager.getColorFromPlayer(1, true));
+        expect(gameManager.getColorFromPlayer(0, false)).not.toBe(gameManager.getColorFromPlayer(1, false));
+    }));
 });
