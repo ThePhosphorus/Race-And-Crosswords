@@ -19,27 +19,26 @@
 
                   <tbody >
                       <div class="list-group w-100" id="bodyOfMatches">
-                      <tr *ngFor="let match of matches" >
+                      <p *ngFor="let match of matches" >
                           <a id= "listPlayer"class="list-group  w-100 m-0" (click)="joinMatch(match); showLevelChoice(true)"
                                   [ngClass]="match.difficulty | lowercase">
                              {{match.name}} - {{match.difficulty}}
                       </a>
 
-                      </tr>
-
+                    </p>
                       </div>
-                      <tr>
+                      <p>
                           <a id="noMatch" *ngIf="matches.length===0">Sorry, no one can play with you</a>
-                      </tr>
-                      <tr>
+                      </p>
+                      <p>
                           Or
-                      </tr>
-                    <tr>
+                      </p>
+                    <p>
                       <button id="newGame" (click)="showLevelChoice(true); joinedPlayer = null" class="btn btn-secondary  m-2 w-75 m-0">
                         CREATE A GAME
                       </button>
 
-                    </tr>
+                    </p>
                   </tbody>
                 </table>
               </div>
