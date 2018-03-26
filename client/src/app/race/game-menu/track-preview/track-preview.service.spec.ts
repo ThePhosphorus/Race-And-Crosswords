@@ -1,11 +1,12 @@
 import { TestBed, inject } from "@angular/core/testing";
 
 import { TrackPreviewService } from "./track-preview.service";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 
 describe("TrackPreviewService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TrackPreviewService]
+      providers: [TrackPreviewService, CameraManagerService]
     });
   });
 
