@@ -86,6 +86,7 @@ export class CrosswordService {
             this._isSinglePlayer = isSinglePlayer;
             this._gameManager.newGame(difficulty);
             this._isGameOver = false;
+            this._gridState.next(new GridState());
 
             if (isSinglePlayer) {
                 this.setUpSingleplayer(difficulty);
