@@ -59,12 +59,9 @@ export class ModalNewGameComponent implements OnInit {
                 this.lvl != null);
     }
 
-    public closeGameOptions(isCancel: boolean): void {
+    public closeGameOptions(): void {
         this.showModal.emit(false);
         this.username = null;
-        if (isCancel) {
-            this.router.navigate(["/"]);
-        }
     }
 
     public createNewGame(): void {
@@ -79,7 +76,7 @@ export class ModalNewGameComponent implements OnInit {
             }
         }
         this._crosswordService.newGame(this.lvl, this.isSinglePlayer);
-        this.closeGameOptions(false);
+        this.closeGameOptions();
     }
 
     public joinMatch(match: InWaitMatch): void {
