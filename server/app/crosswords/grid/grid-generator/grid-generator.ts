@@ -49,17 +49,16 @@ export class GridGenerator extends BaseGridGenerator {
 
     protected async findWord(word: Word, difficulty: Difficulty): Promise<boolean> {
         const constraint: string = this.getConstraints(word);
+        let receivedWord: DatamuseWord = null;
+
         if (constraint.indexOf(CONSTRAINT_CHAR) === -1) {
-            const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
-
-            return this.crossword.addWord(receivedWord.word, receivedWord.defs, word, difficulty);
-
+            receivedWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
         } else {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
-            const receivedWord: DatamuseWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
-
-            return this.crossword.addWord(receivedWord.word, receivedWord.defs, word, difficulty);
+            receivedWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
         }
+
+        return !receivedWord ? false : this.crossword.addWord(receivedWord.word, receivedWord.defs, word, difficulty);
     }
 
     protected async backtrack(currentWord: Word, difficulty: Difficulty): Promise<void> {

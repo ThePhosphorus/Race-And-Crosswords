@@ -51,7 +51,7 @@ export class SCrosswordGrid extends CrosswordGrid {
     }
 
     public addWord(newWord: string, newDefs: string[], word: Word, difficulty: Difficulty): boolean {
-        if (newWord != null && this.isUnique(newWord) && newDefs != null) {
+        if (this.isUnique(newWord) && newDefs != null) {
             this.setWord(newWord, word, difficulty);
             this.setDefinition(newDefs, word, difficulty);
 
