@@ -38,43 +38,20 @@ export class CrosswordService {
         }
     }
 
+    public get gameManager(): GameManager {
+        return this._gameManager;
+    }
+
     public get isTopPlayer(): boolean {
         return this._gameManager.topPlayer === this._gameManager.myPlayer;
     }
+
     public get isSinglePlayer(): boolean {
         return this._isSinglePlayer;
     }
 
-    public get currentPlayer(): BehaviorSubject<number> {
-        return this._gameManager.currentPlayerObs;
-    }
-
-    public get difficulty(): BehaviorSubject<Difficulty> {
-        return this._gameManager.difficultyObs;
-    }
-
-    public get solvedWords(): BehaviorSubject<SolvedWord[]> {
-        return this._gameManager.solvedWordsObs;
-    }
-
     public get gridStateObs(): BehaviorSubject<GridState> {
         return this._gridState;
-    }
-
-    public get playerGrid(): BehaviorSubject<CrosswordGrid> {
-        return this._gameManager.playerGridObs;
-    }
-
-    public get solvedGrid(): BehaviorSubject<CrosswordGrid> {
-        return this._gameManager.solvedGridObs;
-    }
-
-    public get players(): BehaviorSubject<Player[]> {
-        return this._gameManager.playersObs;
-    }
-
-    public getChar(letterId: number): string {
-        return this._gameManager.getChar(letterId);
     }
 
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean): void {
@@ -233,7 +210,7 @@ export class CrosswordService {
 
     public wordIsSolved(letterId: number, orientaion: Orientation): boolean {
         let isSelected: boolean = false;
-        this.solvedWords.getValue().forEach((sw: SolvedWord) => {
+        this.gameManager.solvedWordsObs.getValue().forEach((sw: SolvedWord) => {
 
             if (sw.id === letterId && sw.orientation === orientaion) {
                 isSelected = true;

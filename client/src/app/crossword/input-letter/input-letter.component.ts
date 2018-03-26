@@ -23,7 +23,7 @@ export class InputLetterComponent implements OnInit {
     }
 
     public get letter(): string {
-        return this._crosswordService.getChar(this.id);
+        return this._crosswordService.gameManager.getChar(this.id);
     }
 
     public select(event: MouseEvent): void {
