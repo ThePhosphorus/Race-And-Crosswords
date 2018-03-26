@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, ElementRef, ViewChild, AfterViewInit, AfterContentChecked } from "@angular/core";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/race/track";
 import { TrackPreviewService } from "./track-preview/track-preview.service";
@@ -10,7 +10,7 @@ import { CameraManagerService } from "../camera-manager-service/camera-manager.s
     styleUrls: ["./game-menu.component.css"],
     providers: [TrackLoaderService, TrackPreviewService, CameraManagerService]
 })
-export class GameMenuComponent implements AfterViewInit {
+export class GameMenuComponent implements AfterViewInit, AfterContentChecked {
 
     public tracks: Array<Track>;
     public openedTrack: Track;
@@ -23,6 +23,12 @@ export class GameMenuComponent implements AfterViewInit {
         this.tracks = new Array<Track>();
         this._trackLoader.loadAll().subscribe((ts: Track[]) => this.tracks = ts);
         this.hasDetailsOpen = false;
+    }
+
+    public ngAfterContentChecked(): void {
+        if (this.hasDetailsOpen) {
+            this.trackPreview.onResize();
+        }
     }
 
     public ngAfterViewInit(): void {

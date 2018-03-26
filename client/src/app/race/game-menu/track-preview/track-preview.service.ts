@@ -36,7 +36,7 @@ export class TrackPreviewService extends Renderer {
             const vecPoint: Vector3 = TrackLoaderService.toVector(point);
             avgPoint.add(vecPoint.clone().multiplyScalar(1 / track.points.length));
             height = Math.max(height, vecPoint.length());
-            this.createDot(vecPoint, lastPos);
+            this.createLine(lastPos, vecPoint);
             lastPos = vecPoint;
         });
         this.cameraTargetPosition.copy(avgPoint);
@@ -47,16 +47,10 @@ export class TrackPreviewService extends Renderer {
         this._scene = new Scene();
     }
 
-    private createDot(pos: Vector3, lastPos: Vector3): void {
-        const circle: Mesh = new Mesh(SPHERE_GEOMETRY, WHITE_MATERIAL);
-        circle.position.copy(pos);
-        if (lastPos) { this.createLine(lastPos, pos); }
-        this.scene.add(circle);
-
-        this.scene.add(circle);
-    }
-
     private createLine(from: Vector3, to: Vector3): void {
+        if (!from) {
+            return;
+        }
         const lineG: Geometry = new Geometry();
         lineG.vertices.push(from, to);
         this.scene.add(new Line(lineG, LINE_MATERIAL));
