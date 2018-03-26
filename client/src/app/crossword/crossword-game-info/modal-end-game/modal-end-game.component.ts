@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
+import { Player } from "../../../../../../common/communication/Player";
+import { CrosswordGrid } from "../../../../../../common/crossword/crossword-grid";
 
 @Component({
   selector: "app-modal-end-game",
@@ -12,19 +14,32 @@ import { CrosswordCommunicationService } from "../../crossword-communication-ser
 export class ModalEndGameComponent implements OnInit {
   @Output() public showModal: EventEmitter<boolean>;
   @Output() public configureNewGame: EventEmitter<void>;
+  public isWaitingRematch: boolean;
+  private _players: Array<Player>;
 
   public constructor(private _crosswordService: CrosswordService, private _commService: CrosswordCommunicationService) {
     this.showModal = new EventEmitter<boolean>();
     this.configureNewGame = new EventEmitter<void>();
+    this.isWaitingRematch = false;
+    this._players = new Array<Player>();
   }
 
+  public get players(): Array<Player> {
+    return this._players;
+  }
   public get isVictorious(): boolean {
     return this._crosswordService.isTopPlayer;
   }
-  public get isMultiplayer(): boolean {
-    return ! this._crosswordService.isSinglePlayer;
+  public get isSinglePlayer(): boolean {
+    return this._crosswordService.isSinglePlayer;
   }
   public ngOnInit(): void {
+    this._crosswordService.players.subscribe((players: Array<Player>) => {
+      this._players = players;
+      if (players.length > 1 && this.isWaitingRematch) {
+          this.verifyRematchPlayers();
+      }
+    });
   }
 
   public closeModal(): void {
@@ -35,15 +50,30 @@ export class ModalEndGameComponent implements OnInit {
     this.configureNewGame.emit();
   }
 
-  public startNewGame(): void {
-    const isSinglePlayer: boolean = this._crosswordService.isSinglePlayer;
-    const difficulty: Difficulty = this._crosswordService.difficulty.getValue();
+  public replay(): void {
 
-    if (!isSinglePlayer) {
+    if (!this.isSinglePlayer) {
       this._commService.rematch();
+      this.isWaitingRematch = true;
+    } else {
+      this.newGame();
     }
-    this._crosswordService.newGame(difficulty, isSinglePlayer);
+
+  }
+
+  public newGame(): void {
+    const difficulty: Difficulty = this._crosswordService.difficulty.getValue();
+    this._crosswordService.newGame(difficulty, this.isSinglePlayer);
     this.closeModal();
+  }
+
+  public verifyRematchPlayers(): void {
+    for (const player of this.players) {
+      if (!player.wantsRematch) {
+        return;
+      }
+    }
+    this.newGame();
   }
 
 }

@@ -4,17 +4,28 @@
         <div class="modal-body">
             <div class="card card-block w-100">
                 <div id="rematchSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
-                    <button class="btn btn-secondary w-100 m-0" (click)="startNewGame()">
-                          {{ isMultiplayer ? "REMATCH" : "REPLAY" }}
+                    <button class="btn btn-secondary w-100 m-0" (click)="replay()">
+                          {{ !isSinglePlayer ? "REMATCH" : "REPLAY" }}
                         </button>
                     <button class="btn btn-secondary w-100 m-0" (click)="configureGame()">
-                          {{ isMultiplayer ? "COWER" : "CONFIGURE" }}
+                          {{ !isSinglePlayer ? "COWER" : "CONFIGURE" }}
                         </button>
                 </div>
-                <div class="modal-footer m-0">
-                    <a routerLink="/"> <button id="exitBtn" type="button" class="btn btn-secondary ">Exit</button> </a>
+                <div id="playerList" [class.collapse]="!isWaitingRematch">
+                    <div class="card card-block mt-2 pr-2 pl-2  w-100">
+                        Waiting for players :
+                        <div class="list-group w-100" id="bodyOfMatches">
+                            <div *ngFor="let player of players">
+                                <div id="listPlayer" class="list-group  w-100 m-0">
+                                    {{player.name}} - {{player.isWaitingRematch ? "READY" : "HESITATING"}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer m-0">
+                        <a routerLink="/"> <button id="exitBtn" type="button" class="btn btn-secondary ">Exit</button> </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
