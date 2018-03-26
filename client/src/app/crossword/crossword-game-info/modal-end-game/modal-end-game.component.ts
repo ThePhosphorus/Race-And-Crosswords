@@ -3,7 +3,6 @@ import { CrosswordService } from "../../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { Player } from "../../../../../../common/communication/Player";
-import { CrosswordGrid } from "../../../../../../common/crossword/crossword-grid";
 
 @Component({
   selector: "app-modal-end-game",
