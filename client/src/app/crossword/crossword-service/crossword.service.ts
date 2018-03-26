@@ -149,7 +149,7 @@ export class CrosswordService {
 
     public setSelectedWord(letterId: number, orientation: Orientation): void {
         let startingIndex: number = null;
-        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, true);
+        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
 
         for (const letter of word.letters) {
             if (!this._gridState.value.LIsDisabled(letter.id)) {
@@ -293,9 +293,10 @@ export class CrosswordService {
         return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
     }
 
-    public wordIsSelected(letterId: number, orientaion: Orientation): boolean {
+    public wordIsSolved(letterId: number, orientaion: Orientation): boolean {
         let isSelected: boolean = false;
         this.solvedWords.getValue().forEach((sw: SolvedWord) => {
+
             if (sw.id === letterId && sw.orientation === orientaion) {
                 isSelected = true;
             }

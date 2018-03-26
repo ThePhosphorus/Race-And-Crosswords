@@ -22,14 +22,21 @@ describe("CrosswordService", () => {
 
     it("should select a word", inject([CrosswordService], (service: CrosswordService) => {
         service.newGame(Difficulty.Easy, false);
+        const word: Word = new Word();
+        word.id = 0;
+        word.orientation = Orientation.Across;
+        word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 3), new Letter("", 4)];
+
+        service.playerGrid.getValue().words.push(word);
+
         const index: number = 0; // tile 0 shoud be at a crossroad
         service.setSelectedLetter(index);
-        expect(service.wordIsSelected(index, Orientation.Across)).toBeTruthy();
-        expect(service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
+        console.log(service.gridStateObs.getValue().selectedLetters);
+
+        expect(service.gridStateObs.getValue().LIsSelected(index)).toBeTruthy();
 
         service.unselectWord();
-        expect(service.wordIsSelected(index, Orientation.Across)).toBeFalsy();
-        expect(service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
+        expect(service.gridStateObs.getValue().LIsSelected(index)).toBeFalsy();
     }));
 
     it("should Hover a word", inject([CrosswordService], (service: CrosswordService) => {

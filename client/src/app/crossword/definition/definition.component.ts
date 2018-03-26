@@ -73,7 +73,7 @@ export class DefinitionComponent implements OnInit {
     public get cheatMode(): boolean { return this._cheatmode; }
 
     public isWordSolved(id: number, orientation: Orientation): boolean {
-        return this._crosswordService.wordIsSelected(id, orientation);
+        return this._crosswordService.wordIsSolved(id, orientation);
     }
 
     public getRowCOl(id: number, orientation: Orientation): number {
