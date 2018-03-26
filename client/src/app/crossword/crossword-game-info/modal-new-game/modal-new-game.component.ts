@@ -53,7 +53,7 @@ export class ModalNewGameComponent implements OnInit {
     public get isReadyToPlay(): boolean {
         return (this.isSinglePlayer != null &&
                 this.username != null &&
-                this.username !== "" &&
+                this.username.trim() !== "" &&
                 this.lvl != null);
     }
 

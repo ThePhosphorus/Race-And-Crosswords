@@ -26,11 +26,5 @@ describe("InputLetterComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    // });
-    // it("players should have different backgroundcolor", () => {
-    //     expect(component.getBGPlayerColor(number.PLAYER1)).not.toBe(component.getBGPlayerColor(number.PLAYER2));
-    // });
-    // it("players should have different color", () => {
-    //     expect(component.getPlayerColor(number.PLAYER1)).not.toBe(component.getPlayerColor(number.PLAYER2));
     });
 });
