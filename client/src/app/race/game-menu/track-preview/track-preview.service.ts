@@ -3,13 +3,11 @@ import { Renderer } from "../../renderer/renderer";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { Track } from "../../../../../../common/race/track";
 import { CameraType } from "../../../global-constants/constants";
-import { AmbientLight, Vector3, Scene, Mesh, Geometry, Line } from "three";
+import { AmbientLight, Vector3, Scene, Geometry, Line } from "three";
 import {
     WHITE,
     AMBIENT_LIGHT_OPACITY,
     STARTING_CAMERA_HEIGHT,
-    SPHERE_GEOMETRY,
-    WHITE_MATERIAL,
     LINE_MATERIAL
 } from "../../admin/track-editor.constants";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";

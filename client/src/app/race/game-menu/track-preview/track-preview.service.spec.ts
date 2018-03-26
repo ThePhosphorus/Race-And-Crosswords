@@ -1,15 +1,15 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject } from "@angular/core/testing";
 
-import { TrackPreviewService } from './track-preview.service';
+import { TrackPreviewService } from "./track-preview.service";
 
-describe('TrackPreviewService', () => {
+describe("TrackPreviewService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [TrackPreviewService]
     });
   });
 
-  it('should be created', inject([TrackPreviewService], (service: TrackPreviewService) => {
+  it("should be created", inject([TrackPreviewService], (service: TrackPreviewService) => {
     expect(service).toBeTruthy();
   }));
 });
