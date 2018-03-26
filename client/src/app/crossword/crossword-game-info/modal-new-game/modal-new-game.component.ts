@@ -3,7 +3,6 @@ import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
-import { Router } from "@angular/router";
 
 @Component({
     selector: "app-modal-new-game",
