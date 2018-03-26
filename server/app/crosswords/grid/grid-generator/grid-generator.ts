@@ -52,13 +52,13 @@ export class GridGenerator extends BaseGridGenerator {
         if (constraint.indexOf(CONSTRAINT_CHAR) === -1) {
             const receivedWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
 
-            return this.addWord(receivedWord, word, difficulty);
+            return this.crossword.addWord(receivedWord.word, receivedWord.defs, word, difficulty);
 
         } else {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
             const receivedWord: DatamuseWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
 
-            return this.addWord(receivedWord, word, difficulty);
+            return this.crossword.addWord(receivedWord.word, receivedWord.defs, word, difficulty);
         }
     }
 
@@ -78,7 +78,7 @@ export class GridGenerator extends BaseGridGenerator {
                     if (removedWord.toString() !== removedWordString && await this.findWord(currentWord, difficulty)) {
                         isFixed = true;
                     } else {
-                        this.unsetWord(this.crossword.words.indexOf(removedWord));
+                        this.crossword.removeWord(this.crossword.words.indexOf(removedWord));
                         this.notPlacedWords.push(removedWord);
                     }
                 }
@@ -90,7 +90,7 @@ export class GridGenerator extends BaseGridGenerator {
 
         for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
             if (this.doesIntersect(this.crossword.words[i], currentWord)) {
-                return this.unsetWord(i);
+                return this.crossword.removeWord(i);
             }
         }
 

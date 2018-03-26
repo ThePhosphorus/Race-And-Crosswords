@@ -1,6 +1,5 @@
 import { ExternalCommunications } from "../externalCommunications/external-communications";
 import { EmptyGridGenerator } from "../emptyGridGenerator/empty-grid-generator";
-import { DatamuseWord } from "../../../../../common/communication/datamuse-word";
 import { Word } from "../../../../../common/crossword/word";
 import { Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
@@ -24,7 +23,7 @@ export abstract class BaseGridGenerator {
         this.emptyGridGenerator = new EmptyGridGenerator();
         this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);
-        this.cleanGrid();
+        this.crossword.cleanGrid();
 
         return this.crossword;
     }
@@ -38,7 +37,7 @@ export abstract class BaseGridGenerator {
         this.notPlacedWords = this.findEmptyWords();
     }
 
-    public findEmptyWords(): Word[] {
+    protected findEmptyWords(): Word[] {
         const notPlacedWords: Word[] = new Array<Word>();
         let acrossWord: Word = new Word();
         let downWord: Word = new Word();
@@ -77,58 +76,6 @@ export abstract class BaseGridGenerator {
         }
     }
 
-    protected addWord(receivedWord: DatamuseWord, word: Word, difficulty: Difficulty): boolean {
-        if (receivedWord != null && this.isUnique(receivedWord) && receivedWord.defs != null) {
-            this.setWord(receivedWord, word, difficulty);
-            this.setDefinition(receivedWord, word, difficulty);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    protected isUnique(word: DatamuseWord): boolean {
-        for (const w of this.crossword.words) {
-            if (w.toString() === word.word) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    protected setWord(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
-        for (let i: number = 0; i < gridWord.letters.length; i++) {
-            gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord.word[i] : gridWord.letters[i].char;
-            gridWord.letters[i].count++;
-        }
-
-        this.crossword.words.push(gridWord);
-    }
-
-    protected setDefinition(receivedWord: DatamuseWord, gridWord: Word, difficulty: Difficulty): void {
-        if (receivedWord.defs.length === 1 || difficulty === Difficulty.Easy) {
-            gridWord.definitions.push(receivedWord.defs[0]);
-        } else {
-            gridWord.definitions.push(receivedWord.defs[1]);
-        }
-    }
-
-    protected unsetWord(index: number): Word {
-        const word: Word = this.crossword.words[index];
-        for (const letter of word.letters) {
-            if ((--letter.count) <= 0) {
-                letter.char = "";
-            }
-        }
-        word.definitions = new Array<string>();
-        this.crossword.words.splice(index, 1);
-
-        return word;
-
-    }
-
     protected doesIntersect(word1: Word, word2: Word): boolean {
 
         if (word1.orientation === word2.orientation) {
@@ -160,13 +107,4 @@ export abstract class BaseGridGenerator {
         return constraint;
     }
 
-    protected cleanGrid(): void {
-        for (const tile of this.crossword.grid) {
-            if (tile.char === "") {
-                tile.isBlackTile = true;
-            } else {
-                tile.char = tile.char.normalize("NFD")[0];
-            }
-        }
-    }
 }
