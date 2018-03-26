@@ -1,8 +1,9 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { DefinitionComponent } from "./definition.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 
 describe("DefinitionComponent", () => {
     let component: DefinitionComponent;
@@ -31,4 +32,9 @@ describe("DefinitionComponent", () => {
         component.toogleCheatMode();
         expect(component.cheatMode).toEqual(!pastCheatmodeState);
     });
+    it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
+        service.playerGrid.subscribe( (grid: CrosswordGrid) => {
+          expect(grid).toBeDefined();
+        });
+    }));
 });

@@ -1,5 +1,6 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { CrosswordService } from "./crossword.service";
+import { GameManager } from "../crossword-game-manager/crossword-game-manager";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http/";
 import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
@@ -11,7 +12,7 @@ describe("CrosswordService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            providers: [CrosswordService, CrosswordCommunicationService]
+            providers: [CrosswordService, CrosswordCommunicationService, GameManager]
         });
     });
 
@@ -19,30 +20,16 @@ describe("CrosswordService", () => {
         expect(service).toBeTruthy();
     }));
 
-    it("should define the listeners of commService",
-       inject([CrosswordService, CrosswordCommunicationService],
-              (service: CrosswordService, commService: CrosswordCommunicationService) => {
-        service.newGame(Difficulty.Easy, false);
-        expect(commService.listenerIsCompletedFirst).toBeDefined();
-        expect(commService.listenerReceiveGrid).toBeDefined();
-        expect(commService.listenerReceivePlayers).toBeDefined();
-        expect(commService.listenerReceiveSelect).toBeDefined();
-    }));
-
     it("should select a word", inject([CrosswordService], (service: CrosswordService) => {
         service.newGame(Difficulty.Easy, false);
         const index: number = 0; // tile 0 shoud be at a crossroad
         service.setSelectedLetter(index);
-        expect( service.wordIsSelected(index, Orientation.Across)).toBeTruthy();
-        expect( service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
-
-        service.setSelectedLetter(index);
-        expect( service.wordIsSelected(index, Orientation.Down)).toBeTruthy();
-        expect( service.wordIsSelected(index, Orientation.Across)).toBeFalsy();
+        expect(service.wordIsSelected(index, Orientation.Across)).toBeTruthy();
+        expect(service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
 
         service.unselectWord();
-        expect( service.wordIsSelected(index, Orientation.Across)).toBeFalsy();
-        expect( service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
+        expect(service.wordIsSelected(index, Orientation.Across)).toBeFalsy();
+        expect(service.wordIsSelected(index, Orientation.Down)).toBeFalsy();
     }));
 
     it("should Hover a word", inject([CrosswordService], (service: CrosswordService) => {

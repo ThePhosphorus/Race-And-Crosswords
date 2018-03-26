@@ -86,7 +86,6 @@ export class CrosswordCommunicationService {
     public set listenerReceiveSelect(func: Function) {
         this.socketInfos.receiveSelectCallBack = func;
     }
-
     public set listenerReceiveGrid(func: Function) {
         this.socketInfos.receiveGrid = func;
     }
