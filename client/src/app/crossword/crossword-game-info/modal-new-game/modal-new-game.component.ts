@@ -88,5 +88,4 @@ export class ModalNewGameComponent implements OnInit {
         return diff === this.lvl;
     }
 
-
 }

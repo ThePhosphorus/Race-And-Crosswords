@@ -27,7 +27,7 @@ export class ModalEndGameComponent implements OnInit {
   public ngOnInit(): void {
   }
 
-  public closeGameOptions(): void {
+  public closeModal(): void {
     this.showModal.emit(false);
   }
 
@@ -43,7 +43,7 @@ export class ModalEndGameComponent implements OnInit {
       this._commService.rematch();
     }
     this._crosswordService.newGame(difficulty, isSinglePlayer);
-    this.closeGameOptions();
+    this.closeModal();
   }
 
 }
