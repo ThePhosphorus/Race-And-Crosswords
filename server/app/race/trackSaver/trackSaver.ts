@@ -1,9 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
-import { Track } from "../../../../common/communication/track";
+import { Track } from "../../../../common/race/track";
 import { DbClient } from "../../mongo/DbClient";
-import { Collection, InsertOneWriteOpResult, ReplaceWriteOpResult, ObjectId, DeleteWriteOpResultObject } from "mongodb";
+import {
+    Collection,
+    InsertOneWriteOpResult,
+    ObjectId,
+    DeleteWriteOpResultObject,
+    UpdateWriteOpResult
+} from "mongodb";
 
 const TRACK_COLLECTION: string = "tracks";
 
@@ -26,7 +32,14 @@ export class TrackSaver extends WebService {
     }
 
     protected defineRoutes(): void {
-        this._router.get("/",  (req: Request, res: Response, next: NextFunction) => {
+        this.getReq();
+        this.postReq();
+        this.putReq();
+        this.deleteReq();
+    }
+
+    private getReq(): void {
+        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
             res.send("TrackSaver End Point");
         });
 
@@ -38,18 +51,29 @@ export class TrackSaver extends WebService {
             const id: string = req.params.id;
             this.getTrack(id).then((track: Track) => res.send(track));
         });
+    }
 
-        this._router.post("/", (req: Request, res: Response, next: NextFunction) => {
-            const track: Track = req.body["track"];
-            this.postTrack(track).then( (result: InsertOneWriteOpResult) => res.send(result));
-        });
-
+    private putReq(): void {
         this._router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
             const id: string = req.params.id;
             const track: Track = req.body["track"];
-            this.putTrack(id, track).then((result: ReplaceWriteOpResult) => res.send(result));
+            this.putTrack(id, track).then((result: UpdateWriteOpResult) => res.send(result));
         });
 
+        this._router.put("/play/:id", (req: Request, res: Response, next: NextFunction) => {
+            const id: string = req.params.id;
+            this.incrementPlayTrack(id).then((result: UpdateWriteOpResult) => res.send(result));
+        });
+    }
+
+    private postReq(): void {
+        this._router.post("/", (req: Request, res: Response, next: NextFunction) => {
+            const track: Track = req.body["track"];
+            this.postTrack(track).then((result: InsertOneWriteOpResult) => res.send(result));
+        });
+    }
+
+    private deleteReq(): void {
         this._router.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
             const id: string = req.params.id;
             this.deleteTrack(id).then((result: DeleteWriteOpResultObject) => res.send(result));
@@ -63,11 +87,12 @@ export class TrackSaver extends WebService {
         return this._collection.insertOne(track);
     }
 
-    private putTrack(id: string, track: Track): Promise<ReplaceWriteOpResult> {
+    private putTrack(id: string, track: Track): Promise<UpdateWriteOpResult> {
         this.connect();
         delete track._id; // Because mongo db don't accept _id as a string
 
-        return this._collection.replaceOne({_id : new ObjectId(id)}, track);
+        return this._collection.updateOne({_id: new ObjectId(id)},
+                                          {$set: {points: track.points, name: track.name, description: track.description}});
     }
 
     private getAllTracks(): Promise<Track[]> {
@@ -79,12 +104,18 @@ export class TrackSaver extends WebService {
     private deleteTrack(id: string): Promise<DeleteWriteOpResultObject> {
         this.connect();
 
-        return this._collection.deleteOne({_id: new ObjectId(id)});
+        return this._collection.deleteOne({ _id: new ObjectId(id) });
     }
 
     private getTrack(id: string): Promise<Track> {
         this.connect();
 
-        return this._collection.findOne({_id : new ObjectId(id)});
+        return this._collection.findOne({ _id: new ObjectId(id) });
+    }
+
+    private incrementPlayTrack(id: string): Promise<UpdateWriteOpResult> {
+        this.connect();
+
+        return this._collection.updateOne({ _id: new ObjectId(id) }, { $inc: { nbPlayed: 1 } });
     }
 }

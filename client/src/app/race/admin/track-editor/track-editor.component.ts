@@ -3,10 +3,11 @@ import { TrackGenerator } from "../track-generator-service/track-generator.servi
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
-import { Track, Vector3Struct } from "../../../../../../common/communication/track";
+import { Track } from "../../../../../../common/race/track";
 import { TrackSaverService } from "../track-saver/track-saver.service";
 import { Vector3 } from "three";
 import { LINK_MINIMUM_POINTS } from "../track-editor.constants";
+import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 
 @Component({
     selector: "app-track-editor",
@@ -15,10 +16,11 @@ import { LINK_MINIMUM_POINTS } from "../track-editor.constants";
     providers: [TrackGenerator, CameraManagerService]
 })
 export class TrackEditorComponent implements AfterViewInit {
-    @ViewChild("editor")
     public id: string;
     public description: string;
     public name: string;
+
+    @ViewChild("editor")
     private _elem: ElementRef;
     private _previousName: string;
 

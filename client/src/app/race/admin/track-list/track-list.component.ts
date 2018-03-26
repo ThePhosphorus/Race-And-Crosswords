@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Track } from "../../../../../../common/communication/track";
+import { Track } from "../../../../../../common/race/track";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 
 @Component({
