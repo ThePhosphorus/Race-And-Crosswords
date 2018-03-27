@@ -3,7 +3,7 @@ import { Word } from "../../../../../common/crossword/word";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
 import { BaseGridGenerator, CONSTRAINT_CHAR } from "./base-grid-generator";
 
-const MAX_TOTAL_ROLLBACKS: number = 30;
+const MAX_TOTAL_ROLLBACKS: number = 20;
 
 export class GridGenerator extends BaseGridGenerator {
 
@@ -62,7 +62,6 @@ export class GridGenerator extends BaseGridGenerator {
     }
 
     protected async backtrack(currentWord: Word, difficulty: Difficulty): Promise<void> {
-        this.rollbackCount++;
         let isFixed: boolean = false;
         while (!isFixed) {
             const removedWord: Word = this.backjump(currentWord);
@@ -86,7 +85,7 @@ export class GridGenerator extends BaseGridGenerator {
     }
 
     protected backjump(currentWord: Word): Word {
-
+        this.rollbackCount++;
         for (let i: number = this.crossword.words.length - 1; i >= 0; i--) {
             if (this.doesIntersect(this.crossword.words[i], currentWord)) {
                 return this.crossword.removeWord(i);
