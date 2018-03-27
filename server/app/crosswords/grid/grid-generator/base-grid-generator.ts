@@ -109,11 +109,11 @@ export abstract class BaseGridGenerator {
         return constraint;
     }
 
-    protected addDefinitions(difficulty: Difficulty): void {
-        this.crossword.words.forEach( async (word: Word) => {
+    protected async addDefinitions(difficulty: Difficulty): Promise<void> {
+        for (const word of this.crossword.words) {
             const datamuseWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
             this.crossword.setDefinition(datamuseWord.defs, word, difficulty);
-        });
+        }
 
     }
 
