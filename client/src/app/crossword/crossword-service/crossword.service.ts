@@ -54,6 +54,10 @@ export class CrosswordService {
         return this._gridState;
     }
 
+    public getPlayerColor(playerId: number, isFrontGround: boolean): string { // TODO understand
+        return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
+    }
+
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean): void {
         if (!USE_MOCK_GRID) {
             this._isSinglePlayer = isSinglePlayer;
@@ -204,11 +208,7 @@ export class CrosswordService {
         }
     }
 
-    public getPlayerColor(playerId: number, isFrontGround: boolean): string {
-        return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
-    }
-
-    public wordIsSolved(letterId: number, orientaion: Orientation): boolean {
+    public isWordSolved(letterId: number, orientaion: Orientation): boolean {
         let isSelected: boolean = false;
         this.gameManager.solvedWordsObs.getValue().forEach((sw: SolvedWord) => {
 
