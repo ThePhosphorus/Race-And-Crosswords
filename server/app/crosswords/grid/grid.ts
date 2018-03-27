@@ -30,7 +30,10 @@ export class Grid extends WebService {
                                             : DEFAULT_GRID_SIZE;
 
             res.setHeader("Content-Type", "application/json");
-            this._gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
+            this._gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword)).catch((err: Error) => {
+                console.error(err.message);
+                res.send(null);
+            });
         });
     }
 }

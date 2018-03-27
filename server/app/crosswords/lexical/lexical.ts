@@ -26,6 +26,9 @@ export class Lexical extends WebService {
             this._datamuse.getWord(constraint, isEasy).then((word: string) => {
                 res.setHeader("Content-Type", "application/json");
                 res.send(word);
+            }).catch((err: Error) => {
+                console.error(err.message);
+                res.send(null);
             });
         });
 
@@ -35,6 +38,9 @@ export class Lexical extends WebService {
             this._datamuse.getDefinitions(word).then((words: string) => {
                 res.setHeader("Content-Type", "application/json");
                 res.send(words);
+            }).catch((err: Error) => {
+                console.error(err.message);
+                res.send(null);
             });
         });
     }

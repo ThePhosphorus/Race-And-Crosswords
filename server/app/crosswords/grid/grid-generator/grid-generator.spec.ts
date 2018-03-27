@@ -17,8 +17,10 @@ describe("Grid generation", () => {
 
     let grid: CrosswordGrid;
 
-    before(() => {
-        return gridGenerator.getNewGrid(DEFAULT_DIFFICULTY, GRID_SIZE).then((g: CrosswordGrid) => grid = g);
+    before(async () => {
+        return gridGenerator.getNewGrid(DEFAULT_DIFFICULTY, GRID_SIZE).then((g: CrosswordGrid) => grid = g).catch(() => {
+            assert.fail("Promise rejection of grid");
+        });
     });
 
     describe("When the grid is generated (easy)", () => {
@@ -90,6 +92,9 @@ describe("Grid generation", () => {
                     assert.notEqual(datamuseWord, null, word.toString() + " does not exist");
                     assert.equal(datamuseWord.word, word.toString(), " Expected : " + word.toString() + " got : " + datamuseWord.word);
                     assert.notEqual(datamuseWord.defs, null, word.toString() + " does not have defs");
+                }).catch(() => {
+                    assert.fail("Promise Rejection");
+                    done();
                 });
             }
             done();
@@ -100,6 +105,9 @@ describe("Grid generation", () => {
                 assert.equal(grid.words[0].definitions[0],
                              datamuseWord.defs[0],
                              grid.words[0].toString() + " does not use it's first definition");
+                done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
                 done();
             });
         });
@@ -118,7 +126,13 @@ describe("Grid generation", () => {
                                         mediumGrid.words[0].toString() + " uses it's first definition");
                     }
                     done();
+                }).catch(() => {
+                    assert.fail("Promise Rejection");
+                    done();
                 });
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
 
@@ -133,7 +147,13 @@ describe("Grid generation", () => {
                                         hardGrid.words[0].toString() + " uses it's first definition");
                     }
                     done();
+                }).catch(() => {
+                    assert.fail("Promise Rejection");
+                    done();
                 });
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
     });

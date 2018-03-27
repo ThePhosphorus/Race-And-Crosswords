@@ -7,7 +7,7 @@ describe("Service Lexical", () => {
 
     describe("When the api is called", () => {
         it("should receive our request", (done: MochaDone) => {
-            assert.doesNotThrow(() => { datamuse.getWord("????", true); }, Error);
+            assert.doesNotThrow(() => { datamuse.getWord("????", true).catch((err: Error) => {throw err; }); }, Error);
             done();
         });
     });
@@ -19,6 +19,9 @@ describe("Service Lexical", () => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive array of word.");
                 done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
 
@@ -29,6 +32,9 @@ describe("Service Lexical", () => {
                 assert.notEqual(word, undefined, "Did not receive a word");
                 assert.strictEqual(word.word.length, testString.length, "Did not receive the right length");
 
+                done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
                 done();
             });
         });
@@ -50,6 +56,9 @@ describe("Service Lexical", () => {
                     }
                 }
                 done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
 
@@ -58,6 +67,9 @@ describe("Service Lexical", () => {
             datamuse.getWord(testString, true).then((strResponse: string) => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word.defs.length, 0, "received no definition for the word : " + word.word);
+                done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
                 done();
             });
         });
@@ -76,6 +88,9 @@ describe("Service Lexical", () => {
                 });
                 assert.notEqual(word.defs.length, 0, "Received no definition for the word : " + word.word);
                 done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
 
@@ -88,6 +103,9 @@ describe("Service Lexical", () => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive any word");
                 done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
 
@@ -96,6 +114,9 @@ describe("Service Lexical", () => {
             datamuse.getWord(testString, false).then((strResponse: string) => {
                 const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
                 assert.notEqual(word, undefined, "Did not receive any word");
+                done();
+            }).catch(() => {
+                assert.fail("Promise Rejection");
                 done();
             });
         });
@@ -111,7 +132,13 @@ describe("Service Lexical", () => {
                     assert.ok(hardWord.score < word.score, "Hard word : " + hardWord.word + "(" + hardWord.score + ")" +
                         " is more commun then : " + word.word + "(" + word.score + ")");
                     done();
+                }).catch(() => {
+                    assert.fail("Promise Rejection");
+                    done();
                 });
+            }).catch(() => {
+                assert.fail("Promise Rejection");
+                done();
             });
         });
     });
