@@ -7,7 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
-import { GameInfoService } from "../game-info.service";
+import { GameInfoService } from "../game-info-service/game-info.service";
 
 describe("ModalNewGameComponent", () => {
     let component: ModalNewGameComponent;
@@ -49,10 +49,4 @@ describe("ModalNewGameComponent", () => {
         expect(component.lvl).toBe(match.difficulty);
     });
 
-    it("should compare to the level right", () => {
-        component.lvl = Difficulty.Medium;
-        expect(component.isDiff(Difficulty.Easy)).toBeFalsy();
-        expect(component.isDiff(Difficulty.Medium)).toBeTruthy();
-        expect(component.isDiff(Difficulty.Hard)).toBeFalsy();
-    });
 });
