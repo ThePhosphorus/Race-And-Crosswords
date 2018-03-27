@@ -33,7 +33,7 @@ export class DefinitionComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this._crosswordService.solvedGrid.subscribe((grid: CrosswordGrid) => {
+        this._crosswordService.gameManager.solvedGridObs.subscribe((grid: CrosswordGrid) => {
             this.gridSize = grid.size;
             this.acrossDefinitions = new Array<DisplayedDefinition>();
             this.downDefinitions = new Array<DisplayedDefinition>();
@@ -73,7 +73,7 @@ export class DefinitionComponent implements OnInit {
     public get cheatMode(): boolean { return this._cheatmode; }
 
     public isWordSolved(id: number, orientation: Orientation): boolean {
-        return this._crosswordService.wordIsSolved(id, orientation);
+        return this._crosswordService.isWordSolved(id, orientation);
     }
 
     public getRowCOl(id: number, orientation: Orientation): number {

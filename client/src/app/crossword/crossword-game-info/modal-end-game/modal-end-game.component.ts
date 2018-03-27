@@ -36,7 +36,7 @@ export class ModalEndGameComponent implements OnInit {
     return this._crosswordService.isSinglePlayer;
   }
   public ngOnInit(): void {
-    this._crosswordService.players.subscribe((players: Array<Player>) => {
+    this._crosswordService.gameManager.playersObs.subscribe((players: Array<Player>) => {
       if (players.length < 2) {
         this._isDisconnected = true;
       }
@@ -72,7 +72,7 @@ export class ModalEndGameComponent implements OnInit {
   }
 
   public newGame(): void {
-    const difficulty: Difficulty = this._crosswordService.difficulty.getValue();
+    const difficulty: Difficulty = this._crosswordService.gameManager.difficultyObs.getValue();
     this._crosswordService.newGame(difficulty, (this.isSinglePlayer));
     this.closeModal();
   }

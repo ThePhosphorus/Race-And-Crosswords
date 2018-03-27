@@ -38,10 +38,10 @@ export class CrosswordGameInfoComponent implements OnInit {
         return this._infoService.showModal.getValue();
     }
     public ngOnInit(): void {
-        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
+        this._crosswordService.gameManager.difficultyObs.subscribe((difficulty: Difficulty) =>
             this._lvl = difficulty);
 
-        this._crosswordService.players.subscribe((players: Array<Player>) => {
+        this._crosswordService.gameManager.playersObs.subscribe((players: Array<Player>) => {
             if (players.length < this.players.length) {
                 this._crosswordService.isGameOver = true;
             }

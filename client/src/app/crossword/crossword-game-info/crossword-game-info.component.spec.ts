@@ -35,14 +35,14 @@ describe("CrosswordGameInfoComponent", () => {
     });
 
     it("should receive a promise for Difficulty", inject([CrosswordService], (service: CrosswordService) => {
-        service.difficulty.subscribe((difficulty: Difficulty) => {
-            expect(difficulty).toBeDefined();
+        service.gameManager.difficultyObs.subscribe( (difficulty: Difficulty) => {
+          expect(difficulty).toBeDefined();
         });
     }));
 
     it("should receive a promise for players", inject([CrosswordService], (service: CrosswordService) => {
-        service.players.subscribe((players: Array<Player>) => {
-            expect(players).toBeDefined();
+        service.gameManager.playersObs.subscribe( (players: Array<Player>) => {
+          expect(players).toBeDefined();
         });
     }));
 

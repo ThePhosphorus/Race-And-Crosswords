@@ -1,10 +1,7 @@
 import { Player } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
 import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
-import {
-  Difficulty,
-  Orientation
-} from "../../../../common/crossword/enums-constants";
+import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
 import { Word } from "../../../../common/crossword/word";
 import * as Request from "request-promise-native";
 import { GRID_GENERATION_SERVICE_URL } from "../../constants";

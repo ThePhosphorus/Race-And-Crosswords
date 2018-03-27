@@ -27,15 +27,15 @@ describe("CrosswordService", () => {
         word.orientation = Orientation.Across;
         word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 3), new Letter("", 4)];
 
-        service.playerGrid.getValue().words.push(word);
+        service.gameManager.playerGridObs.getValue().words.push(word);
 
         const index: number = 0; // tile 0 shoud be at a crossroad
         service.setSelectedLetter(index);
 
-        expect(service.gridStateObs.getValue().LIsSelected(index)).toBeTruthy();
+        expect(service.gridStateObs.getValue().isLetterSelected(index)).toBeTruthy();
 
         service.unselectWord();
-        expect(service.gridStateObs.getValue().LIsSelected(index)).toBeFalsy();
+        expect(service.gridStateObs.getValue().isLetterSelected(index)).toBeFalsy();
     }));
 
     it("should Hover a word", inject([CrosswordService], (service: CrosswordService) => {
@@ -46,6 +46,6 @@ describe("CrosswordService", () => {
         word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 4), new Letter("", 3)];
 
         service.setHoveredWord(word.id, word.orientation);
-        word.letters.forEach((l: Letter) => expect(service.gridStateObs.getValue().LIsHovered(l.id)));
+        word.letters.forEach((l: Letter) => expect(service.gridStateObs.getValue().isLetterHovered(l.id)));
     }));
 });
