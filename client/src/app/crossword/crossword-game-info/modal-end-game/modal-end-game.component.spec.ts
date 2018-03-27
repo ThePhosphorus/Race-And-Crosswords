@@ -4,6 +4,7 @@ import { ModalEndGameComponent } from "./modal-end-game.component";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
+import { GameInfoService } from "../game-info-service/game-info.service";
 
 describe("ModalEndGameComponent", () => {
     let component: ModalEndGameComponent;
@@ -13,7 +14,7 @@ describe("ModalEndGameComponent", () => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
             declarations: [ModalEndGameComponent],
-            providers: [CrosswordService, CrosswordCommunicationService]
+            providers: [CrosswordService, CrosswordCommunicationService, GameInfoService]
         })
             .compileComponents();
     }));
