@@ -8,35 +8,31 @@ import { InWaitMatch } from "../../../../../../common/communication/Match";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
 describe("ModalEndGameComponent", () => {
-  let component: ModalEndGameComponent;
-  let fixture: ComponentFixture<ModalEndGameComponent>;
+    let component: ModalEndGameComponent;
+    let fixture: ComponentFixture<ModalEndGameComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-        imports: [HttpClientModule],
-        declarations: [ ModalEndGameComponent ],
-        providers: [ CrosswordService, CrosswordCommunicationService]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientModule],
+            declarations: [ModalEndGameComponent],
+            providers: [CrosswordService, CrosswordCommunicationService]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ModalEndGameComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ModalEndGameComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 
-  it("should put disconnect at false when configure", () => {
-    component.configureGame();
-    expect(component.isDisconnected).toBe(false);
-});
-it("should be able to set showLoading", inject([GameInfoService], (service: GameInfoService) => {
-    service.setShowSearching(true);
-    expect(service.showSearching.getValue()).toBe(true);
-}));
+    it("should put disconnect at false when configure", () => {
+        component.configureGame();
+        expect(component.isDisconnected).toBe(false);
+    });
 
 });
