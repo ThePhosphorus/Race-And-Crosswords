@@ -12,7 +12,7 @@
       <th scope="row">{{ row+1 }}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <app-input-letter [letter]="letter.char" [id]="(twoDimensionGrid.length*row)+col"></app-input-letter>
+          <app-input-letter [id]="(twoDimensionGrid.length*row)+col"></app-input-letter>
         </span>
       </td>
     </tr>

@@ -5,11 +5,15 @@ import {Lexical} from "./lexical/lexical";
 
 import Types from "../types";
 import { WebService } from "../webServices";
+import { Multiplayer } from "./multiplayer/multiplayer";
 
 @injectable()
 export class Crosswords extends WebService {
 
-    public constructor(@inject(Types.Lexical) private _lexical: Lexical, @inject(Types.Grid) private _grid: Grid) {
+    public constructor(
+        @inject(Types.Lexical) private lexical: Lexical,
+        @inject(Types.Grid) private grid: Grid,
+        @inject(Types.Multiplayer) private multiplayer: Multiplayer) {
         super();
         this.routeName = "/crosswords";
     }
@@ -17,7 +21,8 @@ export class Crosswords extends WebService {
     protected defineRoutes(): void {
         this._router.get("/", (req: Request, res: Response, next: NextFunction) => res.send("Crosswords endpoint"));
 
-        this.addSubService(this._lexical);
-        this.addSubService(this._grid);
+        this.addSubService(this.lexical);
+        this.addSubService(this.grid);
+        this.addSubService(this.multiplayer);
     }
 }
