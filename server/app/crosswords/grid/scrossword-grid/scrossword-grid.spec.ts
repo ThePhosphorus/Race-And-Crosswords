@@ -25,7 +25,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word , Difficulty.Easy)
+                crossword.addWord(wordString, defs, word)
             );
 
         });
@@ -43,6 +43,7 @@ describe(" Server Crossword Grid", () => {
         });
 
         it("should add the correct definition", () => {
+            crossword.setDefinition(defs, word, Difficulty.Easy);
             assert.equal(word.definitions[0], defs[0] , "Added : " + word.definitions[0] + " wanted : " + defs[0] );
         });
 
@@ -67,12 +68,13 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word , Difficulty.Medium)
+                crossword.addWord(wordString, defs, word)
             );
 
         });
 
         it("should add the second definition", () => {
+            crossword.setDefinition(defs, word, Difficulty.Medium);
             assert.equal(word.definitions[0], defs[1] , "Added : " + word.definitions[0] + " wanted : " + defs[1] );
         });
 
@@ -97,12 +99,13 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word , Difficulty.Hard)
+                crossword.addWord(wordString, defs, word)
             );
 
         });
 
         it("should add the second definition", () => {
+            crossword.setDefinition(defs, word, Difficulty.Hard);
             assert.equal(word.definitions[0], defs[1] , "Added : " + word.definitions[0] + " wanted : " + defs[1] );
         });
 
@@ -129,10 +132,10 @@ describe(" Server Crossword Grid", () => {
             i++;
         }
 
-        crossword.addWord(wordString, defs, oldWord , Difficulty.Easy);
+        crossword.addWord(wordString, defs, oldWord);
         it("should not succeed", () => {
             assert.ok(
-                !crossword.addWord(wordString, defs, word , Difficulty.Easy)
+                !crossword.addWord(wordString, defs, word)
             );
 
         });
@@ -159,7 +162,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should not succeed", () => {
             assert.ok(
-                !crossword.addWord(wordString, defs, word , Difficulty.Easy)
+                !crossword.addWord(wordString, defs, word)
             );
 
         });
@@ -186,7 +189,7 @@ describe(" Server Crossword Grid", () => {
             i++;
         }
         word.id = word.letters[0].id;
-        crossword.addWord(wordString, defs, word , Difficulty.Easy);
+        crossword.addWord(wordString, defs, word);
 
         it("should get removed word", () => {
             assert.equal(

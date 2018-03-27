@@ -16,9 +16,9 @@ export class SCrosswordGrid extends CrosswordGrid {
         return row * this.size + column;
     }
 
-    public addWord(newWord: string, newDefs: string[], word: Word, difficulty: Difficulty): boolean {
+    public addWord(newWord: string, newDefs: string[], word: Word): boolean {
         if (this.isUnique(newWord) && newDefs != null && newDefs.length !== 0) {
-            this.setWord(newWord, word, difficulty);
+            this.setWord(newWord, word);
 
             return true;
         }
@@ -63,7 +63,7 @@ export class SCrosswordGrid extends CrosswordGrid {
 
         return true;
     }
-    private setWord(receivedWord: string, gridWord: Word, difficulty: Difficulty): void {
+    private setWord(receivedWord: string, gridWord: Word): void {
         for (let i: number = 0; i < gridWord.letters.length; i++) {
             gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord[i] : gridWord.letters[i].char;
             gridWord.letters[i].count++;
