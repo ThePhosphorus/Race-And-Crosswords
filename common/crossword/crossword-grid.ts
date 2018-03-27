@@ -8,7 +8,7 @@ export class CrosswordGrid {
 
     constructor() {
         this.words = new Array<Word>();
-        this.grid =new Array<Letter>();
+        this.grid = new Array<Letter>();
         this.size = 0;
     }
 
