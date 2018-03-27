@@ -1,5 +1,5 @@
 import { ExternalCommunications } from "../externalCommunications/external-communications";
-import { EmptyGridGenerator } from "../emptyGridGenerator/empty-grid-generator";
+import { EmptyGridGenerator } from "../empty-grid-generator/empty-grid-generator";
 import { Word } from "../../../../../common/crossword/word";
 import { Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
