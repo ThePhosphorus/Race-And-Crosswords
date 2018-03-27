@@ -66,7 +66,7 @@ export class GridGenerator extends BaseGridGenerator {
         let isFixed: boolean = false;
         while (!isFixed) {
             const removedWord: Word = this.backjump(currentWord);
-            if (removedWord === undefined) {
+            if (removedWord == null) {
                 await this.findWord(currentWord, difficulty);
                 isFixed = true;
             } else {
@@ -93,7 +93,7 @@ export class GridGenerator extends BaseGridGenerator {
             }
         }
 
-        return undefined;
+        return null;
 
     }
 
