@@ -46,7 +46,7 @@ describe("ModalNewGameComponent", () => {
         const match: InWaitMatch = new InWaitMatch("Alpha", Difficulty.Medium);
         component.joinMatch(match);
         expect(component.joinedPlayer).toBe(match.name);
-        expect(component.lvl).toBe(match.difficulty);
+        expect(component.level).toBe(match.difficulty);
     });
 
 });

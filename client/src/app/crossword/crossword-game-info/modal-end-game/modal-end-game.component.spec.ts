@@ -27,8 +27,4 @@ describe("ModalEndGameComponent", () => {
   it("should create", () => {
     expect(component).toBeTruthy();
   });
-  it("should start game with same configuration", () => {
-    expect(component).toBeTruthy();
-  });
-
 });
