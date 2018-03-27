@@ -161,7 +161,9 @@ export class MatchManager {
 
         if (this._players.find((player: Player) => !player.wantsRematch) == null) {
             this.completedWords = new Array<Word>();
-            this.getNewGrid();
+            this.getNewGrid().catch((err: Error) => {
+                console.error(err.message);
+            });
             this.resetPlayers();
         }
     }

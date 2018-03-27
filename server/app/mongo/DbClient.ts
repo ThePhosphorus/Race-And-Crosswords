@@ -14,12 +14,12 @@ export class DbClient {
         this.connect();
     }
 
-    public connect(): Promise<void> {
-        return MongoClient.connect(DB_URL)
+    public connect(): void {
+         MongoClient.connect(DB_URL)
             .then((client: MongoClient) => {
                 this.db = client.db(DB_DB);
             }).catch((err: Error) => {
-                console.error(err);
+                console.error(err.message);
             });
     }
 }
