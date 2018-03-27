@@ -100,6 +100,26 @@ describe("Grid generation", () => {
             done();
         });
 
+        it("should have correct definition", (done: MochaDone) => {
+            for (const word of grid.words) {
+                communication.getDefinitionsFromServer(word.toString()).then((datamuseWord: DatamuseWord) => {
+                    assert.notEqual(datamuseWord, null, word.toString() + " does not exist");
+                    assert.notEqual(datamuseWord.defs, null, word.toString() + " does not have defs");
+                    let isCorrectDefinition: boolean = false;
+                    for (const def of datamuseWord.defs) {
+                        if (def === word.definitions[0]) {
+                            isCorrectDefinition = true;
+                        }
+                    }
+                    assert.ok(isCorrectDefinition, " got : " + word.definitions[0] + " for : " + word.toString());
+                }).catch(() => {
+                    assert.fail("Promise Rejection");
+                    done();
+                });
+            }
+            done();
+        });
+
         it("should have easy words", (done: MochaDone) => {
             communication.getDefinitionsFromServer(grid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
                 assert.equal(grid.words[0].definitions[0],

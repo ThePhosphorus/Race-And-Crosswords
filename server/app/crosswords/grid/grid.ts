@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
-import {GridGenerator } from "./grid-generator/grid-generator";
 import {CrosswordGrid} from "../../../../common/crossword/crossword-grid";
 import { Difficulty } from "../../../../common/crossword/enums-constants";
+import { GridGenerator } from "./grid-generator/grid-generator";
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
