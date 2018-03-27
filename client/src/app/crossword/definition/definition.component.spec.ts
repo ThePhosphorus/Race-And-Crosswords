@@ -52,7 +52,7 @@ describe("DefinitionComponent", () => {
         expect(displayDef.definition).toBe("Def0");
     });
     it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
-        service.playerGrid.subscribe( (grid: CrosswordGrid) => {
+        service.gameManager.playerGridSubject.subscribe( (grid: CrosswordGrid) => {
           expect(grid).toBeDefined();
         });
     }));

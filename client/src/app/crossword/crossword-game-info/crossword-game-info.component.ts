@@ -1,29 +1,24 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
+import { GameInfoService } from "./game-info-service/game-info.service";
 
 @Component({
     selector: "app-crossword-game-info",
     templateUrl: "./crossword-game-info.component.html",
-    styleUrls: ["./crossword-game-info.component.css"]
+    styleUrls: ["./crossword-game-info.component.css"],
+    providers: [GameInfoService]
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
-    @Output() public showSearching: EventEmitter<boolean>;
-    public showModal: boolean;
-    private _lvl: Difficulty;
     public players: Array<Player>;
     public isCollapsedPlayer: boolean;
     public isCollapsedLevel: boolean;
-    public showLevel: boolean;
 
-    public constructor(private _crosswordService: CrosswordService) {
-        this._lvl = null;
+    public constructor(private _crosswordService: CrosswordService, private _infoService: GameInfoService) {
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
-        this.showModal = true;
-        this.showSearching = new EventEmitter<boolean>();
         this.players = new Array<Player>();
     }
 
@@ -37,20 +32,19 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public get lvl(): Difficulty {
-        return this._lvl;
+        return this._infoService.lvl.getValue();
     }
-
+    public get showModal(): boolean {
+        return this._infoService.showModal.getValue();
+    }
     public ngOnInit(): void {
-        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
-            this._lvl = difficulty);
-
-        this._crosswordService.players.subscribe((players: Array<Player>) => {
+        this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
             if (players.length < this.players.length) {
                 this._crosswordService.isGameOver = true;
             }
             this.players = players;
             if (players.length > 1) {
-                this.showSearching.emit(false);
+                this._infoService.setShowSearching(false);
             }
         });
     }
@@ -60,8 +54,8 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public loadNewGame(): void {
-        this.showModal = true;
-        this.showSearching.emit(false);
+        this._infoService.setShowModal(true);
+        this._infoService.setShowSearching(false);
     }
 
     public configureNewGame(): void {

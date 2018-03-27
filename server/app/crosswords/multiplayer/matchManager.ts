@@ -1,10 +1,7 @@
 import { Player } from "../../../../common/communication/Player";
 import msg from "../../../../common/communication/socketTypes";
 import { CrosswordGrid } from "../../../../common/crossword/crossword-grid";
-import {
-  Difficulty,
-  Orientation
-} from "../../../../common/crossword/enums-constants";
+import { Difficulty, Orientation } from "../../../../common/crossword/enums-constants";
 import { Word } from "../../../../common/crossword/word";
 import * as Request from "request-promise-native";
 import { GRID_GENERATION_SERVICE_URL } from "../../constants";
@@ -107,7 +104,7 @@ export class MatchManager {
         const player: SPlayer = this.getPlayerById(id);
         if (player != null) {
         player.name = name;
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
         }
     }
 
@@ -147,17 +144,17 @@ export class MatchManager {
 
     private playerLeave(id: number): void {
         this._players.splice(id, 1);
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
     }
 
     private incerementScore(playerId: number): void {
         this.getPlayerById(playerId).score++;
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
     }
 
     private rematch(id: number): void {
         this.getPlayerById(id).wantsRematch = true;
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
 
         if (this._players.find((player: Player) => !player.wantsRematch) == null) {
             this.completedWords = new Array<Word>();
@@ -173,7 +170,7 @@ export class MatchManager {
         player.score = 0;
         player.wantsRematch = false;
         });
-        this.notifyAll(msg.getPlayers, this.Players);
+        this.sendPlayers();
     }
 
     private generateid(): number {
@@ -181,5 +178,17 @@ export class MatchManager {
         this._players.forEach((sp: SPlayer, index: number) => (sp.id = index));
 
         return this._players.length;
+    }
+
+    private sendPlayers(): void {
+        this._players.forEach((sp: SPlayer) => {
+            const players: Array<Player> = this.Players;
+            const player: Player = players[sp.id];
+
+            players.splice(sp.id, 1);
+            players.unshift(player);
+
+            sp.socket.emit(msg.getPlayers, players);
+        });
     }
 }

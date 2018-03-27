@@ -33,7 +33,7 @@ export class DefinitionComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this._crosswordService.solvedGrid.subscribe((grid: CrosswordGrid) => {
+        this._crosswordService.gameManager.solvedGridSubject.subscribe((grid: CrosswordGrid) => {
             this.gridSize = grid.size;
             this.acrossDefinitions = new Array<DisplayedDefinition>();
             this.downDefinitions = new Array<DisplayedDefinition>();
@@ -58,7 +58,7 @@ export class DefinitionComponent implements OnInit {
     }
 
     public wordToDefinition(word: Word): DisplayedDefinition {
-        return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1)),
+        return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf("\t") + 1)),
                                        this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), word.id);
     }
 
@@ -73,7 +73,7 @@ export class DefinitionComponent implements OnInit {
     public get cheatMode(): boolean { return this._cheatmode; }
 
     public isWordSolved(id: number, orientation: Orientation): boolean {
-        return this._crosswordService.wordIsSolved(id, orientation);
+        return this._crosswordService.gameManager.isWordSolved(id, orientation);
     }
 
     public getRowCOl(id: number, orientation: Orientation): number {

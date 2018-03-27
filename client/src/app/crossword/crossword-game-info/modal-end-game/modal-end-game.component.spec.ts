@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ModalEndGameComponent } from "./modal-end-game.component";
+import { CrosswordService } from "../../crossword-service/crossword.service";
+import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
+import { HttpClientModule } from "@angular/common/http";
 
 describe("ModalEndGameComponent", () => {
   let component: ModalEndGameComponent;
@@ -8,7 +11,9 @@ describe("ModalEndGameComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalEndGameComponent ]
+        imports: [HttpClientModule],
+        declarations: [ ModalEndGameComponent ],
+        providers: [ CrosswordService, CrosswordCommunicationService]
     })
     .compileComponents();
   }));

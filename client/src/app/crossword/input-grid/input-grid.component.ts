@@ -19,7 +19,7 @@ export class InputGridComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this._crosswordService.playerGrid.subscribe((crosswordGrid: CrosswordGrid) => {
+        this._crosswordService.gameManager.playerGridSubject.subscribe((crosswordGrid: CrosswordGrid) => {
             if (crosswordGrid.words.length > 0) {
                 this.makeTwoDimensionGrid(crosswordGrid);
                 this.showLoading.emit(false);
