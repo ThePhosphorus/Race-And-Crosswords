@@ -22,14 +22,12 @@ export class GameManager {
     private _playerGrid: BehaviorSubject<CrosswordGrid>;
     private _solvedWords: BehaviorSubject<SolvedWord[]>;
     private _solvedGrid: BehaviorSubject<CrosswordGrid>;
-    private _currentPlayer: BehaviorSubject<number>;
     private _difficulty: BehaviorSubject<Difficulty>;
 
     public constructor() {
         this._playerGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
         this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
-        this._currentPlayer = new BehaviorSubject<number>(0);
         this._difficulty = new BehaviorSubject<Difficulty>(Difficulty.Easy);
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
@@ -41,7 +39,6 @@ export class GameManager {
         this._playerGrid.next(new CrosswordGrid());
         this._players.next(new Array<Player>());
         this._solvedWords.next(new Array<SolvedWord>());
-        this._currentPlayer.next(0);
         this._difficulty.next(difficulty);
         this.initializeEmptyGrid();
     }
@@ -52,10 +49,6 @@ export class GameManager {
 
     public get solvedWordsSubject(): BehaviorSubject<SolvedWord[]> {
         return this._solvedWords;
-    }
-
-    public get currentPlayerSubject(): BehaviorSubject<number> {
-        return this._currentPlayer;
     }
 
     public get playersSubject(): BehaviorSubject<Player[]> {
@@ -71,7 +64,7 @@ export class GameManager {
     }
 
     public get myPlayer(): Player {
-        return this._players.getValue()[this._currentPlayer.getValue()];
+        return this._players.getValue()[0];
     }
 
     public get topPlayer(): Player {
@@ -107,10 +100,6 @@ export class GameManager {
 
     public set players(players: Player[]) {
         this._players.next(players);
-    }
-
-    public set currentPlayer(id: number) {
-        this._currentPlayer.next(id);
     }
 
     public getChar(index: number): string {

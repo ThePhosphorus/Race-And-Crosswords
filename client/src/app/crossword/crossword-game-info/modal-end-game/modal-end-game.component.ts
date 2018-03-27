@@ -46,6 +46,7 @@ export class ModalEndGameComponent implements OnInit {
             }
         });
     }
+        this._isDisconnected = true;
 
     public closeModal(): void {
         this._infoService.setShowModal(false);
