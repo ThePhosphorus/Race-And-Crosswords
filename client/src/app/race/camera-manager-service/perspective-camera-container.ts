@@ -18,13 +18,14 @@ const PERSP_CAMERA_ACCELERATION_FACTOR: number = 5;
 const SMOOTHING_EFFET_ON_OFFECT_MODE: number = 100;
 
 export class PerspectiveCameraContainer extends CameraContainer {
-    private thirdPersonPoint: Vector3;
+    private _thirdPersonPoint: Vector3;
     private _perspCamera: PerspectiveCamera;
-    private effectModeisEnabled: boolean;
+    private _effectModeisEnabled: boolean;
 
     public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
         super(audioListener, targetInfos, cameraDistance, zoomLimit, CameraType.Perspective);
-        this.thirdPersonPoint = new Vector3(0, 0, 0);
+        this._effectModeisEnabled = false;
+        this._thirdPersonPoint = new Vector3(0, 0, 0);
         this._perspCamera = new PerspectiveCamera(
             FIELD_OF_VIEW,
             INITIAL_ASPECT_RATIO,
@@ -40,7 +41,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
     }
 
     public fixUpdate(deltaTime: number): void {
-        this.thirdPersonPoint.copy(this.calcPosPerspCamera());
+        this._thirdPersonPoint.copy(this.calcPosPerspCamera());
         this.perspCameraPhysicUpdate(deltaTime);
         this._perspCamera.lookAt(this._targetInfos.position);
     }
@@ -64,10 +65,10 @@ export class PerspectiveCameraContainer extends CameraContainer {
     }
 
     private perspCameraPhysicUpdate(deltaTime: number): void {
-        if (this.effectModeisEnabled) {
+        if (this._effectModeisEnabled) {
 
             deltaTime = deltaTime / MS_TO_SECONDS;
-            const deltaPos: Vector3 = this.thirdPersonPoint.clone().sub(this._perspCamera.position);
+            const deltaPos: Vector3 = this._thirdPersonPoint.clone().sub(this._perspCamera.position);
             deltaPos.multiplyScalar(
                 PERSP_CAMERA_ACCELERATION_FACTOR * deltaTime *
                 (
@@ -75,26 +76,26 @@ export class PerspectiveCameraContainer extends CameraContainer {
                         (((deltaPos.length() - MAX_RECOIL_DISTANCE) / SMOOTHING_EFFET_ON_OFFECT_MODE) + 1) : 1)
             );
             this._perspCamera.position.add(deltaPos);
-        } else { this._perspCamera.position.copy(this.thirdPersonPoint); }
+        } else { this._perspCamera.position.copy(this._thirdPersonPoint); }
     }
 
     public position(): Vector3 {
-        return this.thirdPersonPoint;
+        return this._thirdPersonPoint;
     }
 
     public get camera(): Camera {
         return this._perspCamera;
     }
 
-    public toggleEffect(): void {
-        this.effectModeEnabled = !this.effectModeEnabled;
-    }
-
     public get effectModeEnabled(): boolean {
-        return this.effectModeisEnabled;
+        return this._effectModeisEnabled;
     }
 
     public set effectModeEnabled(value: boolean) {
-        this.effectModeisEnabled = value;
+        this._effectModeisEnabled = value;
+    }
+
+    public toggleEffectMode(): void {
+        this.effectModeEnabled = !this.effectModeEnabled;
     }
 }

@@ -14,11 +14,11 @@
     text-align: center;
     align-self: center;
     border: solid #212529 0.2vmin;
-    background-color: white;
+    background-color: whitesmoke;
 }
 
 #grid tbody {
-    background-color: white;
+    background-color: whitesmoke;
 }
 
 #grid td {

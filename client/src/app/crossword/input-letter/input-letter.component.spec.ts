@@ -3,6 +3,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { InputLetterComponent } from "./input-letter.component";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
+import { TileColorDirective } from "./tile-color.directive";
 
 describe("InputLetterComponent", () => {
     let component: InputLetterComponent;
@@ -10,7 +11,7 @@ describe("InputLetterComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [InputLetterComponent],
+            declarations: [InputLetterComponent, TileColorDirective],
             providers: [CrosswordService, CrosswordCommunicationService],
             imports: [HttpClientModule]
         })

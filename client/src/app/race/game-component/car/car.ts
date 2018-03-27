@@ -4,113 +4,93 @@ import {
     Object3D,
     ObjectLoader,
     Euler,
-    Quaternion
+    Box3,
+    Vector2
 } from "three";
 import { Engine } from "./engine";
-import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, RAD_TO_DEG } from "../../../global-constants/constants";
-import { Wheel } from "./wheel";
-import { DEFAULT_WHEELBASE, DEFAULT_MASS, DEFAULT_DRAG_COEFFICIENT } from "../../race.constants";
+import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, METER_TO_KM_SPEED_CONVERSION, DOUBLE } from "../../../global-constants/constants";
+import {
+    DEFAULT_WHEELBASE,
+    DEFAULT_MASS,
+    DRAG_COEFFICIENT,
+    DEFAULT_WHEEL_RADIUS,
+    DEFAULT_FRICTION_COEFFICIENT
+} from "../../race.constants";
+import { Collider } from "../collision/collider";
+import { RigidBody } from "../rigid-body/rigid-body";
+import { CarLights } from "./carLights/carLights";
+import { CarControl } from "./car-control";
+import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 
-const MAXIMUM_STEERING_ANGLE: number = 0.25;
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
-const INITIAL_WEIGHT_DISTRIBUTION: number = 0.5;
-const MINIMUM_SPEED: number = 0.05;
-const NUMBER_REAR_WHEELS: number = 2;
-const NUMBER_WHEELS: number = 4;
+const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 300;
-const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
-const NO_BACKWARDS_ROLLING_FACTOR: number = -20;
+const CAR_Y_OFFSET: number = -0.1;
+const CAR_FILE: string = "../../assets/camero/";
+const DEFAULT_STEERING_ANGLE: number = 0.15;
+const HANDBRAKE_STEERING_ANGLE: number = 0.4;
+const DEFAULT_FRICTION: number = 400000;
+const HANDBRAKE_FRICTION: number = 50000;
+const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
+const DRIFT_SOUND_MAX: number = 150000;
+const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
+const WALL_FRICTION: number = -20000;
 
 export class Car extends Object3D {
-    public isAcceleratorPressed: boolean;
+    public carControl: CarControl;
 
-    private readonly engine: Engine;
-    private readonly mass: number;
-    private readonly rearWheel: Wheel;
-    private readonly wheelbase: number;
-    private readonly dragCoefficient: number;
-
-    private _speed: Vector3;
-    private isBraking: boolean;
-    private mesh: Object3D;
-    private steeringWheelDirection: number;
-    private weightRear: number;
-    private isSteeringLeft: boolean;
-    private isSteeringRight: boolean;
-
-    public get carMesh(): Object3D {
-        return this.mesh;
-    }
-    public get speed(): Vector3 {
-        return this._speed.clone();
-    }
+    private readonly _engine: Engine;
+    private _mesh: Object3D;
+    private _rigidBody: RigidBody;
+    private _carLights: CarLights;
+    private _frictionCoefficient: number;
+    private _carSound: CarSounds;
 
     public get currentGear(): number {
-        return this.engine.currentGear;
+        return this._engine.currentGear;
     }
 
     public get rpm(): number {
-        return this.engine.rpm;
-    }
-
-    public get angle(): number {
-        return this.mesh.rotation.y * RAD_TO_DEG;
+        return this._engine.rpm;
     }
 
     public get direction(): Vector3 {
         const rotationMatrix: Matrix4 = new Matrix4();
         const carDirection: Vector3 = new Vector3(0, 0, -1);
 
-        rotationMatrix.extractRotation(this.mesh.matrix);
+        rotationMatrix.extractRotation(this._mesh.matrix);
         carDirection.applyMatrix4(rotationMatrix);
 
         return carDirection;
     }
 
+    public get direction2D(): Vector2 {
+        return new Vector2(this.direction.x, this.direction.z);
+    }
+
+    public get speed(): number {
+        return this._mesh == null ? 0 : this._rigidBody.velocity.clone().dot(this.direction2D);
+    }
+
     public constructor(
+        private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
-        rearWheel: Wheel = new Wheel(),
-        wheelbase: number = DEFAULT_WHEELBASE,
-        mass: number = DEFAULT_MASS,
-        dragCoefficient: number = DEFAULT_DRAG_COEFFICIENT
+        mass: number = DEFAULT_MASS
     ) {
         super();
-        if (wheelbase <= 0) {
-            console.error("Wheelbase should be greater than 0.");
-            wheelbase = DEFAULT_WHEELBASE;
-        }
-
-        if (mass <= 0) {
-            console.error("Mass should be greater than 0.");
-            mass = DEFAULT_MASS;
-        }
-
-        if (dragCoefficient <= 0) {
-            console.error("Drag coefficient should be greater than 0.");
-            dragCoefficient = DEFAULT_DRAG_COEFFICIENT;
-        }
-
-        this.engine = engine;
-        this.rearWheel = rearWheel;
-        this.wheelbase = wheelbase;
-        this.mass = mass;
-        this.dragCoefficient = dragCoefficient;
-
-        this.isBraking = false;
-        this.steeringWheelDirection = 0;
-        this.weightRear = INITIAL_WEIGHT_DISTRIBUTION;
-        this._speed = new Vector3(0, 0, 0);
-
-        this.isSteeringLeft = false;
-        this.isSteeringRight = false;
+        this._rigidBody = new RigidBody(mass);
+        this._engine = engine;
+        this.carControl = new CarControl();
+        this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
     // TODO: move loading code outside of car class.
-    private async load(): Promise<Object3D> {
+    private async load(color: string): Promise<Object3D> {
         return new Promise<Object3D>((resolve, reject) => {
             const loader: ObjectLoader = new ObjectLoader();
             loader.load(
-                "../../assets/camero/camero-2010-low-poly.json",
+                CAR_FILE + color + ".json",
                 (object) => {
                     resolve(object);
                 }
@@ -118,147 +98,115 @@ export class Car extends Object3D {
         });
     }
 
-    public async init(): Promise<void> {
-        this.mesh = await this.load();
-        this.mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
-        this.add(this.mesh);
+    public async init(position: Vector3, color: string): Promise<void> {
+        this._mesh = await this.load(color);
+        this._mesh.position.set(position.x, position.y, position.z);
+        this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
+        this._mesh.translateY(CAR_Y_OFFSET);
+
+        const box: Box3 = new Box3().setFromObject(this._mesh);
+        this._mesh.add(new Collider(box.getSize().z, box.getSize().x));
+        this._mesh.add(this._rigidBody);
+        this.add(this._mesh);
+        this.initCarLights();
+        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
+        this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 
-    private updateSteering(): void {
-        const steeringState: number = (this.isSteeringLeft === this.isSteeringRight) ? 0 : this.isSteeringLeft ? 1 : -1;
-        this.steeringWheelDirection = steeringState *
-        MAXIMUM_STEERING_ANGLE * (APPROX_MAXIMUM_SPEED - (this._speed.length() * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
-    }
+    private getSteeringDirection(): number {
+        const steeringState: number = (this.carControl.isSteeringLeft === this.carControl.isSteeringRight) ? 0 :
+            this.carControl.isSteeringLeft ? 1 : -1;
 
-    // Input manager callback methods
-    public accelerate (): void {
-        this.isAcceleratorPressed = true;
-    }
-
-    public steerLeft (): void {
-        this.isSteeringLeft = true;
-    }
-
-    public steerRight (): void {
-        this.isSteeringRight = true;
-    }
-
-    public brake (): void {
-        this.isBraking = true;
-    }
-
-    public releaseSteeringLeft (): void {
-        this.isSteeringLeft = false;
-    }
-
-    public releaseSteeringRight (): void {
-        this.isSteeringRight = false;
-    }
-
-    public releaseBrakes (): void {
-        this.isBraking = false;
-    }
-
-    public releaseAccelerator (): void {
-        this.isAcceleratorPressed = false;
+        return steeringState *
+            (this.carControl.hasHandbrakeOn ? HANDBRAKE_STEERING_ANGLE : DEFAULT_STEERING_ANGLE) *
+            (APPROX_MAXIMUM_SPEED - (this.speed * METER_TO_KM_SPEED_CONVERSION)) / APPROX_MAXIMUM_SPEED;
     }
 
     public update(deltaTime: number): void {
         deltaTime = deltaTime / MS_TO_SECONDS;
+        this._engine.update(Math.abs(this.speed), DEFAULT_WHEEL_RADIUS);
 
-        // Move to car coordinates
-        const rotationMatrix: Matrix4 = new Matrix4();
-        rotationMatrix.extractRotation(this.mesh.matrix);
-        const rotationQuaternion: Quaternion = new Quaternion();
-        rotationQuaternion.setFromRotationMatrix(rotationMatrix);
-        this._speed.applyMatrix4(rotationMatrix);
+        this._rigidBody.addForce(this.getLongitudinalForce());
+        this._rigidBody.addFrictionForce(this.getPerpendicularForce());
+        this._rigidBody.update(deltaTime);
 
-        // Physics calculations
-        this.physicsUpdate(deltaTime);
-
-        // Move back to world coordinates
-        this._speed = this.speed.applyQuaternion(rotationQuaternion.inverse());
-
-        this.updateSteering();
-        // Angular rotation of the car
         const R: number =
             DEFAULT_WHEELBASE /
-            Math.sin(this.steeringWheelDirection * deltaTime);
-        const omega: number = this._speed.length() / R;
-        this.mesh.rotateY(omega);
+            Math.sin(this.getSteeringDirection() * deltaTime);
+        const omega: number = this.speed / R;
+        this._mesh.rotateY(omega);
+        this._carSound.updateRPM(this._engine.rpm);
     }
 
-    private physicsUpdate(deltaTime: number): void {
-        this.rearWheel.angularVelocity +=
-            this.getAngularAcceleration() * deltaTime;
-        this.engine.update(this._speed.length(), this.rearWheel.radius);
-        this.weightRear = this.getWeightDistribution();
-        this._speed.add(this.getDeltaSpeed(deltaTime));
-        this._speed.setLength(
-            this._speed.length() <= MINIMUM_SPEED ? 0 : this._speed.length()
-        );
-        this.mesh.position.add(this.getDeltaPosition(deltaTime));
-        this.rearWheel.update(this._speed.length());
-    }
-
-    private getWeightDistribution(): number {
-        const acceleration: number = this.getAcceleration().length();
-        /* tslint:disable:no-magic-numbers */
-        const distribution: number =
-            this.mass + 1 / this.wheelbase * this.mass * acceleration / 2;
-
-        return Math.min(Math.max(0.25, distribution), 0.75);
-        /* tslint:enable:no-magic-numbers */
-    }
-
-    private getLongitudinalForce(): Vector3 {
-        const resultingForce: Vector3 = new Vector3();
-
-        if (this._speed.length() >= MINIMUM_SPEED) {
-            const dragForce: Vector3 = this.getDragForce();
-            const rollingResistance: Vector3 = this.getRollingResistance();
-            resultingForce.add(dragForce).add(rollingResistance);
+    private getPerpendicularForce(): Vector2 {
+        const direction: Vector2 = this.direction2D;
+        const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
+        const perpSpeedComponent: number = this._rigidBody.velocity.clone().normalize().dot(perpDirection);
+        this._frictionCoefficient = Math.min(this._frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, DEFAULT_FRICTION);
+        if (this.carControl.hasHandbrakeOn) {
+            this._frictionCoefficient = HANDBRAKE_FRICTION;
+            this._carLights.brake();
         }
+        this.updateDriftSound(this._frictionCoefficient);
 
-        if (this.isAcceleratorPressed) {
-            const tractionForce: number = this.getTractionForce();
-            const accelerationForce: Vector3 = this.direction;
+        return perpDirection.multiplyScalar(-perpSpeedComponent * this._frictionCoefficient);
+    }
+
+    private getLongitudinalForce(): Vector2 {
+        const resultingForce: Vector2 = new Vector2();
+        const dragForce: Vector2 = this.getDragForce();
+        const rollingResistance: Vector2 = this.getRollingResistance();
+        const tractionForce: number = this.getTractionForce();
+        const accelerationForce: Vector2 = this.direction2D;
+        resultingForce.add(dragForce).add(rollingResistance);
+        if (this.carControl.isAcceleratorPressed) {
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
-        } else if (this.isBraking && this.isGoingForward()) {
-            const brakeForce: Vector3 = this.getBrakeForce();
-            resultingForce.add(brakeForce);
+            this.turnOffRearLights();
+        } else if (this.carControl.isBraking && this.isGoingForward()) {
+            resultingForce.add(this.getBrakeForce());
+            this._carLights.releaseReverse();
+            this._carLights.brake();
+        } else if (this.carControl.isBraking) {
+            this._carLights.releaseBrakes();
+            this._carLights.reverse();
+            if (Math.abs(this.speed) < DOUBLE * METER_TO_KM_SPEED_CONVERSION) {
+                accelerationForce.multiplyScalar(tractionForce);
+                resultingForce.sub(accelerationForce);
+            }
+        } else {
+            this.turnOffRearLights();
         }
 
         return resultingForce;
     }
-
-    private getRollingResistance(): Vector3 {
+    private turnOffRearLights(): void {
+        this._carLights.releaseBrakes();
+        this._carLights.releaseReverse();
+    }
+    private getRollingResistance(): Vector2 {
         const tirePressure: number = 1;
         // formula taken from: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
-
-        // tslint:disable-next-line:no-magic-numbers
+        /* tslint:disable:no-magic-numbers */
         const rollingCoefficient: number =
             1 / tirePressure *
-                (Math.pow(this.speed.length() * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
+            (Math.pow(this.speed * METER_TO_KM_SPEED_CONVERSION / 100, 2) * 0.0095 + 0.01) + 0.005;
+        /* tslint:enable:no-magic-numbers */
 
-        if (this.isGoingForward()) {
-        return this.direction.multiplyScalar(rollingCoefficient * this.mass * GRAVITY);
-        }
-
-        return this.direction.multiplyScalar(NO_BACKWARDS_ROLLING_FACTOR * rollingCoefficient * this.mass * GRAVITY);
+        return this.direction2D.multiplyScalar(Math.sign(this.speed) * rollingCoefficient * this._rigidBody.mass * GRAVITY);
     }
 
-    private getDragForce(): Vector3 {
+    private getDragForce(): Vector2 {
         const carSurface: number = 3;
         const airDensity: number = 1.2;
-        const resistance: Vector3 = this.direction;
+        const resistance: Vector2 = this.direction2D;
         resistance.multiplyScalar(
+            Math.sign(this.speed) *
             airDensity *
-                carSurface *
-                -this.dragCoefficient *
-                this.speed.length() *
-                this.speed.length()
+            carSurface *
+            -DRAG_COEFFICIENT *
+            this.speed *
+            this.speed
         );
 
         return resistance;
@@ -267,67 +215,71 @@ export class Car extends Object3D {
     private getTractionForce(): number {
         const force: number = this.getEngineForce();
         const maxForce: number =
-            this.rearWheel.frictionCoefficient *
-            this.mass *
-            GRAVITY *
-            this.weightRear *
-            NUMBER_REAR_WHEELS /
-            NUMBER_WHEELS;
+            DEFAULT_FRICTION_COEFFICIENT *
+            this._rigidBody.mass *
+            WHEEL_DISTRIBUTION *
+            GRAVITY;
 
         return -Math.min(force, maxForce);
     }
 
-    private getAngularAcceleration(): number {
-        return (
-            this.getTotalTorque() /
-            (this.rearWheel.inertia * NUMBER_REAR_WHEELS)
-        );
-    }
-
-    private getBrakeForce(): Vector3 {
-        return this.direction.multiplyScalar(
-            this.rearWheel.frictionCoefficient * this.mass * GRAVITY
-        );
-    }
-
-    private getBrakeTorque(): number {
-        return this.getBrakeForce().length() * this.rearWheel.radius;
-    }
-
-    private getTractionTorque(): number {
-        return this.getTractionForce() * this.rearWheel.radius;
-    }
-
-    private getTotalTorque(): number {
-        return (
-            this.getTractionTorque() * NUMBER_REAR_WHEELS +
-            this.getBrakeTorque()
-        );
+    private getBrakeForce(): Vector2 {
+        return this.isGoingForward ?
+            this.direction2D.multiplyScalar(Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this._rigidBody.mass * GRAVITY) :
+            new Vector2(0, 0);
     }
 
     private getEngineForce(): number {
-        return this.engine.getDriveTorque() / this.rearWheel.radius;
-    }
-
-    private getAcceleration(): Vector3 {
-        return this.getLongitudinalForce().divideScalar(this.mass);
-    }
-
-    private getDeltaSpeed(deltaTime: number): Vector3 {
-        return this.getAcceleration().multiplyScalar(deltaTime);
-    }
-
-    private getDeltaPosition(deltaTime: number): Vector3 {
-        return this.speed.multiplyScalar(deltaTime);
+        return this._engine.getDriveTorque() / DEFAULT_WHEEL_RADIUS;
     }
 
     private isGoingForward(): boolean {
-        // tslint:disable-next-line:no-magic-numbers
-        return this.speed.normalize().dot(this.direction) > MINIMUM_SPEED;
+        return this.speed > 0;
     }
 
     public getPosition(): Vector3 {
-        return this.mesh.position;
+        return this._mesh.position;
     }
 
+    public get mesh(): Object3D {
+        return this._mesh;
+    }
+
+    public toggleNightLight(): void {
+        this._carLights.toggleFrontLight();
+    }
+
+    private onCollision(otherRb: RigidBody): void {
+        this.collisionSound();
+        if (otherRb.fixed) {
+            this.wallPenalty();
+        } else {
+            this.carPenalty();
+        }
+    }
+
+    private collisionSound(): void {
+        this._carSound.playCollision();
+    }
+
+    private updateDriftSound(factor: number): void {
+        if (factor < DRIFT_SOUND_MAX && this.speed > MIN_DRIFT_SPEED) {
+            this._carSound.startDrift();
+        } else if (this._carSound.drift.isPlaying()) {
+            this._carSound.releaseDrift();
+        }
+    }
+
+    private carPenalty(): void {
+        this._frictionCoefficient = HANDBRAKE_FRICTION;
+    }
+
+    private wallPenalty(): void {
+        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
+    }
+
+    private initCarLights(): void {
+        this._carLights = new CarLights();
+        this._mesh.add(this._carLights);
+    }
 }

@@ -1,25 +1,49 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { GridState } from "../input-grid/input-grid.component";
+import { Component, Input, OnInit } from "@angular/core";
+import { GridState } from "../grid-state/grid-state";
+import { CrosswordService } from "../crossword-service/crossword.service";
 
 @Component({
     selector: "app-input-letter",
     templateUrl: "./input-letter.component.html",
     styleUrls: ["./input-letter.component.css"]
 })
-export class InputLetterComponent {
-    @Input() public letter: string;
+export class InputLetterComponent implements OnInit {
     @Input() public id: number;
-    @Input() public gridState: GridState;
-    @Output() public setSelectedLetter: EventEmitter<number>;
+    private _gridState: GridState;
 
-    public constructor() {
-        this.letter = "	 ";
+    public constructor(private _crosswordService: CrosswordService) {
         this.id = 1;
-        this.gridState = new GridState();
-        this.setSelectedLetter = new EventEmitter<number>();
+        this._gridState = new GridState();
     }
 
-    public select(): void {
-        this.setSelectedLetter.emit(this.id);
+    public ngOnInit(): void {
+        this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
+            this._gridState = gridState;
+        });
+    }
+
+    public get letter(): string {
+        return this._crosswordService.gameManager.getChar(this.id);
+    }
+
+    public select(event: MouseEvent): void {
+        this._crosswordService.setSelectedLetter(this.id);
+        event.stopPropagation();
+    }
+
+    public isDisabled(): boolean {
+        return this._gridState.isLetterDisabled(this.id);
+    }
+
+    public isHovered(): boolean {
+        return this._gridState.isLetterHovered(this.id);
+    }
+
+    public isCurrentLetter(): boolean {
+        return this._gridState.isLetterCurrent(this.id);
+    }
+
+    public isSelected(): boolean {
+        return this._crosswordService.playersSelectingLetter(this.id).length > 0;
     }
 }

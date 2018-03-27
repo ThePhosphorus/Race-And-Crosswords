@@ -1,9 +1,14 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { HttpClientModule } from "@angular/common/http";
 import { CrosswordGameInfoComponent } from "./crossword-game-info.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { Difficulty } from "../../../../../common/communication/crossword-grid";
+import { Player } from "../../../../../common/communication/Player";
+import { Difficulty } from "../../../../../common/crossword/enums-constants";
+import { ModalNewGameComponent } from "./modal-new-game/modal-new-game.component";
+import { FormsModule } from "@angular/forms";
+import { GameInfoService } from "./game-info-service/game-info.service";
+import { ModalEndGameComponent } from "./modal-end-game/modal-end-game.component";
 
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
@@ -11,10 +16,10 @@ describe("CrosswordGameInfoComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule],
-            declarations: [CrosswordGameInfoComponent],
-            providers: [CrosswordCommunicationService, CrosswordService]
-        })
+            imports: [HttpClientModule, FormsModule],
+            declarations: [CrosswordGameInfoComponent, ModalEndGameComponent, ModalNewGameComponent],
+            providers: [CrosswordCommunicationService, CrosswordService, GameInfoService]
+    })
             .compileComponents();
     }));
 
@@ -28,9 +33,16 @@ describe("CrosswordGameInfoComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should change level", () => {
-        const diff: Difficulty = Difficulty.Easy;
-        component.changeLevel(diff);
-        expect(component.lvl).toBe(diff);
-    });
+    it("should receive a promise for Difficulty", inject([CrosswordService], (service: CrosswordService) => {
+        service.gameManager.difficultySubject.subscribe( (difficulty: Difficulty) => {
+          expect(difficulty).toBeDefined();
+        });
+    }));
+
+    it("should receive a promise for players", inject([CrosswordService], (service: CrosswordService) => {
+        service.gameManager.playersSubject.subscribe( (players: Array<Player>) => {
+          expect(players).toBeDefined();
+        });
+    }));
+
 });

@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Vector3 } from "three";
-import { Track, Vector3Struct } from "../../../../../../common/communication/track";
+import { Track } from "../../../../../../common/race/track";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { BACKEND_URL } from "../../../global-constants/constants";
+import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 
@@ -37,17 +38,14 @@ export class TrackSaverService {
             id,
             name,
             description,
-            new Array<Vector3Struct>()
+            new Array<Vector3Struct>(),
+            0
         );
 
         points.forEach((point: Vector3) => {
-            track.points.push(this.toVectorStruct(point));
+            track.points.push(point);
         });
 
         return track;
-    }
-
-    public toVectorStruct(vector: Vector3): Vector3Struct {
-        return new Vector3Struct(vector.x, vector.y, vector.z);
     }
 }

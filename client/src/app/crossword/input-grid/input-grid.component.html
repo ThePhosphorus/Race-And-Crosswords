@@ -3,17 +3,16 @@
 <table id="grid" vertical-align-items="center"  align-items="center">
   <thead>
     <th>#</th>
-    <th *ngFor="let letters of twoDimensionPlayerGrid;let i = index">
+    <th *ngFor="let letters of twoDimensionGrid;let i = index">
       {{ i+1 }}
     </th>
   </thead>
   <tbody>
-    <tr *ngFor="let letters of twoDimensionPlayerGrid;let row = index">
+    <tr *ngFor="let letters of twoDimensionGrid;let row = index">
       <th scope="row">{{ row+1 }}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
         <span *ngIf="letter.char">
-          <app-input-letter [letter]="letter.char" [id]="(twoDimensionPlayerGrid.length*row)+col"
-            [gridState]="gridState" (setSelectedLetter)="setSelectedLetter($event)"></app-input-letter>
+          <app-input-letter [id]="(twoDimensionGrid.length*row)+col"></app-input-letter>
         </span>
       </td>
     </tr>

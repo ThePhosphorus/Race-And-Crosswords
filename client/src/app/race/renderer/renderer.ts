@@ -1,16 +1,16 @@
 import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
-import { WebGLRenderer, Scene, AmbientLight, Vector2, Vector3 } from "three";
+import { WebGLRenderer, Scene, Vector2, Vector3, PCFShadowMap } from "three";
 import Stats = require("stats.js");
-import {HALF, DOUBLE, AMBIENT_LIGHT_OPACITY, WHITE} from "../../global-constants/constants";
+import {HALF, DOUBLE} from "../../global-constants/constants";
 import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } from "../admin/track-editor.constants";
 
 export abstract class Renderer {
     private _container: HTMLDivElement;
     private _webGlRenderer: WebGLRenderer;
-    private _scene: Scene;
     private _lastDate: number;
     private _stats: Stats;
     private _cameraManager: CameraManagerService;
+    protected _scene: Scene;
     protected cameraTargetPosition: Vector3;
     protected cameraTargetDirection: Vector3;
 
@@ -42,6 +42,8 @@ export abstract class Renderer {
 
     public startRenderingLoop(): void {
         this._webGlRenderer = new WebGLRenderer();
+        this._webGlRenderer.shadowMapEnabled = true;
+        this._webGlRenderer.shadowMap.type = PCFShadowMap;
         this.renderer.setPixelRatio(devicePixelRatio);
         this.renderer.setSize(
             this.container.clientWidth,
@@ -83,8 +85,6 @@ export abstract class Renderer {
 
     private createScene(): void {
         this._scene = new Scene();
-
-        this.scene.add(new AmbientLight(WHITE, AMBIENT_LIGHT_OPACITY));
         this._cameraManager.onResize(this.getAspectRatio());
      }
 

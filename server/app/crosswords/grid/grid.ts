@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
-import {GridGenerator } from "./grid-generator";
-import {Difficulty, CrosswordGrid} from "../../../../common/communication/crossword-grid";
+import {CrosswordGrid} from "../../../../common/crossword/crossword-grid";
+import { Difficulty } from "../../../../common/crossword/enums-constants";
+import { GridGenerator } from "./grid-generator/grid-generator";
 
 const MIN_GRID_SIZE: number = 2;
 const MAX_GRID_SIZE: number = 20;
@@ -11,12 +12,12 @@ const DEFAULT_GRID_SIZE: number = 10;
 @injectable()
 export class Grid extends WebService {
 
-    private gridGenerator: GridGenerator;
+    private _gridGenerator: GridGenerator;
 
     constructor() {
         super();
         this.routeName = "/grid";
-        this.gridGenerator = new GridGenerator();
+        this._gridGenerator = new GridGenerator();
     }
 
     protected defineRoutes(): void {
@@ -29,7 +30,10 @@ export class Grid extends WebService {
                                             : DEFAULT_GRID_SIZE;
 
             res.setHeader("Content-Type", "application/json");
-            this.gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
+            this._gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword)).catch((err: Error) => {
+                console.error(err.message);
+                res.send(null);
+            });
         });
     }
 }

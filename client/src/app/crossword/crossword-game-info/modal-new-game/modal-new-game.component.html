@@ -1,0 +1,65 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <h5 class="modal-title" id="modalLabel">Start A Game</h5>
+    <div class="modal-body">
+      <div class="card card-block w-100">
+        <div id="playerSelector" class="btn-group btn-group-block mt-2 w-100 " data-toggle="buttons">
+          <button class="btn btn-secondary w-100 m-0" (click)="chooseMode(true)">
+            SINGLE PLAYER
+          </button>
+          <button (click)="chooseMode(false)" class="btn btn-secondary w-100 m-0">
+            MULTIPLAYER
+          </button>
+        </div>
+        <div id="listAvailable" [class.collapse]="!isCollapsedAvailablePlayer">
+          <div class="card card-block mt-2 pr-2 pl-2  w-100">
+            Play with a friend?
+            <table class="table w-100 mt-2 mb-0" id="AvailableTable">
+
+              <tbody>
+                <div class="list-group w-100" id="bodyOfMatches">
+                  <p *ngFor="let match of matches">
+                    <a id="listPlayer" class="list-group-item w-100 p-0 m-0" (click)="joinMatch(match)" [ngClass]="match.difficulty | lowercase">
+                      {{match.name}} - {{match.difficulty}}
+                    </a>
+                  </p>
+                </div>
+                <p id="noMatch"*ngIf="matches.length===0">
+                 Sorry, no one can play with you
+                </p>
+                <p>Or</p>
+                <p>
+                  <button id="newGame" (click)="showLevelChoice(true); joinedPlayer = null" class="btn btn-secondary  m-2 w-75 m-0">
+                    CREATE A GAME
+                  </button>
+                </p>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <input type="text" maxlength="23" class="form-control  align-self-center w-75 mt-2" [hidden]="!showLevelGame" [(ngModel)]="username"
+          id="username" placeholder="Username">
+        <div id="difficultySelector" [class.collapse]="username == null || joinedPlayer != null">
+          <div class="card card-block pr-2 pl-2 mt-2  w-100">
+            <div class="btn-group btn-group-block w-100 " data-toggle="buttons">
+              <button class="btn btn-secondary w-100 m-0" [class.active]="level===('Easy')" id="easyBtn" (click)="setLevel('Easy')">
+                EASY
+              </button>
+              <button class="btn w-100 btn-secondary m-0  " id="mediumBtn" [class.active]="level === ('Medium')" (click)="setLevel('Medium')">
+                MEDIUM
+              </button>
+              <button class="btn w-100 btn-secondary m-0" id="hardBtn" [class.active]="level===('Hard')" (click)="setLevel('Hard')">
+                HARD
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer m-0">
+        <button type="button" id="playBtn" [disabled]="!isReadyToPlay" (click)="createNewGame()  " class="btn btn-primary">Play</button>
+        <button id="cancelBtn" type="button" routerLink="/" (click)="closeGameOptions()" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

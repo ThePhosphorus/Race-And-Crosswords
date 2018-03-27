@@ -1,38 +1,51 @@
-import { TestBed, inject, async } from "@angular/core/testing";
+import { TestBed, inject } from "@angular/core/testing";
 import { CrosswordService } from "./crossword.service";
-import { Difficulty, CrosswordGrid } from "../../../../../common/communication/crossword-grid";
+import { GameManager } from "../crossword-game-manager/crossword-game-manager";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http/";
+import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
 
 // tslint:disable:no-magic-numbers
 describe("CrosswordService", () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-        imports: [HttpClientModule],
-        providers: [CrosswordService, CrosswordCommunicationService]
-    });
-  });
-
-  it("should be created", inject([CrosswordService], (service: CrosswordService) => {
-    expect(service).toBeTruthy();
-  }));
-
-  it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
-      service.newGame(Difficulty.Easy, 4, 0.3);
-      service.grid.subscribe( (grid: CrosswordGrid) => {
-        expect(grid).toBeDefined();
-      });
-  }));
-
-  it("should add a solved word", async(inject([CrosswordService], (service: CrosswordService) => {
-        service.solvedWords.subscribe((words: number[]) => {
-            const pastLength: number = words.length;
-            const newNumber: number = 20;
-            service.addSolvedWord(newNumber);
-            service.solvedWords.subscribe((newWords: number[]) => {
-                expect(newWords.length).toBe(pastLength + 1 );
-                expect(newWords[newWords.length - 1]).toBe(newNumber);
-            });
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientModule],
+            providers: [CrosswordService, CrosswordCommunicationService, GameManager]
         });
-  })));
+    });
+
+    it("should be created", inject([CrosswordService], (service: CrosswordService) => {
+        expect(service).toBeTruthy();
+    }));
+
+    it("should select a word", inject([CrosswordService], (service: CrosswordService) => {
+        service.newGame(Difficulty.Easy, false);
+        const word: Word = new Word();
+        word.id = 0;
+        word.orientation = Orientation.Across;
+        word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 3), new Letter("", 4)];
+
+        service.gameManager.playerGridSubject.getValue().words.push(word);
+
+        const index: number = 0; // tile 0 shoud be at a crossroad
+        service.setSelectedLetter(index);
+
+        expect(service.gridStateObs.getValue().isLetterSelected(index)).toBeTruthy();
+
+        service.unselectWord();
+        expect(service.gridStateObs.getValue().isLetterSelected(index)).toBeFalsy();
+    }));
+
+    it("should Hover a word", inject([CrosswordService], (service: CrosswordService) => {
+        service.newGame(Difficulty.Easy, false);
+        const word: Word = new Word();
+        word.id = 0;
+        word.orientation = Orientation.Across;
+        word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 4), new Letter("", 3)];
+
+        service.setHoveredWord(word.id, word.orientation);
+        word.letters.forEach((l: Letter) => expect(service.gridStateObs.getValue().isLetterHovered(l.id)));
+    }));
 });
