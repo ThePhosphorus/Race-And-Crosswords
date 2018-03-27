@@ -6,7 +6,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
-// tslint:disable:no-magic-numbers
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 
 describe("DefinitionComponent", () => {
