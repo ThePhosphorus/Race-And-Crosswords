@@ -58,7 +58,8 @@ export class DefinitionComponent implements OnInit {
     }
 
     public wordToDefinition(word: Word): DisplayedDefinition {
-        return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf(" ") + 1)),
+        console.log(word.definitions[0]);
+        return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf("\t") + 1)),
                                        this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), word.id);
     }
 
