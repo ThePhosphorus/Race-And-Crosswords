@@ -198,5 +198,6 @@ describe(" Server Crossword Grid", () => {
         it("should not remove a non existant word", () => {
             assert.equal(crossword.removeWord(0), null , "It added the word");
         });
+
     });
 });

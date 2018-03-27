@@ -16,14 +16,15 @@ export class SCrosswordGrid extends CrosswordGrid {
         return row * this.size + column;
     }
 
-    public cleanGrid(): void {
-        for (const tile of this.grid) {
-            if (tile.char === "") {
-                tile.isBlackTile = true;
-            } else {
-                tile.char = tile.char.normalize("NFD")[0];
-            }
+    public addWord(newWord: string, newDefs: string[], word: Word, difficulty: Difficulty): boolean {
+        if (this.isUnique(newWord) && newDefs != null && newDefs.length !== 0) {
+            this.setWord(newWord, word, difficulty);
+            this.setDefinition(newDefs, word, difficulty);
+
+            return true;
         }
+
+        return false;
     }
 
     public removeWord(index: number): Word {
@@ -44,15 +45,14 @@ export class SCrosswordGrid extends CrosswordGrid {
 
     }
 
-    public addWord(newWord: string, newDefs: string[], word: Word, difficulty: Difficulty): boolean {
-        if (this.isUnique(newWord) && newDefs != null && newDefs.length !== 0) {
-            this.setWord(newWord, word, difficulty);
-            this.setDefinition(newDefs, word, difficulty);
-
-            return true;
+    public cleanGrid(): void {
+        for (const tile of this.grid) {
+            if (tile.char === "") {
+                tile.isBlackTile = true;
+            } else {
+                tile.char = tile.char.normalize("NFD")[0];
+            }
         }
-
-        return false;
     }
 
     private isUnique(word: string): boolean {
