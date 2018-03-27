@@ -4,8 +4,6 @@ import { ModalEndGameComponent } from "./modal-end-game.component";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
-import { InWaitMatch } from "../../../../../../common/communication/Match";
-import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
 describe("ModalEndGameComponent", () => {
     let component: ModalEndGameComponent;
