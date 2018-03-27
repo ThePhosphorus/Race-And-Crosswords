@@ -22,14 +22,12 @@ export class GameManager {
     private _playerGrid: BehaviorSubject<CrosswordGrid>;
     private _solvedWords: BehaviorSubject<SolvedWord[]>;
     private _solvedGrid: BehaviorSubject<CrosswordGrid>;
-    private _currentPlayer: BehaviorSubject<number>;
     private _difficulty: BehaviorSubject<Difficulty>;
 
     public constructor() {
         this._playerGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
         this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
-        this._currentPlayer = new BehaviorSubject<number>(0);
         this._difficulty = new BehaviorSubject<Difficulty>(Difficulty.Easy);
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
@@ -41,37 +39,32 @@ export class GameManager {
         this._playerGrid.next(new CrosswordGrid());
         this._players.next(new Array<Player>());
         this._solvedWords.next(new Array<SolvedWord>());
-        this._currentPlayer.next(0);
         this._difficulty.next(difficulty);
         this.initializeEmptyGrid();
     }
 
-    public get difficultyObs(): BehaviorSubject<Difficulty> {
+    public get difficultySubject(): BehaviorSubject<Difficulty> {
         return this._difficulty;
     }
 
-    public get solvedWordsObs(): BehaviorSubject<SolvedWord[]> {
+    public get solvedWordsSubject(): BehaviorSubject<SolvedWord[]> {
         return this._solvedWords;
     }
 
-    public get currentPlayerObs(): BehaviorSubject<number> {
-        return this._currentPlayer;
-    }
-
-    public get playersObs(): BehaviorSubject<Player[]> {
+    public get playersSubject(): BehaviorSubject<Player[]> {
         return this._players;
     }
 
-    public get playerGridObs(): BehaviorSubject<CrosswordGrid> {
+    public get playerGridSubject(): BehaviorSubject<CrosswordGrid> {
         return this._playerGrid;
     }
 
-    public get solvedGridObs(): BehaviorSubject<CrosswordGrid> {
+    public get solvedGridSubject(): BehaviorSubject<CrosswordGrid> {
         return this._solvedGrid;
     }
 
     public get myPlayer(): Player {
-        return this._players.getValue()[this._currentPlayer.getValue()];
+        return this._players.getValue()[0];
     }
 
     public get topPlayer(): Player {
@@ -107,10 +100,6 @@ export class GameManager {
 
     public set players(players: Player[]) {
         this._players.next(players);
-    }
-
-    public set currentPlayer(id: number) {  // Players must be set first
-        this._currentPlayer.next(id);
     }
 
     public getChar(index: number): string {
@@ -167,5 +156,17 @@ export class GameManager {
         const hue: number = playerId * MAX_ANGLE / this._players.getValue().length;
 
         return "hsl(" + hue + ", " + SATURAION + "%, " + lightness + "%)";
+    }
+
+    public isWordSolved(letterId: number, orientaion: Orientation): boolean {
+        let isSelected: boolean = false;
+        this._solvedWords.getValue().forEach((sw: SolvedWord) => {
+
+            if (sw.id === letterId && sw.orientation === orientaion) {
+                isSelected = true;
+            }
+        });
+
+        return isSelected;
     }
 }

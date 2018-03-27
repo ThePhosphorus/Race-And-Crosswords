@@ -7,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
+import { GameInfoService } from "../game-info.service";
 
 describe("ModalNewGameComponent", () => {
     let component: ModalNewGameComponent;
@@ -15,7 +16,7 @@ describe("ModalNewGameComponent", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [FormsModule, HttpClientModule],
-            providers: [CrosswordService, CrosswordCommunicationService],
+            providers: [CrosswordService, CrosswordCommunicationService, GameInfoService],
             declarations: [ ModalNewGameComponent ]
         })
         .compileComponents();
