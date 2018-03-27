@@ -23,30 +23,27 @@ describe("CrosswordGameManager", () => {
         newGrid.size = 5;
         gameManager.grid = newGrid;
         gameManager.newGame(Difficulty.Easy);
-        expect(gameManager.solvedGridObs.getValue()).not.toBe(newGrid);
+        expect(gameManager.solvedGridSubject.getValue()).not.toBe(newGrid);
         const grid: CrosswordGrid = new CrosswordGrid();
-        expect(gameManager.solvedGridObs.getValue().grid.length).toBe(grid.grid.length);
-        expect(gameManager.solvedGridObs.getValue().size).toBe(grid.size);
-        expect(gameManager.solvedGridObs.getValue().words.length).toBe(grid.words.length);
+        expect(gameManager.solvedGridSubject.getValue().grid.length).toBe(grid.grid.length);
+        expect(gameManager.solvedGridSubject.getValue().size).toBe(grid.size);
+        expect(gameManager.solvedGridSubject.getValue().words.length).toBe(grid.words.length);
     }));
 
     it("should put the right difficulty when creating a new game", inject([GameManager], (gameManager: GameManager) => {
         const diff: Difficulty = Difficulty.Medium;
         gameManager.newGame(diff);
 
-        expect(gameManager.difficultyObs.getValue()).toBe(diff);
+        expect(gameManager.difficultySubject.getValue()).toBe(diff);
     }));
 
     it("should be able set players", inject([GameManager], (service: GameManager) => {
         const players: Player[] = [new Player(0, "Alpha", 0), new Player(1, "Beta", 0), new Player(2, "Charlie", 0)];
         service.players = players;
 
-        expect(service.playersObs.getValue().length).toBe(players.length);
-        expect(service.playersObs.getValue()).toBe(players);
+        expect(service.playersSubject.getValue().length).toBe(players.length);
+        expect(service.playersSubject.getValue()).toBe(players);
 
-        const player: number = 1;
-        service.currentPlayer = player;
-        expect(service.currentPlayerObs.getValue()).toBe(player);
     }));
 
     it("should add a solved word and return if it's the last one", inject([GameManager], (gameManager: GameManager) => {

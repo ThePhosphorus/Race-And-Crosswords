@@ -27,4 +27,11 @@ describe("ModalEndGameComponent", () => {
   it("should create", () => {
     expect(component).toBeTruthy();
   });
+
+  it("should join the right player", () => {
+    const match: InWaitMatch = new InWaitMatch("Alpha", Difficulty.Medium);
+    component.joinMatch(match);
+    expect(component.joinedPlayer).toBe(match.name);
+    expect(component.level).toBe(match.difficulty);
+});
 });

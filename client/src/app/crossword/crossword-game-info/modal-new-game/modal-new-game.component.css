@@ -32,7 +32,7 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #545555;
 }
-#bodyOfMatches p{
+#bodyOfMatches ::-webkit-scrollbar-track-piece{
     border-radius: 10%;
     display: block;
 }
