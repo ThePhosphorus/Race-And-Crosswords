@@ -40,7 +40,7 @@ describe("DefinitionComponent", () => {
     it("should create a Display deffinition right", () => {
         const word: Word = new Word();
         word.id = 0;
-        word.definitions = ["n def0", "n Def1"];
+        word.definitions = ["n\tdef0", "n\tDef1"];
         word.letters = [new Letter("W", 0), new Letter("o", 1), new Letter("r", 2) , new Letter("d", 3)];
         word.orientation = Orientation.Across;
 
