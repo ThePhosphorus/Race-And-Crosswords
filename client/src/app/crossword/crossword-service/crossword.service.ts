@@ -84,8 +84,8 @@ export class CrosswordService {
     }
 
     public setSelectedLetter(index: number): void {
-        if (!this._gridState.value.LIsDisabled(index)) {
-            if (this._gridState.value.LIsCurrentLetter(index)) {
+        if (!this._gridState.value.isLetterDisabled(index)) {
+            if (this._gridState.value.isLetterCurrent(index)) {
                 this._gridState.value.switchOrientation();
             } else {
                 this._gridState.value.currentOrientation = Orientation.Across;
@@ -104,7 +104,7 @@ export class CrosswordService {
             if (targetWord !== null) {
                 this.setSelectedWord(targetWord.id, targetWord.orientation);
                 this._gridState.value.currentLetter = targetWord.letters[0].id;
-                if (this._gridState.value.LIsDisabled(this._gridState.value.currentLetter)) {
+                if (this._gridState.value.isLetterDisabled(this._gridState.value.currentLetter)) {
                     this._gridState.value.currentLetter = this.findNextLetterId(true);
                 }
             }
@@ -116,7 +116,7 @@ export class CrosswordService {
         const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
 
         for (const letter of word.letters) {
-            if (!this._gridState.value.LIsDisabled(letter.id)) {
+            if (!this._gridState.value.isLetterDisabled(letter.id)) {
                 startingIndex = letter.id;
                 break;
             }
@@ -162,7 +162,7 @@ export class CrosswordService {
 
     public getLetterSelectPlayers(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
-        if (this._gridState.getValue().LIsSelected(letterId)) {
+        if (this._gridState.getValue().isLetterSelected(letterId)) {
             players.push(this._gameManager.currentPlayerObs.getValue());
         }
 
@@ -252,14 +252,14 @@ export class CrosswordService {
             for (let i: number = this._gridState.value.selectedLetters
                 .indexOf(this._gridState.value.currentLetter) + 1;
                 i < this._gridState.value.selectedLetters.length; i++) {
-                if (!this._gridState.value.LIsDisabled(this._gridState.value.selectedLetters[i])) {
+                if (!this._gridState.value.isLetterDisabled(this._gridState.value.selectedLetters[i])) {
                     return this._gridState.value.selectedLetters[i];
                 }
             }
         } else {
             for (let i: number = this._gridState.value.selectedLetters
                 .indexOf(this._gridState.value.currentLetter) - 1; i >= 0; i--) {
-                if (!this._gridState.value.LIsDisabled(this._gridState.value.selectedLetters[i])) {
+                if (!this._gridState.value.isLetterDisabled(this._gridState.value.selectedLetters[i])) {
                     return this._gridState.value.selectedLetters[i];
                 }
             }

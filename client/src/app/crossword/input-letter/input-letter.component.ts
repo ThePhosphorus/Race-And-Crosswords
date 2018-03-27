@@ -32,15 +32,15 @@ export class InputLetterComponent implements OnInit {
     }
 
     public isDisabled(): boolean {
-        return this._gridState.LIsDisabled(this.id);
+        return this._gridState.isLetterDisabled(this.id);
     }
 
     public isHovered(): boolean {
-        return this._gridState.LIsHovered(this.id);
+        return this._gridState.isLetterHovered(this.id);
     }
 
     public isCurrentLetter(): boolean {
-        return this._gridState.LIsCurrentLetter(this.id);
+        return this._gridState.isLetterCurrent(this.id);
     }
 
     public isSelected(): boolean {
