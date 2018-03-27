@@ -45,7 +45,6 @@ export class ModalNewGameComponent implements OnInit {
     public getMatchesFromServer(): void {
         this.commService.getMatches().subscribe((matches: Array<InWaitMatch>) => {
             this._matchesAvailable = matches;
-            console.log(this._matchesAvailable);
         });
     }
 
