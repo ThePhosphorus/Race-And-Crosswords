@@ -4,6 +4,8 @@ import { ModalEndGameComponent } from "./modal-end-game.component";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
+import { InWaitMatch } from "../../../../../../common/communication/Match";
+import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
 describe("ModalEndGameComponent", () => {
   let component: ModalEndGameComponent;
@@ -28,10 +30,13 @@ describe("ModalEndGameComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should join the right player", () => {
-    const match: InWaitMatch = new InWaitMatch("Alpha", Difficulty.Medium);
-    component.joinMatch(match);
-    expect(component.joinedPlayer).toBe(match.name);
-    expect(component.level).toBe(match.difficulty);
+  it("should put disconnect at false when configure", () => {
+    component.configureGame();
+    expect(component.isDisconnected).toBe(false);
 });
+it("should be able to set showLoading", inject([GameInfoService], (service: GameInfoService) => {
+    service.setShowSearching(true);
+    expect(service.showSearching.getValue()).toBe(true);
+}));
+
 });
