@@ -41,7 +41,7 @@ export class ModalEndGameComponent implements OnInit {
 
     public ngOnInit(): void {
         this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
-            if (players.length < 2) {
+            if (players.length < 2 && !this.isSinglePlayer) {
                 this._isDisconnected = true;
             }
             this._players = players;
