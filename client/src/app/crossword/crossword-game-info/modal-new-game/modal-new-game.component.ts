@@ -1,8 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
+import { GameInfoService } from "../game-info-service/game-info.service";
 
 @Component({
     selector: "app-modal-new-game",
@@ -12,8 +13,6 @@ import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 export class ModalNewGameComponent implements OnInit {
     public isCollapsedAvailablePlayer: boolean;
     public showLevelGame: boolean;
-    @Output() public showModal: EventEmitter<boolean>;
-    @Output() public showSearching: EventEmitter<boolean>;
     public username: string;
     public lvl: Difficulty;
     public isSinglePlayer: boolean;
@@ -21,23 +20,28 @@ export class ModalNewGameComponent implements OnInit {
 
     private _matchesAvailable: Array<InWaitMatch>;
 
-    public constructor(
-            private _crosswordService: CrosswordService,
-            private commService: CrosswordCommunicationService
-        ) {
-            this.isCollapsedAvailablePlayer = false;
-            this.showLevelGame = false;
-            this.showModal = new EventEmitter<boolean>();
-            this.showSearching = new EventEmitter<boolean>();
-            this.lvl = null;
-            this.username = null;
-            this.isSinglePlayer = null;
-            this.joinedPlayer = null;
-            this._matchesAvailable = [];
-         }
+    public constructor(private _crosswordService: CrosswordService,
+                       private _infoService: GameInfoService, private commService: CrosswordCommunicationService) {
+        this.isCollapsedAvailablePlayer = false;
+        this.lvl = null;
+        this.username = null;
+        this.isSinglePlayer = null;
+        this.joinedPlayer = null;
+        this._matchesAvailable = [];
+    }
 
     public ngOnInit(): void {
         this.getMatchesFromServer();
+    }
+    public get showModal(): boolean {
+        return this._infoService.showModal.getValue();
+    }
+    public get level(): Difficulty {
+        return this._infoService.lvl.getValue();
+    }
+
+    public setLevel(diff: Difficulty): void {
+        this._infoService.setLvl(diff);
     }
 
     public getMatchesFromServer(): void {
@@ -54,11 +58,11 @@ export class ModalNewGameComponent implements OnInit {
         return (this.isSinglePlayer != null &&
                 this.username != null &&
                 this.username.trim() !== "" &&
-                this.lvl != null);
+            this.level != null);
     }
 
     public closeGameOptions(): void {
-        this.showModal.emit(false);
+        this._infoService.setShowModal(false);
         this.username = null;
     }
 
@@ -66,7 +70,7 @@ export class ModalNewGameComponent implements OnInit {
         this.commService.returnName = this.username;
 
         if (!this.isSinglePlayer) {
-            this.showSearching.emit(true);
+            this._infoService.setShowSearching(true);
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this.lvl);
             } else {
@@ -86,10 +90,6 @@ export class ModalNewGameComponent implements OnInit {
     public showLevelChoice(bool: boolean): void {
         this.isCollapsedAvailablePlayer = (bool) ? false : !this.isCollapsedAvailablePlayer;
         this.showLevelGame = bool;
-    }
-
-    public isDiff( diff: Difficulty): boolean {
-        return diff === this.lvl;
     }
 
     public chooseMode(isSinglePlayer: boolean): void {

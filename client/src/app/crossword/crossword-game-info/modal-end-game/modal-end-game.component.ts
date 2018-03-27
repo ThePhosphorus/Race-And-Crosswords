@@ -1,8 +1,9 @@
-import { Component, OnInit, EventEmitter, Output} from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { CrosswordService } from "../../crossword-service/crossword.service";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { Player } from "../../../../../../common/communication/Player";
+import { GameInfoService } from "../game-info-service/game-info.service";
 
 @Component({
   selector: "app-modal-end-game",
@@ -11,15 +12,12 @@ import { Player } from "../../../../../../common/communication/Player";
 })
 
 export class ModalEndGameComponent implements OnInit {
-  @Output() public showModal: EventEmitter<boolean>;
-  @Output() public configureNewGame: EventEmitter<void>;
   public isWaitingRematch: boolean;
   private _isDisconnected: boolean;
   private _players: Array<Player>;
 
-  public constructor(private _crosswordService: CrosswordService, private _commService: CrosswordCommunicationService) {
-    this.showModal = new EventEmitter<boolean>();
-    this.configureNewGame = new EventEmitter<void>();
+  public constructor(private _crosswordService: CrosswordService,
+                     private _infoService: GameInfoService, private _commService: CrosswordCommunicationService) {
     this.isWaitingRematch = false;
     this._isDisconnected = false;
     this._players = new Array<Player>();
@@ -50,13 +48,13 @@ export class ModalEndGameComponent implements OnInit {
   }
 
   public closeModal(): void {
-    this.showModal.emit(false);
+    this._infoService.setShowModal(false);
   }
 
   public configureGame(): void {
     this._isDisconnected = false;
     this._crosswordService.resetGrid();
-    this.configureNewGame.emit();
+    this._infoService.configureNewGame();
   }
 
   public replay(): void {
