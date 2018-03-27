@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable } from "inversify";
 import { WebService } from "../../webServices";
-import {GridGenerator } from "./grid-generator";
+import {GridGenerator } from "./grid-generator/grid-generator";
 import {CrosswordGrid} from "../../../../common/crossword/crossword-grid";
 import { Difficulty } from "../../../../common/crossword/enums-constants";
 
@@ -30,7 +30,10 @@ export class Grid extends WebService {
                                             : DEFAULT_GRID_SIZE;
 
             res.setHeader("Content-Type", "application/json");
-            this._gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword));
+            this._gridGenerator.getNewGrid(difficulty, size).then((crossword: CrosswordGrid) => res.send(crossword)).catch((err: Error) => {
+                console.error(err.message);
+                res.send(null);
+            });
         });
     }
 }

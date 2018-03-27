@@ -17,7 +17,7 @@ export class ExternalCommunications {
             json: true
         };
 
-        return await Request(LEXICAL_SERVICE_URL + LEXICAL_REQUEST_WORDS, options) as DatamuseWord;
+        return Request(LEXICAL_SERVICE_URL + LEXICAL_REQUEST_WORDS, options) ;
     }
 
     public async getDefinitionsFromServer(word: string): Promise<DatamuseWord> {
@@ -29,7 +29,7 @@ export class ExternalCommunications {
             json: true
         };
 
-        return await Request(LEXICAL_SERVICE_URL + LEXICAL_TEST_WORD, options) as DatamuseWord;
+        return Request(LEXICAL_SERVICE_URL + LEXICAL_TEST_WORD, options);
     }
 
 }
