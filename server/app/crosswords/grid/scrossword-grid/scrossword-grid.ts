@@ -16,16 +16,6 @@ export class SCrosswordGrid extends CrosswordGrid {
         return row * this.size + column;
     }
 
-    public isUnique(word: string): boolean {
-        for (const w of this.words) {
-            if (w.toString() === word) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public cleanGrid(): void {
         for (const tile of this.grid) {
             if (tile.char === "") {
@@ -38,6 +28,10 @@ export class SCrosswordGrid extends CrosswordGrid {
 
     public removeWord(index: number): Word {
         const word: Word = this.words[index];
+        if (word == null) {
+            return null;
+        }
+
         for (const letter of word.letters) {
             if ((--letter.count) <= 0) {
                 letter.char = "";
@@ -61,6 +55,15 @@ export class SCrosswordGrid extends CrosswordGrid {
         return false;
     }
 
+    private isUnique(word: string): boolean {
+        for (const w of this.words) {
+            if (w.toString() === word) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     private setWord(receivedWord: string, gridWord: Word, difficulty: Difficulty): void {
         for (let i: number = 0; i < gridWord.letters.length; i++) {
             gridWord.letters[i].char = (gridWord.letters[i].char === "") ? receivedWord[i] : gridWord.letters[i].char;
