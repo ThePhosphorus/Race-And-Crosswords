@@ -2,11 +2,15 @@ import { TestBed, inject } from "@angular/core/testing";
 
 import { GameInfoService } from "./game-info.service";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
+import { CrosswordService } from "../../crossword-service/crossword.service";
+import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
+import { HttpClientModule } from "@angular/common/http";
 
 describe("GameInfoService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [GameInfoService]
+            imports: [HttpClientModule],
+            providers: [GameInfoService, CrosswordService, CrosswordCommunicationService]
         });
     });
 
