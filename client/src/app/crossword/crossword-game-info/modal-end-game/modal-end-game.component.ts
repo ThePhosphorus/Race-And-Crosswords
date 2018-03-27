@@ -17,13 +17,12 @@ export class ModalEndGameComponent implements OnInit {
     private _players: Array<Player>;
 
     public constructor(private _crosswordService: CrosswordService,
-        private _infoService: GameInfoService, private _commService: CrosswordCommunicationService) {
+                       private _infoService: GameInfoService, private _commService: CrosswordCommunicationService) {
         this.isWaitingRematch = false;
         this._isDisconnected = false;
         this._players = new Array<Player>();
     }
 
-<<<<<<< HEAD
     public get isDisconnected(): boolean {
         return this._isDisconnected;
     }
@@ -47,31 +46,6 @@ export class ModalEndGameComponent implements OnInit {
             }
         });
     }
-=======
-  public get isDisconnected(): boolean {
-    return this._isDisconnected;
-  }
-  public get players(): Array<Player> {
-    return this._players;
-  }
-  public get isVictorious(): boolean {
-    return this._crosswordService.isTopPlayer;
-  }
-  public get isSinglePlayer(): boolean {
-    return this._crosswordService.isSinglePlayer;
-  }
-  public ngOnInit(): void {
-    this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
-      if (players.length < 2) {
-        this._isDisconnected = true;
-      }
-      this._players = players;
-      if (players.length > 1 && this.isWaitingRematch) {
-          this.verifyRematchPlayers();
-      }
-    });
-  }
->>>>>>> multiplayer
 
     public closeModal(): void {
         this._infoService.setShowModal(false);
@@ -97,19 +71,12 @@ export class ModalEndGameComponent implements OnInit {
 
     }
 
-<<<<<<< HEAD
     public newGame(): void {
         const difficulty: Difficulty = this._crosswordService.gameManager.difficultySubject.getValue();
         this._crosswordService.newGame(difficulty, (this.isSinglePlayer));
         this.closeModal();
     }
-=======
-  public newGame(): void {
-    const difficulty: Difficulty = this._crosswordService.gameManager.difficultySubject.getValue();
-    this._crosswordService.newGame(difficulty, (this.isSinglePlayer));
-    this.closeModal();
-  }
->>>>>>> multiplayer
+
 
     public verifyRematchPlayers(): void {
         for (const player of this.players) {
