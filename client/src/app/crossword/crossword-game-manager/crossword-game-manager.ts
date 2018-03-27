@@ -46,27 +46,27 @@ export class GameManager {
         this.initializeEmptyGrid();
     }
 
-    public get difficultyObs(): BehaviorSubject<Difficulty> {
+    public get difficultySubject(): BehaviorSubject<Difficulty> {
         return this._difficulty;
     }
 
-    public get solvedWordsObs(): BehaviorSubject<SolvedWord[]> {
+    public get solvedWordsSubject(): BehaviorSubject<SolvedWord[]> {
         return this._solvedWords;
     }
 
-    public get currentPlayerObs(): BehaviorSubject<number> {
+    public get currentPlayerSubject(): BehaviorSubject<number> {
         return this._currentPlayer;
     }
 
-    public get playersObs(): BehaviorSubject<Player[]> {
+    public get playersSubject(): BehaviorSubject<Player[]> {
         return this._players;
     }
 
-    public get playerGridObs(): BehaviorSubject<CrosswordGrid> {
+    public get playerGridSubject(): BehaviorSubject<CrosswordGrid> {
         return this._playerGrid;
     }
 
-    public get solvedGridObs(): BehaviorSubject<CrosswordGrid> {
+    public get solvedGridSubject(): BehaviorSubject<CrosswordGrid> {
         return this._solvedGrid;
     }
 
@@ -109,7 +109,7 @@ export class GameManager {
         this._players.next(players);
     }
 
-    public set currentPlayer(id: number) {  // Players must be set first
+    public set currentPlayer(id: number) {
         this._currentPlayer.next(id);
     }
 
@@ -167,5 +167,17 @@ export class GameManager {
         const hue: number = playerId * MAX_ANGLE / this._players.getValue().length;
 
         return "hsl(" + hue + ", " + SATURAION + "%, " + lightness + "%)";
+    }
+
+    public isWordSolved(letterId: number, orientaion: Orientation): boolean {
+        let isSelected: boolean = false;
+        this._solvedWords.getValue().forEach((sw: SolvedWord) => {
+
+            if (sw.id === letterId && sw.orientation === orientaion) {
+                isSelected = true;
+            }
+        });
+
+        return isSelected;
     }
 }

@@ -1,11 +1,16 @@
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 
+export class OtherPlayersSelect {
+    public constructor(public playerId: number, public selectedLetters: Array<number>) { }
+}
+
 export class GridState {
     public currentOrientation: Orientation;
     public currentLetter: number;
     public selectedLetters: number[];
     public hoveredLetters: number[];
     public disabledLetters: number[];
+    public otherPlayersSelect: Array<OtherPlayersSelect>;
 
     public constructor() {
         this.currentOrientation = Orientation.Across;
@@ -13,6 +18,7 @@ export class GridState {
         this.selectedLetters = [];
         this.hoveredLetters = [];
         this.disabledLetters = [];
+        this.otherPlayersSelect = new Array<OtherPlayersSelect>();
     }
 
     public isLetterDisabled(letterId: number): boolean {

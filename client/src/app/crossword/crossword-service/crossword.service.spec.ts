@@ -27,7 +27,7 @@ describe("CrosswordService", () => {
         word.orientation = Orientation.Across;
         word.letters = [new Letter("", 0), new Letter("", 1), new Letter("", 2), new Letter("", 3), new Letter("", 4)];
 
-        service.gameManager.playerGridObs.getValue().words.push(word);
+        service.gameManager.playerGridSubject.getValue().words.push(word);
 
         const index: number = 0; // tile 0 shoud be at a crossroad
         service.setSelectedLetter(index);

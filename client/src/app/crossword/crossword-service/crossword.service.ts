@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
-import { GridState } from "../grid-state/grid-state";
+import { GridState, OtherPlayersSelect } from "../grid-state/grid-state";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player } from "../../../../../common/communication/Player";
@@ -15,22 +15,16 @@ const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const INPUT_REGEX: RegExp = /^[a-z]$/i;
 
-class OtherPlayersSelect {
-    public constructor(public playerId: number, public selectedLetters: Array<number>) { }
-}
-
 @Injectable()
 export class CrosswordService {
     private _gameManager: GameManager;
     private _gridState: BehaviorSubject<GridState>;
-    private _otherPlayersHover: Array<OtherPlayersSelect>;
     private _isSinglePlayer: boolean;
     public isGameOver: boolean;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
-        this._otherPlayersHover = new Array<OtherPlayersSelect>();
         this._isSinglePlayer = true;
         this.isGameOver = false;
         if (USE_MOCK_GRID) {
@@ -164,13 +158,13 @@ export class CrosswordService {
         }
     }
 
-    public getLetterSelectPlayers(letterId: number): Array<number> {
+    public playersSelectingLetter(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
         if (this._gridState.getValue().isLetterSelected(letterId)) {
-            players.push(this._gameManager.currentPlayerObs.getValue());
+            players.push(this._gameManager.currentPlayerSubject.getValue());
         }
 
-        this._otherPlayersHover.forEach((oph: OtherPlayersSelect) => {
+        this._gridState.getValue().otherPlayersSelect.forEach((oph: OtherPlayersSelect) => {
             if (oph.selectedLetters.indexOf(letterId) > -1) {
                 players.push(oph.playerId);
             }
@@ -179,10 +173,10 @@ export class CrosswordService {
         return players;
     }
 
-    public getLetterDisabledPlayers(letterId: number): Array<number> {
+    public playersDisablingLetter(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
 
-        this._gameManager.solvedWordsObs.getValue().forEach((sw: SolvedWord) => {
+        this._gameManager.solvedWordsSubject.getValue().forEach((sw: SolvedWord) => {
             const word: Word = this._gameManager.findWordFromLetter(sw.id, sw.orientation, false);
             if (word != null && word.letters.find((l: Letter) => l.id === letterId) != null) {
                 players.push(sw.player);
@@ -193,32 +187,19 @@ export class CrosswordService {
     }
 
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
-        let player: OtherPlayersSelect = this._otherPlayersHover.find((oph: OtherPlayersSelect) => oph.playerId === playerId);
+        let player: OtherPlayersSelect = this._gridState.getValue().otherPlayersSelect.find(
+                                                        (oph: OtherPlayersSelect) => oph.playerId === playerId);
         if (player == null) {
             player = new OtherPlayersSelect(playerId, []);
-            this._otherPlayersHover.push(player);
+            this._gridState.getValue().otherPlayersSelect.push(player);
         }
 
         const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, true);
-
         if (word != null) {
-            player.selectedLetters = word.letters.map(
-                (letter: Letter) => letter.id
-            );
+            player.selectedLetters = word.letters.map((letter: Letter) => letter.id);
         }
     }
 
-    public isWordSolved(letterId: number, orientaion: Orientation): boolean {
-        let isSelected: boolean = false;
-        this.gameManager.solvedWordsObs.getValue().forEach((sw: SolvedWord) => {
-
-            if (sw.id === letterId && sw.orientation === orientaion) {
-                isSelected = true;
-            }
-        });
-
-        return isSelected;
-    }
     public resetGrid(): void {
         this._gameManager.grid = new CrosswordGrid();
     }
@@ -288,7 +269,7 @@ export class CrosswordService {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
                     if (this._isSinglePlayer) {
-                        this.disableWord(playerWord, this._gameManager.currentPlayerObs.getValue());
+                        this.disableWord(playerWord, this._gameManager.myPlayer.id);
                     } else {
                         this.commService.completedWord(solvedWord);
                     }
