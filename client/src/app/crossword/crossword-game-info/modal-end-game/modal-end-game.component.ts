@@ -26,15 +26,19 @@ export class ModalEndGameComponent implements OnInit {
     public get isDisconnected(): boolean {
         return this._isDisconnected;
     }
+
     public get players(): Array<Player> {
         return this._players;
     }
+
     public get isVictorious(): boolean {
         return this._crosswordService.isTopPlayer;
     }
+
     public get isSinglePlayer(): boolean {
         return this._crosswordService.isSinglePlayer;
     }
+
     public ngOnInit(): void {
         this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
             if (players.length < 2) {
@@ -85,5 +89,4 @@ export class ModalEndGameComponent implements OnInit {
         }
         this.newGame();
     }
-
 }

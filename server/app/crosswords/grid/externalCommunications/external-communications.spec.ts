@@ -24,6 +24,9 @@ describe("External Communications", () => {
                 assert.fail("could not find easy word");
             }
             done();
+        }).catch(() => {
+            assert.fail("Promise Rejection");
+            done();
         });
     });
 
@@ -38,6 +41,9 @@ describe("External Communications", () => {
         externalCommunication.getDefinitionsFromServer(testWord).then((datamuseWord: DatamuseWord) => {
             assert.equal(datamuseWord.word, testWord, "Expected : " + testWord + " got : " + datamuseWord.word);
             assert.notEqual(datamuseWord.defs, undefined, "Did not fetch definitions");
+            done();
+        }).catch(() => {
+            assert.fail("Promise Rejection");
             done();
         });
     });
@@ -56,6 +62,9 @@ describe("External Communications", () => {
                 assert.fail("could not find easy word");
             }
             done();
+        }).catch(() => {
+            assert.fail("Promise Rejection");
+            done();
         });
     });
 
@@ -73,6 +82,9 @@ describe("External Communications", () => {
                 assert.fail("could not find hard word");
             }
             done();
+        }).catch(() => {
+            assert.fail("Promise Rejection");
+            done();
         });
     });
 
@@ -87,6 +99,9 @@ describe("External Communications", () => {
 
         externalCommunication.getDefinitionsFromServer(fakeWord).then((datamuseWord: DatamuseWord) => {
             assert.equal(datamuseWord, undefined, "Found word for : " + fakeWord);
+            done();
+        }).catch(() => {
+            assert.fail("Promise Rejection");
             done();
         });
     });

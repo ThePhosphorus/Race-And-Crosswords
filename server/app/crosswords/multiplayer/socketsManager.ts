@@ -61,7 +61,7 @@ export class SocketsManager {
     }
 
     private addSocket(socket: Socket): void {
-        socket.on(msg.createMatch, (diff: Difficulty) => this.createMatch(socket, diff));
+        socket.on(msg.createMatch, async (diff: Difficulty) => this.createMatch(socket, diff));
         socket.on(msg.joinMatch, (name: string) => this.joinMatch(socket, name));
     }
 }
