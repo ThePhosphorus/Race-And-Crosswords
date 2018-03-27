@@ -48,7 +48,7 @@ export class CrosswordService {
         return this._gridState;
     }
 
-    public getPlayerColor(playerId: number, isFrontGround: boolean): string { // TODO understand
+    public getPlayerColor(playerId: number, isFrontGround: boolean): string {
         return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
     }
 
