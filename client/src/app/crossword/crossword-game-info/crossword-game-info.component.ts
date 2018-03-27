@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
-import { GameInfoService } from "./game-info.service";
+import { GameInfoService } from "./game-info-service/game-info.service";
 
 @Component({
     selector: "app-crossword-game-info",
@@ -12,13 +12,11 @@ import { GameInfoService } from "./game-info.service";
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
-    private _lvl: Difficulty;
     public players: Array<Player>;
     public isCollapsedPlayer: boolean;
     public isCollapsedLevel: boolean;
 
     public constructor(private _crosswordService: CrosswordService, private _infoService: GameInfoService) {
-        this._lvl = null;
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
         this.players = new Array<Player>();
@@ -32,14 +30,13 @@ export class CrosswordGameInfoComponent implements OnInit {
 
         return bool;
     }
-    public get showModal(): boolean {
-        return this._infoService.showModal;
-    }
 
     public get lvl(): Difficulty {
-        return this._lvl;
+        return this._infoService.lvl.getValue();
     }
-
+    public get showModal(): boolean {
+        return this._infoService.showModal.getValue();
+    }
     public ngOnInit(): void {
         this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
             this._lvl = difficulty);
@@ -50,7 +47,7 @@ export class CrosswordGameInfoComponent implements OnInit {
             }
             this.players = players;
             if (players.length > 1) {
-                this._infoService.showSearching.emit(false);
+                this._infoService.setShowSearching(false);
             }
         });
     }
@@ -60,8 +57,8 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public loadNewGame(): void {
-        this._infoService.showModal = true;
-        this._infoService.showSearching.emit(false);
+        this._infoService.setShowModal(true);
+        this._infoService.setShowSearching(false);
     }
 
     public configureNewGame(): void {

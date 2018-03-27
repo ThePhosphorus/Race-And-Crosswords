@@ -3,7 +3,7 @@ import { CrosswordService } from "../../crossword-service/crossword.service";
 import { CrosswordCommunicationService } from "../../crossword-communication-service/crossword.communication.service";
 import { InWaitMatch } from "../../../../../../common/communication/Match";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
-import { GameInfoService } from "../game-info.service";
+import { GameInfoService } from "../game-info-service/game-info.service";
 
 @Component({
     selector: "app-modal-new-game",
@@ -34,8 +34,16 @@ export class ModalNewGameComponent implements OnInit {
         this.getMatchesFromServer();
     }
     public get showModal(): boolean {
-        return this._infoService.showModal;
+        return this._infoService.showModal.getValue();
     }
+    public get level(): Difficulty {
+        return this._infoService.lvl.getValue();
+    }
+
+    public setLevel(diff: Difficulty): void {
+        this._infoService.setLvl(diff);
+    }
+
     public getMatchesFromServer(): void {
         this.commService.getMatches().subscribe((matches: Array<InWaitMatch>) => {
             this._matchesAvailable = matches;
@@ -50,11 +58,11 @@ export class ModalNewGameComponent implements OnInit {
         return (this.isSinglePlayer != null &&
             this.username != null &&
             this.username !== "" &&
-            this.lvl != null);
+            this.level != null);
     }
 
     public closeGameOptions(): void {
-        this._infoService.showModal = false;
+        this._infoService.setShowModal(false);
         this.username = null;
     }
 
@@ -62,7 +70,7 @@ export class ModalNewGameComponent implements OnInit {
         this.commService.returnName = this.username;
 
         if (!this.isSinglePlayer) {
-            this._infoService.showSearching.emit(true);
+            this._infoService.setShowSearching(true);
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this.lvl);
             } else {
@@ -82,10 +90,6 @@ export class ModalNewGameComponent implements OnInit {
     public showLevelChoice(bool: boolean): void {
         this.isCollapsedAvailablePlayer = (bool) ? false : !this.isCollapsedAvailablePlayer;
         this.showLevelGame = bool;
-    }
-
-    public isDiff(diff: Difficulty): boolean {
-        return diff === this.lvl;
     }
 
     public chooseMode(isSinglePlayer: boolean): void {
