@@ -13,7 +13,7 @@ export class GameInfoService {
         this._showModal = new BehaviorSubject<boolean>(true);
         this._showSearching = new BehaviorSubject<boolean>(false);
         this._lvl = new BehaviorSubject<Difficulty>(null);
-        this._crosswordService.difficulty.subscribe((difficulty: Difficulty) =>
+        this._crosswordService.gameManager.difficultyObs.subscribe((difficulty: Difficulty) =>
         this.setLvl(difficulty));
     }
     public configureNewGame(): void {
