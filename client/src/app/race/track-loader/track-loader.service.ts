@@ -13,7 +13,7 @@ import { Collider } from "../game-component/collision/collider";
 import { RigidBody } from "../game-component/rigid-body/rigid-body";
 import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 
-const TRACK_PATH: string = "../../assets/textures/test.jpg";
+export const TRACK_PATH: string = "../../assets/textures/test.jpg";
 const LINE_PATH: string = "../../assets/textures/linefixed.bmp";
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const TRACK_SAVER_INCPLAY_URL: string = TRACK_SAVER_URL + "play/";

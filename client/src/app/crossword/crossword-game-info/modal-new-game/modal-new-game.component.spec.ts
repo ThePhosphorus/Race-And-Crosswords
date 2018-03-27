@@ -42,11 +42,21 @@ describe("ModalNewGameComponent", () => {
         expect(component.showLevelGame).not.toBeTruthy();
     });
 
-    it("should join the right player", () => {
-        const match: InWaitMatch = new InWaitMatch("Alpha", Difficulty.Medium);
+    it("should chooseMode singlePlayer", () => {
+        const isSinglePlayer: boolean = true;
+        component.chooseMode(isSinglePlayer);
+        expect(component.isSinglePlayer).toBeTruthy();
+    });
+    it("should show level if true", () => {
+        const isShowLevel: boolean = true;
+        component.showLevelChoice(isShowLevel);
+        expect(component.showLevelGame).toBeTruthy();
+    });
+    it("should joinMatch", () => {
+        const match: InWaitMatch = new InWaitMatch("test", Difficulty.Easy);
         component.joinMatch(match);
         expect(component.joinedPlayer).toBe(match.name);
-        expect(component.lvl).toBe(match.difficulty);
+        expect(component.level).toBe(match.difficulty);
     });
 
 });

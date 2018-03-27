@@ -5,6 +5,7 @@ import { Difficulty, Orientation, MIN_WORD_LENGTH } from "../../../../../common/
 import { Letter } from "../../../../../common/crossword/letter";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { SCrosswordGrid } from "../scrossword-grid/scrossword-grid";
+import { DatamuseWord } from "../../../../../common/communication/datamuse-word";
 
 export const CONSTRAINT_CHAR: string = "?";
 
@@ -23,6 +24,7 @@ export abstract class BaseGridGenerator {
         this.emptyGridGenerator = new EmptyGridGenerator();
         this.initialiseEmptyGrid(size);
         await this.findWords(difficulty);
+        await this.addDefinitions(difficulty);
         this.crossword.cleanGrid();
 
         return this.crossword;
@@ -105,6 +107,14 @@ export abstract class BaseGridGenerator {
         });
 
         return constraint;
+    }
+
+    protected async addDefinitions(difficulty: Difficulty): Promise<void> {
+        for (const word of this.crossword.words) {
+            const datamuseWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
+            this.crossword.setDefinition(datamuseWord.defs, word, difficulty);
+        }
+
     }
 
 }
