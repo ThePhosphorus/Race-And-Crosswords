@@ -67,13 +67,13 @@ describe("CrosswordGameManager", () => {
 
         gameManager.grid = grid;
 
-        const pastSolvedWordsLength: number = gameManager.solvedWordsObs.getValue().length;
+        const pastSolvedWordsLength: number = gameManager.solvedWordsSubject.getValue().length;
 
         expect(gameManager.addSolvedWord(wordD, 0)).toBeFalsy();
-        expect(gameManager.solvedWordsObs.getValue().length).toBe(pastSolvedWordsLength + 1);
+        expect(gameManager.solvedWordsSubject.getValue().length).toBe(pastSolvedWordsLength + 1);
 
         expect(gameManager.addSolvedWord(wordD, 0)).toBeTruthy();
-        expect(gameManager.solvedWordsObs.getValue().length).toBe(pastSolvedWordsLength + 2);
+        expect(gameManager.solvedWordsSubject.getValue().length).toBe(pastSolvedWordsLength + 2);
     }));
 
     it("should be able to set and get a character", inject([GameManager], (gameManager: GameManager) => {

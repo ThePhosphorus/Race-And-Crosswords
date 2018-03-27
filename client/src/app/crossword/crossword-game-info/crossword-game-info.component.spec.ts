@@ -10,7 +10,6 @@ import { FormsModule } from "@angular/forms";
 import { GameInfoService } from "./game-info-service/game-info.service";
 import { ModalEndGameComponent } from "./modal-end-game/modal-end-game.component";
 
-
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
     let fixture: ComponentFixture<CrosswordGameInfoComponent>;
@@ -35,13 +34,13 @@ describe("CrosswordGameInfoComponent", () => {
     });
 
     it("should receive a promise for Difficulty", inject([CrosswordService], (service: CrosswordService) => {
-        service.gameManager.difficulty.subscribe( (difficulty: Difficulty) => {
+        service.gameManager.difficultySubject.subscribe( (difficulty: Difficulty) => {
           expect(difficulty).toBeDefined();
         });
     }));
 
     it("should receive a promise for players", inject([CrosswordService], (service: CrosswordService) => {
-        service.gameManager.players.subscribe( (players: Array<Player>) => {
+        service.gameManager.playersSubject.subscribe( (players: Array<Player>) => {
           expect(players).toBeDefined();
         });
     }));
