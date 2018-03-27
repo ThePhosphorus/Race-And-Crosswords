@@ -15,7 +15,7 @@ const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const INPUT_REGEX: RegExp = /^[a-z]$/i;
 
-class OtherPlayersHover {
+class OtherPlayersSelect {
     public constructor(public playerId: number, public selectedLetters: Array<number>) { }
 }
 
@@ -23,14 +23,14 @@ class OtherPlayersHover {
 export class CrosswordService {
     private _gameManager: GameManager;
     private _gridState: BehaviorSubject<GridState>;
-    private _otherPlayersHover: Array<OtherPlayersHover>;
+    private _otherPlayersHover: Array<OtherPlayersSelect>;
     private _isSinglePlayer: boolean;
     public isGameOver: boolean;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
-        this._otherPlayersHover = new Array<OtherPlayersHover>();
+        this._otherPlayersHover = new Array<OtherPlayersSelect>();
         this._isSinglePlayer = true;
         this.isGameOver = false;
         if (USE_MOCK_GRID) {
@@ -170,7 +170,7 @@ export class CrosswordService {
             players.push(this._gameManager.currentPlayerObs.getValue());
         }
 
-        this._otherPlayersHover.forEach((oph: OtherPlayersHover) => {
+        this._otherPlayersHover.forEach((oph: OtherPlayersSelect) => {
             if (oph.selectedLetters.indexOf(letterId) > -1) {
                 players.push(oph.playerId);
             }
@@ -193,9 +193,9 @@ export class CrosswordService {
     }
 
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
-        let player: OtherPlayersHover = this._otherPlayersHover.find((oph: OtherPlayersHover) => oph.playerId === playerId);
+        let player: OtherPlayersSelect = this._otherPlayersHover.find((oph: OtherPlayersSelect) => oph.playerId === playerId);
         if (player == null) {
-            player = new OtherPlayersHover(playerId, []);
+            player = new OtherPlayersSelect(playerId, []);
             this._otherPlayersHover.push(player);
         }
 
