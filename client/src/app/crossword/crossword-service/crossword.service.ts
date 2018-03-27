@@ -88,8 +88,10 @@ export class CrosswordService {
             } else {
                 this._gridState.value.currentOrientation = Orientation.Across;
             }
+
             let targetWord: Word = this._gameManager.findWordFromLetter(
                 index, this._gridState.value.currentOrientation, false);
+
             if (targetWord === null) {
                 for (const ori of Object.keys(Orientation)) {
                     if (ori !== this._gridState.value.currentOrientation) {
@@ -99,6 +101,7 @@ export class CrosswordService {
                     }
                 }
             }
+
             if (targetWord !== null) {
                 this.setSelectedWord(targetWord.id, targetWord.orientation);
                 this._gridState.value.currentLetter = targetWord.letters[0].id;
@@ -123,9 +126,11 @@ export class CrosswordService {
         if (startingIndex != null) {
             this._gridState.value.currentOrientation = orientation;
             this._gridState.value.selectedLetters = [];
+
             for (const letter of word.letters) {
                 this._gridState.value.selectedLetters.push(letter.id);
             }
+
             this._gridState.value.currentLetter = startingIndex;
             this.commService.notifySelect(letterId, orientation);
         }
@@ -142,17 +147,20 @@ export class CrosswordService {
                 this._gameManager.setChar(this._gridState.value.currentLetter, key.toLowerCase());
                 this.verifyWords();
                 nextLetterId = this.findNextLetterId(true);
+
                 if (nextLetterId != null) {
                     this._gridState.value.currentLetter = nextLetterId;
                 }
             } else if (key === "Backspace") {
                 let nextLetterId: number;
+
                 if (this._gameManager.getChar(this._gridState.value.currentLetter) === EMPTY_TILE_CHARACTER) {
                     nextLetterId = this.findNextLetterId(false);
                     if (nextLetterId != null) {
                         this._gridState.value.currentLetter = nextLetterId;
                     }
                 }
+
                 this._gameManager.setChar(this._gridState.value.currentLetter, EMPTY_TILE_CHARACTER);
             }
         }
@@ -261,12 +269,15 @@ export class CrosswordService {
 
     private verifyWords(): void {
         const currentLetter: number = this._gridState.value.currentLetter;
+
         for (const orientation of Object.keys(Orientation)) {
             const playerWord: Word = this._gameManager.findWordFromLetter(currentLetter, orientation, false);
             const solvedWord: Word = this._gameManager.findWordFromLetter(currentLetter, orientation, true);
+
             if (playerWord != null) {
                 if (playerWord.letters.map((lt: Letter) => (lt.char)).join("") ===
                     solvedWord.letters.map((lt: Letter) => (lt.char)).join("")) {
+
                     if (this._isSinglePlayer) {
                         this.disableWord(playerWord, this._gameManager.myPlayer.id);
                     } else {
