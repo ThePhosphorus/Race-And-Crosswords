@@ -112,9 +112,10 @@ export abstract class BaseGridGenerator {
     protected async addDefinitions(difficulty: Difficulty): Promise<void> {
         for (const word of this.crossword.words) {
             const datamuseWord: DatamuseWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
-            this.crossword.setDefinition(datamuseWord.defs, word, difficulty);
+            if ( datamuseWord != null) {
+                this.crossword.setDefinition(datamuseWord.defs, word, difficulty);
+            }
         }
-
     }
 
 }
