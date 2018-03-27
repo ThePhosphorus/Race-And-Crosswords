@@ -77,7 +77,6 @@ export class ModalEndGameComponent implements OnInit {
         this.closeModal();
     }
 
-
     public verifyRematchPlayers(): void {
         for (const player of this.players) {
             if (!player.wantsRematch) {
