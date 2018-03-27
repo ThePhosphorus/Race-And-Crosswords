@@ -161,7 +161,7 @@ export class CrosswordService {
     public playersSelectingLetter(letterId: number): Array<number> {
         const players: Array<number> = new Array<number>();
         if (this._gridState.getValue().isLetterSelected(letterId)) {
-            players.push(this._gameManager.currentPlayerSubject.getValue());
+            players.push(this._gameManager.myPlayer.id);
         }
 
         this._gridState.getValue().otherPlayersSelect.forEach((oph: OtherPlayersSelect) => {
@@ -219,7 +219,6 @@ export class CrosswordService {
 
         this.commService.listenerReceivePlayers = (players: Player[]) => {
             this._gameManager.players = players;
-            this._gameManager.currentPlayer = players[0].id;
         };
         this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
             this.selectWordFromOtherPlayer(playerId, letterId, orientation);
