@@ -14,7 +14,6 @@ export class ModalNewGameComponent implements OnInit {
     public isCollapsedAvailablePlayer: boolean;
     public showLevelGame: boolean;
     public username: string;
-    public lvl: Difficulty;
     public isSinglePlayer: boolean;
     public joinedPlayer: string;
 
@@ -23,7 +22,6 @@ export class ModalNewGameComponent implements OnInit {
     public constructor(private _crosswordService: CrosswordService,
                        private _infoService: GameInfoService, private commService: CrosswordCommunicationService) {
         this.isCollapsedAvailablePlayer = false;
-        this.lvl = null;
         this.username = null;
         this.isSinglePlayer = null;
         this.joinedPlayer = null;
@@ -47,6 +45,7 @@ export class ModalNewGameComponent implements OnInit {
     public getMatchesFromServer(): void {
         this.commService.getMatches().subscribe((matches: Array<InWaitMatch>) => {
             this._matchesAvailable = matches;
+            console.log(this._matchesAvailable);
         });
     }
 
@@ -56,8 +55,8 @@ export class ModalNewGameComponent implements OnInit {
 
     public get isReadyToPlay(): boolean {
         return (this.isSinglePlayer != null &&
-                this.username != null &&
-                this.username.trim() !== "" &&
+            this.username != null &&
+            this.username !== "" &&
             this.level != null);
     }
 
@@ -72,7 +71,7 @@ export class ModalNewGameComponent implements OnInit {
         if (!this.isSinglePlayer) {
             this._infoService.setShowSearching(true);
             if (this.joinedPlayer === null) {
-                this.commService.createMatch(this.lvl);
+                this.commService.createMatch(this.level);
             } else {
                 this.commService.joinMatch(this.joinedPlayer);
             }
@@ -83,7 +82,7 @@ export class ModalNewGameComponent implements OnInit {
 
     public joinMatch(match: InWaitMatch): void {
         this.joinedPlayer = match.name;
-        this.lvl = match.difficulty;
+        this.setLevel(match.difficulty);
         this.showLevelChoice(true);
     }
 
