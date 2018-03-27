@@ -55,7 +55,6 @@ export class CrosswordGameInfoComponent implements OnInit {
 
     public loadNewGame(): void {
         this._infoService.setShowModal(true);
-        this._infoService.setShowSearching(false);
     }
 
     public configureNewGame(): void {

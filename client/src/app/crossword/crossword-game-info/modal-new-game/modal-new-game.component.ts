@@ -20,7 +20,7 @@ export class ModalNewGameComponent implements OnInit {
     private _matchesAvailable: Array<InWaitMatch>;
 
     public constructor(private _crosswordService: CrosswordService,
-                       private _infoService: GameInfoService, private commService: CrosswordCommunicationService) {
+        private _infoService: GameInfoService, private commService: CrosswordCommunicationService) {
         this.isCollapsedAvailablePlayer = false;
         this.username = null;
         this.isSinglePlayer = null;
@@ -68,7 +68,6 @@ export class ModalNewGameComponent implements OnInit {
         this.commService.returnName = this.username;
 
         if (!this.isSinglePlayer) {
-            this._infoService.setShowSearching(true);
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this.level);
             } else {
@@ -93,9 +92,9 @@ export class ModalNewGameComponent implements OnInit {
     public chooseMode(isSinglePlayer: boolean): void {
         this.isSinglePlayer = isSinglePlayer;
         this.showLevelChoice(isSinglePlayer);
-
         if (!isSinglePlayer) {
             this.getMatchesFromServer();
+            this._infoService.setShowSearching(true);
         }
     }
 
