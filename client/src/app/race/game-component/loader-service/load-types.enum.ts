@@ -3,9 +3,15 @@ export enum LoadedObject {
 }
 
 export enum LoadedAudio {
-    collision,
     background_music,
-    car
+    engine,
+    start,
+    drift,
+    collision1,
+    collision2,
+    collision3,
+    collision4,
+    collision5
 }
 
 export enum LoadedTexture {

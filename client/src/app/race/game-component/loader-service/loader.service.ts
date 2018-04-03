@@ -2,6 +2,32 @@ import { Injectable } from "@angular/core";
 import { DefaultLoadingManager, Object3D, Audio, Texture, CubeTexture } from "three";
 import { LoadedObject, LoadedAudio, LoadedTexture, LoadedCubeTexture } from "./load-types.enum";
 
+const ASSETS: string = "../../assets/";
+
+const CAR_FILE: string = ASSETS + "camero/yellow.json";
+
+const SOUND_PATH: string = ASSETS + "sounds/";
+const START_SOUND_FILE: string = SOUND_PATH + "starting.ogg";
+const MUSIC_SOUND_FILE: string = SOUND_PATH + "dejavu.ogg";
+const ENGINE_SOUND_FILE: string = SOUND_PATH + "engine/engine2.ogg";
+const DRIFT_SOUND_FILE: string = SOUND_PATH + "drift/drift1.ogg";
+const COLLISION_SOUNDS_PATH: string = SOUND_PATH + "crash";
+const CRASH_PATH_1: string = COLLISION_SOUNDS_PATH + "/crash1.ogg";
+const CRASH_PATH_2: string = COLLISION_SOUNDS_PATH + "/crash2.ogg";
+const CRASH_PATH_3: string = COLLISION_SOUNDS_PATH + "/crash3.ogg";
+const CRASH_PATH_4: string = COLLISION_SOUNDS_PATH + "/crash4.ogg";
+const CRASH_PATH_5: string = COLLISION_SOUNDS_PATH + "/crash5.ogg";
+
+const TEXTURE_PATH: string = ASSETS + "textures/";
+const TRACK_TEXTURE_FILE: string = TEXTURE_PATH + "test.jpg";
+const START_LINE_TEXTURE_FILE: string = TEXTURE_PATH + "linefixed.bmp";
+const OFF_ROAD_TEXTURE_FILE: string = TEXTURE_PATH + "orange.jpg";
+
+const SKYBOX_PATH: string = ASSETS + "skybox/";
+const NIGHT_SKYBOX_FOLDER: string = SKYBOX_PATH + "sky3/";
+const DAY_SKYBOX_FOLDER: string = SKYBOX_PATH + "sky1/";
+const SKYBOX_FILES: string[] = [ "posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png"];
+
 @Injectable()
 export class LoaderService {
 
@@ -9,31 +35,37 @@ export class LoaderService {
     private _audios: Array<Audio>;
     private _textures: Array<Texture>;
     private _cubeTextures: Array<CubeTexture>;
+    private _finished: boolean;
 
-    public constructor() {}
-
-    public setCallbacks(): void {
-        DefaultLoadingManager.onStart = () => console.log("started The Loading");
-        DefaultLoadingManager.onLoad = () => console.log("loaded");
-        DefaultLoadingManager.onProgress = (item: string, loaded: number, total: number) =>
-            console.log("Loading " + item + ". " + loaded + "/ " + total);
-        DefaultLoadingManager.onError = () => console.error("There was an error while loading");
+    public constructor() {
+        this.init();
+        this.setCallbacks();
     }
 
-    public loadObject(path: string, type: LoadedObject): void {
-        // Load the object
+    public startLoading(): void {
+        this.loadObject(CAR_FILE, LoadedObject.car);
+
+        this.loadAudio(START_SOUND_FILE, LoadedAudio.start);
+        this.loadAudio(MUSIC_SOUND_FILE, LoadedAudio.background_music);
+        this.loadAudio(ENGINE_SOUND_FILE, LoadedAudio.engine);
+        this.loadAudio(DRIFT_SOUND_FILE, LoadedAudio.drift);
+        this.loadAudio(CRASH_PATH_1, LoadedAudio.collision1);
+        this.loadAudio(CRASH_PATH_2, LoadedAudio.collision2);
+        this.loadAudio(CRASH_PATH_3, LoadedAudio.collision3);
+        this.loadAudio(CRASH_PATH_4, LoadedAudio.collision4);
+        this.loadAudio(CRASH_PATH_5, LoadedAudio.collision5);
+
+        this.loadTexture(TRACK_TEXTURE_FILE, LoadedTexture.track);
+        this.loadTexture(START_LINE_TEXTURE_FILE, LoadedTexture.start);
+        this.loadTexture(OFF_ROAD_TEXTURE_FILE, LoadedTexture.offRoad);
+
+        this.loadCubeTexture(DAY_SKYBOX_FOLDER, SKYBOX_FILES, LoadedCubeTexture.daySkyBox);
+        this.loadCubeTexture(NIGHT_SKYBOX_FOLDER, SKYBOX_FILES, LoadedCubeTexture.nightSkyBox);
+
     }
 
-    public loadAudio(path: string, type: LoadedAudio): void {
-        // Load the Audio
-    }
-
-    private loadTexture(path: string, type: LoadedTexture): void {
-        // Load the texture
-    }
-
-    private loadCubeTexture(path: string, files: Array<string>, type: LoadedCubeTexture): void {
-        // Load the cube Texture
+    public get isFinished(): boolean {
+        return this._finished;
     }
 
     public getObject(type: LoadedObject): Object3D {
@@ -48,5 +80,77 @@ export class LoaderService {
     }
     public getCubeTexture(type: LoadedCubeTexture): CubeTexture {
         return this._cubeTextures[type];
+    }
+
+    private init(): void {
+        this._objects = new Array<Object3D>();
+        this._audios = new Array<Audio>();
+        this._textures = new Array<Texture>();
+        this._cubeTextures = new Array<CubeTexture>();
+
+        this._finished = false;
+
+        this.clearArrays();
+    }
+
+    private clearArrays(): void {
+        for (const objectType of Object.keys(LoadedObject)) {
+            const type: number = Number(objectType);
+            if (type) {
+                this._objects[type] = null;
+            }
+        }
+
+        for (const audioType of Object.keys(LoadedAudio)) {
+            const type: number = Number(audioType);
+            if (type) {
+                this._audios[type] = null;
+            }
+        }
+
+        for (const textureType of Object.keys(LoadedTexture)) {
+            const type: number = Number(textureType);
+            if (type) {
+                this._textures[type] = null;
+            }
+        }
+
+        for (const cubeTextureType of Object.keys(LoadedCubeTexture)) {
+            const type: number = Number(cubeTextureType);
+            if (type) {
+                this._textures[type] = null;
+            }
+        }
+    }
+
+    private setCallbacks(): void {
+        DefaultLoadingManager.onStart = () => {
+            console.log("started The Loading");
+            this._finished = false;
+        };
+        DefaultLoadingManager.onProgress = (item: string, loaded: number, total: number) =>
+            console.log("Loading " + item + ". " + loaded + "/ " + total);
+        DefaultLoadingManager.onLoad = () => {
+            console.log("finished teh Loading");
+            this._finished = true;
+        };
+
+        DefaultLoadingManager.onError = () => console.error("There was an error while loading");
+    }
+
+    private loadObject(path: string, type: LoadedObject): void {
+        // Load the object
+    }
+
+    private loadAudio(path: string, type: LoadedAudio): void {
+        // Load the Audio
+    }
+
+    private loadTexture(path: string, type: LoadedTexture): void {
+        // Load the texture
+    }
+
+    private loadCubeTexture(path: string, files: Array<string>, type: LoadedCubeTexture): void {
+        // Load the cube Texture
     }
 }
