@@ -152,22 +152,16 @@ export class LoaderService {
     }
 
     private setCallbacks(): void {
-        DefaultLoadingManager.onStart = () => {
-            console.log("started The Loading");
-            this._finished = false;
-        };
-        DefaultLoadingManager.onProgress = (
-            item: string,
-            loaded: number,
-            total: number
-        ) => console.log("Loading " + item + ". " + loaded + "/ " + total);
+        DefaultLoadingManager.onStart = () => this._finished = false;
+
+        DefaultLoadingManager.onProgress = this.progressHandler;
+
         DefaultLoadingManager.onLoad = () => {
-            console.log("finished teh Loading");
             this._finished = true;
         };
 
-        DefaultLoadingManager.onError = () =>
-            console.error("There was an error while loading");
+        DefaultLoadingManager.onError = this.errorHandler;
+
     }
 
     private loadObject(path: string, type: LoadedObject): void {
@@ -181,8 +175,8 @@ export class LoaderService {
         new AudioLoader(DefaultLoadingManager).load(
             path,
             (audio: AudioBuffer) => (this._audios[type] = audio),
-            () => {},
-            () => {} // TO PUT IN THE UPDATE
+            this.progressHandler,
+            this.errorHandler
         );
     }
 
@@ -198,5 +192,13 @@ export class LoaderService {
             files,
             (cubeTexture: CubeTexture) => this._cubeTextures[type] = cubeTexture
         );
+    }
+
+    private errorHandler(): void {
+        console.error("There was an error while loading");
+    }
+
+    private progressHandler(item: string, loaded: number, total: number): void {
+        console.error("Loading " + item + ". " + loaded + "/ " + total);
     }
 }
