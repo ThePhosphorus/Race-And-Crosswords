@@ -14,7 +14,7 @@ export enum LoadedTextures {
     offRoad
 }
 
-export enum LoaderCubeTextures {
+export enum LoadedCubeTextures {
     daySkyBox,
     nightSkyBox
 }
