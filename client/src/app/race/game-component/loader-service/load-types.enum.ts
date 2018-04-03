@@ -1,20 +1,20 @@
-export enum LoadedObjects {
+export enum LoadedObject {
     car
 }
 
-export enum LoadedAudios {
+export enum LoadedAudio {
     collision,
     background_music,
     car
 }
 
-export enum LoadedTextures {
+export enum LoadedTexture {
     track,
     start,
     offRoad
 }
 
-export enum LoadedCubeTextures {
+export enum LoadedCubeTexture {
     daySkyBox,
     nightSkyBox
 }

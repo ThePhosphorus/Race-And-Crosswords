@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
 import { DefaultLoadingManager, Object3D, Audio, Texture, CubeTexture } from "three";
-import { LoadedObjects, LoadedAudios, LoadedTextures, LoadedCubeTextures } from "./load-types.enum";
+import { LoadedObject, LoadedAudio, LoadedTexture, LoadedCubeTexture } from "./load-types.enum";
 
 @Injectable()
 export class LoaderService {
 
-    private objects: Array<Object3D>;
-    private audios: Array<Audio>;
-    private textures: Array<Texture>;
-    private cubeTextures: Array<CubeTexture>;
+    private _objects: Array<Object3D>;
+    private _audios: Array<Audio>;
+    private _textures: Array<Texture>;
+    private _cubeTextures: Array<CubeTexture>;
 
     public constructor() {}
 
@@ -20,19 +20,33 @@ export class LoaderService {
         DefaultLoadingManager.onError = () => console.error("There was an error while loading");
     }
 
-    public loadObject(path: string, type: LoadedObjects): void {
+    public loadObject(path: string, type: LoadedObject): void {
         // Load the object
     }
 
-    public loadAudio(path: string, type: LoadedAudios): void {
+    public loadAudio(path: string, type: LoadedAudio): void {
         // Load the Audio
     }
 
-    private loadTexture(path: string, type: LoadedTextures): void {
+    private loadTexture(path: string, type: LoadedTexture): void {
         // Load the texture
     }
 
-    private loadCubeTexture(path: string, files: Array<string>, type: LoadedCubeTextures): void {
+    private loadCubeTexture(path: string, files: Array<string>, type: LoadedCubeTexture): void {
         // Load the cube Texture
+    }
+
+    public getObject(type: LoadedObject): Object3D {
+        return this._objects[type];
+    }
+
+    public getAudio(type: LoadedAudio): Audio {
+        return this._audios[type];
+    }
+    public getTexture(type: LoadedTexture): Texture {
+        return this._textures[type];
+    }
+    public getCubeTexture(type: LoadedCubeTexture): CubeTexture {
+        return this._cubeTextures[type];
     }
 }
