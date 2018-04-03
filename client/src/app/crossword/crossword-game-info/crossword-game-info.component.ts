@@ -41,11 +41,11 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
             if (players.length < this.players.length) {
                 this._crosswordService.isGameOver = true;
+            } else if (this._crosswordService.isSinglePlayer || players.length > 1) {
+                this._infoService.setShowSearching(false);
+                console.log("why u no work");
             }
             this.players = players;
-            if (players.length > 1) {
-                this._infoService.setShowSearching(false);
-            }
         });
     }
 
