@@ -37,6 +37,7 @@ import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
+import { AIController } from "../ai-controller/ai-controller";
 
 export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
@@ -149,6 +150,9 @@ export class GameManagerService extends Renderer {
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
             await this._aiControlledCars[i].init(spawn, COLORS[(i + 1) % COLORS.length]);
             this._aiControlledCars[i].mesh.lookAt(spawn.clone().add(lookAtOffset));
+            const ai: AIController = new AIController();
+            this._aiControlledCars[i].add(ai);
+            ai.init();
         }
     }
 
@@ -171,7 +175,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.lightManager.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
-
     }
 
     private initSoundManager(): void {
