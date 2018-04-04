@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { CrosswordService } from "../../crossword-service/crossword.service";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Difficulty } from "../../../../../../common/crossword/enums-constants";
 
@@ -10,18 +9,13 @@ export class GameInfoService {
     private _showLoading: BehaviorSubject<boolean>;
     private _lvl: BehaviorSubject<Difficulty>;
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor() {
         this._showModal = new BehaviorSubject<boolean>(true);
         this._showSearching = new BehaviorSubject<boolean>(true);
         this._showLoading = new BehaviorSubject<boolean>(true);
         this._lvl = new BehaviorSubject<Difficulty>(null);
 
     }
-
-    public configureNewGame(): void {
-        this._crosswordService.isGameOver = false;
-    }
-
     public get showModal(): BehaviorSubject<boolean> {
         return this._showModal;
     }
