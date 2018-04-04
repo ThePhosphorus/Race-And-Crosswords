@@ -33,9 +33,11 @@ export class CrosswordGameInfoComponent implements OnInit {
     public get lvl(): Difficulty {
         return this._infoService.lvl.getValue();
     }
+
     public get showModal(): boolean {
         return this._infoService.showModal.getValue();
     }
+
     public ngOnInit(): void {
         this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
             if (players.length < this.players.length) {

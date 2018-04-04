@@ -17,6 +17,7 @@ export class CrosswordsComponent implements OnInit {
         this.loading = true;
         this.searching = true;
     }
+
     public ngOnInit(): void {
         this._gameInfo.showSearching.subscribe((showSearching: boolean) => {
             this.searching = showSearching;
