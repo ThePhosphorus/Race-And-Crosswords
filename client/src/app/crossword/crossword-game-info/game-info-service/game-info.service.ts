@@ -19,24 +19,31 @@ export class GameInfoService {
     public get showModal(): BehaviorSubject<boolean> {
         return this._showModal;
     }
+
     public setShowModal(bool: boolean): void {
         this._showModal.next(bool);
     }
+
     public get showSearching(): BehaviorSubject<boolean> {
         return this._showSearching;
     }
+
     public setShowSearching(bool: boolean): void {
         this._showSearching.next(bool);
     }
+
     public get showLoading(): BehaviorSubject<boolean> {
         return this._showLoading;
     }
+
     public setShowLoading(bool: boolean): void {
         this._showLoading.next(bool);
     }
+
     public get lvl(): BehaviorSubject<Difficulty> {
         return this._lvl;
     }
+
     public setLvl(diff: Difficulty): void {
         this._lvl.next(diff);
     }
