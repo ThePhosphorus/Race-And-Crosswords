@@ -46,9 +46,9 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         private _trackLoader: TrackLoaderService,
         private _route: ActivatedRoute,
         private _inputManager: InputManagerService,
-        // private _loader: LoaderService
+        private _loader: LoaderService
     ) {
-        // this._loader.isFinished.subscribe((finished: boolean) => this.isLoading = !finished);
+        this._loader.isFinished.subscribe((finished: boolean) => console.log(finished));
         this.isLoading = true;
         this.track = new Track("", LOADING_TITLE, LOADING_DESCRIPTION, [], 0, [] );
     }

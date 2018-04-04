@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Observable } from "rxjs/Observable";
 import {
     DefaultLoadingManager,
     Object3D,
@@ -51,6 +52,8 @@ const SKYBOX_FILES: string[] = [
     "negz.png"
 ];
 
+const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
+
 @Injectable()
 export class LoaderService {
     private _objects: Array<Object3D>;
@@ -58,6 +61,8 @@ export class LoaderService {
     private _textures: Array<Texture>;
     private _cubeTextures: Array<CubeTexture>;
     private _finished: BehaviorSubject<boolean>;
+    private _status: BehaviorSubject<number>;
+    private _loadingMsg: BehaviorSubject<string>;
 
     public constructor() {
         this.init();
@@ -65,6 +70,10 @@ export class LoaderService {
     }
 
     public startLoading(): void {
+        this.loadTexture(TRACK_TEXTURE_FILE, LoadedTexture.track);
+        this.loadTexture(START_LINE_TEXTURE_FILE, LoadedTexture.start);
+        this.loadTexture(OFF_ROAD_TEXTURE_FILE, LoadedTexture.offRoad);
+
         this.loadObject(CAR_FILE, LoadedObject.car);
 
         this.loadAudio(START_SOUND_FILE, LoadedAudio.start);
@@ -76,10 +85,6 @@ export class LoaderService {
         this.loadAudio(CRASH_PATH_3, LoadedAudio.collision3);
         this.loadAudio(CRASH_PATH_4, LoadedAudio.collision4);
         this.loadAudio(CRASH_PATH_5, LoadedAudio.collision5);
-
-        this.loadTexture(TRACK_TEXTURE_FILE, LoadedTexture.track);
-        this.loadTexture(START_LINE_TEXTURE_FILE, LoadedTexture.start);
-        this.loadTexture(OFF_ROAD_TEXTURE_FILE, LoadedTexture.offRoad);
 
         this.loadCubeTexture(
             DAY_SKYBOX_FOLDER,
@@ -93,8 +98,16 @@ export class LoaderService {
         );
     }
 
-    public get isFinished(): BehaviorSubject<boolean> {
-        return this._finished;
+    public get isFinished(): Observable<boolean> {
+        return this._finished.asObservable();
+    }
+
+    public get status(): Observable<number> {
+        return this._status.asObservable();
+    }
+
+    public get loadingMsg(): Observable<string> {
+        return this._loadingMsg.asObservable();
     }
 
     public getObject(type: LoadedObject): Object3D {
@@ -118,6 +131,8 @@ export class LoaderService {
         this._cubeTextures = new Array<CubeTexture>();
 
         this._finished = new BehaviorSubject<boolean>(false);
+        this._status = new BehaviorSubject<number>(0);
+        this._loadingMsg = new BehaviorSubject<string>(DEFAULT_LOADING_MESSAGE);
 
         this.clearArrays();
     }
@@ -153,11 +168,16 @@ export class LoaderService {
     }
 
     private setCallbacks(): void {
-        DefaultLoadingManager.onProgress = () => this.progressHandler;
+        DefaultLoadingManager.onStart = () => {
+            this._loadingMsg.next("Started Loading");
+        };
 
-        DefaultLoadingManager.onLoad = () => this._finished.next(true);
+        DefaultLoadingManager.onProgress = (item: string, loaded: number, total: number) =>
+            this.progressHandler(item, loaded, total);
 
-        DefaultLoadingManager.onError = () => this.errorHandler;
+        DefaultLoadingManager.onLoad = () => this.doneHandler();
+
+        DefaultLoadingManager.onError = () => this.errorHandler();
     }
 
     private loadObject(path: string, type: LoadedObject): void {
@@ -198,6 +218,12 @@ export class LoaderService {
     }
 
     private progressHandler(item: string, loaded: number, total: number): void {
-        console.log("Loading " + item + ". " + loaded + "/ " + total);
+        this._status.next(loaded / total);
+        this._loadingMsg.next("Loading " + item + ". " + loaded + "/ " + total);
+    }
+
+    private doneHandler(): void {
+        this._finished.next(true);
+        this._loadingMsg.next("Done Loading");
     }
 }

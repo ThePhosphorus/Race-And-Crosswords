@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, HostListener, SimpleChanges, OnChanges } from "@angular/core";
+import { Component, Input, ViewChild, AfterViewInit, ElementRef, HostListener, SimpleChanges, OnChanges } from "@angular/core";
 import { Track } from "../../../../../../common/race/track";
 import { LoaderService } from "../loader-service/loader.service";
 import { TrackPreviewService } from "../../track-preview/track-preview.service";
+
+const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
 
 @Component({
     selector: "app-loading",
@@ -12,13 +14,21 @@ import { TrackPreviewService } from "../../track-preview/track-preview.service";
 export class LoadingComponent implements AfterViewInit, OnChanges {
     @Input() public track: Track;
 
+    public loadingMessage: string;
+    public loadingStatus: number;
+
     @ViewChild("preview") private _preview: ElementRef;
 
     public constructor(
         private _loader: LoaderService,
         private _trackPreview: TrackPreviewService
     ) {
-        this._loader.startLoading();
+        this.loadingMessage = DEFAULT_LOADING_MESSAGE;
+        this.loadingStatus = 0;
+
+        this._loader.status.subscribe((status: number) => this.loadingStatus = status);
+        this._loader.loadingMsg.subscribe((msg: string) => this.loadingMessage = msg);
+        // this._loader.startLoading();
     }
 
     @HostListener("window:resize", ["$event"])
@@ -32,8 +42,10 @@ export class LoadingComponent implements AfterViewInit, OnChanges {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (this.track._id !== "") {
-            this._trackPreview.displayPreview(this.track);
+        for (const propName in changes) {
+            if ( changes[propName].currentValue === this.track && this.track._id !== "") {
+                this._trackPreview.displayPreview(this.track);
+            }
         }
     }
 }
