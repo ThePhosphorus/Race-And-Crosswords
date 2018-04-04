@@ -9,6 +9,7 @@ import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/race/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
 import { GameConfiguration } from "./game-configuration/game-configuration";
+import { LoaderService } from "./loader-service/loader.service";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
 const EMPTY_TRACK_ID: string = "empty";
@@ -24,7 +25,8 @@ const EMPTY_TRACK_ID: string = "empty";
         SoundManagerService,
         CollisionDetectorService,
         TrackLoaderService,
-        LightManagerService
+        LightManagerService,
+        LoaderService
     ]
 })
 export class GameComponent implements OnDestroy, AfterViewInit {
@@ -38,7 +40,9 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         private _soundManager: SoundManagerService,
         private _trackLoader: TrackLoaderService,
         private _route: ActivatedRoute,
-        private _inputManager: InputManagerService) {}
+        private _inputManager: InputManagerService,
+        private _loader: LoaderService
+    ) {}
 
     @HostListener("window:resize", ["$event"])
     public onResize(): void {

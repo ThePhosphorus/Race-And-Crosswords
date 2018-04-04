@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
 import {
     DefaultLoadingManager,
     Object3D,
@@ -28,12 +27,12 @@ const START_SOUND_FILE: string = SOUND_PATH + "starting.ogg";
 const MUSIC_SOUND_FILE: string = SOUND_PATH + "dejavu.ogg";
 const ENGINE_SOUND_FILE: string = SOUND_PATH + "engine/engine2.ogg";
 const DRIFT_SOUND_FILE: string = SOUND_PATH + "drift/drift1.ogg";
-const COLLISION_SOUNDS_PATH: string = SOUND_PATH + "crash";
-const CRASH_PATH_1: string = COLLISION_SOUNDS_PATH + "/crash1.ogg";
-const CRASH_PATH_2: string = COLLISION_SOUNDS_PATH + "/crash2.ogg";
-const CRASH_PATH_3: string = COLLISION_SOUNDS_PATH + "/crash3.ogg";
-const CRASH_PATH_4: string = COLLISION_SOUNDS_PATH + "/crash4.ogg";
-const CRASH_PATH_5: string = COLLISION_SOUNDS_PATH + "/crash5.ogg";
+const COLLISION_SOUNDS_PATH: string = SOUND_PATH + "crash/";
+const CRASH_PATH_1: string = COLLISION_SOUNDS_PATH + "crash1.ogg";
+const CRASH_PATH_2: string = COLLISION_SOUNDS_PATH + "crash2.ogg";
+const CRASH_PATH_3: string = COLLISION_SOUNDS_PATH + "crash3.ogg";
+const CRASH_PATH_4: string = COLLISION_SOUNDS_PATH + "crash4.ogg";
+const CRASH_PATH_5: string = COLLISION_SOUNDS_PATH + "crash5.ogg";
 
 const TEXTURE_PATH: string = ASSETS + "textures/";
 const TRACK_TEXTURE_FILE: string = TEXTURE_PATH + "test.jpg";
@@ -94,8 +93,8 @@ export class LoaderService {
         );
     }
 
-    public get isFinished(): Observable<boolean> {
-        return this._finished.asObservable();
+    public get isFinished(): BehaviorSubject<boolean> {
+        return this._finished;
     }
 
     public getObject(type: LoadedObject): Object3D {
@@ -148,20 +147,17 @@ export class LoaderService {
         for (const cubeTextureType of Object.keys(LoadedCubeTexture)) {
             const type: number = Number(cubeTextureType);
             if (type) {
-                this._textures[type] = null;
+                this._cubeTextures[type] = null;
             }
         }
     }
 
     private setCallbacks(): void {
-        DefaultLoadingManager.onProgress = this.progressHandler;
+        DefaultLoadingManager.onProgress = () => this.progressHandler;
 
-        DefaultLoadingManager.onLoad = () => {
-            this._finished.next(true);
-        };
+        DefaultLoadingManager.onLoad = () => this._finished.next(true);
 
-        DefaultLoadingManager.onError = this.errorHandler;
-
+        DefaultLoadingManager.onError = () => this.errorHandler;
     }
 
     private loadObject(path: string, type: LoadedObject): void {
@@ -175,8 +171,8 @@ export class LoaderService {
         new AudioLoader(DefaultLoadingManager).load(
             path,
             (audio: AudioBuffer) => (this._audios[type] = audio),
-            this.progressHandler,
-            this.errorHandler
+            () => this.progressHandler,
+            () => this.errorHandler
         );
     }
 
@@ -187,11 +183,14 @@ export class LoaderService {
         );
     }
 
-    private loadCubeTexture(path: string, files: Array<string>, type: LoadedCubeTexture ): void {
-        new CubeTextureLoader(DefaultLoadingManager).setPath(path).load(
-            files,
-            (cubeTexture: CubeTexture) => this._cubeTextures[type] = cubeTexture
-        );
+    private loadCubeTexture(path: string, files: Array<string>, type: LoadedCubeTexture): void {
+        new CubeTextureLoader(DefaultLoadingManager)
+            .setPath(path)
+            .load(
+                files,
+                (cubeTexture: CubeTexture) =>
+                    (this._cubeTextures[type] = cubeTexture)
+            );
     }
 
     private errorHandler(): void {
@@ -199,6 +198,6 @@ export class LoaderService {
     }
 
     private progressHandler(item: string, loaded: number, total: number): void {
-        console.error("Loading " + item + ". " + loaded + "/ " + total);
+        console.log("Loading " + item + ". " + loaded + "/ " + total);
     }
 }
