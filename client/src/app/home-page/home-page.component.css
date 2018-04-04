@@ -1,7 +1,7 @@
 #teamTitle{
     border: transparent;
     font-family: "Team Font",'Times New Roman', Times, serif;
-    font-size: 900%;
+    font-size: 11vmax;
     background-color: transparent;
     margin-bottom: 0%;
     max-height: 25vmin;
@@ -10,10 +10,11 @@
 .card{
     border: transparent;
 }
+
 #presentTitle{
     border: transparent;
     font-family: "Team Font",'Times New Roman', Times, serif;
-    font-size: 200%;
+    font-size: 3.5vmax;
     text-align: top;
     background-color: transparent;
     text-shadow: 0.4vmin 0.4vmin 0.4vmin 0.4vmin gray;
@@ -27,6 +28,7 @@
     margin-bottom: 0%;
     width: 100%;
 }
+
 .btn{
     align-self: center;
     width: 45%;
@@ -36,7 +38,7 @@
 
 #raceBtn {
     font-family: "Race Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 300%;
+    font-size: 2.5vmax;
     text-align: center;
     background-color: steelblue;
     border-radius:3vmin;
@@ -48,7 +50,7 @@
 }
 #wordBtn {
     font-family: "Word Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    font-size: 430%;
+    font-size: 5vmax;
     text-align: center;
     background-color: steelblue;
     border-radius: 3vmin;
@@ -58,7 +60,7 @@
 
 #adminBtn {
     font-family: "Admin Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 120%;
+    font-size: 1.5vmax;
     text-align: center;
     align-self: center;
     background-color:  #a3293d;
