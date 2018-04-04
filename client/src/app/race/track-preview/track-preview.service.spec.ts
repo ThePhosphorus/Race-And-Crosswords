@@ -1,7 +1,7 @@
 import { TestBed, inject } from "@angular/core/testing";
 
 import { TrackPreviewService } from "./track-preview.service";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 describe("TrackPreviewService", () => {
     beforeEach(() => {

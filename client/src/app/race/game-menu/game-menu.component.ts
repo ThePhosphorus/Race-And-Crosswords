@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, AfterContentChecked } from "@angular/core";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/race/track";
-import { TrackPreviewService } from "./track-preview/track-preview.service";
+import { TrackPreviewService } from "../track-preview/track-preview.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 
 @Component({

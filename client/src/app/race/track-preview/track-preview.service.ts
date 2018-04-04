@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { Renderer } from "../../renderer/renderer";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
-import { Track } from "../../../../../../common/race/track";
-import { CameraType } from "../../../global-constants/constants";
+import { Renderer } from "../renderer/renderer";
+import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
+import { Track } from "../../../../../common/race/track";
+import { CameraType } from "../../global-constants/constants";
 import { AmbientLight, Vector3, Scene, Mesh, Color } from "three";
 import {
     WHITE,
     AMBIENT_LIGHT_OPACITY,
     STARTING_CAMERA_HEIGHT
-} from "../../admin/track-editor.constants";
-import { TrackLoaderService } from "../../track-loader/track-loader.service";
+} from "../admin/track-editor.constants";
+import { TrackLoaderService } from "../track-loader/track-loader.service";
 
 const BACKGROUND_COLOR: number = 0x4682B4;
 const HEIGHT_RATIO: number = 0.8;
