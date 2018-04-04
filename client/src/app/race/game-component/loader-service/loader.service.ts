@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Observable } from "rxjs/Observable";
 import {
     DefaultLoadingManager,
     Object3D,
-    Audio,
+    AudioBuffer,
     Texture,
     CubeTexture,
     ObjectLoader,
@@ -56,7 +58,7 @@ export class LoaderService {
     private _audios: Array<AudioBuffer>;
     private _textures: Array<Texture>;
     private _cubeTextures: Array<CubeTexture>;
-    private _finished: boolean;
+    private _finished: BehaviorSubject<boolean>;
 
     public constructor() {
         this.init();
@@ -92,8 +94,8 @@ export class LoaderService {
         );
     }
 
-    public get isFinished(): boolean {
-        return this._finished;
+    public get isFinished(): Observable<boolean> {
+        return this._finished.asObservable();
     }
 
     public getObject(type: LoadedObject): Object3D {
@@ -112,11 +114,11 @@ export class LoaderService {
 
     private init(): void {
         this._objects = new Array<Object3D>();
-        this._audios = new Array<Audio>();
+        this._audios = new Array<AudioBuffer>();
         this._textures = new Array<Texture>();
         this._cubeTextures = new Array<CubeTexture>();
 
-        this._finished = false;
+        this._finished = new BehaviorSubject<boolean>(false);
 
         this.clearArrays();
     }
@@ -152,12 +154,10 @@ export class LoaderService {
     }
 
     private setCallbacks(): void {
-        DefaultLoadingManager.onStart = () => this._finished = false;
-
         DefaultLoadingManager.onProgress = this.progressHandler;
 
         DefaultLoadingManager.onLoad = () => {
-            this._finished = true;
+            this._finished.next(true);
         };
 
         DefaultLoadingManager.onError = this.errorHandler;
