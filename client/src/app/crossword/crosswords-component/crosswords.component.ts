@@ -9,7 +9,7 @@ import { GameInfoService } from "../crossword-game-info/game-info-service/game-i
     styleUrls: ["./crosswords.component.css"],
     providers: [CrosswordCommunicationService, GameInfoService, CrosswordService]
 })
-export class CrosswordsComponent {
+export class CrosswordsComponent implements OnInit {
     public loading: boolean;
     public searching: boolean;
 
