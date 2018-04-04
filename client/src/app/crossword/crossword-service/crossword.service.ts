@@ -222,16 +222,16 @@ export class CrosswordService {
     }
 
     private setUpMultiplayer(diff: Difficulty): void {
-        this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
+        this.commService.listenerGridReceived = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 
-        this.commService.listenerReceivePlayers = (players: Player[]) => {
+        this.commService.listenerPlayersReceived = (players: Player[]) =>
             this._gameManager.players = players;
-        };
-        this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
+
+        this.commService.listenerWordSelected = (playerId: number, letterId: number, orientation: Orientation) =>
             this.selectWordFromOtherPlayer(playerId, letterId, orientation);
 
-        this.commService.listenerIsCompletedFirst = (playerId: number, word: Word) =>
+        this.commService.listenerWordSolved = (playerId: number, word: Word) =>
             this.disableWord(word, playerId);
     }
 

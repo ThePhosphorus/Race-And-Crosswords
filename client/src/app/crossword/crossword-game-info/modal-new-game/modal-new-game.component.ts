@@ -31,9 +31,11 @@ export class ModalNewGameComponent implements OnInit {
     public ngOnInit(): void {
         this.getMatchesFromServer();
     }
+
     public get showModal(): boolean {
         return this._infoService.showModal.getValue();
     }
+
     public get level(): Difficulty {
         return this._infoService.lvl.getValue();
     }
@@ -99,5 +101,4 @@ export class ModalNewGameComponent implements OnInit {
             this.getMatchesFromServer();
         }
     }
-
 }
