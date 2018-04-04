@@ -7,8 +7,7 @@ import { GameInfoService } from "./game-info-service/game-info.service";
 @Component({
     selector: "app-crossword-game-info",
     templateUrl: "./crossword-game-info.component.html",
-    styleUrls: ["./crossword-game-info.component.css"],
-    providers: [GameInfoService]
+    styleUrls: ["./crossword-game-info.component.css"]
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
@@ -43,7 +42,6 @@ export class CrosswordGameInfoComponent implements OnInit {
                 this._crosswordService.isGameOver = true;
             } else if (this._crosswordService.isSinglePlayer || players.length > 1) {
                 this._infoService.setShowSearching(false);
-                console.log("why u no work");
             }
             this.players = players;
         });
@@ -55,6 +53,8 @@ export class CrosswordGameInfoComponent implements OnInit {
 
     public loadNewGame(): void {
         this._infoService.setShowModal(true);
+        this._infoService.setShowSearching(true);
+        this._infoService.setShowLoading(true);
     }
 
     public configureNewGame(): void {

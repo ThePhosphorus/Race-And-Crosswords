@@ -19,11 +19,9 @@ export class CrosswordsComponent {
     }
     public ngOnInit(): void {
         this._gameInfo.showSearching.subscribe((showSearching: boolean) => {
-            console.log(showSearching);
             this.searching = showSearching;
         });
         this._gameInfo.showLoading.subscribe((showLoading: boolean) => {
-            console.log(showLoading);
             this.loading = showLoading;
         });
     }

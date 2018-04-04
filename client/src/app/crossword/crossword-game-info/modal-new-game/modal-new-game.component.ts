@@ -75,9 +75,7 @@ export class ModalNewGameComponent implements OnInit {
                 this.commService.joinMatch(this.joinedPlayer);
             }
         } else {
-            console.log("what");
             this._infoService.setShowSearching(false);
-            this._infoService.setShowLoading(false);
         }
         this._crosswordService.newGame(this.level, this.isSinglePlayer);
         this.closeGameOptions();
