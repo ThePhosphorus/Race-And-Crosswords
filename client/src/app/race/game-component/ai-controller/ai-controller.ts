@@ -4,6 +4,7 @@ import { Car } from "../car/car";
 import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
+const COLLISION_SPEED_THRESHOLD: number = 20;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -29,15 +30,16 @@ export class AIController extends Object3D {
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
                 const objective: number = this.findObjective(nextPointIndex);
-                this.applyAcceleration(nextPointIndex, deltaTime);
+                this.wallCollisionTimer -= deltaTime;
+                this.applyAcceleration();
                 this.applySteering(objective);
             }
         }
     }
 
     private onCollision(otherRb: RigidBody): void {
-        if (otherRb.fixed) {
-            this.wallCollisionTimer = 500;
+        if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
+            this.wallCollisionTimer = 1500;
         }
     }
 
@@ -112,9 +114,8 @@ export class AIController extends Object3D {
         }
     }
 
-    private applyAcceleration(nextPointIndex: number, deltaTime: number): void {
+    private applyAcceleration(): void {
         if (this.wallCollisionTimer > 0) {
-            this.wallCollisionTimer -= deltaTime;
             this.carControl.releaseAccelerator();
             this.carControl.brake();
         } else {
