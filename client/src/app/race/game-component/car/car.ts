@@ -73,6 +73,10 @@ export class Car extends Object3D {
         return this._mesh == null ? 0 : this._rigidBody.velocity.clone().dot(this.direction2D);
     }
 
+    public get rigidBody(): RigidBody {
+        return this._rigidBody;
+    }
+
     public constructor(
         private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),

@@ -1,30 +1,43 @@
 import { Object3D, Vector3 } from "three";
 import { CarControl } from "../car/car-control";
 import { Car } from "../car/car";
+import { RigidBody } from "../rigid-body/rigid-body";
+
+const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
     private track: Array<Vector3>;
+    private wallCollisionTimer: number;
 
     public constructor() {
         super();
+        this.wallCollisionTimer = 0;
     }
 
     public init(track: Array<Vector3>): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
+            this.parent.rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
         }
         this.track = track;
     }
 
-    public update(): void {
+    public update(deltaTime: number): void {
         if (this.track != null) {
             this.carControl.accelerate();
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
-                const objective: Vector3 = this.findObjective(nextPointIndex);
+                const objective: number = this.findObjective(nextPointIndex);
+                this.applyAcceleration(nextPointIndex, deltaTime);
                 this.applySteering(objective);
             }
+        }
+    }
+
+    private onCollision(otherRb: RigidBody): void {
+        if (otherRb.fixed) {
+            this.wallCollisionTimer = 500;
         }
     }
 
@@ -44,15 +57,23 @@ export class AIController extends Object3D {
         return new Vector3();
     }
 
-    private findObjective(nextPointIndex: number): Vector3 {
+    private getSpeed(): number {
+        if (this.parent != null && this.parent instanceof Car) {
+            return this.parent.speed;
+        }
+
+        return 0;
+    }
+
+    private findObjective(nextPointIndex: number): number {
+        const p0: Vector3 = this.track[(nextPointIndex === 0) ? this.track.length - 1 : nextPointIndex - 1];
         const p1: Vector3 = this.track[nextPointIndex];
         const p2: Vector3 = this.track[(nextPointIndex + 1) % (this.track.length - 1)];
-        const p3: Vector3 = this.track[(nextPointIndex + 2) % (this.track.length - 1)];
-        const direction1: Vector3 = p2.clone().sub(p1);
-        const direction2: Vector3 = p3.clone().sub(p2);
-        const minimumDistance: number = direction1.angleTo(direction2) * 30;
+        const direction1: Vector3 = p1.clone().sub(p0);
+        const direction2: Vector3 = p2.clone().sub(p1);
+        const minimumDistance: number = direction1.angleTo(direction2) * MINIMUM_STEERING_DISTANCE_FACTOR;
 
-        return this.getPosition().sub(p1).length() < minimumDistance ? p2 : p1;
+        return this.getPosition().sub(p1).length() < minimumDistance ? (nextPointIndex + 1) % (this.track.length - 1) : nextPointIndex;
     }
 
     private findNextPoint(): number {
@@ -77,15 +98,28 @@ export class AIController extends Object3D {
         return point;
     }
 
-    private applySteering(objective: Vector3): void {
-        const roadDirection: Vector3 = this.getPosition().sub(objective);
-        const steeringDirection: number = this.getDirection().cross(roadDirection).y;
+    private applySteering(objective: number): void {
+        const objectiveDirection: Vector3 = this.wallCollisionTimer > 0 ?
+            this.getPosition().sub(this.track[(objective === 0) ? this.track.length - 1 : objective - 1]) :
+            this.getPosition().sub(this.track[objective]);
+        const steeringDirection: number = this.getDirection().cross(objectiveDirection).y * Math.sign(this.getSpeed());
         if (steeringDirection > 0) {
             this.carControl.releaseSteeringLeft();
             this.carControl.steerRight();
         } else {
             this.carControl.releaseSteeringRight();
             this.carControl.steerLeft();
+        }
+    }
+
+    private applyAcceleration(nextPointIndex: number, deltaTime: number): void {
+        if (this.wallCollisionTimer > 0) {
+            this.wallCollisionTimer -= deltaTime;
+            this.carControl.releaseAccelerator();
+            this.carControl.brake();
+        } else {
+            this.carControl.releaseBrakes();
+            this.carControl.accelerate();
         }
     }
 }

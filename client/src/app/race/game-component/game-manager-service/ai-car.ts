@@ -12,7 +12,7 @@ export class AICar {
     }
 
     public update(deltaTime: number): void {
-        this.aiController.update();
+        this.aiController.update(deltaTime);
         this.car.update(deltaTime);
     }
 }
