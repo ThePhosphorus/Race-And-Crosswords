@@ -9,6 +9,7 @@ const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
 const WALL_COLLISION_ANGLE: number = 0.4;
+const OBJECTIVE_MINIMUM_DISTANCE: number = 12;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -83,7 +84,8 @@ export class AIController extends Object3D {
 
     private findObjective(nextPointIndex: number): number {
         const p1: Vector3 = this.track[nextPointIndex];
-        const minimumDistance: number = (this.getSpeed() < 12) ? 0 : this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
+        const minimumDistance: number = (this.getSpeed() < OBJECTIVE_MINIMUM_DISTANCE) ? 0 :
+            this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
 
         return this.getPosition().sub(p1).length() < minimumDistance ? (nextPointIndex + 1) % (this.track.length - 1) : nextPointIndex;
     }
