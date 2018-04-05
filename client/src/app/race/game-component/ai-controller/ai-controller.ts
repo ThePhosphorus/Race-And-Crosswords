@@ -46,11 +46,11 @@ export class AIController extends Object3D {
 
     private findObjective(nextPointIndex: number): Vector3 {
         const p1: Vector3 = this.track[nextPointIndex];
-        const p2: Vector3 = this.track[(nextPointIndex === this.track.length - 1) ? 1 : nextPointIndex + 1];
-        const p3: Vector3 = this.track[(nextPointIndex === this.track.length - 1) ? 2 : nextPointIndex + 2];
+        const p2: Vector3 = this.track[(nextPointIndex + 1) % (this.track.length - 1)];
+        const p3: Vector3 = this.track[(nextPointIndex + 2) % (this.track.length - 1)];
         const direction1: Vector3 = p2.clone().sub(p1);
         const direction2: Vector3 = p3.clone().sub(p2);
-        const minimumDistance: number = direction1.angleTo(direction2) * 25;
+        const minimumDistance: number = direction1.angleTo(direction2) * 30;
 
         return this.getPosition().sub(p1).length() < minimumDistance ? p2 : p1;
     }
