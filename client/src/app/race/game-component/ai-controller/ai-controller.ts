@@ -13,14 +13,13 @@ export class AIController extends Object3D {
     public init(track: Array<Vector3>): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
-            this.carControl.accelerate();
         }
         this.track = track;
     }
 
     public update(): void {
-        if (this.track != null) {
-            // Do ai stuff
+        if (this.track != null && this.getPosition() != null) {
+            this.carControl.accelerate();
         }
     }
 
