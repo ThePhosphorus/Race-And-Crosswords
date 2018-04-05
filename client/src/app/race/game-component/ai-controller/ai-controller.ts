@@ -5,6 +5,7 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
+// const HANDBRAKE_SPEED: number = 80;
 const DEFAULT_WALL_COLLISION_TIMER: number = 1500;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
 
@@ -34,7 +35,7 @@ export class AIController extends Object3D {
                 const objective: number = this.findObjective(nextPointIndex);
                 this.wallCollisionTimer -= deltaTime;
                 this.applyAcceleration(nextPointIndex);
-                this.applySteering(objective);
+                this.applySteering(objective, nextPointIndex);
             }
         }
     }
@@ -108,9 +109,9 @@ export class AIController extends Object3D {
         return point;
     }
 
-    private applySteering(objective: number): void {
+    private applySteering(objective: number, nextPointIndex: number): void {
         const objectiveDirection: Vector3 = this.wallCollisionTimer > 0 ?
-            this.getPosition().sub(this.track[(objective === 0) ? this.track.length - 1 : objective - 1]) :
+            this.getPosition().sub(this.track[nextPointIndex]) :
             this.getPosition().sub(this.track[objective]);
         const steeringDirection: number = this.getDirection().cross(objectiveDirection).y * Math.sign(this.getSpeed());
         if (steeringDirection > 0) {
@@ -123,20 +124,20 @@ export class AIController extends Object3D {
     }
 
     private applyAcceleration(nextPointIndex: number): void {
-        if (this.wallCollisionTimer > 0) {
+        if (this.wallCollisionTimer > 1000000) {
             this.carControl.releaseAccelerator();
             this.carControl.brake();
         } else {
             const angle: number = this.pointAngle(nextPointIndex);
             const distanceToNext: number = this.getPosition().sub(this.track[nextPointIndex]).length();
-            let slowingDistance: number = (angle * this.getSpeed());
+            let slowingDistance: number = (angle * this.getSpeed() / 2.5);
             slowingDistance = slowingDistance < MINIMUM_SLOWING_DISTANCE ? 0 : slowingDistance;
 
-            if (distanceToNext < slowingDistance && this.getSpeed() > COLLISION_SPEED_THRESHOLD) {
-                this.carControl.releaseAccelerator();
-                this.carControl.brake();
+            if (distanceToNext < slowingDistance) {
+                this.carControl.handBrake();
             } else {
                 this.carControl.releaseBrakes();
+                this.carControl.releaseHandBrake();
                 this.carControl.accelerate();
             }
         }
