@@ -19,24 +19,25 @@ export class AIController extends Object3D {
 
     public update(): void {
         if (this.track != null) {
+            this.carControl.accelerate();
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
-                const objective: Vector3 = this.track[nextPointIndex];
-                if (objective.clone().sub(this.getPosition()).length() > 5) {
-                    this.carControl.releaseBrakes();
-                    this.carControl.accelerate();
-                } else {
-                    this.carControl.releaseAccelerator();
-                    this.carControl.brake();
-                }
+                this.applySteering(nextPointIndex);
             }
-
         }
     }
 
     private getPosition(): Vector3 {
         if (this.parent != null && this.parent instanceof Car) {
             return this.parent.getPosition().clone();
+        }
+
+        return new Vector3();
+    }
+
+    private getDirection(): Vector3 {
+        if (this.parent != null && this.parent instanceof Car) {
+            return this.parent.direction.clone();
         }
 
         return new Vector3();
@@ -62,5 +63,18 @@ export class AIController extends Object3D {
         }
 
         return point;
+    }
+
+    private applySteering(nextPointIndex: number): void {
+        const objectivePoint: Vector3 = this.track[nextPointIndex];
+        const lookingDirection: Vector3 = this.getDirection();
+        const steeringDirection: number = lookingDirection.clone().cross(objectivePoint).y;
+        if (steeringDirection < 0) {
+            this.carControl.releaseSteeringLeft();
+            this.carControl.steerRight();
+        } else {
+            this.carControl.releaseSteeringRight();
+            this.carControl.steerLeft();
+        }
     }
 }
