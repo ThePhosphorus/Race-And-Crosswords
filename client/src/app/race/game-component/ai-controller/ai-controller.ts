@@ -19,14 +19,18 @@ export class AIController extends Object3D {
 
     public update(): void {
         if (this.track != null) {
-            const objective: Vector3 = this.track[this.findNextPoint()];
-            if (objective.clone().sub(this.getPosition()).length() > 5) {
-                this.carControl.releaseBrakes();
-                this.carControl.accelerate();
-            } else {
-                this.carControl.releaseAccelerator();
-                this.carControl.brake();
+            const nextPointIndex: number = this.findNextPoint();
+            if (nextPointIndex !== -1) {
+                const objective: Vector3 = this.track[nextPointIndex];
+                if (objective.clone().sub(this.getPosition()).length() > 5) {
+                    this.carControl.releaseBrakes();
+                    this.carControl.accelerate();
+                } else {
+                    this.carControl.releaseAccelerator();
+                    this.carControl.brake();
+                }
             }
+
         }
     }
 
@@ -47,7 +51,7 @@ export class AIController extends Object3D {
             const p1: Vector3 = this.track[i];
             const p2: Vector3 = this.track[nextIndex];
             const distance: number = Math.abs((p2.z - p1.z) * pos.x - (p2.x - p1.x) * pos.z + p2.x * p1.z - p2.z * p1.x) /
-                                              p1.clone().distanceTo(p2);
+                p1.clone().distanceTo(p2);
             if (distance < minDistance) {
                 const dotProduct: number = p2.clone().sub(p1).dot(pos.clone().sub(p1));
                 if (dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq()) {

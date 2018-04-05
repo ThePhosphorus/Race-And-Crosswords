@@ -147,7 +147,7 @@ export class GameManagerService extends Renderer {
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
             await this._aiControlledCars[i].init(spawn, COLORS[(i + 1) % COLORS.length],
-                                                 TrackLoaderService.toVectors(this._gameConfiguration.track.points));
+                                                 TrackLoaderService.toVectors(points));
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }
