@@ -1,17 +1,16 @@
 import { Object3D, Vector3 } from "three";
 import { CarControl } from "../car/car-control";
 import { Car } from "../car/car";
-import { Track } from "../../../../../../common/race/track";
 
 export class AIController extends Object3D {
     private carControl: CarControl;
-    private track: Track;
+    private track: Array<Vector3>;
 
     public constructor() {
         super();
     }
 
-    public init(track: Track): void {
+    public init(track: Array<Vector3>): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
             this.carControl.accelerate();
