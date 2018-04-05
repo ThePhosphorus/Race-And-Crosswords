@@ -4,20 +4,23 @@ import { Car } from "../car/car";
 
 export class AIController extends Object3D {
     private carControl: CarControl;
+    private track: Array<Vector3>;
 
     public constructor() {
         super();
     }
 
-    public init(): void {
+    public init(track: Array<Vector3>): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
-            this.carControl.accelerate();
         }
+        this.track = track;
     }
 
     public update(): void {
-        //
+        if (this.track != null && this.getPosition() != null) {
+            this.carControl.accelerate();
+        }
     }
 
     private getPosition(): Vector3 {
