@@ -5,10 +5,10 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
-const DEFAULT_WALL_COLLISION_TIMER: number = 1500;
+const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
-const WALL_COLLISION_ANGLE: number = 0.7854;
+const WALL_COLLISION_ANGLE: number = 0.4;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
