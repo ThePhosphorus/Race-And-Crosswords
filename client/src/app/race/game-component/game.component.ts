@@ -95,8 +95,8 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         this.isLoading = false;
         if (this.track != null && this.track._id !== "") {
             const gameConfig: GameConfiguration = new GameConfiguration(this.track,
-                                                                        TrackLoaderService.getTrackMeshs(this.track),
-                                                                        TrackLoaderService.getTrackWalls(this.track));
+                                                                        this._trackLoader.getTrackMeshs(this.track),
+                                                                        this._trackLoader.getTrackWalls(this.track));
             this._gameManagerService.start(this.containerRef.nativeElement, gameConfig);
             this._trackLoader.playTrack(this.track._id).subscribe();
         } else {

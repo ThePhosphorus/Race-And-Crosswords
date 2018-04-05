@@ -28,6 +28,7 @@ export class LoadingComponent implements AfterViewInit, OnChanges {
 
         this._loader.status.subscribe((status: number) => this.loadingStatus = status);
         this._loader.loadingMsg.subscribe((msg: string) => this.loadingMessage = msg);
+        this._loader.startLoading(); // Ask randy no to use texutres in the preview
     }
 
     @HostListener("window:resize", ["$event"])
@@ -44,7 +45,6 @@ export class LoadingComponent implements AfterViewInit, OnChanges {
         for (const propName in changes) {
             if ( changes[propName].currentValue === this.track && this.track._id !== "") {
                 this._trackPreview.displayPreview(this.track);
-                this._loader.startLoading();
                 this._trackPreview.onResize();
             }
         }

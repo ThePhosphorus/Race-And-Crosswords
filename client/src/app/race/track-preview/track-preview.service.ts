@@ -17,7 +17,7 @@ const HEIGHT_RATIO: number = 0.8;
 @Injectable()
 export class TrackPreviewService extends Renderer {
 
-    public constructor(private cameraManager: CameraManagerService) {
+    public constructor(private cameraManager: CameraManagerService, private _trackLoader: TrackLoaderService ) {
         super(cameraManager, false);
     }
 
@@ -34,7 +34,7 @@ export class TrackPreviewService extends Renderer {
         this.scene.background = new Color(BACKGROUND_COLOR);
         const avgPoint: Vector3 = new Vector3(0, 0, 0);
         let height: number = 0;
-        const meshs: Array<Mesh> =  TrackLoaderService.getTrackMeshs(track);
+        const meshs: Array<Mesh> =  this._trackLoader.getTrackMeshs(track);
         meshs.forEach((m) => {
             this.scene.add(m);
             avgPoint.add(m.position.clone().multiplyScalar(1 / meshs.length));

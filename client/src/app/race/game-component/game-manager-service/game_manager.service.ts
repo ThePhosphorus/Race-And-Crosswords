@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import {
     Mesh,
     Texture,
-    TextureLoader,
     RepeatWrapping,
     PlaneGeometry,
     DoubleSide,
@@ -38,7 +37,7 @@ import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { LoaderService } from "../loader-service/loader.service";
-import { LoadedObject } from "../loader-service/load-types.enum";
+import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 
 export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
@@ -106,7 +105,7 @@ export class GameManagerService extends Renderer {
         this.initSoundManager();
         this.initCameraManager();
         this.initTrack();
-        await this.initCars();
+        this.initCars();
         this.initScene();
         this.startRenderingLoop();
     }
@@ -128,7 +127,7 @@ export class GameManagerService extends Renderer {
         }
     }
 
-    private async initCars(): Promise<void> {
+    private initCars(): void {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
         const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
@@ -192,7 +191,7 @@ export class GameManagerService extends Renderer {
     }
 
     private getFloor(): Mesh {
-        const texture: Texture = new Texture(); // new TextureLoader().load(OFF_ROAD_PATH);
+        const texture: Texture = this.loader.getTexture(LoadedTexture.offRoad);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
@@ -206,4 +205,5 @@ export class GameManagerService extends Renderer {
 
         return plane;
     }
+
 }
