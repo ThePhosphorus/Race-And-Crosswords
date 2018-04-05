@@ -5,9 +5,10 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
-// const HANDBRAKE_SPEED: number = 80;
 const DEFAULT_WALL_COLLISION_TIMER: number = 1500;
+const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
+const WALL_COLLISION_ANGLE: number = 0.7854;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -33,7 +34,7 @@ export class AIController extends Object3D {
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
                 const objective: number = this.findObjective(nextPointIndex);
-                this.wallCollisionTimer -= deltaTime;
+                this.calculateWallCollision(deltaTime, nextPointIndex);
                 this.applyAcceleration(nextPointIndex);
                 this.applySteering(objective, nextPointIndex);
             }
@@ -124,13 +125,13 @@ export class AIController extends Object3D {
     }
 
     private applyAcceleration(nextPointIndex: number): void {
-        if (this.wallCollisionTimer > 1000000) {
+        if (this.wallCollisionTimer > 0) {
             this.carControl.releaseAccelerator();
             this.carControl.brake();
         } else {
             const angle: number = this.pointAngle(nextPointIndex);
             const distanceToNext: number = this.getPosition().sub(this.track[nextPointIndex]).length();
-            let slowingDistance: number = (angle * this.getSpeed() / 2.5);
+            let slowingDistance: number = (angle * this.getSpeed() / SLOWING_DISTANCE_FACTOR);
             slowingDistance = slowingDistance < MINIMUM_SLOWING_DISTANCE ? 0 : slowingDistance;
 
             if (distanceToNext < slowingDistance) {
@@ -140,6 +141,16 @@ export class AIController extends Object3D {
                 this.carControl.releaseHandBrake();
                 this.carControl.accelerate();
             }
+        }
+    }
+
+    private calculateWallCollision(deltaTime: number, nextPointIndex: number): void {
+        const p0: Vector3 = this.track[(nextPointIndex === 0) ? this.track.length - 1 : nextPointIndex - 1];
+        const p1: Vector3 = this.track[nextPointIndex];
+        if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
+            this.wallCollisionTimer -= deltaTime;
+        } else {
+            this.wallCollisionTimer = 0;
         }
     }
 }
