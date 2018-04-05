@@ -37,6 +37,8 @@ import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject } from "../loader-service/load-types.enum";
 
 export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
@@ -46,8 +48,6 @@ const N_AI_CONTROLLED_CARS: number = 2;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
-
-const COLORS: Array<string> = ["yellow" , "blue", "green", "orange", "pink", "purple", "red"];
 
 export class CarInfos {
     public constructor(
@@ -69,7 +69,8 @@ export class GameManagerService extends Renderer {
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
                        private collisionDetector: CollisionDetectorService,
-                       private lightManager: LightManagerService ) {
+                       private lightManager: LightManagerService,
+                       private loader: LoaderService ) {
         super(cameraManager, false);
         this._gameConfiguration = new GameConfiguration();
         this._hudTimerSubject = new Subject<number>();
@@ -138,7 +139,7 @@ export class GameManagerService extends Renderer {
 
         const playerSpawnPoint: Vector3 = startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
             .add(perpOffset);
-        await this._player.init(playerSpawnPoint, COLORS[0]);
+        this._player.init(playerSpawnPoint, this.loader, LoadedObject.car);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
         let offset: number = 0;
@@ -147,7 +148,7 @@ export class GameManagerService extends Renderer {
             const spawn: Vector3 = startPosition.clone()
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
-            await this._aiControlledCars[i].init(spawn, COLORS[(i + 1) % COLORS.length]);
+            this._aiControlledCars[i].init(playerSpawnPoint, this.loader, LoadedObject.car);
             this._aiControlledCars[i].mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }
@@ -191,7 +192,7 @@ export class GameManagerService extends Renderer {
     }
 
     private getFloor(): Mesh {
-        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
+        const texture: Texture = new Texture(); // new TextureLoader().load(OFF_ROAD_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);

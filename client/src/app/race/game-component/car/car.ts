@@ -2,7 +2,6 @@ import {
     Vector3,
     Matrix4,
     Object3D,
-    ObjectLoader,
     Euler,
     Box3,
     Vector2
@@ -22,12 +21,13 @@ import { CarLights } from "./carLights/carLights";
 import { CarControl } from "./car-control";
 import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject } from "../loader-service/load-types.enum";
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 300;
 const CAR_Y_OFFSET: number = -0.1;
-const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
 const HANDBRAKE_STEERING_ANGLE: number = 0.4;
 const DEFAULT_FRICTION: number = 400000;
@@ -85,21 +85,8 @@ export class Car extends Object3D {
         this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
-    // TODO: move loading code outside of car class.
-    private async load(color: string): Promise<Object3D> {
-        return new Promise<Object3D>((resolve, reject) => {
-            const loader: ObjectLoader = new ObjectLoader();
-            loader.load(
-                CAR_FILE + color + ".json",
-                (object) => {
-                    resolve(object);
-                }
-            );
-        });
-    }
-
-    public async init(position: Vector3, color: string): Promise<void> {
-        this._mesh = await this.load(color);
+    public async init(position: Vector3, loader: LoaderService, type: LoadedObject): Promise<void> {
+        this._mesh = loader.getObject(type);
         this._mesh.position.set(position.x, position.y, position.z);
         this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this._mesh.translateY(CAR_Y_OFFSET);
@@ -109,7 +96,7 @@ export class Car extends Object3D {
         this._mesh.add(this._rigidBody);
         this.add(this._mesh);
         this.initCarLights();
-        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
+        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener, loader);
         this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 

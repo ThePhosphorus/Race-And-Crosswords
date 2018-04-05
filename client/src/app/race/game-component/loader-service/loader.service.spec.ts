@@ -59,7 +59,20 @@ describe("LoaderServiceService", () => {
         })
     );
 
-    it("Everything shoulb be leaded once completed", (done: DoneFn) =>
+    it("should change loading status while loading", (done: DoneFn) =>
+        inject([LoaderService], (service: LoaderService) => {
+            let pastStatus: number = 0;
+
+            service.status.subscribe((status: number) => {
+                expect(status).not.toBe(pastStatus);
+                pastStatus = status;
+                done();
+            });
+
+            service.startLoading();
+        }));
+
+    it("Everything should be leaded once completed", (done: DoneFn) =>
         inject([LoaderService], (service: LoaderService) => {
             service.startLoading();
             service.isFinished.subscribe((finished: boolean) => {

@@ -124,7 +124,7 @@ export class TrackLoaderService {
     }
 
     private static getTrackMaterial(width: number, length: number): MeshPhongMaterial {
-        const texture: Texture = new TextureLoader().load(TRACK_PATH);
+        const texture: Texture = new Texture(); // new TextureLoader().load(TRACK_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(width * FLOOR_RATIO, length * FLOOR_RATIO);
@@ -133,7 +133,7 @@ export class TrackLoaderService {
     }
 
     private static getFinishLineMaterial(width: number, length: number): MeshPhongMaterial {
-        const texture: Texture = new TextureLoader().load(LINE_PATH);
+        const texture: Texture = new Texture(); // new TextureLoader().load(LINE_PATH);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(width, length / FINISH_LINE_LENGTH_RATIO);

@@ -1,7 +1,7 @@
 
-import { AudioLoader, AudioBuffer, AudioListener, Audio } from "three";
-
-const DEFAULT_SOUND_PATH: string = "../../assets/sounds/";
+import { AudioBuffer, AudioListener, Audio } from "three";
+import { LoaderService } from "../../loader-service/loader.service";
+import { LoadedAudio } from "../../loader-service/load-types.enum";
 
 export abstract class AbstractSoundFacade {
     protected sound: Audio;
@@ -11,21 +11,10 @@ export abstract class AbstractSoundFacade {
 
     protected abstract instanciateSound(soundListener: AudioListener): void;
 
-    public async init(fileName: string, sourcePath?: string): Promise<void> {
-        let path: string = sourcePath ? sourcePath : DEFAULT_SOUND_PATH;
-        path += fileName;
-
-        return this.loadSound(path).then((buffer) => this.setSoundSettings(buffer));
+    public init(loader: LoaderService, type: LoadedAudio): void {
+        this.setSoundSettings(loader.getAudio(type));
     }
 
-    protected async loadSound(path: string): Promise<AudioBuffer> {
-        return new Promise<AudioBuffer>((resolve, reject) => {
-            new AudioLoader().load(path, (buffer: AudioBuffer) => {
-                resolve(buffer);
-            },
-                                   () => { }, () => { });
-        });
-    }
     protected setSoundSettings(buffer: AudioBuffer): void {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(this._isLoop);

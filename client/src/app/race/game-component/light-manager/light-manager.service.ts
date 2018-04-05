@@ -59,16 +59,16 @@ export class LightManagerService {
     }
 
     public loadSkybox(path: string): void {
-        this._scene.background = new CubeTextureLoader()
-            .setPath(path)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
+        // this._scene.background = new CubeTextureLoader()
+        //     .setPath(path)
+        //     .load([
+        //         "posx.png",
+        //         "negx.png",
+        //         "posy.png",
+        //         "negy.png",
+        //         "posz.png",
+        //         "negz.png"
+        //     ]);
     }
     public toggleNightMode(): void {
 

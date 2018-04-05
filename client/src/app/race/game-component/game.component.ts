@@ -8,7 +8,7 @@ import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/race/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
-// import { GameConfiguration } from "./game-configuration/game-configuration";
+import { GameConfiguration } from "./game-configuration/game-configuration";
 import { LoaderService } from "./loader-service/loader.service";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
@@ -48,7 +48,11 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         private _inputManager: InputManagerService,
         private _loader: LoaderService
     ) {
-        this._loader.isFinished.subscribe((finished: boolean) => console.log(finished));
+        this._loader.isFinished.subscribe((finished: boolean) => {
+            if (finished) {
+                this.finishedLoading();
+            }
+        });
         this.isLoading = true;
         this.track = new Track("", LOADING_TITLE, LOADING_DESCRIPTION, [], 0, [] );
     }
@@ -78,20 +82,25 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         if (id != null && id !== EMPTY_TRACK_ID) {
             this._trackLoader.loadOne(id).subscribe((track: Track) => {
                 this.track = track;
-
-                // const gameConfig: GameConfiguration = new GameConfiguration(track,
-                //                                                             TrackLoaderService.getTrackMeshs(track),
-                //                                                             TrackLoaderService.getTrackWalls(track));
-                // this._gameManagerService.start(this.containerRef.nativeElement, gameConfig);
-                // this._trackLoader.playTrack(id).subscribe();
             });
-        } else {
-            // this._gameManagerService.start(this.containerRef.nativeElement, new GameConfiguration());
         }
     }
 
     private fullscreen(): void {
         this.containerRef.nativeElement.webkitRequestFullscreen();
         this.onResize();
+    }
+
+    private finishedLoading(): void {
+        this.isLoading = false;
+        if (this.track != null && this.track._id !== "") {
+            const gameConfig: GameConfiguration = new GameConfiguration(this.track,
+                                                                        TrackLoaderService.getTrackMeshs(this.track),
+                                                                        TrackLoaderService.getTrackWalls(this.track));
+            this._gameManagerService.start(this.containerRef.nativeElement, gameConfig);
+            this._trackLoader.playTrack(this.track._id).subscribe();
+        } else {
+            this._gameManagerService.start(this.containerRef.nativeElement, new GameConfiguration());
+        }
     }
 }
