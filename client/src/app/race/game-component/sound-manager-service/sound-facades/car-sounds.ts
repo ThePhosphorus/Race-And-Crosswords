@@ -36,17 +36,17 @@ export class CarSounds {
         const crash4: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
         const crash5: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
 
-        this._collisionSounds.push(crash1);
-        this._collisionSounds.push(crash2);
-        this._collisionSounds.push(crash3);
-        this._collisionSounds.push(crash4);
-        this._collisionSounds.push(crash5);
-
         crash1.init(this.loader, LoadedAudio.collision1);
         crash2.init(this.loader, LoadedAudio.collision2);
         crash3.init(this.loader, LoadedAudio.collision3);
         crash4.init(this.loader, LoadedAudio.collision4);
         crash5.init(this.loader, LoadedAudio.collision5);
+
+        this._collisionSounds.push(crash1);
+        this._collisionSounds.push(crash2);
+        this._collisionSounds.push(crash3);
+        this._collisionSounds.push(crash4);
+        this._collisionSounds.push(crash5);
 
         this._collisionSounds.forEach((sound: PositionalSoundFacade) => sound.setVolume(CRASH_VOLUME));
     }

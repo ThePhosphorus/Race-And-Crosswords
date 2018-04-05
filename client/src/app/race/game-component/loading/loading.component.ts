@@ -43,7 +43,7 @@ export class LoadingComponent implements AfterViewInit, OnChanges {
 
     public ngOnChanges(changes: SimpleChanges): void {
         for (const propName in changes) {
-            if ( changes[propName].currentValue === this.track && this.track._id !== "") {
+            if ( changes[propName].currentValue === this.track && this.track._id !== "" && this.loadingStatus > 0.5) {
                 this._trackPreview.displayPreview(this.track);
                 this._trackPreview.onResize();
             }

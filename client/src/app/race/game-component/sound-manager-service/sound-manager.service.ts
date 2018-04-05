@@ -22,7 +22,7 @@ export class SoundManagerService {
           this._startSound.init(this.loader, LoadedAudio.start);
           this._startSound.play();
           this._music = new GlobalSoundFacade(this._audioListener, true, MUSIC_VOLUME);
-          this._music.init(this.loader, LoadedAudio.background_music);
+          this._music.init(this.loader, LoadedAudio.backgroundMusic);
           this._music.play();
     }
 

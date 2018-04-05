@@ -34,7 +34,6 @@ const LOADING_DESCRIPTION: string = "Getting the track from the server";
 })
 export class GameComponent implements OnDestroy, AfterViewInit {
 
-    @ViewChild("container")
     private containerRef: ElementRef;
 
     public track: Track;
@@ -49,9 +48,7 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         private _loader: LoaderService
     ) {
         this._loader.isFinished.subscribe((finished: boolean) => {
-            if (finished) {
-                this.finishedLoading();
-            }
+            this.isLoading = !finished;
         });
         this.isLoading = true;
         this.track = new Track("", LOADING_TITLE, LOADING_DESCRIPTION, [], 0, [] );
@@ -61,6 +58,15 @@ export class GameComponent implements OnDestroy, AfterViewInit {
     public onResize(): void {
         if (!this.isLoading) {
             this._gameManagerService.onResize();
+        }
+    }
+
+    @ViewChild("container") public set container(el: ElementRef) {
+        if (el != null) {
+            this.containerRef = el;
+            if (!this.isLoading) {
+                this.finishedLoading();
+            }
         }
     }
 
@@ -92,7 +98,6 @@ export class GameComponent implements OnDestroy, AfterViewInit {
     }
 
     private finishedLoading(): void {
-        this.isLoading = false;
         if (this.track != null && this.track._id !== "") {
             const gameConfig: GameConfiguration = new GameConfiguration(this.track,
                                                                         this._trackLoader.getTrackMeshs(this.track),
@@ -102,5 +107,6 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         } else {
             this._gameManagerService.start(this.containerRef.nativeElement, new GameConfiguration());
         }
+        this.onResize();
     }
 }

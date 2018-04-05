@@ -77,7 +77,7 @@ export class LoaderService {
         this.loadObject(CAR_FILE, LoadedObject.car);
 
         this.loadAudio(START_SOUND_FILE, LoadedAudio.start);
-        this.loadAudio(MUSIC_SOUND_FILE, LoadedAudio.background_music);
+        this.loadAudio(MUSIC_SOUND_FILE, LoadedAudio.backgroundMusic);
         this.loadAudio(ENGINE_SOUND_FILE, LoadedAudio.engine);
         this.loadAudio(DRIFT_SOUND_FILE, LoadedAudio.drift);
         this.loadAudio(CRASH_PATH_1, LoadedAudio.collision1);
@@ -111,7 +111,7 @@ export class LoaderService {
     }
 
     public getObject(type: LoadedObject): Object3D {
-        return this._objects[type];
+        return this._objects[type].clone();
     }
 
     public getAudio(type: LoadedAudio): AudioBuffer {

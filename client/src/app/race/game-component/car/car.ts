@@ -85,7 +85,7 @@ export class Car extends Object3D {
         this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
-    public async init(position: Vector3, loader: LoaderService, type: LoadedObject): Promise<void> {
+    public init(position: Vector3, loader: LoaderService, type: LoadedObject): void {
         this._mesh = loader.getObject(type);
         this._mesh.position.set(position.x, position.y, position.z);
         this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);

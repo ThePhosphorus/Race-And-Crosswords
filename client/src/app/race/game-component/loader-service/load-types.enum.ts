@@ -3,7 +3,7 @@ export enum LoadedObject {
 }
 
 export enum LoadedAudio {
-    background_music,
+    backgroundMusic,
     engine,
     start,
     drift,
