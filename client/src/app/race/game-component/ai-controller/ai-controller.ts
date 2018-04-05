@@ -22,7 +22,8 @@ export class AIController extends Object3D {
             this.carControl.accelerate();
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
-                this.applySteering(nextPointIndex);
+                const objective: Vector3 = this.findObjective(nextPointIndex);
+                this.applySteering(objective);
             }
         }
     }
@@ -41,6 +42,14 @@ export class AIController extends Object3D {
         }
 
         return new Vector3();
+    }
+
+    private findObjective(nextPointIndex: number): Vector3 {
+        const nextPoint: Vector3 = this.track[nextPointIndex];
+        const followingPoint: Vector3 = this.track[(nextPointIndex === this.track.length - 1) ? 1 : nextPointIndex + 1];
+        const minimumDistance: number = 15;
+
+        return this.getPosition().sub(nextPoint).length() < minimumDistance ? followingPoint : nextPoint;
     }
 
     private findNextPoint(): number {
@@ -65,10 +74,9 @@ export class AIController extends Object3D {
         return point;
     }
 
-    private applySteering(nextPointIndex: number): void {
-        const objectivePoint: Vector3 = this.track[nextPointIndex];
+    private applySteering(objective: Vector3): void {
         const lookingDirection: Vector3 = this.getDirection();
-        const steeringDirection: number = lookingDirection.clone().cross(objectivePoint).y;
+        const steeringDirection: number = lookingDirection.clone().cross(objective).y;
         if (steeringDirection < 0) {
             this.carControl.releaseSteeringLeft();
             this.carControl.steerRight();
