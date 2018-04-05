@@ -5,6 +5,7 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 20;
+const DEFAULT_WALL_COLLISION_TIMER: number = 1500;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -39,7 +40,7 @@ export class AIController extends Object3D {
 
     private onCollision(otherRb: RigidBody): void {
         if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
-            this.wallCollisionTimer = 1500;
+            this.wallCollisionTimer = DEFAULT_WALL_COLLISION_TIMER;
         }
     }
 
