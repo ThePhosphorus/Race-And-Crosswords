@@ -12,6 +12,7 @@ export class AIController extends Object3D {
     public init(): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
+            this.carControl.accelerate();
         }
     }
 
