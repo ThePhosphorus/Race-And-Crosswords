@@ -132,14 +132,11 @@ export class GameManagerService extends Renderer {
     private async initCars(): Promise<void> {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
-        const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
-            .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
-        const perpOffset: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
-            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+        const spawnDirection: Vector3 = this.calculateSpawnDirection(points);
+        const perpOffset: Vector3 = this.calculateOffset(spawnDirection);
         const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
-        const playerSpawnPoint: Vector3 = startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
-            .add(perpOffset);
+        const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
         await this._player.init(playerSpawnPoint, COLORS[0]);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
@@ -153,6 +150,21 @@ export class GameManagerService extends Renderer {
                                                  TrackLoaderService.toVectors(this._gameConfiguration.track.points));
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
+    }
+
+    private calculateSpawnPoint(startPosition: Vector3, spawnDirection: Vector3, perpOffset: Vector3 ): Vector3 {
+        return startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
+        .add(perpOffset);
+    }
+
+    private calculateOffset(spawnDirection: Vector3): Vector3 {
+        return new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
+            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+    }
+
+    private calculateSpawnDirection(points: Array<Vector3Struct>): Vector3 {
+        return TrackLoaderService.toVector(points[points.length - 2])
+        .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
     }
 
     private initKeyBindings(): void {
