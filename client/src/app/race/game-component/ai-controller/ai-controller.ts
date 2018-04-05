@@ -4,8 +4,9 @@ import { Car } from "../car/car";
 import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
-const COLLISION_SPEED_THRESHOLD: number = 20;
+const COLLISION_SPEED_THRESHOLD: number = 30;
 const DEFAULT_WALL_COLLISION_TIMER: number = 1500;
+const MINIMUM_SLOWING_DISTANCE: number = 10;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -32,7 +33,7 @@ export class AIController extends Object3D {
             if (nextPointIndex !== -1) {
                 const objective: number = this.findObjective(nextPointIndex);
                 this.wallCollisionTimer -= deltaTime;
-                this.applyAcceleration();
+                this.applyAcceleration(nextPointIndex);
                 this.applySteering(objective);
             }
         }
@@ -68,13 +69,19 @@ export class AIController extends Object3D {
         return 0;
     }
 
-    private findObjective(nextPointIndex: number): number {
+    private pointAngle(nextPointIndex: number): number {
         const p0: Vector3 = this.track[(nextPointIndex === 0) ? this.track.length - 1 : nextPointIndex - 1];
         const p1: Vector3 = this.track[nextPointIndex];
         const p2: Vector3 = this.track[(nextPointIndex + 1) % (this.track.length - 1)];
         const direction1: Vector3 = p1.clone().sub(p0);
         const direction2: Vector3 = p2.clone().sub(p1);
-        const minimumDistance: number = direction1.angleTo(direction2) * MINIMUM_STEERING_DISTANCE_FACTOR;
+
+        return direction1.angleTo(direction2);
+    }
+
+    private findObjective(nextPointIndex: number): number {
+        const p1: Vector3 = this.track[nextPointIndex];
+        const minimumDistance: number = this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
 
         return this.getPosition().sub(p1).length() < minimumDistance ? (nextPointIndex + 1) % (this.track.length - 1) : nextPointIndex;
     }
@@ -115,13 +122,23 @@ export class AIController extends Object3D {
         }
     }
 
-    private applyAcceleration(): void {
+    private applyAcceleration(nextPointIndex: number): void {
         if (this.wallCollisionTimer > 0) {
             this.carControl.releaseAccelerator();
             this.carControl.brake();
         } else {
-            this.carControl.releaseBrakes();
-            this.carControl.accelerate();
+            const angle: number = this.pointAngle(nextPointIndex);
+            const distanceToNext: number = this.getPosition().sub(this.track[nextPointIndex]).length();
+            let slowingDistance: number = (angle * this.getSpeed());
+            slowingDistance = slowingDistance < MINIMUM_SLOWING_DISTANCE ? 0 : slowingDistance;
+
+            if (distanceToNext < slowingDistance && this.getSpeed() > COLLISION_SPEED_THRESHOLD) {
+                this.carControl.releaseAccelerator();
+                this.carControl.brake();
+            } else {
+                this.carControl.releaseBrakes();
+                this.carControl.accelerate();
+            }
         }
     }
 }
