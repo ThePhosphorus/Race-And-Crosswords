@@ -19,15 +19,17 @@ export class RaceState {
         return -1;
     }
 
-    public updateRacer(id: number, position: number, currentTime: number): void {
+    public updateRacer(id: number, position: number, currentTime: number): boolean {
         for (const racer of this._racers) {
             if (racer.id === id) {
                 racer.update(position, currentTime);
                 this.sortRacers();
 
-                return;
+                return true;
             }
         }
+
+        return false;
     }
     private sortRacers(): void {
         this._racers.sort((a: RacerState, b: RacerState) => {
