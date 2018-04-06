@@ -10,10 +10,9 @@ button {
     height: 100%;
     color: #212529;
     text-align: center;
-    outline: none;
-    background-color: whitesmoke;
+    background-color: transparent;
     margin:0%;
-    border-color: transparent;
+    border: thin black;
     border-radius: 0%;
 
 }
@@ -22,13 +21,14 @@ button {
     display: inherit;
 }
 
-
 .disabled {
     width: 90%;
     height: 90%;
     color:rgb(105, 104, 104);
     border-color: var(--color2, white);
     border-width: 0.2vmin;
+    user-select: none;
+    outline: none;
     box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color,white);
     background: linear-gradient(45deg, var(--color, white) 50%, rgba(0,0,0,0) 50% ,rgba(0,0,0,0) 0), var(--color2,white);
 }
@@ -36,6 +36,7 @@ button {
 .selected {
     border-style: dotted;
     width: 90%;
+    outline: none;
     height: 90%;
     border-width: 0.2vmin;
     border-color: var(--color, white);
@@ -51,7 +52,6 @@ button {
 
 .hovered {
     background-color: lightgrey;
-    border-color: none;
 }
 
 @font-face {

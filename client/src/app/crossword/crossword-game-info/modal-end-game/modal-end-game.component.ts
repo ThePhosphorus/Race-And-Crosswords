@@ -58,7 +58,7 @@ export class ModalEndGameComponent implements OnInit {
     public configureGame(): void {
         this._isDisconnected = false;
         this._crosswordService.resetGrid();
-        this._infoService.configureNewGame();
+        this._crosswordService.isGameOver = true;
     }
 
     public replay(): void {
