@@ -4,7 +4,7 @@ import { Collider } from "./collider";
 import { Projected } from "./projection";
 import { Collision } from "./collision";
 import { RigidBody } from "../rigid-body/rigid-body";
-const OVERLAP_FACTOR: number = 4;
+const OVERLAP_FACTOR: number = 0.5;
 
 @Injectable()
 export class CollisionDetectorService {

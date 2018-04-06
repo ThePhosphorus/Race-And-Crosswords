@@ -7,6 +7,10 @@ import { DefinitionComponent } from "../definition/definition.component";
 import { InputGridComponent } from "../input-grid/input-grid.component";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { HttpClientModule } from "@angular/common/http";
+import { ModalNewGameComponent } from "../crossword-game-info/modal-new-game/modal-new-game.component";
+import { TileColorDirective } from "../input-letter/tile-color.directive";
+import { FormsModule } from "@angular/forms";
+import { ModalEndGameComponent } from "../crossword-game-info/modal-end-game/modal-end-game.component";
 
 describe("CrosswordsComponent", () => {
   let component: CrosswordsComponent;
@@ -14,8 +18,10 @@ describe("CrosswordsComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ CrosswordsComponent, CrosswordGameInfoComponent, InputGridComponent, InputLetterComponent, DefinitionComponent ],
-      imports: [HttpClientModule],
+      declarations: [ CrosswordsComponent, CrosswordGameInfoComponent,
+                      InputGridComponent, InputLetterComponent,
+                      DefinitionComponent, ModalNewGameComponent, TileColorDirective, ModalEndGameComponent],
+      imports: [HttpClientModule, FormsModule],
       providers: [ CrosswordCommunicationService, CrosswordService ]
     })
     .compileComponents();
@@ -29,6 +35,14 @@ describe("CrosswordsComponent", () => {
 
   it("should create", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("loading should be true on init", () => {
+    expect(component.loading).toBeTruthy();
+  });
+
+  it("searching should be false on init", () => {
+      expect(component.searching).toBeFalsy();
   });
 
 });

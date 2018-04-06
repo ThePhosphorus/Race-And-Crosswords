@@ -7,8 +7,10 @@ import { Crosswords } from "./crosswords/crosswords";
 import { Race } from "./race/race";
 import { Lexical } from "./crosswords/lexical/lexical";
 import { Grid } from "./crosswords/grid/grid";
-import { GridGenerator } from "./crosswords/grid/grid-generator";
+import { GridGenerator } from "./crosswords/grid/grid-generator/grid-generator";
 import { TrackSaver } from "./race/trackSaver/trackSaver";
+import { Multiplayer } from "./crosswords/multiplayer/multiplayer";
+import { SocketsManager } from "./crosswords/multiplayer/socketsManager";
 
 const container: Container = new Container();
 
@@ -21,5 +23,7 @@ container.bind(Types.Lexical).to(Lexical);
 container.bind(Types.Grid).to(Grid);
 container.bind(Types.GridGenerator).to(GridGenerator);
 container.bind(Types.TrackSaver).to(TrackSaver);
+container.bind(Types.Multiplayer).to(Multiplayer);
+container.bind(Types.SocketsManager).to(SocketsManager).inSingletonScope();
 
 export { container };

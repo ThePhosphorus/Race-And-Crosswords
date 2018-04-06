@@ -11,4 +11,5 @@ export class CrosswordGrid {
         this.grid = new Array<Letter>();
         this.size = 0;
     }
+
 }

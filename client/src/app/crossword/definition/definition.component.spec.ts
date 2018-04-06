@@ -1,8 +1,12 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { DefinitionComponent } from "./definition.component";
+import { DefinitionComponent, DisplayedDefinition } from "./definition.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 import { HttpClientModule } from "@angular/common/http";
+import { Word } from "../../../../../common/crossword/word";
+import { Letter } from "../../../../../common/crossword/letter";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
+import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 
 describe("DefinitionComponent", () => {
     let component: DefinitionComponent;
@@ -26,24 +30,29 @@ describe("DefinitionComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
     it("should switch cheat mode", () => {
         const pastCheatmodeState: boolean = component.cheatMode;
         component.toogleCheatMode();
         expect(component.cheatMode).toEqual(!pastCheatmodeState);
     });
 
-    it("should upperfirst the first Letter", () => {
-        const strLowerFirst: string = "hello";
-        const strUpperFirst: string = "Allo";
-        const firstLetterLower: string = strLowerFirst.substr(0, 1);
-        const firstLetterUpper: string = strUpperFirst.substr(0, 1);
+    it("should create a Display deffinition right", () => {
+        const word: Word = new Word();
+        word.id = 0;
+        word.definitions = ["n\tdef0", "n\tDef1"];
+        word.letters = [new Letter("W", 0), new Letter("o", 1), new Letter("r", 2) , new Letter("d", 3)];
+        word.orientation = Orientation.Across;
 
-        // Check if it's the same string
-        expect(component.upperFirstLetter(strLowerFirst).toLowerCase()).toBe(strLowerFirst.toLowerCase());
-        expect(component.upperFirstLetter(strUpperFirst).toLowerCase()).toBe(strUpperFirst.toLowerCase());
+        const displayDef: DisplayedDefinition = component.wordToDefinition(word);
 
-        // Check if the first letter is uppercase
-        expect(component.upperFirstLetter(strLowerFirst).substr(0, 1)).toBe(firstLetterLower.toUpperCase());
-        expect(component.upperFirstLetter(strUpperFirst).substr(0, 1)).toBe(firstLetterUpper.toUpperCase());
+        expect(displayDef.id).toBe(word.id);
+        expect(displayDef.word).toBe(word.toString());
+        expect(displayDef.definition).toBe("Def0");
     });
+    it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
+        service.gameManager.playerGridSubject.subscribe( (grid: CrosswordGrid) => {
+          expect(grid).toBeDefined();
+        });
+    }));
 });
