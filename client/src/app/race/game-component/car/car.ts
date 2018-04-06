@@ -35,7 +35,7 @@ const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
-const WALL_FRICTION: number = -20000;
+const WALL_FRICTION: number = -8000;
 
 export class Car extends Object3D {
     public carControl: CarControl;
