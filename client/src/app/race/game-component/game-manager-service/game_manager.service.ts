@@ -111,12 +111,12 @@ export class GameManagerService extends Renderer {
     }
 
     protected update(deltaTime: number): void {
+        this.collisionDetector.detectCollisions(this.scene);
         this._player.update(deltaTime);
         this._hudTimerSubject.next(deltaTime);
         this._aiControlledCars.forEach((car) => car.update(deltaTime));
         this.cameraTargetDirection = this._player.direction;
         this.cameraTargetPosition = this._player.getPosition();
-        this.collisionDetector.detectCollisions(this.scene);
         this.lightManager.updateSunlight();
     }
 
