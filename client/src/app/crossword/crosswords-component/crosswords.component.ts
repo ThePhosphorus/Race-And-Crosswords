@@ -3,7 +3,6 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { GameInfoService } from "../crossword-game-info/game-info-service/game-info.service";
 
-
 @Component({
     selector: "app-crosswords",
     templateUrl: "./crosswords.component.html",

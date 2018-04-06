@@ -19,8 +19,10 @@ export class ModalNewGameComponent implements OnInit {
 
     private _matchesAvailable: Array<InWaitMatch>;
 
-    public constructor(private _crosswordService: CrosswordService,
-        private _infoService: GameInfoService, private commService: CrosswordCommunicationService) {
+    public constructor(
+            private _crosswordService: CrosswordService,
+            private _infoService: GameInfoService,
+            private commService: CrosswordCommunicationService) {
         this.isCollapsedAvailablePlayer = false;
         this.username = null;
         this.isSinglePlayer = null;
