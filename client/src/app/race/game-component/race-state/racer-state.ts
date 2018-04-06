@@ -10,6 +10,9 @@ export class RacerState {
         this._lapTimes = new Array<number>();
         this._lapTimes.push(0);
     }
+    public get id(): number {
+        return this._id;
+    }
     public get currentLap(): number {
         return this._finishedLap + 1;
     }
