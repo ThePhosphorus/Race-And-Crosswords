@@ -19,7 +19,6 @@ export class SocketToServerInfos {
         public receiveGrid: Function,
         public receiveIsCompletedWord: Function,
         public returnName: string
-
     ) { }
 }
 
@@ -40,9 +39,11 @@ export class CrosswordCommunicationService {
             "difficulty=" + difficulty +
             "&size=" + size);
     }
+
     public getMatches(): Observable<Array<InWaitMatch>> {
         return this.http.get<Array<InWaitMatch>>(BACKEND_URL + "crosswords/multiplayer/matchs");
     }
+
     public basicServerConnection(): Observable<string> {
         return this.http.get<string>(BACKEND_URL);
     }
@@ -59,13 +60,11 @@ export class CrosswordCommunicationService {
         this.socket.on(socketMsg.playerSelectTile, (playerId: number, letterId: number, orientation: Orientation) =>
             this.execute(this.socketInfos.receiveSelectCallBack, playerId, letterId, orientation));
 
-        this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) => {
-            this.execute(this.socketInfos.receiveGrid, this.realGrid(grid));
-        });
+        this.socket.on(socketMsg.getGrid, (grid: CrosswordGrid) =>
+            this.execute(this.socketInfos.receiveGrid, this.realGrid(grid)));
 
         this.socket.on(socketMsg.completedWord, (playerId: number, word: Word) =>
             this.execute(this.socketInfos.receiveIsCompletedWord, playerId, word));
-
     }
 
     public rematch(): void {
@@ -79,28 +78,31 @@ export class CrosswordCommunicationService {
     public joinMatch(matchName: string): void {
         this.socket.emit(socketMsg.joinMatch, matchName);
     }
+
     private socketReturnName(id: number): void {
         this.socket.emit(socketMsg.requestName, this.socketInfos.returnName);
     }
 
-    public set listenerReceivePlayers(func: Function) {
+    public set listenerPlayersReceived(func: Function) {
         this.socketInfos.receivePlayersCallBack = func;
     }
 
-    public set listenerReceiveSelect(func: Function) {
+    public set listenerWordSelected(func: Function) {
         this.socketInfos.receiveSelectCallBack = func;
     }
-    public set listenerReceiveGrid(func: Function) {
+
+    public set listenerGridReceived(func: Function) {
         this.socketInfos.receiveGrid = func;
     }
 
-    public set listenerIsCompletedFirst(func: Function) {
+    public set listenerWordSolved(func: Function) {
         this.socketInfos.receiveIsCompletedWord = func;
     }
 
     public set returnName(name: string) {
         this.socketInfos.returnName = name;
     }
+
     public get returnName(): string {
         return this.socketInfos.returnName;
     }
@@ -108,6 +110,7 @@ export class CrosswordCommunicationService {
     public notifySelect(letterId: number, orientation: Orientation): void {
         this.socket.emit(socketMsg.playerSelectTile, letterId, orientation);
     }
+
     public completedWord(w: Word): void {
         this.socket.emit(socketMsg.completedWord, w);
     }
@@ -119,5 +122,4 @@ export class CrosswordCommunicationService {
     private realGrid(sgrid: CrosswordGrid): CrosswordGrid { // For some reason the Crossword that we get isn't a real object (it's in JSON)
         return JSON.parse("" + sgrid);
     }
-
 }
