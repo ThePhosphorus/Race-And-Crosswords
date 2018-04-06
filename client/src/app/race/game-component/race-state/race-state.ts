@@ -15,6 +15,8 @@ export class RaceState {
                 return this._racers.indexOf(racer) + 1;
             }
         }
+
+        return -1;
     }
 
     public updateRacer(id: number, position: number, currentTime: number): void {
