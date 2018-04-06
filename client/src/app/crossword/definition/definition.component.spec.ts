@@ -8,6 +8,8 @@ import { Letter } from "../../../../../common/crossword/letter";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 
+// tslint:disable:no-magic-numbers
+
 describe("DefinitionComponent", () => {
     let component: DefinitionComponent;
     let fixture: ComponentFixture<DefinitionComponent>;

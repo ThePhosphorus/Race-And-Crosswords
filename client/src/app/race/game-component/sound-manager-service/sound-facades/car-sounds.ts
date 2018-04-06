@@ -30,11 +30,12 @@ export class CarSounds {
         const crash3: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
         const crash4: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
         const crash5: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
-        crash1.init(CRASH_PATH_1, sourcePath).then( () => this._collisionSounds[0].setVolume(1));
-        crash2.init(CRASH_PATH_2, sourcePath).then( () => this._collisionSounds[1].setVolume(CRASH_VOLUME));
-        crash3.init(CRASH_PATH_3, sourcePath).then( () => this._collisionSounds[2].setVolume(CRASH_VOLUME));
-        crash4.init(CRASH_PATH_4, sourcePath).then( () => this._collisionSounds[3].setVolume(CRASH_VOLUME));
-        crash5.init(CRASH_PATH_4, sourcePath).then( () => this._collisionSounds[4].setVolume(CRASH_VOLUME));
+        let n: number = 0;
+        crash1.init(CRASH_PATH_1, sourcePath).then( () => this._collisionSounds[n++].setVolume(1));
+        crash2.init(CRASH_PATH_2, sourcePath).then( () => this._collisionSounds[n++].setVolume(CRASH_VOLUME));
+        crash3.init(CRASH_PATH_3, sourcePath).then( () => this._collisionSounds[n++].setVolume(CRASH_VOLUME));
+        crash4.init(CRASH_PATH_4, sourcePath).then( () => this._collisionSounds[n++].setVolume(CRASH_VOLUME));
+        crash5.init(CRASH_PATH_4, sourcePath).then( () => this._collisionSounds[n++].setVolume(CRASH_VOLUME));
         this._collisionSounds.push(crash1);
         this._collisionSounds.push(crash2);
         this._collisionSounds.push(crash3);
@@ -45,7 +46,7 @@ export class CarSounds {
         this._engine.setPlaybackRate(this.getPlaybackRate(rpm));
     }
     private getPlaybackRate(rpm: number): number {
-        return (rpm - 800) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
+        return (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
     }
     public stop(): void {
         this._engine.stop();
