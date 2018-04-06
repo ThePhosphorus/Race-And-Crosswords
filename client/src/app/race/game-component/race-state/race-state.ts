@@ -16,6 +16,17 @@ export class RaceState {
             }
         }
     }
+
+    public updateRacer(id: number, position: number, currentTime: number): void {
+        for (const racer of this._racers) {
+            if (racer.id === id) {
+                racer.update(position, currentTime);
+                this.sortRacers();
+
+                return;
+            }
+        }
+    }
     private sortRacers(): void {
         this._racers.sort((a: RacerState, b: RacerState) => {
             const difference: number = a.currentLap - b.currentLap;
