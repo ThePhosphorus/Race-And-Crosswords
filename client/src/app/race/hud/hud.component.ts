@@ -7,6 +7,7 @@ import { GameManagerService, CarInfos } from "../game-component/game-manager-ser
     templateUrl: "./hud.component.html",
     styleUrls: ["./hud.component.css"]
 })
+const NB_LAPS: number = 5;
 export class HudComponent implements OnInit {
     private _globalTimer: Timer;
     private _lapTimer: Timer;
@@ -17,7 +18,7 @@ export class HudComponent implements OnInit {
         this._globalTimer = new Timer();
         this._lapTimer = new Timer();
         this.lapCount = 1;
-        this.totalLap = 5;
+        this.totalLap = NB_LAPS;
 
     }
 
