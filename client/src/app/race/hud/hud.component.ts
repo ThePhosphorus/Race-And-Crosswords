@@ -2,12 +2,12 @@ import { Component, OnInit } from "@angular/core";
 import { Timer } from "./timer";
 import { GameManagerService, CarInfos } from "../game-component/game-manager-service/game_manager.service";
 
+const NB_LAPS: number = 5;
 @Component({
     selector: "app-hud",
     templateUrl: "./hud.component.html",
     styleUrls: ["./hud.component.css"]
 })
-const NB_LAPS: number = 5;
 export class HudComponent implements OnInit {
     private _globalTimer: Timer;
     private _lapTimer: Timer;
