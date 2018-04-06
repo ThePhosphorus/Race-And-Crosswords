@@ -275,7 +275,7 @@ export class Car extends Object3D {
     }
 
     private wallPenalty(): void {
-        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
+        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION * Math.sign(this.speed)));
     }
 
     private initCarLights(): void {
