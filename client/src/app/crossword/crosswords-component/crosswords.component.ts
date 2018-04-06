@@ -14,8 +14,8 @@ export class CrosswordsComponent implements OnInit {
     public searching: boolean;
 
     public constructor(private _gameInfo: GameInfoService) {
-        this.loading = true;
-        this.searching = true;
+        this.loading = false;
+        this.searching = false;
     }
 
     public ngOnInit(): void {

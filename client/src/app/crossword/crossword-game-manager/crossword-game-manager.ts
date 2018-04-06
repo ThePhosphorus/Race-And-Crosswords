@@ -129,7 +129,7 @@ export class GameManager {
         }
     }
 
-    private initializeEmptyGrid(): void {
+    public initializeEmptyGrid(): void {
         this._playerGrid.value.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._playerGrid.value.size * this._playerGrid.value.size); i++) {
             this._playerGrid.getValue().grid.push(new Letter(EMPTY_TILE_CHARACTER));

@@ -20,13 +20,13 @@ export class CrosswordService {
     private _gameManager: GameManager;
     private _gridState: BehaviorSubject<GridState>;
     private _isSinglePlayer: boolean;
-    public isGameOver: boolean;
+    private _isGameOver: BehaviorSubject<boolean>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._isSinglePlayer = true;
-        this.isGameOver = false;
+        this._isGameOver = new BehaviorSubject<boolean>(false);
         if (USE_MOCK_GRID) {
             this._gameManager.grid = MOCK;
         }
@@ -48,6 +48,14 @@ export class CrosswordService {
         return this._gridState;
     }
 
+    public get isGameOver(): BehaviorSubject<boolean> {
+        return this._isGameOver;
+    }
+
+    public setIsGameOver(bool: boolean): void {
+        this._isGameOver.next(bool);
+    }
+
     public getPlayerColor(playerId: number, isFrontGround: boolean): string {
         return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
     }
@@ -56,7 +64,7 @@ export class CrosswordService {
         if (!USE_MOCK_GRID) {
             this._isSinglePlayer = isSinglePlayer;
             this._gameManager.newGame(difficulty);
-            this.isGameOver = false;
+            this.setIsGameOver(false);
             this._gridState.next(new GridState());
 
             if (isSinglePlayer) {
@@ -196,7 +204,7 @@ export class CrosswordService {
 
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersSelect = this._gridState.getValue().otherPlayersSelect.find(
-                                                        (oph: OtherPlayersSelect) => oph.playerId === playerId);
+            (oph: OtherPlayersSelect) => oph.playerId === playerId);
         if (player == null) {
             player = new OtherPlayersSelect(playerId, []);
             this._gridState.getValue().otherPlayersSelect.push(player);
@@ -210,6 +218,7 @@ export class CrosswordService {
 
     public resetGrid(): void {
         this._gameManager.grid = new CrosswordGrid();
+        this._gameManager.initializeEmptyGrid();
     }
 
     private setUpSingleplayer(diff: Difficulty): void {
@@ -263,7 +272,7 @@ export class CrosswordService {
         }
         this.unselectWord();
         if (this._gameManager.addSolvedWord(word, playerId)) {
-            this.isGameOver = true;
+            this.setIsGameOver(true);
         }
     }
 
