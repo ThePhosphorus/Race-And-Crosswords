@@ -4,9 +4,9 @@ import { PointsHandler } from "./points-handler";
 import { TrackGenerator } from "../track-generator.service";
 import { CameraManagerService } from "../../../camera-manager-service/camera-manager.service";
 import { ConstraintValidator } from "../constraint-validator/constraint-validator";
-import { EMPTY_ARRAY_EXCEPTION_MSG } from "../../../../exceptions/EmptyArrayException";
+import { EMPTY_ARRAY_EXCEPTION_MSG } from "../../../../exceptions/empty-array-exception";
 import { Mesh } from "three";
-import { OUT_OF_RANGE_EXCEPTION_MSG } from "../../../../exceptions/OutOfRangeException";
+import { OUT_OF_RANGE_EXCEPTION_MSG } from "../../../../exceptions/out-of-range-exception";
 import { InputManagerService } from "../../../input-manager-service/input-manager.service";
 
 describe("PointsHandler for TrackGeneratorService", () => {
