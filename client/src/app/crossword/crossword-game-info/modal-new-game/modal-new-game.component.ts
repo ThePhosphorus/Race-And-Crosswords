@@ -64,7 +64,7 @@ export class ModalNewGameComponent implements OnInit {
         if (this.username === null) {
             return false;
         }
-        if (this.username.split(" ").join("").length === 0 || this.username === this.joinedPlayer) {
+        if (this.username.split(" ").join("").length === 0 || this.username.split(" ").join("") === this.joinedPlayer.split(" ").join("")) {
             return false;
         }
 
