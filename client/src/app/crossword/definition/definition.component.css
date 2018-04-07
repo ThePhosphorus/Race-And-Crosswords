@@ -22,6 +22,7 @@ label {
 
 .disabled {
     text-decoration-line: line-through;
+    background-color: var(--color, whitesmoke);
 }
 
 .enabled:hover{

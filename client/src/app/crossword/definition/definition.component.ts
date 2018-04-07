@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ElementRef } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { GridState } from "../grid-state/grid-state";
 import { Word } from "../../../../../common/crossword/word";
@@ -7,7 +7,7 @@ import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
 
 export class DisplayedDefinition {
-    public constructor(public definition: string, public word: string, public id: number) {}
+    public constructor(public definition: string, public word: string, public id: number) { }
 }
 
 @Component({
@@ -21,8 +21,9 @@ export class DefinitionComponent implements OnInit {
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
     private gridSize: number;
+    private style: CSSStyleDeclaration;
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(el: ElementRef, private _crosswordService: CrosswordService) {
         this._crosswordService.gridStateObs.subscribe((gs: GridState) =>
             this._gridState = gs);
 
@@ -30,6 +31,7 @@ export class DefinitionComponent implements OnInit {
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
         this.gridSize = 1;
+        this.style = el.nativeElement.style;
     }
 
     public ngOnInit(): void {
@@ -42,7 +44,7 @@ export class DefinitionComponent implements OnInit {
 
             wordGrid.forEach((w: Word) => {
                 const definition: DisplayedDefinition =
-                this.wordToDefinition(w);
+                    this.wordToDefinition(w);
 
                 if (w.orientation === Orientation.Across) {
                     this.acrossDefinitions.push(definition);
@@ -73,6 +75,10 @@ export class DefinitionComponent implements OnInit {
     public get cheatMode(): boolean { return this._cheatmode; }
 
     public isWordSolved(id: number, orientation: Orientation): boolean {
+        this.style.setProperty("--color",
+                               this._crosswordService.getPlayerColor(this._crosswordService.gameManager.solvedWordPlayer(id, orientation),
+                                                                     false));
+
         return this._crosswordService.gameManager.isWordSolved(id, orientation);
     }
 
