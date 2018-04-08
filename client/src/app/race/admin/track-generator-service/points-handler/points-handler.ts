@@ -1,7 +1,7 @@
 import { Mesh, Vector3 } from "three";
 import { TrackGenerator } from "../track-generator.service";
-import { EmptyArrayException } from "../../../../exceptions/EmptyArrayException";
-import { OutOfRangeException } from "../../../../exceptions/OutOfRangeException";
+import { EmptyArrayException } from "../../../../exceptions/empty-array-exception";
+import { OutOfRangeException } from "../../../../exceptions/out-of-range-exception";
 import { WHITE_MATERIAL, SELECTION_MATERIAL, LINK_MINIMUM_POINTS, START_POINT_MATERIAL } from "../../track-editor.constants";
 
 export class PointsHandler {

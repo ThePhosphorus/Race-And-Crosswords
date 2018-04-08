@@ -18,7 +18,7 @@ import {
 } from "../../race.constants";
 import { Collider } from "../collision/collider";
 import { RigidBody } from "../rigid-body/rigid-body";
-import { CarLights } from "./carLights/carLights";
+import { CarLights } from "./car-lights/car-lights";
 import { CarControl } from "./car-control";
 import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
