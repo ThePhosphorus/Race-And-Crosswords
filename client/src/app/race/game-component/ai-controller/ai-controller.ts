@@ -36,10 +36,10 @@ export class AIController extends Object3D {
             this.carControl.accelerate();
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
-                const objective: number = this.findObjective(nextPointIndex);
+                const target: number = this.findTargetPoint(nextPointIndex);
                 this.calculateWallCollision(deltaTime, nextPointIndex);
                 this.applyAcceleration(nextPointIndex);
-                this.applySteering(objective, nextPointIndex);
+                this.applySteering(target, nextPointIndex);
             }
         }
     }
@@ -88,7 +88,7 @@ export class AIController extends Object3D {
         return direction1.angleTo(direction2);
     }
 
-    private findObjective(nextPointIndex: number): number {
+    private findTargetPoint(nextPointIndex: number): number {
         const p1: Vector3 = this.track[nextPointIndex];
         let minimumDistance: number = this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
         minimumDistance = this.isZigZag(nextPointIndex) ? minimumDistance / ZIG_ZAG_DISTANCE_FACTOR : minimumDistance;
@@ -135,9 +135,9 @@ export class AIController extends Object3D {
         return point;
     }
 
-    private applySteering(objective: number, nextPointIndex: number): void {
-        const objectiveDirection: Vector3 = this.getPosition().sub(this.track[objective]);
-        const steeringDirection: number = this.getDirection().cross(objectiveDirection).y * Math.sign(this.getSpeed());
+    private applySteering(target: number, nextPointIndex: number): void {
+        const targetDirection: Vector3 = this.getPosition().sub(this.track[target]);
+        const steeringDirection: number = this.getDirection().cross(targetDirection).y * Math.sign(this.getSpeed());
         if (steeringDirection > 0) {
             this.carControl.releaseSteeringLeft();
             this.carControl.steerRight();
