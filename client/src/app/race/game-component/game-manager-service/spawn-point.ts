@@ -34,6 +34,6 @@ export class SpawnPointFinder {
     }
 
     private static calculateSpawnDirection(track: Array<Vector3>): Vector3 {
-        return track[track.length - 2].sub(track[track.length - 1]).normalize();
+        return track[track.length - 2].clone().sub(track[track.length - 1]).normalize();
     }
 }
