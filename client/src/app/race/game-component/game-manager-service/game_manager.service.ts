@@ -38,12 +38,13 @@ import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
+import { AICar } from "./ai-car";
 
 export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
-const N_AI_CONTROLLED_CARS: number = 2;
+const N_AI_CONTROLLED_CARS: number = 5;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
@@ -59,7 +60,7 @@ export class CarInfos {
 @Injectable()
 export class GameManagerService extends Renderer {
     private _player: Car;
-    private _aiControlledCars: Array<Car>;
+    private _aiControlledCars: Array<AICar>;
     private _hudTimerSubject: Subject<number>;
     private _hudLapResetSubject: Subject<void>;
     private _gameConfiguration: GameConfiguration;
@@ -75,9 +76,9 @@ export class GameManagerService extends Renderer {
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
         this._player = new Car(this.cameraManager);
-        this._aiControlledCars = new Array<Car>();
+        this._aiControlledCars = new Array<AICar>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this._aiControlledCars.push(new Car(this.cameraManager));
+            this._aiControlledCars.push(new AICar(new Car(this.cameraManager)));
         }
     }
 
@@ -90,6 +91,7 @@ export class GameManagerService extends Renderer {
     public get hudTimer(): Observable<number> {
         return this._hudTimerSubject.asObservable();
     }
+
     public get hudLapReset(): Observable<void> {
         return this._hudLapResetSubject.asObservable();
     }
@@ -111,12 +113,12 @@ export class GameManagerService extends Renderer {
     }
 
     protected update(deltaTime: number): void {
+        this.collisionDetector.detectCollisions(this.scene);
         this._player.update(deltaTime);
         this._hudTimerSubject.next(deltaTime);
-        this._aiControlledCars.forEach((car) => car.update(deltaTime));
+        this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
         this.cameraTargetDirection = this._player.direction;
         this.cameraTargetPosition = this._player.getPosition();
-        this.collisionDetector.detectCollisions(this.scene);
         this.lightManager.updateSunlight();
     }
 
@@ -130,14 +132,11 @@ export class GameManagerService extends Renderer {
     private initCars(): void {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
-        const spawnDirection: Vector3 = TrackLoaderService.toVector(points[points.length - 2])
-            .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
-        const perpOffset: Vector3 = new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
-            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+        const spawnDirection: Vector3 = this.calculateSpawnDirection(points);
+        const perpOffset: Vector3 = this.calculateOffset(spawnDirection);
         const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
-        const playerSpawnPoint: Vector3 = startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
-            .add(perpOffset);
+        const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
         this._player.init(playerSpawnPoint, this.loader, LoadedObject.car);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
@@ -148,8 +147,23 @@ export class GameManagerService extends Renderer {
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
             this._aiControlledCars[i].init(spawn, this.loader, LoadedObject.car);
-            this._aiControlledCars[i].mesh.lookAt(spawn.clone().add(lookAtOffset));
+            this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
+    }
+
+    private calculateSpawnPoint(startPosition: Vector3, spawnDirection: Vector3, perpOffset: Vector3 ): Vector3 {
+        return startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
+        .add(perpOffset);
+    }
+
+    private calculateOffset(spawnDirection: Vector3): Vector3 {
+        return new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
+            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+    }
+
+    private calculateSpawnDirection(points: Array<Vector3Struct>): Vector3 {
+        return TrackLoaderService.toVector(points[points.length - 2])
+        .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
     }
 
     private initKeyBindings(): void {
@@ -171,7 +185,6 @@ export class GameManagerService extends Renderer {
         this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.lightManager.toggleSunlight());
         this.inputManager.registerKeyUp(HANDBRAKE_KEYCODE, () => this._player.carControl.releaseHandBrake());
-
     }
 
     private initSoundManager(): void {
@@ -186,8 +199,8 @@ export class GameManagerService extends Renderer {
     private initScene(): void {
         this.scene.add(this.getFloor());
         this.scene.add(this._player);
-        this._aiControlledCars.forEach((car) => this.scene.add(car));
-        this.lightManager.init(this.scene, this._player, this._aiControlledCars);
+        this._aiControlledCars.forEach((aiCar) => this.scene.add(aiCar.car));
+        this.lightManager.init(this.scene, this._player, this._aiControlledCars.map((aiCar) => aiCar.car));
     }
 
     private getFloor(): Mesh {

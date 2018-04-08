@@ -2,6 +2,7 @@ import {
     Vector3,
     Matrix4,
     Object3D,
+    ObjectLoader,
     Euler,
     Box3,
     Vector2
@@ -17,17 +18,16 @@ import {
 } from "../../race.constants";
 import { Collider } from "../collision/collider";
 import { RigidBody } from "../rigid-body/rigid-body";
-import { CarLights } from "./carLights/carLights";
+import { CarLights } from "./car-lights/car-lights";
 import { CarControl } from "./car-control";
 import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
-import { LoaderService } from "../loader-service/loader.service";
-import { LoadedObject } from "../loader-service/load-types.enum";
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
-const APPROX_MAXIMUM_SPEED: number = 300;
+const APPROX_MAXIMUM_SPEED: number = 280;
 const CAR_Y_OFFSET: number = -0.1;
+const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
 const HANDBRAKE_STEERING_ANGLE: number = 0.4;
 const DEFAULT_FRICTION: number = 400000;
@@ -35,7 +35,7 @@ const HANDBRAKE_FRICTION: number = 50000;
 const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
-const WALL_FRICTION: number = -20000;
+const WALL_FRICTION: number = -8000;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -71,6 +71,10 @@ export class Car extends Object3D {
 
     public get speed(): number {
         return this._mesh == null ? 0 : this._rigidBody.velocity.clone().dot(this.direction2D);
+    }
+
+    public get rigidBody(): RigidBody {
+        return this._rigidBody;
     }
 
     public constructor(
@@ -262,7 +266,7 @@ export class Car extends Object3D {
     }
 
     private wallPenalty(): void {
-        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION));
+        this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION * Math.sign(this.speed)));
     }
 
     private initCarLights(): void {

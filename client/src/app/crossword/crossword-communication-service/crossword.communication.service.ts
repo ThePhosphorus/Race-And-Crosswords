@@ -43,6 +43,7 @@ export class CrosswordCommunicationService {
     public getMatches(): Observable<Array<InWaitMatch>> {
         return this.http.get<Array<InWaitMatch>>(BACKEND_URL + "crosswords/multiplayer/matchs");
     }
+
     public basicServerConnection(): Observable<string> {
         return this.http.get<string>(BACKEND_URL);
     }

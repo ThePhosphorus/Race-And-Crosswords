@@ -9,5 +9,5 @@ export class Track {
         public points: Vector3Struct[],
         public nbPlayed: number,
         public highscores?: Array<Highscore>
-    ){}
+    ) {}
 }
