@@ -92,6 +92,7 @@ export class GameManagerService extends Renderer {
     public get hudTimer(): Observable<number> {
         return this._hudTimerSubject.asObservable();
     }
+
     public get hudLapReset(): Observable<void> {
         return this._hudLapResetSubject.asObservable();
     }
