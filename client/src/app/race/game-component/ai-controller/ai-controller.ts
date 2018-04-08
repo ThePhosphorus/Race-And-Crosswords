@@ -5,7 +5,7 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
-const COLLISION_RESET_TIMER: number = -100;
+const COLLISION_RESET_TIMER: number = -300;
 const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
@@ -20,7 +20,7 @@ export class AIController extends Object3D {
 
     public constructor() {
         super();
-        this.wallCollisionTimer = 0;
+        this.wallCollisionTimer = COLLISION_RESET_TIMER;
     }
 
     public init(track: Array<Vector3>): void {
