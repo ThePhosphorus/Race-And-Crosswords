@@ -88,10 +88,6 @@ export class GameManagerService extends Renderer {
         return this._hudLapResetSubject.asObservable();
     }
 
-    public getDeltaTime(): Observable<number> {
-        return this._hudTimerSubject.asObservable();
-    }
-
     public async start(container: HTMLDivElement, config: GameConfiguration): Promise<void> {
         this._gameConfiguration = config;
         this.init(container);
