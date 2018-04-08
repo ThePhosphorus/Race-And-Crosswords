@@ -5,7 +5,6 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
-const COLLISION_RESET_TIMER: number = -300;
 const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
@@ -20,7 +19,7 @@ export class AIController extends Object3D {
 
     public constructor() {
         super();
-        this.wallCollisionTimer = COLLISION_RESET_TIMER;
+        this.wallCollisionTimer = 0;
     }
 
     public init(track: Array<Vector3>): void {
@@ -37,7 +36,7 @@ export class AIController extends Object3D {
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
                 const target: number = this.findTargetPoint(nextPointIndex);
-                this.wallCollisionTimer -= this.wallCollisionTimer > COLLISION_RESET_TIMER ? deltaTime : COLLISION_RESET_TIMER;
+                this.wallCollisionTimer -= this.wallCollisionTimer > 0 ? deltaTime : 0;
                 this.applyAcceleration(nextPointIndex);
                 this.applySteering(target, nextPointIndex);
             }
@@ -45,7 +44,7 @@ export class AIController extends Object3D {
     }
 
     private onCollision(otherRb: RigidBody): void {
-        if (otherRb.fixed && this.wallCollisionTimer <= COLLISION_RESET_TIMER && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
+        if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
             const nextPointIndex: number = this.findNextPoint();
             const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
             const p1: Vector3 = this.track[nextPointIndex];
