@@ -27,20 +27,18 @@ import {
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import { LightManagerService } from "../light-manager/light-manager.service";
-import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { UserPlayer } from "../player/user-player";
 import { AiPlayer } from "../player/ai-player";
+import { SpawnPoint, SpawnPointFinder } from "./spawn-point";
 
 export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const N_AI_CONTROLLED_CARS: number = 5;
-const INITIAL_SPAWN_OFFSET: number = 7;
-const SPACE_BETWEEN_CARS: number = 5;
 const NO_TRACK_POINTS: Array<Vector3> = [new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(0, 0, 0)];
 
 const COLORS: Array<string> = ["yellow", "blue", "green", "orange", "pink", "purple", "red"];
@@ -120,40 +118,16 @@ export class GameManagerService extends Renderer {
     private async initCars(): Promise<void> {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
-        const startPosition: Vector3 = TrackLoaderService.toVector(points[0]);
-        const spawnDirection: Vector3 = this.calculateSpawnDirection(points);
-        const perpOffset: Vector3 = this.calculateOffset(spawnDirection);
-        const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
+        const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
 
-        const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
-        await this._player.init(playerSpawnPoint, COLORS[0]);
-        this._player.car.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
+        await this._player.init(spawnPoints[0].position, COLORS[0]);
+        this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
-        let offset: number = 0;
         for (let i: number = 0; i < N_AI_CONTROLLED_CARS; i++) {
             this._aiControlledCars.push(new AiPlayer(this.cameraManager, track));
-            offset = i % 2 === 0 ? offset : offset + 1;
-            const spawn: Vector3 = startPosition.clone()
-                .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
-                .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
-            await this._aiControlledCars[i].init(spawn, COLORS[(i + 1) % COLORS.length]);
-            this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
+            await this._aiControlledCars[i].init(spawnPoints[i + 1].position, COLORS[(i + 1) % COLORS.length]);
+            this._aiControlledCars[i].car.mesh.lookAt(spawnPoints[i + 1].direction);
         }
-    }
-
-    private calculateSpawnPoint(startPosition: Vector3, spawnDirection: Vector3, perpOffset: Vector3): Vector3 {
-        return startPosition.clone().add(spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET))
-            .add(perpOffset);
-    }
-
-    private calculateOffset(spawnDirection: Vector3): Vector3 {
-        return new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
-            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
-    }
-
-    private calculateSpawnDirection(points: Array<Vector3Struct>): Vector3 {
-        return TrackLoaderService.toVector(points[points.length - 2])
-            .sub(TrackLoaderService.toVector(points[points.length - 1])).normalize();
     }
 
     private initKeyBindings(): void {
