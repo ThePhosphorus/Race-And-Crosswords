@@ -5,6 +5,7 @@ import { RigidBody } from "../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
+const COLLISION_RESET_TIMER: number = -100;
 const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
@@ -36,7 +37,7 @@ export class AIController extends Object3D {
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
                 const target: number = this.findTargetPoint(nextPointIndex);
-                this.calculateWallCollision(deltaTime, nextPointIndex);
+                this.wallCollisionTimer -= this.wallCollisionTimer > COLLISION_RESET_TIMER ? deltaTime : COLLISION_RESET_TIMER;
                 this.applyAcceleration(nextPointIndex);
                 this.applySteering(target, nextPointIndex);
             }
@@ -44,8 +45,13 @@ export class AIController extends Object3D {
     }
 
     private onCollision(otherRb: RigidBody): void {
-        if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
-            this.wallCollisionTimer = DEFAULT_WALL_COLLISION_TIMER;
+        if (otherRb.fixed && this.wallCollisionTimer <= COLLISION_RESET_TIMER && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
+            const nextPointIndex: number = this.findNextPoint();
+            const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
+            const p1: Vector3 = this.track[nextPointIndex];
+            if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
+                this.wallCollisionTimer = DEFAULT_WALL_COLLISION_TIMER;
+            }
         }
     }
 
@@ -167,16 +173,6 @@ export class AIController extends Object3D {
                 this.carControl.releaseHandBrake();
                 this.carControl.accelerate();
             }
-        }
-    }
-
-    private calculateWallCollision(deltaTime: number, nextPointIndex: number): void {
-        const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
-        const p1: Vector3 = this.track[nextPointIndex];
-        if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
-            this.wallCollisionTimer -= deltaTime;
-        } else {
-            this.wallCollisionTimer = 0;
         }
     }
 }
