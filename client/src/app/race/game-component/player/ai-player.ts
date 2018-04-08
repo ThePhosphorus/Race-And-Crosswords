@@ -1,4 +1,4 @@
-import { RacePlayer } from "./player";
+import { RacePlayer } from "./race-player";
 import { AIController } from "../ai-controller/ai-controller";
 import { Car } from "../car/car";
 import { Vector3 } from "three";

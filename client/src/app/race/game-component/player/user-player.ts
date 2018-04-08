@@ -1,4 +1,4 @@
-import { RacePlayer } from "./player";
+import { RacePlayer } from "./race-player";
 import { Car } from "../car/car";
 import { Vector3 } from "three";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
