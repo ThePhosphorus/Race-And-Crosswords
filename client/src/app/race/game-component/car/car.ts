@@ -114,7 +114,7 @@ export class Car extends Object3D {
         this.add(this._mesh);
         this.initCarLights();
         this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
-        this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
+        this._rigidBody.addCollisionObserver((otherRb: RigidBody) => this.onCollision(otherRb));
     }
 
     private getSteeringDirection(): number {

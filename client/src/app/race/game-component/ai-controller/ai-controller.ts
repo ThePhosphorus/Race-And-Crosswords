@@ -26,7 +26,7 @@ export class AIController extends Object3D {
     public init(track: Array<Vector3>): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
-            this.parent.rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
+            this.parent.rigidBody.addCollisionObserver((otherRb: RigidBody) => this.onCollision(otherRb));
         }
         this.track = track;
     }
