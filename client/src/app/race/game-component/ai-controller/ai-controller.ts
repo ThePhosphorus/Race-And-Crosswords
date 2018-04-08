@@ -9,7 +9,8 @@ const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
 const WALL_COLLISION_ANGLE: number = 0.4;
-const OBJECTIVE_MINIMUM_DISTANCE: number = 12;
+const MAXIMUM_ZIG_ZAG: number = 40;
+const ZIG_ZAG_ANGLE: number = 1.05;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -72,10 +73,14 @@ export class AIController extends Object3D {
         return 0;
     }
 
+    private getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
+        return this.track[(pointIndex + offsetIndex + this.track.length) % this.track.length];
+    }
+
     private pointAngle(nextPointIndex: number): number {
-        const p0: Vector3 = this.track[(nextPointIndex === 0) ? this.track.length - 1 : nextPointIndex - 1];
+        const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
         const p1: Vector3 = this.track[nextPointIndex];
-        const p2: Vector3 = this.track[(nextPointIndex + 1) % (this.track.length - 1)];
+        const p2: Vector3 = this.getSurroundingPoint(nextPointIndex, 1);
         const direction1: Vector3 = p1.clone().sub(p0);
         const direction2: Vector3 = p2.clone().sub(p1);
 
@@ -84,10 +89,27 @@ export class AIController extends Object3D {
 
     private findObjective(nextPointIndex: number): number {
         const p1: Vector3 = this.track[nextPointIndex];
-        const minimumDistance: number = (this.getSpeed() < OBJECTIVE_MINIMUM_DISTANCE) ? 0 :
-            this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
+        let minimumDistance: number = this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
+        minimumDistance = this.isZigZag(nextPointIndex) ? minimumDistance / 10 : minimumDistance;
 
         return this.getPosition().sub(p1).length() < minimumDistance ? (nextPointIndex + 1) % (this.track.length - 1) : nextPointIndex;
+    }
+
+    private isZigZag(nextPointIndex: number): boolean {
+        const previous: Vector3 = this.getSurroundingPoint(nextPointIndex, -2);
+        const p0: Vector3 = this.track[(nextPointIndex === 0) ? this.track.length - 1 : nextPointIndex - 1];
+        const p1: Vector3 = this.track[nextPointIndex];
+        const p2: Vector3 = this.track[(nextPointIndex + 1) % (this.track.length - 1)];
+
+        const l1: Vector3 = p0.clone().sub(previous);
+        const l2: Vector3 = p1.clone().sub(p0);
+        const l3: Vector3 = p2.clone().sub(p1);
+
+        const hasZigZagShape: boolean = Math.sign(l1.clone().cross(l2).y) !== Math.sign(l2.clone().cross(l3).y);
+        const hasBigAngle: boolean = l1.angleTo(l2) > ZIG_ZAG_ANGLE && l2.angleTo(l3) > ZIG_ZAG_ANGLE;
+        const isSmallEnough: boolean = l2.length() < MAXIMUM_ZIG_ZAG;
+
+        return hasZigZagShape && hasBigAngle && isSmallEnough;
     }
 
     private findNextPoint(): number {
@@ -113,9 +135,7 @@ export class AIController extends Object3D {
     }
 
     private applySteering(objective: number, nextPointIndex: number): void {
-        const objectiveDirection: Vector3 = this.wallCollisionTimer > 0 ?
-            this.getPosition().sub(this.track[nextPointIndex]) :
-            this.getPosition().sub(this.track[objective]);
+        const objectiveDirection: Vector3 = this.getPosition().sub(this.track[objective]);
         const steeringDirection: number = this.getDirection().cross(objectiveDirection).y * Math.sign(this.getSpeed());
         if (steeringDirection > 0) {
             this.carControl.releaseSteeringLeft();
