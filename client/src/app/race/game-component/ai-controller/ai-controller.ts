@@ -1,4 +1,4 @@
-import { Object3D, Vector3 } from "three";
+import { Object3D, Vector3, Vector2 } from "three";
 import { CarControl } from "../car/car-control";
 import { Car } from "../car/car";
 import { RigidBody } from "../rigid-body/rigid-body";
@@ -50,7 +50,13 @@ export class AIController extends Object3D {
             const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
             const p1: Vector3 = this.track[nextPointIndex];
             if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
-                this.wallCollisionTimer = DEFAULT_WALL_COLLISION_TIMER;
+                const trackDir: Vector3 = p1.clone().sub(p0);
+                const carRelativePos: Vector3 = this.getPosition().sub(p0);
+                const side: number = Math.sign(carRelativePos.cross(trackDir).y);
+                const direction: number = Math.sign(this.getDirection().cross(trackDir).y);
+                if (side === direction) {
+                    this.wallCollisionTimer = DEFAULT_WALL_COLLISION_TIMER;
+                }
             }
         }
     }
