@@ -120,7 +120,7 @@ export class AIController extends Object3D {
         const hasBigAngle: boolean = l1.angleTo(l2) > ZIG_ZAG_ANGLE && l2.angleTo(l3) > ZIG_ZAG_ANGLE;
         const isSmallEnough: boolean = l2.length() < MAXIMUM_ZIG_ZAG;
 
-        return hasZigZagShape && hasBigAngle && isSmallEnough;
+        return hasBigAngle && isSmallEnough;
     }
 
     private findNextPoint(): number {
