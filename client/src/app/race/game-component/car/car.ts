@@ -25,7 +25,7 @@ import { CameraManagerService } from "../../camera-manager-service/camera-manage
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
-const APPROX_MAXIMUM_SPEED: number = 300;
+const APPROX_MAXIMUM_SPEED: number = 280;
 const CAR_Y_OFFSET: number = -0.1;
 const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
@@ -73,6 +73,10 @@ export class Car extends Object3D {
         return this._mesh == null ? 0 : this._rigidBody.velocity.clone().dot(this.direction2D);
     }
 
+    public get rigidBody(): RigidBody {
+        return this._rigidBody;
+    }
+
     public constructor(
         private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
@@ -110,7 +114,7 @@ export class Car extends Object3D {
         this.add(this._mesh);
         this.initCarLights();
         this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
-        this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
+        this._rigidBody.addCollisionObserver((otherRb: RigidBody) => this.onCollision(otherRb));
     }
 
     private getSteeringDirection(): number {

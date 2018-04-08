@@ -32,27 +32,29 @@ export class TrackLoaderService {
         return new Vector3(vector.x, vector.y, vector.z);
     }
 
+    public static toVectors(vectors: Array<Vector3Struct>): Array<Vector3> {
+        const vectorArr: Array<Vector3> = new Array<Vector3>();
+        vectors.forEach((vec) => vectorArr.push(TrackLoaderService.toVector(vec)));
+
+        return vectorArr;
+    }
+
     public static getTrackMeshs(track: Track): Mesh[] {
+        const vectorTrack: Array<Vector3> = TrackLoaderService.toVectors(track.points);
         const meshs: Array<Mesh> = new Array<Mesh>();
-        const startMesh: Mesh =
-            TrackLoaderService.getStartMesh(
-                TrackLoaderService.toVector(track.points[0]),
-                TrackLoaderService.toVector(track.points[1])
-            );
+        const startMesh: Mesh = TrackLoaderService.getStartMesh(vectorTrack[0], vectorTrack[1]);
         meshs.push(startMesh);
         for (let i: number = 0; i < track.points.length - 1; i++) {
-            const roadMesh: Mesh = TrackLoaderService.getRoad(
-                TrackLoaderService.toVector(track.points[i]),
-                TrackLoaderService.toVector(track.points[i + 1]));
+            const roadMesh: Mesh = TrackLoaderService.getRoad(vectorTrack[i], vectorTrack[i + 1]);
             if (i === 0) {
                 roadMesh.position.setY(DOUBLE * Y_OFFSET);
             } else if (i % DOUBLE) { roadMesh.position.setY(Y_OFFSET); }
             meshs.push(roadMesh);
 
             meshs.push(TrackLoaderService.getCornerAprox(
-                TrackLoaderService.toVector(track.points[i]),
-                TrackLoaderService.toVector(track.points[(i === 0) ? track.points.length - 1 : i - 1]),
-                TrackLoaderService.toVector(track.points[(i === track.points.length - 1) ? 0 : i + 1])
+                vectorTrack[i],
+                vectorTrack[(i === 0) ? track.points.length - 1 : i - 1],
+                vectorTrack[(i === track.points.length - 1) ? 0 : i + 1]
             ));
         }
 
