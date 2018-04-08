@@ -106,7 +106,7 @@ export class LightManagerService {
         this._directionalLight.shadow.camera.far = D_LIGHT_PLANE_SIZE;
         this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
         this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
-        this._directionalLight.shadowBias = SHADOW_BIAS;
+        this._directionalLight.shadow.bias = SHADOW_BIAS;
     }
 
 }
