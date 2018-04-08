@@ -171,11 +171,11 @@ export class GameManager {
     }
 
     public solvedWordPlayer(letterId: number, orientation: Orientation): number {
-        this._solvedWords.getValue().forEach((sw: SolvedWord) => {
+        for (const sw of this._solvedWords.getValue()) {
             if (sw.id === letterId && sw.orientation === orientation) {
                 return sw.player;
             }
-        });
+        }
 
         return null;
     }
