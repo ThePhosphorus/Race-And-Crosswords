@@ -121,8 +121,7 @@ export class AIController extends Object3D {
             const nextIndex: number = (i === this.track.length - 1) ? 1 : i + 1;
             const p1: Vector3 = this.track[i];
             const p2: Vector3 = this.track[nextIndex];
-            const distance: number = Math.abs((p2.z - p1.z) * pos.x - (p2.x - p1.x) * pos.z + p2.x * p1.z - p2.z * p1.x) /
-                p1.clone().distanceTo(p2);
+            const distance: number = this.distanceToLine(p1, p2, pos);
             if (distance < minDistance) {
                 const dotProduct: number = p2.clone().sub(p1).dot(pos.clone().sub(p1));
                 if (dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq()) {
@@ -133,6 +132,11 @@ export class AIController extends Object3D {
         }
 
         return point;
+    }
+
+    private distanceToLine(p1: Vector3, p2: Vector3, pos: Vector3): number {
+        return Math.abs((p2.z - p1.z) * pos.x - (p2.x - p1.x) * pos.z + p2.x * p1.z - p2.z * p1.x) /
+            p1.clone().distanceTo(p2);
     }
 
     private applySteering(target: number, nextPointIndex: number): void {
