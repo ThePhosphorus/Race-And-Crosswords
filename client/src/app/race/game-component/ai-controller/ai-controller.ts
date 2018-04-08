@@ -9,9 +9,8 @@ const DEFAULT_WALL_COLLISION_TIMER: number = 2500;
 const SLOWING_DISTANCE_FACTOR: number = 2.5;
 const MINIMUM_SLOWING_DISTANCE: number = 10;
 const WALL_COLLISION_ANGLE: number = 0.4;
-const MAXIMUM_ZIG_ZAG: number = 40;
-const ZIG_ZAG_ANGLE: number = 1.05;
-const ZIG_ZAG_DISTANCE_FACTOR: number = 5;
+const MAXIMUM_ZIG_ZAG: number = 90;
+const ZIG_ZAG_ANGLE: number = 1.25;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
@@ -91,7 +90,7 @@ export class AIController extends Object3D {
     private findTargetPoint(nextPointIndex: number): number {
         const p1: Vector3 = this.track[nextPointIndex];
         let minimumDistance: number = this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
-        minimumDistance = this.isZigZag(nextPointIndex) ? minimumDistance / ZIG_ZAG_DISTANCE_FACTOR : minimumDistance;
+        minimumDistance = this.isZigZag(nextPointIndex) ? minimumDistance / 2 : minimumDistance;
 
         return this.getPosition().sub(p1).length() < minimumDistance ? (nextPointIndex + 1) % (this.track.length - 1) : nextPointIndex;
     }
@@ -172,7 +171,7 @@ export class AIController extends Object3D {
     }
 
     private calculateWallCollision(deltaTime: number, nextPointIndex: number): void {
-        const p0: Vector3 = this.track[(nextPointIndex === 0) ? this.track.length - 1 : nextPointIndex - 1];
+        const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
         const p1: Vector3 = this.track[nextPointIndex];
         if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
             this.wallCollisionTimer -= deltaTime;
