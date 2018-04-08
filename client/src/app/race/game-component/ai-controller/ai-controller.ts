@@ -116,7 +116,6 @@ export class AIController extends Object3D {
         const l2: Vector3 = p1.clone().sub(p0);
         const l3: Vector3 = p2.clone().sub(p1);
 
-        const hasZigZagShape: boolean = Math.sign(l1.clone().cross(l2).y) !== Math.sign(l2.clone().cross(l3).y);
         const hasBigAngle: boolean = l1.angleTo(l2) > ZIG_ZAG_ANGLE && l2.angleTo(l3) > ZIG_ZAG_ANGLE;
         const isSmallEnough: boolean = l2.length() < MAXIMUM_ZIG_ZAG;
 
