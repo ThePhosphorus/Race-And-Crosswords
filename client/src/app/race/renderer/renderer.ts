@@ -4,6 +4,8 @@ import Stats = require("stats.js");
 import {HALF, DOUBLE} from "../../global-constants/constants";
 import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } from "../admin/track-editor.constants";
 
+const MAX_DELTA_TIME: number = 100; // 10 FPS
+
 export abstract class Renderer {
     private _container: HTMLDivElement;
     private _webGlRenderer: WebGLRenderer;
@@ -98,7 +100,12 @@ export abstract class Renderer {
      }
 
     private rendererUpdate(): void {
-        const timeSinceLastFrame: number = Date.now() - this._lastDate;
+        let timeSinceLastFrame: number = Date.now() - this._lastDate;
+
+        if (timeSinceLastFrame > MAX_DELTA_TIME) {
+            timeSinceLastFrame = MAX_DELTA_TIME;
+        }
+
         this.update(timeSinceLastFrame);
         this._cameraManager.updateTargetInfos( new TargetInfos(
             this.cameraTargetPosition,

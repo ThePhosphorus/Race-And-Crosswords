@@ -71,7 +71,7 @@ export class GameManagerService extends Renderer {
                        private collisionDetector: CollisionDetectorService,
                        private lightManager: LightManagerService,
                        private loader: LoaderService ) {
-        super(cameraManager, false);
+        super(cameraManager, true);
         this._gameConfiguration = new GameConfiguration();
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
@@ -146,7 +146,7 @@ export class GameManagerService extends Renderer {
             const spawn: Vector3 = startPosition.clone()
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
-            this._aiControlledCars[i].init(spawn, this.loader, LoadedObject.car);
+            this._aiControlledCars[i].init(spawn, this.loader, LoadedObject.car, TrackLoaderService.toVectors(points));
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }

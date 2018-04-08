@@ -2,7 +2,6 @@ import {
     Vector3,
     Matrix4,
     Object3D,
-    ObjectLoader,
     Euler,
     Box3,
     Vector2
@@ -22,12 +21,13 @@ import { CarLights } from "./car-lights/car-lights";
 import { CarControl } from "./car-control";
 import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject } from "../loader-service/load-types.enum";
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 280;
 const CAR_Y_OFFSET: number = -0.1;
-const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
 const HANDBRAKE_STEERING_ANGLE: number = 0.4;
 const DEFAULT_FRICTION: number = 400000;
