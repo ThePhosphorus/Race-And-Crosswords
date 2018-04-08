@@ -3,7 +3,11 @@ import { AIController } from "../ai-controller/ai-controller";
 import { Vector3 } from "three";
 
 export class AICar {
-    public constructor(public car: Car, public aiController: AIController) {}
+    private aiController: AIController;
+
+    public constructor(public car: Car) {
+        this.aiController = new AIController();
+    }
 
     public async init(position: Vector3, color: string, track: Array<Vector3>): Promise<void> {
         this.car.add(this.aiController);

@@ -37,7 +37,6 @@ import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
-import { AIController } from "../ai-controller/ai-controller";
 import { AICar } from "./ai-car";
 
 export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
@@ -79,7 +78,7 @@ export class GameManagerService extends Renderer {
         this._player = new Car(this.cameraManager);
         this._aiControlledCars = new Array<AICar>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this._aiControlledCars.push(new AICar(new Car(this.cameraManager), new AIController()));
+            this._aiControlledCars.push(new AICar(new Car(this.cameraManager)));
         }
     }
 
