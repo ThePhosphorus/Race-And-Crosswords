@@ -1,7 +1,8 @@
 <div class="row mt-5">
   <div class="col mt-3" id="game-wrapper">
-    <div #container id="container">
+    <div #container id="container" *ngIf="!isLoading">
       <app-hud></app-hud>
     </div>
+    <app-loading *ngIf="isLoading" [track]="track" ></app-loading>
   </div>
 </div>

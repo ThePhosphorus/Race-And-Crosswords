@@ -4,6 +4,8 @@ import Stats = require("stats.js");
 import {HALF, DOUBLE} from "../../global-constants/constants";
 import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } from "../admin/track-editor.constants";
 
+const MAX_DELTA_TIME: number = 100; // 10 FPS
+
 export abstract class Renderer {
     private _container: HTMLDivElement;
     private _webGlRenderer: WebGLRenderer;
@@ -42,7 +44,7 @@ export abstract class Renderer {
 
     public startRenderingLoop(): void {
         this._webGlRenderer = new WebGLRenderer();
-        this._webGlRenderer.shadowMapEnabled = true;
+        this._webGlRenderer.shadowMap.enabled = true;
         this._webGlRenderer.shadowMap.type = PCFShadowMap;
         this.renderer.setPixelRatio(devicePixelRatio);
         this.renderer.setSize(
@@ -98,11 +100,12 @@ export abstract class Renderer {
      }
 
     private rendererUpdate(): void {
-        const timeSinceLastFrame: number = Date.now() - this._lastDate;
+        const timeSinceLastFrame: number = Math.min(Date.now() - this._lastDate, MAX_DELTA_TIME);
+
         this.update(timeSinceLastFrame);
         this._cameraManager.updateTargetInfos( new TargetInfos(
-            this.cameraTargetPosition,
-            this.cameraTargetDirection
+            this.cameraTargetPosition.clone(),
+            this.cameraTargetDirection.clone()
         ));
         this._cameraManager.update(timeSinceLastFrame);
         this._lastDate = Date.now();
@@ -153,4 +156,8 @@ export abstract class Renderer {
             clientClickPos.y + HALF * htmlElem.clientHeight
         );
      }
+
+    protected get cameraManager (): CameraManagerService {
+        return this._cameraManager;
+    }
 }

@@ -2,10 +2,10 @@ import {
     Vector3,
     Matrix4,
     Object3D,
-    ObjectLoader,
     Euler,
     Box3,
-    Vector2
+    Vector2,
+    AudioListener
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, METER_TO_KM_SPEED_CONVERSION, DOUBLE } from "../../../global-constants/constants";
@@ -21,13 +21,13 @@ import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./car-lights/car-lights";
 import { CarControl } from "./car-control";
 import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject } from "../loader-service/load-types.enum";
 
 const INITIAL_MODEL_ROTATION: Euler = new Euler(0, PI_OVER_2, 0);
 const WHEEL_DISTRIBUTION: number = 0.6;
 const APPROX_MAXIMUM_SPEED: number = 280;
 const CAR_Y_OFFSET: number = -0.1;
-const CAR_FILE: string = "../../assets/camero/";
 const DEFAULT_STEERING_ANGLE: number = 0.15;
 const HANDBRAKE_STEERING_ANGLE: number = 0.4;
 const DEFAULT_FRICTION: number = 400000;
@@ -36,6 +36,7 @@ const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
 const WALL_FRICTION: number = -8000;
+const BREAKE_MULTIPLYER: number = 3;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -78,7 +79,6 @@ export class Car extends Object3D {
     }
 
     public constructor(
-        private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
         mass: number = DEFAULT_MASS
     ) {
@@ -89,21 +89,8 @@ export class Car extends Object3D {
         this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
-    // TODO: move loading code outside of car class.
-    private async load(color: string): Promise<Object3D> {
-        return new Promise<Object3D>((resolve, reject) => {
-            const loader: ObjectLoader = new ObjectLoader();
-            loader.load(
-                CAR_FILE + color + ".json",
-                (object) => {
-                    resolve(object);
-                }
-            );
-        });
-    }
-
-    public async init(position: Vector3, color: string): Promise<void> {
-        this._mesh = await this.load(color);
+    public init(position: Vector3, loader: LoaderService, type: LoadedObject, audioListener: AudioListener): void {
+        this._mesh = loader.getObject(type);
         this._mesh.position.set(position.x, position.y, position.z);
         this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
         this._mesh.translateY(CAR_Y_OFFSET);
@@ -113,8 +100,8 @@ export class Car extends Object3D {
         this._mesh.add(this._rigidBody);
         this.add(this._mesh);
         this.initCarLights();
-        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener);
-        this._rigidBody.addCollisionObserver((otherRb: RigidBody) => this.onCollision(otherRb));
+        this._carSound = new CarSounds(this.mesh, audioListener, loader);
+        this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 
     private getSteeringDirection(): number {
@@ -229,7 +216,8 @@ export class Car extends Object3D {
 
     private getBrakeForce(): Vector2 {
         return this.isGoingForward ?
-            this.direction2D.multiplyScalar(Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this._rigidBody.mass * GRAVITY) :
+            this.direction2D.multiplyScalar(
+                Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this._rigidBody.mass * GRAVITY * BREAKE_MULTIPLYER) :
             new Vector2(0, 0);
     }
 
