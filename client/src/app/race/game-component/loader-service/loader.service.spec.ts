@@ -15,7 +15,7 @@ describe("LoaderServiceService", () => {
         TestBed.configureTestingModule({
             providers: [LoaderService]
         });
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 60 Secs
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000; // 20 Secs
     });
 
     it(
