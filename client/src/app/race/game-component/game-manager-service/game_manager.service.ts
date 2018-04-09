@@ -55,7 +55,8 @@ export class CarInfos {
     ) { }
 }
 
-const AI_COLORS: LoadedObject[] =  [
+const COLORS: LoadedObject[] =  [
+LoadedObject.carYellow,
 LoadedObject.carGreen,
 LoadedObject.carRed,
 LoadedObject.carOrange,
@@ -84,7 +85,7 @@ export class GameManagerService extends Renderer {
         this._player = new Car();
         this._aiControlledCars = new Array<AICar>();
         // tslint:disable-next-line:prefer-for-of
-        for (let i: number = 0; i < AI_COLORS.length ; i++) {
+        for (let i: number = 0; i < COLORS.length - 1 ; i++) {
             this._aiControlledCars.push(new AICar(new Car()));
         }
     }
@@ -144,7 +145,7 @@ export class GameManagerService extends Renderer {
         const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
         const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
-        this._player.init(playerSpawnPoint, this.loader, LoadedObject.carYellow, this.cameraManager.audioListener);
+        this._player.init(playerSpawnPoint, this.loader, COLORS[0], this.cameraManager.audioListener);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
         let offset: number = 0;
@@ -154,7 +155,7 @@ export class GameManagerService extends Renderer {
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
             this._aiControlledCars[i].init(
-                spawn, this.loader, AI_COLORS[i], TrackLoaderService.toVectors(points), this.cameraManager.audioListener);
+                spawn, this.loader, COLORS[i + 1], TrackLoaderService.toVectors(points), this.cameraManager.audioListener);
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }
