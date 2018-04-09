@@ -44,7 +44,6 @@ export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
-const N_AI_CONTROLLED_CARS: number = 5;
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
@@ -56,6 +55,15 @@ export class CarInfos {
         public rpm: number
     ) { }
 }
+
+const AI_COLORS: LoadedObject[] =  [
+LoadedObject.carGreen,
+LoadedObject.carRed,
+LoadedObject.carYellow,
+LoadedObject.carOrange,
+LoadedObject.carPurple,
+LoadedObject.carPink
+];
 
 @Injectable()
 export class GameManagerService extends Renderer {
@@ -77,7 +85,7 @@ export class GameManagerService extends Renderer {
         this._hudLapResetSubject = new Subject<void>();
         this._player = new Car();
         this._aiControlledCars = new Array<AICar>();
-        for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
+        for (const index of AI_COLORS) {
             this._aiControlledCars.push(new AICar(new Car()));
         }
     }
@@ -137,7 +145,7 @@ export class GameManagerService extends Renderer {
         const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
         const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
-        this._player.init(playerSpawnPoint, this.loader, LoadedObject.car, this.cameraManager);
+        this._player.init(playerSpawnPoint, this.loader, LoadedObject.carYellow, this.cameraManager);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
         let offset: number = 0;
@@ -146,7 +154,7 @@ export class GameManagerService extends Renderer {
             const spawn: Vector3 = startPosition.clone()
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
-            this._aiControlledCars[i].init(spawn, this.loader, LoadedObject.car, TrackLoaderService.toVectors(points), this.cameraManager);
+            this._aiControlledCars[i].init(spawn, this.loader, AI_COLORS[i], TrackLoaderService.toVectors(points), this.cameraManager);
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }

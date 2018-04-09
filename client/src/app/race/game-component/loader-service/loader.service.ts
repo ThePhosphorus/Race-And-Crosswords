@@ -21,7 +21,14 @@ import {
 
 const ASSETS: string = "../../assets/";
 
-const CAR_FILE: string = ASSETS + "camero/yellow.json";
+const CAR_FOLDER: string = ASSETS + "camero/";
+const YELLOW_CAR_FILE: string = CAR_FOLDER + "yellow.json";
+const GREEN_CAR_FILE: string = CAR_FOLDER + "green.json";
+const RED_CAR_FILE: string = CAR_FOLDER + "red.json";
+const BLUE_CAR_FILE: string = CAR_FOLDER + "blue.json";
+const PURPLE_CAR_FILE: string = CAR_FOLDER + "purple.json";
+const PINK_CAR_FILE: string = CAR_FOLDER + "pink.json";
+const ORANGE_CAR_FILE: string = CAR_FOLDER + "orange.json";
 
 const SOUND_PATH: string = ASSETS + "sounds/";
 const START_SOUND_FILE: string = SOUND_PATH + "starting.ogg";
@@ -75,32 +82,10 @@ export class LoaderService {
     }
 
     public startLoading(): void {
-        this.loadTexture(TRACK_TEXTURE_FILE, LoadedTexture.track);
-        this.loadTexture(START_LINE_TEXTURE_FILE, LoadedTexture.start);
-        this.loadTexture(OFF_ROAD_TEXTURE_FILE, LoadedTexture.offRoad);
-
-        this.loadObject(CAR_FILE, LoadedObject.car);
-
-        this.loadAudio(START_SOUND_FILE, LoadedAudio.start);
-        this.loadAudio(MUSIC_SOUND_FILE, LoadedAudio.backgroundMusic);
-        this.loadAudio(ENGINE_SOUND_FILE, LoadedAudio.engine);
-        this.loadAudio(DRIFT_SOUND_FILE, LoadedAudio.drift);
-        this.loadAudio(CRASH_PATH_1, LoadedAudio.collision1);
-        this.loadAudio(CRASH_PATH_2, LoadedAudio.collision2);
-        this.loadAudio(CRASH_PATH_3, LoadedAudio.collision3);
-        this.loadAudio(CRASH_PATH_4, LoadedAudio.collision4);
-        this.loadAudio(CRASH_PATH_5, LoadedAudio.collision5);
-
-        this.loadCubeTexture(
-            DAY_SKYBOX_FOLDER,
-            SKYBOX_FILES,
-            LoadedCubeTexture.daySkyBox
-        );
-        this.loadCubeTexture(
-            NIGHT_SKYBOX_FOLDER,
-            SKYBOX_FILES,
-            LoadedCubeTexture.nightSkyBox
-        );
+        this.startLoadTexture();
+        this.startLoadCar();
+        this.startLoadAudio();
+        this.startLoadSkybox();
     }
 
     public get isFinished(): Observable<boolean> {
@@ -252,5 +237,46 @@ export class LoaderService {
         if (this._audioloaded / this._nbAudio === 1 && this._loadingDone) {
             this._finished.next(true);
         }
+    }
+
+    private startLoadTexture(): void {
+        this.loadTexture(TRACK_TEXTURE_FILE, LoadedTexture.track);
+        this.loadTexture(START_LINE_TEXTURE_FILE, LoadedTexture.start);
+        this.loadTexture(OFF_ROAD_TEXTURE_FILE, LoadedTexture.offRoad);
+    }
+
+    private startLoadCar(): void {
+        this.loadObject(YELLOW_CAR_FILE, LoadedObject.carYellow);
+        this.loadObject(BLUE_CAR_FILE, LoadedObject.carBlue);
+        this.loadObject(GREEN_CAR_FILE, LoadedObject.carGreen);
+        this.loadObject(ORANGE_CAR_FILE, LoadedObject.carOrange);
+        this.loadObject(PINK_CAR_FILE, LoadedObject.carPink);
+        this.loadObject(PURPLE_CAR_FILE, LoadedObject.carPurple);
+        this.loadObject(RED_CAR_FILE, LoadedObject.carRed);
+    }
+
+    private startLoadAudio(): void {
+        this.loadAudio(START_SOUND_FILE, LoadedAudio.start);
+        this.loadAudio(MUSIC_SOUND_FILE, LoadedAudio.backgroundMusic);
+        this.loadAudio(ENGINE_SOUND_FILE, LoadedAudio.engine);
+        this.loadAudio(DRIFT_SOUND_FILE, LoadedAudio.drift);
+        this.loadAudio(CRASH_PATH_1, LoadedAudio.collision1);
+        this.loadAudio(CRASH_PATH_2, LoadedAudio.collision2);
+        this.loadAudio(CRASH_PATH_3, LoadedAudio.collision3);
+        this.loadAudio(CRASH_PATH_4, LoadedAudio.collision4);
+        this.loadAudio(CRASH_PATH_5, LoadedAudio.collision5);
+    }
+
+    private startLoadSkybox(): void {
+        this.loadCubeTexture(
+            DAY_SKYBOX_FOLDER,
+            SKYBOX_FILES,
+            LoadedCubeTexture.daySkyBox
+        );
+        this.loadCubeTexture(
+            NIGHT_SKYBOX_FOLDER,
+            SKYBOX_FILES,
+            LoadedCubeTexture.nightSkyBox
+        );
     }
 }

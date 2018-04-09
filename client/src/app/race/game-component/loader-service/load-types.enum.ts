@@ -1,5 +1,11 @@
 export enum LoadedObject {
-    car
+    carBlue,
+    carGreen,
+    carOrange,
+    carPink,
+    carPurple,
+    carRed,
+    carYellow
 }
 
 export enum LoadedAudio {
