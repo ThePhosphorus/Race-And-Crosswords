@@ -114,10 +114,7 @@ export class LoaderService {
     }
     public getCubeTexture(type: LoadedCubeTexture): CubeTexture {
         if (this._cubeTextures[type]) {
-            const texCube: CubeTexture = this._cubeTextures[type].clone();
-            texCube.needsUpdate = true;
-
-            return texCube;
+            return this._cubeTextures[type];
         } else {
             console.error("Cube Texture not loaded");
 
