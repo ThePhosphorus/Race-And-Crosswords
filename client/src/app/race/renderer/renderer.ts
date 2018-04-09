@@ -100,11 +100,7 @@ export abstract class Renderer {
      }
 
     private rendererUpdate(): void {
-        let timeSinceLastFrame: number = Date.now() - this._lastDate;
-
-        if (timeSinceLastFrame > MAX_DELTA_TIME) {
-            timeSinceLastFrame = MAX_DELTA_TIME;
-        }
+        const timeSinceLastFrame: number = Math.min(Date.now() - this._lastDate, MAX_DELTA_TIME);
 
         this.update(timeSinceLastFrame);
         this._cameraManager.updateTargetInfos( new TargetInfos(
