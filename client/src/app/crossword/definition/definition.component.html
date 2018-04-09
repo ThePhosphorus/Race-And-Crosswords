@@ -7,7 +7,9 @@
         </tr>
       </thead>
       <tr *ngFor="let item of acrossDefinitions; let row = index">
-        <app-definition-tile [item]="item" [cheatmode]="cheatMode"></app-definition-tile>
+        <td>
+          <app-definition-tile [item]="item" [cheatmode]="cheatMode"></app-definition-tile>
+        </td>
       </tr>
     </table>
   </div>
@@ -19,7 +21,9 @@
         </tr>
       </thead>
       <tr *ngFor="let item of downDefinitions;let row= index">
-        <app-definition-tile [item]="item" [cheatmode]="cheatMode"></app-definition-tile>
+        <td>
+          <app-definition-tile [item]="item" [cheatmode]="cheatMode"></app-definition-tile>
+        </td>
       </tr>
     </table>
   </div>
