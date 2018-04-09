@@ -61,7 +61,8 @@ export class GameComponent implements OnDestroy, AfterViewInit {
         }
     }
 
-    @ViewChild("container") public set container(el: ElementRef) {
+    @ViewChild("container")
+    public set container(el: ElementRef) {
         if (el != null) {
             this.containerRef = el;
             if (!this.isLoading) {
