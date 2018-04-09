@@ -78,7 +78,6 @@ export class Car extends Object3D {
     }
 
     public constructor(
-        private cameraManager: CameraManagerService,
         engine: Engine = new Engine(),
         mass: number = DEFAULT_MASS
     ) {
@@ -89,7 +88,7 @@ export class Car extends Object3D {
         this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
-    public init(position: Vector3, loader: LoaderService, type: LoadedObject): void {
+    public init(position: Vector3, loader: LoaderService, type: LoadedObject, cameraManager: CameraManagerService): void {
         this._mesh = loader.getObject(type);
         this._mesh.position.set(position.x, position.y, position.z);
         this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
@@ -100,7 +99,7 @@ export class Car extends Object3D {
         this._mesh.add(this._rigidBody);
         this.add(this._mesh);
         this.initCarLights();
-        this._carSound = new CarSounds(this.mesh, this.cameraManager.audioListener, loader);
+        this._carSound = new CarSounds(this.mesh, cameraManager.audioListener, loader);
         this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 

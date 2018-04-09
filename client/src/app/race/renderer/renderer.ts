@@ -108,8 +108,8 @@ export abstract class Renderer {
 
         this.update(timeSinceLastFrame);
         this._cameraManager.updateTargetInfos( new TargetInfos(
-            this.cameraTargetPosition,
-            this.cameraTargetDirection
+            this.cameraTargetPosition.clone(),
+            this.cameraTargetDirection.clone()
         ));
         this._cameraManager.update(timeSinceLastFrame);
         this._lastDate = Date.now();
@@ -160,4 +160,8 @@ export abstract class Renderer {
             clientClickPos.y + HALF * htmlElem.clientHeight
         );
      }
+
+    protected get cameraManager (): CameraManagerService {
+        return this._cameraManager;
+    }
 }

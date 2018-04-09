@@ -17,7 +17,7 @@ const HEIGHT_RATIO: number = 0.8;
 @Injectable()
 export class TrackPreviewService extends Renderer {
 
-    public constructor(private cameraManager: CameraManagerService, private _trackLoader: TrackLoaderService ) {
+    public constructor(cameraManager: CameraManagerService, private _trackLoader: TrackLoaderService ) {
         super(cameraManager, false);
     }
 

@@ -65,7 +65,7 @@ export class GameManagerService extends Renderer {
     private _hudLapResetSubject: Subject<void>;
     private _gameConfiguration: GameConfiguration;
 
-    public constructor(private cameraManager: CameraManagerService,
+    public constructor(cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
                        private collisionDetector: CollisionDetectorService,
@@ -75,10 +75,10 @@ export class GameManagerService extends Renderer {
         this._gameConfiguration = new GameConfiguration();
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
-        this._player = new Car(this.cameraManager);
+        this._player = new Car();
         this._aiControlledCars = new Array<AICar>();
         for (let index: number = 0; index < N_AI_CONTROLLED_CARS; index++) {
-            this._aiControlledCars.push(new AICar(new Car(this.cameraManager)));
+            this._aiControlledCars.push(new AICar(new Car()));
         }
     }
 
@@ -100,7 +100,7 @@ export class GameManagerService extends Renderer {
         return this._hudTimerSubject.asObservable();
     }
 
-    public async start(container: HTMLDivElement, config: GameConfiguration): Promise<void> {
+    public start(container: HTMLDivElement, config: GameConfiguration): void {
         this._gameConfiguration = config;
         this.init(container);
         this.initKeyBindings();
@@ -137,7 +137,7 @@ export class GameManagerService extends Renderer {
         const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
         const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
-        this._player.init(playerSpawnPoint, this.loader, LoadedObject.car);
+        this._player.init(playerSpawnPoint, this.loader, LoadedObject.car, this.cameraManager);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
         let offset: number = 0;
@@ -146,7 +146,7 @@ export class GameManagerService extends Renderer {
             const spawn: Vector3 = startPosition.clone()
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
-            this._aiControlledCars[i].init(spawn, this.loader, LoadedObject.car, TrackLoaderService.toVectors(points));
+            this._aiControlledCars[i].init(spawn, this.loader, LoadedObject.car, TrackLoaderService.toVectors(points), this.cameraManager);
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }
