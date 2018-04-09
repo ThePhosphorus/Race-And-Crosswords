@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, AfterViewInit, ElementRef, HostListener, S
 import { Track } from "../../../../../../common/race/track";
 import { LoaderService } from "../loader-service/loader.service";
 import { TrackPreviewService } from "../../track-preview/track-preview.service";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 
 const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
 
@@ -9,7 +10,7 @@ const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
     selector: "app-loading",
     templateUrl: "./loading.component.html",
     styleUrls: ["./loading.component.css"],
-    providers: [TrackPreviewService]
+    providers: [TrackPreviewService, CameraManagerService]
 })
 export class LoadingComponent implements AfterViewInit, OnChanges {
     @Input() public track: Track;
