@@ -1,4 +1,4 @@
-<td (mouseenter)="hover(item.id, 'Down')" (mouseleave)="unHover()" (click)="select(definition.id, 'Down', $event)"
-[ngClass]="isWordSolved(item.id, 'Across') ? 'disabled' : 'enabled'">
-  {{ item.rowNumber }}. {{ cheatMode ? item.word : item.definition}}
+<td (mouseenter)="hover()" (mouseleave)="unHover()" (click)="select($event)"
+[ngClass]="isWordSolved() ? 'disabled' : 'enabled'">
+  {{ item.rowNumber }}. {{ cheatMode ? item.word : item.definition }}
 </td>
