@@ -36,22 +36,25 @@ describe("LoaderServiceService", () => {
         })
     );
 
-    it("should change loading status while loading", async (done: DoneFn) =>
-        inject([LoaderService], (service: LoaderService) => {
-            let pastStatus: number = 0;
+    it("should change loading status while loading", async (done: DoneFn) => {
+            const service: LoaderService = new LoaderService();
+            let pastStatus: number = -1;
 
             service.clearArrays();
             service.startLoading();
             service.status.subscribe((status: number) => {
                 expect(status).not.toBe(pastStatus);
                 pastStatus = status;
-                done();
+                if (status === 1) {
+                    done();
+                }
             });
 
-        }));
+        });
 
-    it("Everything should be loaded once completed", async (done: DoneFn) =>
-        inject([LoaderService], (service: LoaderService) => {
+    it("Everything should be loaded once completed", async (done: DoneFn) => {
+            const service: LoaderService = new LoaderService();
+
             service.clearArrays();
             service.startLoading();
             service.isFinished.subscribe((finished: boolean) => {
@@ -88,7 +91,7 @@ describe("LoaderServiceService", () => {
                     done();
                 }
             });
-        }));
+        });
     it("should have different texture for offroad", inject([LoaderService], (loader: LoaderService) => {
         expect( loader.getTexture(LoadedTexture.offRoad) !== loader.getTexture(LoadedTexture.track)).toBeTruthy();
     }));
