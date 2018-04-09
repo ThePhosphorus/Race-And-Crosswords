@@ -1,0 +1,12 @@
+#hints td {
+    text-align: left;
+}
+
+.disabled {
+    text-decoration-line: line-through;
+    background-color: var(--color, whitesmoke);
+}
+
+.enabled:hover{
+    background-color: #e7e7e7;
+}

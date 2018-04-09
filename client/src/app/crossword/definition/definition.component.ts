@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { GridState } from "../grid-state/grid-state";
 import { Word } from "../../../../../common/crossword/word";
@@ -7,7 +7,8 @@ import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
 
 export class DisplayedDefinition {
-    public constructor(public definition: string, public word: string, public id: number) { }
+    public constructor(public definition: string, public word: string, public id: number,
+                       public rowNumber: number, public orientation: Orientation) { }
 }
 
 @Component({
@@ -21,9 +22,8 @@ export class DefinitionComponent implements OnInit {
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
     private gridSize: number;
-    private style: CSSStyleDeclaration;
 
-    public constructor(el: ElementRef, private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService) {
         this._crosswordService.gridStateObs.subscribe((gs: GridState) =>
             this._gridState = gs);
 
@@ -31,7 +31,6 @@ export class DefinitionComponent implements OnInit {
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();
         this.gridSize = 1;
-        this.style = el.nativeElement.style;
     }
 
     public ngOnInit(): void {
@@ -43,8 +42,7 @@ export class DefinitionComponent implements OnInit {
             wordGrid.sort((a: Word, b: Word) => a.id - b.id);
 
             wordGrid.forEach((w: Word) => {
-                const definition: DisplayedDefinition =
-                    this.wordToDefinition(w);
+                const definition: DisplayedDefinition = this.wordToDefinition(w);
 
                 if (w.orientation === Orientation.Across) {
                     this.acrossDefinitions.push(definition);
@@ -55,17 +53,23 @@ export class DefinitionComponent implements OnInit {
 
             this.acrossDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id - b.id);
             this.downDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id % this.gridSize - b.id % this.gridSize);
-
         });
     }
 
     public wordToDefinition(word: Word): DisplayedDefinition {
         return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf("\t") + 1)),
-                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")), word.id);
+                                       this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")),
+                                       word.id,
+                                       this.getRowNumber(word.id, word.orientation),
+                                       word.orientation);
     }
 
     private upperFirstLetter(str: string): string {
         return str ? str.charAt(0).toUpperCase() + str.slice(1) : undefined;
+    }
+
+    private getRowNumber(id: number, orientation: Orientation): number {
+        return (orientation === Orientation.Across) ? Math.floor(id / this.gridSize) + 1 : id % this.gridSize + 1;
     }
 
     public toogleCheatMode(): void {
@@ -73,29 +77,4 @@ export class DefinitionComponent implements OnInit {
     }
 
     public get cheatMode(): boolean { return this._cheatmode; }
-
-    public isWordSolved(id: number, orientation: Orientation): boolean {
-        this.style.setProperty("--color",
-                               this._crosswordService.getPlayerColor(this._crosswordService.gameManager.solvedWordPlayer(id, orientation),
-                                                                     false));
-
-        return this._crosswordService.gameManager.isWordSolved(id, orientation);
-    }
-
-    public getRowCOl(id: number, orientation: Orientation): number {
-        return (orientation === Orientation.Across) ? Math.floor(id / this.gridSize) : id % this.gridSize;
-    }
-
-    public select(index: number, orientation: Orientation, event: MouseEvent): void {
-        this._crosswordService.setSelectedWord(index, orientation);
-        event.stopPropagation();
-    }
-
-    public hover(index: number, orientation: Orientation): void {
-        this._crosswordService.setHoveredWord(index, orientation);
-    }
-
-    public unHover(): void {
-        this._crosswordService.setHoveredWord(null, null);
-    }
 }

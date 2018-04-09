@@ -19,12 +19,3 @@ label {
     font-family: "Hints Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")
 }
-
-.disabled {
-    text-decoration-line: line-through;
-    background-color: var(--color, whitesmoke);
-}
-
-.enabled:hover{
-    background-color: #e7e7e7;
-}
