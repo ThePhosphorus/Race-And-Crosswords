@@ -58,7 +58,6 @@ export class CarInfos {
 const AI_COLORS: LoadedObject[] =  [
 LoadedObject.carGreen,
 LoadedObject.carRed,
-LoadedObject.carYellow,
 LoadedObject.carOrange,
 LoadedObject.carPurple,
 LoadedObject.carPink
