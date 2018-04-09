@@ -84,9 +84,9 @@
         "name": "camero_map_png",
         "mapping": 300,
         "minFilter": 1008,
-        "image": "B6A6440D-820E-3FF9-BEB3-3FB2F73E7F8A",
+        "image": "B6A6440D-823E-3FF9-BEB3-3FB2F73E7F8A",
         "repeat": [1,1],
-        "uuid": "AE38A956-9AB2-3824-8674-F71A275AFD60",
+        "uuid": "AE38A956-9AB2-3824-8694-F71A275AFD60",
         "magFilter": 1006,
         "wrap": [1000,1000],
         "anisotropy": 1
@@ -94,9 +94,9 @@
         "name": "camero_map_png",
         "mapping": 300,
         "minFilter": 1008,
-        "image": "B6A6440D-820E-3FF9-BEB3-3FB2F73E7F8A",
+        "image": "B6A6440D-823E-3FF9-BEB3-3FB2F73E7F8A",
         "repeat": [1,1],
-        "uuid": "AE38A956-9AB2-3824-8674-F71A275AFD60",
+        "uuid": "AE38A956-9AB2-3824-8694-F71A275AFD60",
         "magFilter": 1006,
         "wrap": [1000,1000],
         "anisotropy": 1
@@ -104,21 +104,21 @@
         "name": "camero_map_png",
         "mapping": 300,
         "minFilter": 1008,
-        "image": "B6A6440D-820E-3FF9-BEB3-3FB2F73E7F8A",
+        "image": "B6A6440D-823E-3FF9-BEB3-3FB2F73E7F8A",
         "repeat": [1,1],
-        "uuid": "AE38A956-9AB2-3824-8674-F71A275AFD60",
+        "uuid": "AE38A956-9AB2-3824-8694-F71A275AFD60",
         "magFilter": 1006,
         "wrap": [1000,1000],
         "anisotropy": 1
     }],
     "materials": [{
-        "bumpMap": "AE38A956-9AB2-3824-8674-F71A275AFD60",
+        "bumpMap": "AE38A956-9AB2-3824-8694-F71A275AFD60",
         "name": "Carcamero_ma",
         "type": "MeshPhongMaterial",
         "blending": "NormalBlending",
         "uuid": "DA2DB727-F766-3434-B879-9034985D99FC",
         "bumpScale": 1,
-        "map": "AE38A956-9AB2-3824-8674-F71A275AFD60",
+        "map": "AE38A956-9AB2-3824-8694-F71A275AFD60",
         "specular": 789516,
         "emissive": 0,
         "ambient": 14737632,
@@ -126,7 +126,7 @@
         "side": 2,
         "color": 14737632,
         "vertexColors": false,
-        "specularMap": "AE38A956-9AB2-3824-8674-F71A275AFD60",
+        "specularMap": "AE38A956-9AB2-3824-8694-F71A275AFD60",
         "depthWrite": true,
         "depthTest": true
     }],
@@ -136,7 +136,7 @@
         "generator": "io_three"
     },
     "images": [{
-        "uuid": "B6A6440D-820E-3FF9-BEB3-3FB2F73E7F8A",
+        "uuid": "B6A6440D-823E-3FF9-BEB3-3FB2F73E7F8A",
         "name": "pink.png",
         "url": "pink.png"
     }]
