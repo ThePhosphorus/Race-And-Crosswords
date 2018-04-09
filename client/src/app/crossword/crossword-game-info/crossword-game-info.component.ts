@@ -3,6 +3,7 @@ import { CrosswordService } from "../crossword-service/crossword.service";
 import { Player } from "../../../../../common/communication/Player";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
 import { GameInfoService } from "./game-info-service/game-info.service";
+import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
 
 @Component({
     selector: "app-crossword-game-info",
@@ -16,7 +17,8 @@ export class CrosswordGameInfoComponent implements OnInit {
     public isCollapsedLevel: boolean;
     private _isEndGame: boolean;
 
-    public constructor(private _crosswordService: CrosswordService, private _infoService: GameInfoService) {
+    public constructor(private _crosswordService: CrosswordService,
+                       private _commService: CrosswordCommunicationService, private _infoService: GameInfoService) {
         this.isCollapsedPlayer = false;
         this.isCollapsedLevel = false;
         this._isEndGame = false;
@@ -61,5 +63,7 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._infoService.setShowModal(true);
         this._infoService.setShowSearching(true);
         this._infoService.setShowLoading(true);
+        this._commService.disconnect();
+
     }
 }
