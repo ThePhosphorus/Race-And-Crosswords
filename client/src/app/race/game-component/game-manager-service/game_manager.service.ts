@@ -145,7 +145,7 @@ export class GameManagerService extends Renderer {
         const lookAtOffset: Vector3 = spawnDirection.clone().multiplyScalar(INITIAL_SPAWN_OFFSET);
 
         const playerSpawnPoint: Vector3 = this.calculateSpawnPoint(startPosition, spawnDirection, perpOffset);
-        this._player.init(playerSpawnPoint, this.loader, LoadedObject.carYellow, this.cameraManager);
+        this._player.init(playerSpawnPoint, this.loader, LoadedObject.carYellow, this.cameraManager.audioListener);
         this._player.mesh.lookAt(playerSpawnPoint.add(lookAtOffset));
 
         let offset: number = 0;
@@ -154,7 +154,8 @@ export class GameManagerService extends Renderer {
             const spawn: Vector3 = startPosition.clone()
                                         .add(spawnDirection.clone().multiplyScalar((offset * SPACE_BETWEEN_CARS) + INITIAL_SPAWN_OFFSET))
                                         .add(perpOffset.clone().multiplyScalar(-Math.pow(-1, i)));
-            this._aiControlledCars[i].init(spawn, this.loader, AI_COLORS[i], TrackLoaderService.toVectors(points), this.cameraManager);
+            this._aiControlledCars[i].init(
+                spawn, this.loader, AI_COLORS[i], TrackLoaderService.toVectors(points), this.cameraManager.audioListener);
             this._aiControlledCars[i].car.mesh.lookAt(spawn.clone().add(lookAtOffset));
         }
     }

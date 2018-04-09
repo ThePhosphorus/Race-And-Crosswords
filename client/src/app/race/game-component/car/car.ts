@@ -4,7 +4,8 @@ import {
     Object3D,
     Euler,
     Box3,
-    Vector2
+    Vector2,
+    AudioListener
 } from "three";
 import { Engine } from "./engine";
 import { MS_TO_SECONDS, GRAVITY, PI_OVER_2, METER_TO_KM_SPEED_CONVERSION, DOUBLE } from "../../../global-constants/constants";
@@ -20,7 +21,6 @@ import { RigidBody } from "../rigid-body/rigid-body";
 import { CarLights } from "./car-lights/car-lights";
 import { CarControl } from "./car-control";
 import { CarSounds } from "../sound-manager-service/sound-facades/car-sounds";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
 
@@ -89,7 +89,7 @@ export class Car extends Object3D {
         this._frictionCoefficient = DEFAULT_FRICTION;
     }
 
-    public init(position: Vector3, loader: LoaderService, type: LoadedObject, cameraManager: CameraManagerService): void {
+    public init(position: Vector3, loader: LoaderService, type: LoadedObject, audioListener: AudioListener): void {
         this._mesh = loader.getObject(type);
         this._mesh.position.set(position.x, position.y, position.z);
         this._mesh.setRotationFromEuler(INITIAL_MODEL_ROTATION);
@@ -100,7 +100,7 @@ export class Car extends Object3D {
         this._mesh.add(this._rigidBody);
         this.add(this._mesh);
         this.initCarLights();
-        this._carSound = new CarSounds(this.mesh, cameraManager.audioListener, loader);
+        this._carSound = new CarSounds(this.mesh, audioListener, loader);
         this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
 

@@ -19,13 +19,13 @@ class MockEngine extends Engine {
 describe("Car", () => {
     let car: Car;
 
-    beforeEach(async (done: () => void) => {
+    beforeEach(() => {
         TestBed.configureTestingModule({providers: [CameraManagerService, LoaderService]});
         car = new Car( new MockEngine());
-        await car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService), );
+        car.init(
+            CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener, );
 
         car.update(MS_BETWEEN_FRAMES);
-        done();
     });
 
     it("should be instantiable using default constructor", inject([CameraManagerService], (cameraManager: CameraManagerService) => {

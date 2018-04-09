@@ -36,7 +36,7 @@ describe("AIController", () => {
         ai = new AIController();
         car.add(ai);
 
-        car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService));
+        car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener);
         ai.init(track);
     });
 
