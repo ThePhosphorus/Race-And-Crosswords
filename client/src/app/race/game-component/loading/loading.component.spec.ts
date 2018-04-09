@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { LoadingComponent } from "./loading.component";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { HttpClientModule } from "@angular/common/http";
+import { LoaderService } from "../loader-service/loader.service";
 
 describe("LoadingComponent", () => {
   let component: LoadingComponent;
@@ -12,7 +13,7 @@ describe("LoadingComponent", () => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
       declarations: [ LoadingComponent ],
-      providers: [TrackLoaderService]
+      providers: [TrackLoaderService, LoaderService]
     })
     .compileComponents();
   }));

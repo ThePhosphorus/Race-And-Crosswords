@@ -162,7 +162,7 @@ export class LoaderService {
         this.clearArrays();
     }
 
-    private clearArrays(): void {
+    public clearArrays(): void {
         for (const objectType of Object.keys(LoadedObject)) {
             const type: number = Number(objectType);
             if (type) {

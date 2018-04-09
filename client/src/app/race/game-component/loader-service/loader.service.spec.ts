@@ -7,8 +7,6 @@ import {
     LoadedTexture,
     LoadedCubeTexture
 } from "./load-types.enum";
-import { Object3D, Texture, CubeTexture } from "three";
-
 // tslint:disable:max-func-body-length
 // tslint:disable:no-magic-numbers
 
@@ -17,7 +15,7 @@ describe("LoaderServiceService", () => {
         TestBed.configureTestingModule({
             providers: [LoaderService]
         });
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000; // 60 Secs
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 60 Secs
     });
 
     it(
@@ -38,10 +36,11 @@ describe("LoaderServiceService", () => {
         })
     );
 
-    it("should change loading status while loading", (done: DoneFn) =>
+    it("should change loading status while loading", async (done: DoneFn) =>
         inject([LoaderService], (service: LoaderService) => {
             let pastStatus: number = 0;
 
+            service.clearArrays();
             service.startLoading();
             service.status.subscribe((status: number) => {
                 expect(status).not.toBe(pastStatus);
@@ -51,8 +50,9 @@ describe("LoaderServiceService", () => {
 
         }));
 
-    it("Everything should be loaded once completed", (done: DoneFn) =>
+    it("Everything should be loaded once completed", async (done: DoneFn) =>
         inject([LoaderService], (service: LoaderService) => {
+            service.clearArrays();
             service.startLoading();
             service.isFinished.subscribe((finished: boolean) => {
                 if (finished) {
