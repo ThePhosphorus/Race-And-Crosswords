@@ -85,7 +85,8 @@ export class GameManagerService extends Renderer {
         this._hudLapResetSubject = new Subject<void>();
         this._player = new Car();
         this._aiControlledCars = new Array<AICar>();
-        for (const index of AI_COLORS) {
+        // tslint:disable-next-line:prefer-for-of
+        for (let i: number = 0; i < AI_COLORS.length ; i++) {
             this._aiControlledCars.push(new AICar(new Car()));
         }
     }
