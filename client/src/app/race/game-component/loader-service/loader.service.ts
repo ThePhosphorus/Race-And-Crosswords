@@ -1,23 +1,10 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
-import {
-    DefaultLoadingManager,
-    Object3D,
-    AudioBuffer,
-    Texture,
-    CubeTexture,
-    ObjectLoader,
-    AudioLoader,
-    TextureLoader,
-    CubeTextureLoader
+import { DefaultLoadingManager, Object3D, AudioBuffer, Texture,
+    CubeTexture, ObjectLoader, AudioLoader, TextureLoader, CubeTextureLoader
 } from "three";
-import {
-    LoadedObject,
-    LoadedAudio,
-    LoadedTexture,
-    LoadedCubeTexture
-} from "./load-types.enum";
+import { LoadedObject, LoadedAudio, LoadedTexture, LoadedCubeTexture } from "./load-types.enum";
 
 const ASSETS: string = "../../assets/";
 
@@ -50,14 +37,7 @@ const OFF_ROAD_TEXTURE_FILE: string = TEXTURE_PATH + "orange.jpg";
 const SKYBOX_PATH: string = ASSETS + "skybox/";
 const NIGHT_SKYBOX_FOLDER: string = SKYBOX_PATH + "sky3/";
 const DAY_SKYBOX_FOLDER: string = SKYBOX_PATH + "sky1/";
-const SKYBOX_FILES: string[] = [
-    "posx.png",
-    "negx.png",
-    "posy.png",
-    "negy.png",
-    "posz.png",
-    "negz.png"
-];
+const SKYBOX_FILES: string[] = [ "posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png"];
 
 const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
 
