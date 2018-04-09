@@ -3,6 +3,7 @@ import { Track } from "../../../../../../common/race/track";
 import { LoaderService } from "../loader-service/loader.service";
 import { TrackPreviewService } from "../../track-preview/track-preview.service";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { HALF } from "../../../global-constants/constants";
 
 const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
 
@@ -44,7 +45,7 @@ export class LoadingComponent implements AfterViewInit, OnChanges {
 
     public ngOnChanges(changes: SimpleChanges): void {
         for (const propName in changes) {
-            if ( changes[propName].currentValue === this.track && this.track._id !== "" && this.loadingStatus > 0.5) {
+            if ( changes[propName].currentValue === this.track && this.track._id !== "" && this.loadingStatus > HALF) {
                 this._trackPreview.displayPreview(this.track);
                 this._trackPreview.onResize();
             }

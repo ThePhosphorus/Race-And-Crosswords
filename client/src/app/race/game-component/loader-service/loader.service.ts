@@ -25,7 +25,7 @@ const CAR_FILE: string = ASSETS + "camero/yellow.json";
 
 const SOUND_PATH: string = ASSETS + "sounds/";
 const START_SOUND_FILE: string = SOUND_PATH + "starting.ogg";
-const MUSIC_SOUND_FILE: string = SOUND_PATH + "dejavu.ogg";
+const MUSIC_SOUND_FILE: string = SOUND_PATH + "runnin.ogg";
 const ENGINE_SOUND_FILE: string = SOUND_PATH + "engine/engine2.ogg";
 const DRIFT_SOUND_FILE: string = SOUND_PATH + "drift/drift1.ogg";
 const COLLISION_SOUNDS_PATH: string = SOUND_PATH + "crash/";
@@ -63,6 +63,11 @@ export class LoaderService {
     private _finished: BehaviorSubject<boolean>;
     private _status: BehaviorSubject<number>;
     private _loadingMsg: BehaviorSubject<string>;
+    // Audio is loaded differently, therfore it does notice the ending of the loading at the right time.
+    // so we use this variable to keep track of audio loading
+    private _audioloaded: number ;
+    private _loadingDone: boolean;
+    private _nbAudio: number;
 
     public constructor() {
         this.init();
@@ -118,10 +123,16 @@ export class LoaderService {
         return this._audios[type];
     }
     public getTexture(type: LoadedTexture): Texture {
-        return this._textures[type];
+        const tex: Texture = this._textures[type].clone();
+        tex.needsUpdate = true;
+
+        return tex;
     }
     public getCubeTexture(type: LoadedCubeTexture): CubeTexture {
-        return this._cubeTextures[type];
+        const texCube: CubeTexture = this._cubeTextures[type].clone();
+        texCube.needsUpdate = true;
+
+        return texCube;
     }
 
     private init(): void {
@@ -133,6 +144,9 @@ export class LoaderService {
         this._finished = new BehaviorSubject<boolean>(false);
         this._status = new BehaviorSubject<number>(0);
         this._loadingMsg = new BehaviorSubject<string>(DEFAULT_LOADING_MESSAGE);
+        this._audioloaded = 0;
+        this._nbAudio = 0;
+        this._loadingDone = false;
 
         this.clearArrays();
     }
@@ -141,28 +155,28 @@ export class LoaderService {
         for (const objectType of Object.keys(LoadedObject)) {
             const type: number = Number(objectType);
             if (type) {
-                this._objects[type] = null;
+                this._objects[type - 1] = null;
             }
         }
 
         for (const audioType of Object.keys(LoadedAudio)) {
             const type: number = Number(audioType);
             if (type) {
-                this._audios[type] = null;
+                this._audios[type - 1 ] = null;
             }
         }
 
         for (const textureType of Object.keys(LoadedTexture)) {
             const type: number = Number(textureType);
             if (type) {
-                this._textures[type] = null;
+                this._textures[type - 1] = null;
             }
         }
 
         for (const cubeTextureType of Object.keys(LoadedCubeTexture)) {
             const type: number = Number(cubeTextureType);
             if (type) {
-                this._cubeTextures[type] = null;
+                this._cubeTextures[type - 1] = null;
             }
         }
     }
@@ -188,9 +202,15 @@ export class LoaderService {
     }
 
     private loadAudio(path: string, type: LoadedAudio): void {
+        this._nbAudio++;
+
         new AudioLoader(DefaultLoadingManager).load(
             path,
-            (audio: AudioBuffer) => (this._audios[type] = audio),
+            (audio: AudioBuffer) => {
+                this._audios[type] = audio;
+                this._audioloaded++;
+                this.updateDone();
+            },
             () => this.progressHandler,
             () => this.errorHandler
         );
@@ -223,7 +243,14 @@ export class LoaderService {
     }
 
     private doneHandler(): void {
-        this._finished.next(true);
+        this._loadingDone = true;
+        this.updateDone();
         this._loadingMsg.next("Done Loading");
+    }
+
+    private updateDone(): void {
+        if (this._audioloaded / this._nbAudio === 1 && this._loadingDone) {
+            this._finished.next(true);
+        }
     }
 }
