@@ -5,6 +5,7 @@ import { Track } from "../../../../../common/race/track";
 import { Mesh, Object3D } from "three";
 import { DEFAULT_TRACK_WIDTH, DEFAULT_WALL_WIDTH } from "../race.constants";
 import { Vector3Struct } from "../../../../../common/race/vector3-struct";
+import { LoaderService } from "../game-component/loader-service/loader.service";
 
 /* tslint:disable:no-magic-numbers */
 describe("Track Loader", () => {
@@ -21,7 +22,7 @@ describe("Track Loader", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-        providers: [TrackLoaderService],
+        providers: [TrackLoaderService, LoaderService],
         imports: [HttpClientModule]
         });
     });

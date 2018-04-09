@@ -101,23 +101,49 @@ export class LoaderService {
     }
 
     public getObject(type: LoadedObject): Object3D {
-        return this._objects[type].clone();
+        if (this._objects[type]) {
+            return this._objects[type].clone();
+        } else {
+            console.error("Object not loaded");
+
+            return new Object3D();
+        }
     }
 
     public getAudio(type: LoadedAudio): AudioBuffer {
-        return this._audios[type];
+        if (this._audios[type]) {
+            return this._audios[type];
+        } else {
+            console.error("Audio not loaded");
+
+            return null;
+        }
     }
     public getTexture(type: LoadedTexture): Texture {
-        const tex: Texture = this._textures[type].clone();
-        tex.needsUpdate = true;
+        if (this._textures[type]) {
+            const tex: Texture = this._textures[type].clone();
+            tex.needsUpdate = true;
 
-        return tex;
+            return tex;
+        } else {
+            console.error("Texture not loaded");
+
+            return new Texture();
+        }
+
     }
     public getCubeTexture(type: LoadedCubeTexture): CubeTexture {
-        const texCube: CubeTexture = this._cubeTextures[type].clone();
-        texCube.needsUpdate = true;
+        if (this._cubeTextures[type]) {
+            const texCube: CubeTexture = this._cubeTextures[type].clone();
+            texCube.needsUpdate = true;
 
-        return texCube;
+            return texCube;
+        } else {
+            console.error("Cube Texture not loaded");
+
+            return new CubeTexture();
+        }
+
     }
 
     private init(): void {

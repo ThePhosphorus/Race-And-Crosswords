@@ -36,6 +36,7 @@ const PROGRESSIVE_DRIFT_COEFFICIENT: number = 1800;
 const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
 const WALL_FRICTION: number = -8000;
+const BREAKE_MULTIPLYER: number = 3;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -215,7 +216,8 @@ export class Car extends Object3D {
 
     private getBrakeForce(): Vector2 {
         return this.isGoingForward ?
-            this.direction2D.multiplyScalar(Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this._rigidBody.mass * GRAVITY) :
+            this.direction2D.multiplyScalar(
+                Math.sign(this.speed) * DEFAULT_FRICTION_COEFFICIENT * this._rigidBody.mass * GRAVITY * BREAKE_MULTIPLYER) :
             new Vector2(0, 0);
     }
 

@@ -44,7 +44,7 @@ export abstract class Renderer {
 
     public startRenderingLoop(): void {
         this._webGlRenderer = new WebGLRenderer();
-        this._webGlRenderer.shadowMapEnabled = true;
+        this._webGlRenderer.shadowMap.enabled = true;
         this._webGlRenderer.shadowMap.type = PCFShadowMap;
         this.renderer.setPixelRatio(devicePixelRatio);
         this.renderer.setSize(

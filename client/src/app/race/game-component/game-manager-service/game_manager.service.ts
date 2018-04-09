@@ -40,7 +40,6 @@ import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 import { AICar } from "./ai-car";
 
-export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
