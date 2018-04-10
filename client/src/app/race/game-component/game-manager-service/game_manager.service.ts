@@ -23,8 +23,6 @@ import {
     TOGGLE_NIGHT_MODE_KEYCODE,
     TOGGLE_SUNLIGHT_KEYCODE,
 } from "../../../global-constants/constants";
-import { Subject } from "rxjs/Subject";
-import { Observable } from "rxjs/Observable";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
@@ -62,9 +60,8 @@ LoadedObject.carPink
 export class GameManagerService extends Renderer {
     private _player: UserPlayer;
     private _aiControlledCars: Array<AiPlayer>;
-    private _hudTimerSubject: Subject<number>;
-    private _hudLapResetSubject: Subject<void>;
     private _gameConfiguration: GameConfiguration;
+    private _updateSubscribers: Array<(deltaTime: number) => void>;
 
     public constructor(cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -73,9 +70,8 @@ export class GameManagerService extends Renderer {
                        private lightManager: LightManagerService,
                        private loader: LoaderService) {
         super(cameraManager, false);
+        this._updateSubscribers = new Array<(deltaTime: number) => void>();
         this._gameConfiguration = new GameConfiguration();
-        this._hudTimerSubject = new Subject<number>();
-        this._hudLapResetSubject = new Subject<void>();
         this._player = new UserPlayer(this.inputManager);
         this._aiControlledCars = new Array<AiPlayer>();
     }
@@ -86,16 +82,8 @@ export class GameManagerService extends Renderer {
                             this._player.car.rpm);
     }
 
-    public get hudTimer(): Observable<number> {
-        return this._hudTimerSubject.asObservable();
-    }
-
-    public get hudLapReset(): Observable<void> {
-        return this._hudLapResetSubject.asObservable();
-    }
-
-    public getDeltaTime(): Observable<number> {
-        return this._hudTimerSubject.asObservable();
+    public subscribeToUpdate(callback: (deltaTime: number) => void): void {
+        this._updateSubscribers.push(callback);
     }
 
     public start(container: HTMLDivElement, config: GameConfiguration): void {
@@ -111,9 +99,9 @@ export class GameManagerService extends Renderer {
     }
 
     protected update(deltaTime: number): void {
+        this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
         this.collisionDetector.detectCollisions(this.scene);
         this._player.update(deltaTime);
-        this._hudTimerSubject.next(deltaTime);
         this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
         this.cameraTargetDirection = this._player.car.direction;
         this.cameraTargetPosition = this._player.car.getPosition();
