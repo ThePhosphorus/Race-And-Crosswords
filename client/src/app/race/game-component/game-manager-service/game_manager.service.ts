@@ -132,7 +132,8 @@ export class GameManagerService extends Renderer {
     private initCars(): void {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
-        const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
+        let spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
+        spawnPoints = spawnPoints.sort(() => Math.random() - 1 / 2);
         this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener);
         this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
