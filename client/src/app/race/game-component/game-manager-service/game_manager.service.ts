@@ -65,15 +65,15 @@ export class GameManagerService extends Renderer {
     private _isStarted: boolean;
 
     public constructor(cameraManager: CameraManagerService,
-                       private inputManager: InputManagerService,
-                       private soundManager: SoundManagerService,
-                       private collisionDetector: CollisionDetectorService,
-                       private lightManager: LightManagerService,
-                       private loader: LoaderService) {
+                       private _inputManager: InputManagerService,
+                       private _soundManager: SoundManagerService,
+                       private _collisionDetector: CollisionDetectorService,
+                       private _lightManager: LightManagerService,
+                       private _loader: LoaderService) {
         super(cameraManager, false);
         this._updateSubscribers = new Array<(deltaTime: number) => void>();
         this._gameConfiguration = new GameConfiguration();
-        this._player = new UserPlayer(this.inputManager);
+        this._player = new UserPlayer(this._inputManager);
         this._aiControlledCars = new Array<AiPlayer>();
         this._isStarted = false;
     }
@@ -82,6 +82,10 @@ export class GameManagerService extends Renderer {
         return new CarInfos(this._player.car.speed,
                             this._player.car.currentGear,
                             this._player.car.rpm);
+    }
+
+    public get soundManager(): SoundManagerService {
+        return this._soundManager;
     }
 
     public subscribeToUpdate(callback: (deltaTime: number) => void): void {
@@ -108,14 +112,14 @@ export class GameManagerService extends Renderer {
         this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
 
         if (this._isStarted) {
-            this.collisionDetector.detectCollisions(this.scene);
+            this._collisionDetector.detectCollisions(this.scene);
             this._player.update(deltaTime);
             this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
         }
 
         this.cameraTargetDirection = this._player.car.direction;
         this.cameraTargetPosition = this._player.car.getPosition();
-        this.lightManager.updateSunlight();
+        this._lightManager.updateSunlight();
     }
 
     public initTrack(): void {
@@ -129,31 +133,31 @@ export class GameManagerService extends Renderer {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
         const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
-        this._player.init(spawnPoints[0].position, this.loader, COLORS[0], this.cameraManager.audioListener);
+        this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener);
         this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
         for (let i: number = 0; i < N_AI_CONTROLLED_CARS; i++) {
             this._aiControlledCars.push(new AiPlayer(this.cameraManager, track));
-            this._aiControlledCars[i].init(spawnPoints[i + 1].position, this.loader, COLORS[(i + 1) % COLORS.length],
+            this._aiControlledCars[i].init(spawnPoints[i + 1].position, this._loader, COLORS[(i + 1) % COLORS.length],
                                            this.cameraManager.audioListener);
             this._aiControlledCars[i].car.mesh.lookAt(spawnPoints[i + 1].direction);
         }
     }
 
     private initKeyBindings(): void {
-        this.inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
-        this.inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
-        this.inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
-        this.inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
-        this.inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this.lightManager.toggleNightMode());
-        this.inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
-        this.inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
-        this.inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this.lightManager.toggleSunlight());
+        this._inputManager.registerKeyDown(CHANGE_CAMERA_KEYCODE, () => this.cameraManager.switchCamera());
+        this._inputManager.registerKeyDown(TOGGLE_CAMERA_EFFECT_MODE, () => this.cameraManager.toggleCameraEffect());
+        this._inputManager.registerKeyDown(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomIn());
+        this._inputManager.registerKeyDown(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomOut());
+        this._inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this._lightManager.toggleNightMode());
+        this._inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
+        this._inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
+        this._inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this._lightManager.toggleSunlight());
     }
 
     private initSoundManager(): void {
-        this.soundManager.init(this.cameraManager.audioListener);
-        this.soundManager.startRace();
+        this._soundManager.init(this.cameraManager.audioListener);
+        this._soundManager.startRace();
     }
 
     private initCameraManager(): void {
@@ -164,11 +168,11 @@ export class GameManagerService extends Renderer {
         this.scene.add(this.getFloor());
         this.scene.add(this._player.car);
         this._aiControlledCars.forEach((aiCar) => this.scene.add(aiCar.car));
-        this.lightManager.init(this.scene, this._player.car, this._aiControlledCars.map((aiCar) => aiCar.car));
+        this._lightManager.init(this.scene, this._player.car, this._aiControlledCars.map((aiCar) => aiCar.car));
     }
 
     private getFloor(): Mesh {
-        const texture: Texture = this.loader.getTexture(LoadedTexture.offRoad);
+        const texture: Texture = this._loader.getTexture(LoadedTexture.offRoad);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
@@ -182,5 +186,4 @@ export class GameManagerService extends Renderer {
 
         return plane;
     }
-
 }
