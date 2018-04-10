@@ -3,6 +3,7 @@ import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
 
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;
+const OFFSET_FACTOR: number = 0.25;
 
 export class SpawnPoint {
     public constructor(public position: Vector3, public direction: Vector3) {}
@@ -30,7 +31,7 @@ export class SpawnPointFinder {
 
     private static calculateOffset(spawnDirection: Vector3): Vector3 {
         return new Vector3(spawnDirection.z, spawnDirection.y, -spawnDirection.x)
-            .multiplyScalar(-DEFAULT_TRACK_WIDTH / 2 / 2);
+            .multiplyScalar(-DEFAULT_TRACK_WIDTH * OFFSET_FACTOR);
     }
 
     private static calculateSpawnDirection(track: Array<Vector3>): Vector3 {
