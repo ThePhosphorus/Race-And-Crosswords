@@ -30,11 +30,12 @@ import {
 export class CarLights extends Object3D {
     private _frontLight: SpotLight;
     private _brakeLights: Array<SpotLight>;
-    public constructor(private isAiCar: boolean) {
+
+    public constructor(isAiCar: boolean) {
         super();
         this._brakeLights = new Array<SpotLight>();
         this.initFrontLight();
-        this.initBrakeLights();
+        this.initBrakeLights(isAiCar);
     }
 
     private initFrontLight(): void {
@@ -46,9 +47,9 @@ export class CarLights extends Object3D {
         this.add(this._frontLight.target);
     }
 
-    private initBrakeLights(): void {
+    private initBrakeLights(isAiCar: boolean): void {
         this.initCenterLight();
-        if (!this.isAiCar) {
+        if (!isAiCar) {
             this.initSmallLight(EXT_LEFT_LIGHT_POSITION, EXT_LEFT_LIGHT_TARGET);
             this.initSmallLight(INT_LEFT_LIGHT_POSITION, INT_LEFT_LIGHT_TARGET);
             this.initSmallLight(INT_RIGHT_LIGHT_POSITION, INT_RIGHT_LIGHT_TARGET);
