@@ -57,8 +57,11 @@ export class GridGenerator extends BaseGridGenerator {
             const isEasyWord: boolean = difficulty !== Difficulty.Hard;
             receivedWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
         }
+        if ( receivedWord == null || receivedWord.defs == null) {
+            return false;
+        }
 
-        return !receivedWord ? false : this.crossword.addWord(receivedWord.word, receivedWord.defs, word);
+        return this.crossword.addWord(receivedWord.word, receivedWord.defs, word) ;
     }
 
     protected async backtrack(currentWord: Word, difficulty: Difficulty): Promise<void> {
