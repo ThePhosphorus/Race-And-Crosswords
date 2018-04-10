@@ -1,67 +1,53 @@
 #track-list {
-    position: absolute;
-    top: 50px;
-	left: 75px;
-	right: 75px;
-	padding: 50px 40px 30px 40px;
-	text-align: center;
-	line-height: 175px;
-	background-color: steelblue;
-    animation: pulse 4s infinite;
-	border-radius: 15px;
+    background-color: steelblue;
+    border-radius: 3vmin;
 }
 
 .track-button {
+    font-family: "Track Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     outline: none;
-    position: relative;
     border: none;
-	border-radius: 5px;
-    background-color: rgb(236, 236, 236);
-    box-shadow: 0 5px 0 2px rgb(161, 161, 161);
-    top: 0px;
-    height: 250px;
-    width: 250px;
-    margin: 10px;
-    line-height: 2rem;
+	border-radius: 1vmin;
+    background-color: whitesmoke;
+
 }
 
 .track-button:active {
 	box-shadow: none;
-	top: 8px;
-	background-color: #e0e0e0;
+	background-color: whitesmoke;
 }
 
 .track-button:hover {
-	background-color: #d0d0d0;
+	background-color: lightgray;
 }
 
 .track-button .title {
-    font-size: 1.7rem;
+    font-size: 170%;
 }
 
 .track-button .desription {
-    font-size: 1rem;
+    font-size: 100%;
 }
 
 .track-button .playCounter {
-    font-size: 1.2rem;
+    font-size: 120%;
 }
 
 .details {
+    font-family: "Track Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     display: none;
     position: fixed;
-    z-index: 20;
-    left: 0;
-    top: 0;
     width: 100%;
-    height: 100%;
+    top:0;
+    left:0;
+    z-index: 20;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.7);
 }
 
 .details-content {
     margin: 5% auto;
-    padding: 20px;
+    padding: 2vmin;
     width: 50%;
 }
 
@@ -71,5 +57,30 @@
 
 #preview {
     width: 100%;
-    height: 20rem;
+    height: 15vmin;
 }
+#noRace{
+    background-color:	 #d9eac8;
+}
+
+h1{
+    font-family: "Race Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    text-align: center;
+    color: whitesmoke;
+    padding: 2%;
+}
+h2{
+    font-family: "Track Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    text-align: center;
+    color: whitesmoke;
+}
+
+@font-face {
+    font-family: "Track Font";
+    src: url("/assets/fonts/Geometos Rounded.ttf ") format("truetype")
+  }
+
+@font-face {
+    font-family: "Race Font";
+    src: url("/assets/fonts/Railway to Hells.ttf") format("truetype");
+  }
