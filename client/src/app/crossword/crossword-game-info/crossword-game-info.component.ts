@@ -46,11 +46,11 @@ export class CrosswordGameInfoComponent implements OnInit {
             }
             this.players = players;
         });
-        this._crosswordService.isGameOver.subscribe((bool: boolean) => {
-            if (bool) {
+        this._crosswordService.isGameOver.subscribe((gameOver: boolean) => {
+            if (gameOver) {
                 this.loadNewGame();
             }
-            this._isEndGame = bool;
+            this._isEndGame = gameOver;
         }
         );
     }
@@ -63,7 +63,6 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._infoService.setShowModal(true);
         this._infoService.setShowSearching(true);
         this._infoService.setShowLoading(true);
-        this._commService.disconnect();
-
+        this._commService.leaveGame();
     }
 }

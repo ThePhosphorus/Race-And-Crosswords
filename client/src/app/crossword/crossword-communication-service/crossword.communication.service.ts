@@ -111,8 +111,8 @@ export class CrosswordCommunicationService {
         this.socket.emit(socketMsg.playerSelectTile, letterId, orientation);
     }
 
-    public disconnect(): void {
-        this.socket.emit(socketMsg.disconnect);
+    public leaveGame(): void {
+        this.socket.emit(socketMsg.leaveGame);
     }
 
     public completedWord(w: Word): void {
