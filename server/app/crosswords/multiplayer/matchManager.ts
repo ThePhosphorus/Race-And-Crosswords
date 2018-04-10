@@ -134,6 +134,7 @@ export class MatchManager {
         );
 
         socket.on(msg.disconnect, () => this.playerLeave(id));
+        socket.on(msg.leaveGame, () => this.playerLeave(id));
         socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
         socket.on(msg.rematch, () => this.rematch(id));
     }

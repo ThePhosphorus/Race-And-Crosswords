@@ -63,7 +63,6 @@ export class CrosswordGameInfoComponent implements OnInit {
         this._infoService.setShowModal(true);
         this._infoService.setShowSearching(true);
         this._infoService.setShowLoading(true);
-        this._commService.disconnect();
-
+        this._commService.leaveGame();
     }
 }
