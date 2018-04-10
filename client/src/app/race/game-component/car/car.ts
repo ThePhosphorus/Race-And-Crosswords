@@ -148,7 +148,9 @@ export class Car extends Object3D {
         const rollingResistance: Vector2 = this.getRollingResistance();
         const tractionForce: number = this.getTractionForce();
         const accelerationForce: Vector2 = this.direction2D;
+
         resultingForce.add(dragForce).add(rollingResistance);
+
         if (this.carControl.isAcceleratorPressed) {
             accelerationForce.multiplyScalar(tractionForce);
             resultingForce.add(accelerationForce);
