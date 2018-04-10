@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import { DEFAULT_TRACK_WIDTH } from "../../race.constants";
+import { DEFAULT_TRACK_WIDTH } from "../../../race.constants";
 
 const INITIAL_SPAWN_OFFSET: number = 7;
 const SPACE_BETWEEN_CARS: number = 5;

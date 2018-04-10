@@ -29,7 +29,7 @@ import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { UserPlayer } from "../player/user-player";
 import { AiPlayer } from "../player/ai-player";
-import { SpawnPoint, SpawnPointFinder } from "./spawn-point";
+import { SpawnPoint, SpawnPointFinder } from "./spawn-point/spawn-point";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 
