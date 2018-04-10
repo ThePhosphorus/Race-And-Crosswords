@@ -1,3 +1,5 @@
 <div id="container">
-  <div class="light" *ngFor="let light of lights"></div>
+  <div *ngFor="let light of lights">
+    <div class="light" *ngIf="light"></div>
+  </div>
 </div>
