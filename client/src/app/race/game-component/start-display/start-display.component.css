@@ -3,7 +3,10 @@
 }
 
 .light {
-    width: 100px;
-    height: 100px;
-    background-color: red;
+    margin: 0 auto;
+    width: 90px;
+    height: 90px;
+    background-color: rgb(255, 36, 36);
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset rgb(102, 0, 0) 0 -1px 9px, rgb(252, 1, 1) 0 2px 14px;
 }
