@@ -43,8 +43,8 @@ button {
     width: 90%;
     outline: none;
     height: 90%;
-    border:0.3vmin var(--color, white);
-    outline:0.3vmin dotted var(--color2, white);
+    border:0.25vmin var(--color, white);
+    outline:0.25vmin dotted var(--color2, white);
     outline-offset:-0.2vmin;
     box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color, white), inset 0vmin 0vmin 2vmin var(--color, white);
     background-color: var(--bgColor, white);
