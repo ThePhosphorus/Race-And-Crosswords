@@ -62,6 +62,7 @@ export class GameManagerService extends Renderer {
     private _aiControlledCars: Array<AiPlayer>;
     private _gameConfiguration: GameConfiguration;
     private _updateSubscribers: Array<(deltaTime: number) => void>;
+    private _isStarted: boolean;
 
     public constructor(cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
@@ -74,6 +75,7 @@ export class GameManagerService extends Renderer {
         this._gameConfiguration = new GameConfiguration();
         this._player = new UserPlayer(this.inputManager);
         this._aiControlledCars = new Array<AiPlayer>();
+        this._isStarted = false;
     }
 
     public get playerInfos(): CarInfos {
@@ -98,11 +100,19 @@ export class GameManagerService extends Renderer {
         this.startRenderingLoop();
     }
 
+    public startGame(): void {
+        this._isStarted = true;
+    }
+
     protected update(deltaTime: number): void {
         this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
-        this.collisionDetector.detectCollisions(this.scene);
-        this._player.update(deltaTime);
-        this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
+
+        if (this._isStarted) {
+            this.collisionDetector.detectCollisions(this.scene);
+            this._player.update(deltaTime);
+            this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
+        }
+
         this.cameraTargetDirection = this._player.car.direction;
         this.cameraTargetPosition = this._player.car.getPosition();
         this.lightManager.updateSunlight();
