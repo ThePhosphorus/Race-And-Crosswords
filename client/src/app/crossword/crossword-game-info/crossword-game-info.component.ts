@@ -8,7 +8,7 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 @Component({
     selector: "app-crossword-game-info",
     templateUrl: "./crossword-game-info.component.html",
-    styleUrls: ["./crossword-game-info.component.css"],
+    styleUrls: ["./crossword-game-info.component.css"]
 })
 
 export class CrosswordGameInfoComponent implements OnInit {
