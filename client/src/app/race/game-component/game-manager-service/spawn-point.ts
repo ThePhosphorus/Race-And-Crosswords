@@ -26,7 +26,7 @@ export class SpawnPointFinder {
             spawnPoints.push(new SpawnPoint(position, direction));
         }
 
-        return spawnPoints;
+        return spawnPoints.sort(() => Math.random() - 1 / 2);
     }
 
     private static calculateOffset(spawnDirection: Vector3): Vector3 {
