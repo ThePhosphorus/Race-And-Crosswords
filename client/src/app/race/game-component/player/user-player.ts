@@ -1,18 +1,24 @@
 import { RacePlayer } from "./race-player";
 import { Car } from "../car/car";
-import { Vector3 } from "three";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { Vector3, AudioListener } from "three";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { ACCELERATE_KEYCODE, BRAKE_KEYCODE, LEFT_KEYCODE, RIGHT_KEYCODE, HANDBRAKE_KEYCODE } from "../../../global-constants/constants";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject } from "../loader-service/load-types.enum";
 
 export class UserPlayer extends RacePlayer {
-    public constructor(cameraManager: CameraManagerService, private inputManager: InputManagerService) {
-        super(new Car(cameraManager));
+    public constructor(private inputManager: InputManagerService) {
+        super(new Car());
     }
 
-    public async init(position: Vector3, color: string): Promise<void> {
+    public init(
+        position: Vector3,
+        loader: LoaderService,
+        type: LoadedObject,
+        audioListener: AudioListener
+    ): void {
+        this.car.init(position, loader, type, audioListener);
         this.initKeyBindings();
-        await this.car.init(position, color);
     }
 
     public update(deltaTime: number): void {
