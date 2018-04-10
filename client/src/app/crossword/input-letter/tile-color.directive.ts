@@ -45,7 +45,7 @@ export class TileColorDirective implements AfterContentChecked {
             );
             colors[BG_COLOR] = this._crosswordService.getPlayerColor(
                 players[0],
-                false
+                this.isDisabled
             );
 
             if (players.length > 1) {

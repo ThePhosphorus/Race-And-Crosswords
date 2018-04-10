@@ -30,17 +30,23 @@ button {
     user-select: none;
     outline: none;
     box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color,white);
-    background: linear-gradient(45deg, var(--color, white) 50%, rgba(0,0,0,0) 50% ,rgba(0,0,0,0) 0), var(--color2,white);
+    background:repeating-linear-gradient(
+        45deg,
+        var(--color, white),
+        var(--color, white), 1vmin,
+        var(--color2,white) 1vmin,
+        var(--color2,white) 2vmin
+      ),var(--color2,white);
 }
 
 .selected {
-    border-style: dotted;
     width: 90%;
     outline: none;
     height: 90%;
-    border-width: 0.2vmin;
-    border-color: var(--color, white);
-    box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color, white), inset 0vmin 0vmin 1.5vmin var(--color, white);
+    border:0.22vmin var(--color, white);
+    outline:0.22vmin dotted var(--color2, white);
+    outline-offset:-0.2vmin;
+    box-shadow: 0vmin 0vmin 0vmin 0.4vmin var(--color, white), inset 0vmin 0vmin 2vmin var(--color, white);
     background-color: var(--bgColor, white);
 }
 
