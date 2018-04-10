@@ -1,22 +1,29 @@
 import { RacePlayer } from "./race-player";
 import { AIController } from "../ai-controller/ai-controller";
 import { Car } from "../car/car";
-import { Vector3 } from "three";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { Vector3, AudioListener } from "three";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject } from "../loader-service/load-types.enum";
 
 export class AiPlayer extends RacePlayer {
     private aiController: AIController;
     private track: Array<Vector3>;
 
     public constructor(cameraManager: CameraManagerService, track: Array<Vector3>) {
-        super(new Car(cameraManager));
+        super(new Car());
         this.aiController = new AIController();
         this.track = track;
     }
 
-    public async init(position: Vector3, color: string): Promise<void> {
+    public init(
+        position: Vector3,
+        loader: LoaderService,
+        type: LoadedObject,
+        audioListener: AudioListener
+    ): void {
         this.car.add(this.aiController);
-        await this.car.init(position, color);
+        this.car.init(position, loader, type, audioListener);
         this.aiController.init(this.track);
     }
 

@@ -9,6 +9,7 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/of";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
+import { LoaderService } from "../../game-component/loader-service/loader.service";
 
 describe("TrackEditorComponent", () => {
   let component: TrackEditorComponent;
@@ -23,6 +24,7 @@ describe("TrackEditorComponent", () => {
           TrackLoaderService,
           TrackSaverService,
           InputManagerService,
+          LoaderService,
           {
             provide: ActivatedRoute,
             useValue: {

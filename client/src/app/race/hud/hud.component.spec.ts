@@ -8,6 +8,7 @@ import { SoundManagerService } from "../game-component/sound-manager-service/sou
 import { CollisionDetectorService } from "../game-component/collision/collision-detector.service";
 import { LightManagerService } from "../game-component/light-manager/light-manager.service";
 import { RpmBarComponent } from "./rpm-bar/rpm-bar.component";
+import { LoaderService } from "../game-component/loader-service/loader.service";
 
 // tslint:disable:no-magic-numbers
 describe("HudComponent", () => {
@@ -23,7 +24,8 @@ describe("HudComponent", () => {
                 InputManagerService,
                 SoundManagerService,
                 CollisionDetectorService,
-                LightManagerService
+                LightManagerService,
+                LoaderService
             ]
         })
             .compileComponents();

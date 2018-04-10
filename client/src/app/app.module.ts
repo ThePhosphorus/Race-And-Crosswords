@@ -22,6 +22,7 @@ import { TileColorDirective } from "./crossword/input-letter/tile-color.directiv
 import { HudComponent } from "./race/hud/hud.component";
 import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
 import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end-game/modal-end-game.component";
+import { LoadingComponent } from "./race/game-component/loading/loading.component";
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end
         HudComponent,
         ModalEndGameComponent,
         GameMenuComponent,
-        RpmBarComponent
+        RpmBarComponent,
+        LoadingComponent
     ],
     imports: [
         BrowserModule,

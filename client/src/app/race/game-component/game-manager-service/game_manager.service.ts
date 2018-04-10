@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import {
     Mesh,
     Texture,
-    TextureLoader,
     RepeatWrapping,
     PlaneGeometry,
     DoubleSide,
@@ -33,15 +32,14 @@ import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { UserPlayer } from "../player/user-player";
 import { AiPlayer } from "../player/ai-player";
 import { SpawnPoint, SpawnPointFinder } from "./spawn-point";
+import { LoaderService } from "../loader-service/loader.service";
+import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 
-export const OFF_ROAD_PATH: string = "../../assets/textures/orange.jpg";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const N_AI_CONTROLLED_CARS: number = 5;
-const NO_TRACK_POINTS: Array<Vector3> = [new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(0, 0, 0)];
-
-const COLORS: Array<string> = ["yellow", "blue", "green", "orange", "pink", "purple", "red"];
+const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
 
 export class CarInfos {
     public constructor(
@@ -51,6 +49,15 @@ export class CarInfos {
     ) { }
 }
 
+const COLORS: LoadedObject[] =  [
+LoadedObject.carYellow,
+LoadedObject.carGreen,
+LoadedObject.carRed,
+LoadedObject.carOrange,
+LoadedObject.carPurple,
+LoadedObject.carPink
+];
+
 @Injectable()
 export class GameManagerService extends Renderer {
     private _player: UserPlayer;
@@ -59,16 +66,17 @@ export class GameManagerService extends Renderer {
     private _hudLapResetSubject: Subject<void>;
     private _gameConfiguration: GameConfiguration;
 
-    public constructor(private cameraManager: CameraManagerService,
+    public constructor(cameraManager: CameraManagerService,
                        private inputManager: InputManagerService,
                        private soundManager: SoundManagerService,
                        private collisionDetector: CollisionDetectorService,
-                       private lightManager: LightManagerService) {
+                       private lightManager: LightManagerService,
+                       private loader: LoaderService) {
         super(cameraManager, false);
         this._gameConfiguration = new GameConfiguration();
         this._hudTimerSubject = new Subject<number>();
         this._hudLapResetSubject = new Subject<void>();
-        this._player = new UserPlayer(this.cameraManager, this.inputManager);
+        this._player = new UserPlayer(this.inputManager);
         this._aiControlledCars = new Array<AiPlayer>();
     }
 
@@ -86,14 +94,18 @@ export class GameManagerService extends Renderer {
         return this._hudLapResetSubject.asObservable();
     }
 
-    public async start(container: HTMLDivElement, config: GameConfiguration): Promise<void> {
+    public getDeltaTime(): Observable<number> {
+        return this._hudTimerSubject.asObservable();
+    }
+
+    public start(container: HTMLDivElement, config: GameConfiguration): void {
         this._gameConfiguration = config;
         this.init(container);
         this.initKeyBindings();
         this.initSoundManager();
         this.initCameraManager();
         this.initTrack();
-        await this.initCars();
+        this.initCars();
         this.initScene();
         this.startRenderingLoop();
     }
@@ -115,17 +127,17 @@ export class GameManagerService extends Renderer {
         }
     }
 
-    private async initCars(): Promise<void> {
+    private initCars(): void {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
         const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
-
-        await this._player.init(spawnPoints[0].position, COLORS[0]);
+        this._player.init(spawnPoints[0].position, this.loader, COLORS[0], this.cameraManager.audioListener);
         this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
         for (let i: number = 0; i < N_AI_CONTROLLED_CARS; i++) {
             this._aiControlledCars.push(new AiPlayer(this.cameraManager, track));
-            await this._aiControlledCars[i].init(spawnPoints[i + 1].position, COLORS[(i + 1) % COLORS.length]);
+            this._aiControlledCars[i].init(spawnPoints[i + 1].position, this.loader, COLORS[(i + 1) % COLORS.length],
+                                           this.cameraManager.audioListener);
             this._aiControlledCars[i].car.mesh.lookAt(spawnPoints[i + 1].direction);
         }
     }
@@ -158,7 +170,7 @@ export class GameManagerService extends Renderer {
     }
 
     private getFloor(): Mesh {
-        const texture: Texture = new TextureLoader().load(OFF_ROAD_PATH);
+        const texture: Texture = this.loader.getTexture(LoadedTexture.offRoad);
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set(FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO, FLOOR_DIMENSION * FLOOR_TEXTURE_RATIO);
@@ -172,4 +184,5 @@ export class GameManagerService extends Renderer {
 
         return plane;
     }
+
 }

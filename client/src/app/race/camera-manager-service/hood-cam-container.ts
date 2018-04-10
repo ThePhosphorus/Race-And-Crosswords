@@ -66,8 +66,4 @@ export class HoodCamContainer extends CameraContainer {
     public get camera(): Camera {
         return this._perspCamera;
     }
-
-    public toggleEffectMode(): void {
-        return;
-    }
 }
