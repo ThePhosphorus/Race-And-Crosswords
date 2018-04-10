@@ -18,6 +18,7 @@ export class UserPlayer extends RacePlayer {
         audioListener: AudioListener
     ): void {
         this.car.init(position, loader, type, audioListener);
+        this.car.initCarLights(false);
         this.initKeyBindings();
     }
 

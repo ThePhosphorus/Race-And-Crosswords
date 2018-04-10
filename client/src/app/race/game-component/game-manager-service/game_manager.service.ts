@@ -38,7 +38,7 @@ import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
-const N_AI_CONTROLLED_CARS: number = 5;
+const N_AI_CONTROLLED_CARS: number = 3;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
 
 export class CarInfos {

@@ -99,7 +99,6 @@ export class Car extends Object3D {
         this._mesh.add(new Collider(box.getSize().z, box.getSize().x));
         this._mesh.add(this._rigidBody);
         this.add(this._mesh);
-        this.initCarLights();
         this._carSound = new CarSounds(this.mesh, audioListener, loader);
         this._rigidBody.addCollisionObserver((otherRb) => this.onCollision(otherRb));
     }
@@ -270,8 +269,8 @@ export class Car extends Object3D {
         this._rigidBody.addFrictionForce(this.direction2D.multiplyScalar(WALL_FRICTION * Math.sign(this.speed)));
     }
 
-    private initCarLights(): void {
-        this._carLights = new CarLights();
+    public initCarLights(isAiCar: boolean): void {
+        this._carLights = new CarLights(isAiCar);
         this._mesh.add(this._carLights);
     }
 }

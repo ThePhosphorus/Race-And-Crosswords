@@ -30,7 +30,7 @@ import {
 export class CarLights extends Object3D {
     private _frontLight: SpotLight;
     private _brakeLights: Array<SpotLight>;
-    public constructor() {
+    public constructor(private isAiCar: boolean) {
         super();
         this._brakeLights = new Array<SpotLight>();
         this.initFrontLight();
@@ -48,14 +48,17 @@ export class CarLights extends Object3D {
 
     private initBrakeLights(): void {
         this.initCenterLight();
-        this.initSmallLight(EXT_LEFT_LIGHT_POSITION, EXT_LEFT_LIGHT_TARGET);
-        this.initSmallLight(INT_LEFT_LIGHT_POSITION, INT_LEFT_LIGHT_TARGET);
-        this.initSmallLight(INT_RIGHT_LIGHT_POSITION, INT_RIGHT_LIGHT_TARGET);
-        this.initSmallLight(EXT_RIGHT_LIGHT_POSITION.clone().add(POSITION_OFFSET), EXT_RIGHT_LIGHT_TARGET.clone().sub(TARGET_OFFSET));
+        if (!this.isAiCar) {
+            this.initSmallLight(EXT_LEFT_LIGHT_POSITION, EXT_LEFT_LIGHT_TARGET);
+            this.initSmallLight(INT_LEFT_LIGHT_POSITION, INT_LEFT_LIGHT_TARGET);
+            this.initSmallLight(INT_RIGHT_LIGHT_POSITION, INT_RIGHT_LIGHT_TARGET);
+            this.initSmallLight(EXT_RIGHT_LIGHT_POSITION.clone().add(POSITION_OFFSET), EXT_RIGHT_LIGHT_TARGET.clone().sub(TARGET_OFFSET));
+        }
     }
 
     private initSmallLight(position: Vector3, target: Vector3): void {
         const brakeLightLeft: SpotLight = new SpotLight(RED, 0, NEAR_LIGHT_DISTANCE, SMALL_LIGHT_ANGLE);
+        brakeLightLeft.castShadow = false;
         brakeLightLeft.position.copy(position);
         brakeLightLeft.target.position.copy(target);
         this.add(brakeLightLeft);

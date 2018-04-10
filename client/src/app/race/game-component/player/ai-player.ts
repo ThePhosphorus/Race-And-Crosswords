@@ -24,6 +24,7 @@ export class AiPlayer extends RacePlayer {
     ): void {
         this.car.add(this.aiController);
         this.car.init(position, loader, type, audioListener);
+        this.car.initCarLights(true);
         this.aiController.init(this.track);
     }
 
