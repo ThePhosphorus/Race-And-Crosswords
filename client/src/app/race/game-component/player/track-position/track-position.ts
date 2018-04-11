@@ -43,8 +43,7 @@ export class TrackPosition {
         const p2: Vector3 = this.getPoint(p2Index);
 
         const line: Vector3 = p2.clone().sub(p1);
-        const projection: Vector3 = position.clone().projectOnVector(line);
-        const distanceToPoint: number = projection.clone().sub(p1).length();
+        const distanceToPoint: number = position.clone().sub(p1).projectOnVector(line).length();
 
         return this.distances[p1Index] + distanceToPoint;
     }
@@ -58,7 +57,7 @@ export class TrackPosition {
             const p2: Vector3 = this.track[nextIndex];
             const dotProduct: number = p2.clone().sub(p1).dot(position.clone().sub(p1));
             const isContainedInLine: boolean = dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq();
-            const distance: number = isContainedInLine ? this.distanceToLine(p1, p2, position) : p2.clone().sub(position).length();
+            const distance: number = isContainedInLine ? this.distanceToLine(p1, p2, position) : position.clone().sub(p1).length();
 
             if (distance < minDistance) {
                 point = nextIndex;
@@ -67,6 +66,10 @@ export class TrackPosition {
         }
 
         return point;
+    }
+
+    private minPointsDistance(p1: Vector3, p2: Vector3, pos: Vector3): number {
+        return Math.max(p2.clone().sub(pos).length(), pos.clone().sub(p1).length());
     }
 
     private distanceToLine(p1: Vector3, p2: Vector3, pos: Vector3): number {
