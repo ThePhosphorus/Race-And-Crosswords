@@ -48,11 +48,11 @@ export abstract class RacePlayer {
 
     protected abstract onUpdate(deltaTime: number): void;
 
-    private calculateLap(): number {
-        return this._lap;
+    private calculateLap(): void {
+        this._lap = 1;
     }
 
-    private calculateDistanceOnTrack(): number {
-        return (this._track != null) ? this._track.findDistanceOnTrack(this.car.getPosition()) : 0;
+    private calculateDistanceOnTrack(): void {
+        this._distanceOnTrack = (this._track != null) ? this._track.findDistanceOnTrack(this.car.getPosition()) : 0;
     }
 }
