@@ -8,13 +8,13 @@ export abstract class RacePlayer {
     private _track: TrackPosition;
     private _lap: number;
     private _distanceOnTrack: number;
-    private _lastDistanceOnTrack: number;
+    private _lastTrackIndex: number;
 
     public constructor(public car: Car) {
         this._track = null;
         this._lap = 0;
         this._distanceOnTrack = 0;
-        this._lastDistanceOnTrack = 0;
+        this._lastTrackIndex = 0;
     }
 
     public get track(): TrackPosition {
@@ -35,6 +35,7 @@ export abstract class RacePlayer {
                 audioListener: AudioListener,
                 track: TrackPosition): void {
         this._track = track;
+        this._lastTrackIndex = this._track.length - 1;
         this.onInit(position, loader, type, audioListener);
     }
 
@@ -56,14 +57,17 @@ export abstract class RacePlayer {
             return;
         }
 
-        const deltaPosition: number = this._distanceOnTrack - this._lastDistanceOnTrack;
-        if (Math.abs(deltaPosition) > this._track.trackLength / 2) {
-            this._lap += Math.sign(deltaPosition);
+        const trackIndex: number = this._track.findClosestNextPointIndex(this.car.getPosition());
+        const deltaTrack: number = this._lastTrackIndex - trackIndex;
+        this._lastTrackIndex = trackIndex;
+
+        if (Math.abs(deltaTrack) > this._track.length / 2) {
+            this._lap += Math.sign(deltaTrack);
         }
     }
 
     private calculateDistanceOnTrack(): void {
-        this._lastDistanceOnTrack = this._distanceOnTrack;
-        this._distanceOnTrack = (this._track != null) ? this._track.findDistanceOnTrack(this.car.getPosition()) : 0;
+        this._distanceOnTrack = (this._track != null) ?
+            this._track.findDistanceOnTrack(this.car.getPosition()) + this._lap * this._track.trackLength : 0;
     }
 }

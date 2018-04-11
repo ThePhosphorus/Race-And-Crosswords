@@ -56,14 +56,13 @@ export class TrackPosition {
             const nextIndex: number = (i === this.track.length - 1) ? 1 : i + 1;
             const p1: Vector3 = this.track[i];
             const p2: Vector3 = this.track[nextIndex];
-            const distance: number = this.distanceToLine(p1, p2, position);
+            const dotProduct: number = p2.clone().sub(p1).dot(position.clone().sub(p1));
+            const isContainedInLine: boolean = dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq();
+            const distance: number = isContainedInLine ? this.distanceToLine(p1, p2, position) : p2.clone().sub(position).length();
 
             if (distance < minDistance) {
-                const dotProduct: number = p2.clone().sub(p1).dot(position.clone().sub(p1));
-                if (dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq()) {
-                    point = nextIndex;
-                    minDistance = distance;
-                }
+                point = nextIndex;
+                minDistance = distance;
             }
         }
 
