@@ -5,27 +5,27 @@ import { CameraManagerService } from "../../camera-manager-service/camera-manage
 import { Vector3, AudioListener } from "three";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
+import { TrackPosition } from "./track-position/track-position";
 
 export class AiPlayer extends RacePlayer {
     private aiController: AIController;
-    private track: Array<Vector3>;
 
-    public constructor(cameraManager: CameraManagerService, track: Array<Vector3>) {
+    public constructor(cameraManager: CameraManagerService) {
         super(new Car());
         this.aiController = new AIController();
-        this.track = track;
     }
 
     public init(
         position: Vector3,
         loader: LoaderService,
         type: LoadedObject,
-        audioListener: AudioListener
+        audioListener: AudioListener,
+        track: TrackPosition
     ): void {
         this.car.add(this.aiController);
         this.car.init(position, loader, type, audioListener);
         this.car.initCarLights(true);
-        this.aiController.init(this.track);
+        this.aiController.init(track);
     }
 
     public update(deltaTime: number): void {

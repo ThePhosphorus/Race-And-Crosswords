@@ -2,6 +2,7 @@ import { Object3D, Vector3 } from "three";
 import { CarControl } from "../../car/car-control";
 import { Car } from "../../car/car";
 import { RigidBody } from "../../rigid-body/rigid-body";
+import { TrackPosition } from "../track-position/track-position";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
@@ -14,7 +15,7 @@ const ZIG_ZAG_ANGLE: number = 1.25;
 
 export class AIController extends Object3D {
     private carControl: CarControl;
-    private track: Array<Vector3>;
+    private trackPosition: TrackPosition;
     private wallCollisionTimer: number;
 
     public constructor() {
@@ -22,16 +23,16 @@ export class AIController extends Object3D {
         this.wallCollisionTimer = 0;
     }
 
-    public init(track: Array<Vector3>): void {
+    public init(trackPosition: TrackPosition): void {
         if (this.parent != null && this.parent instanceof Car) {
             this.carControl = this.parent.carControl;
             this.parent.rigidBody.addCollisionObserver((otherRb: RigidBody) => this.onCollision(otherRb));
         }
-        this.track = track;
+        this.trackPosition = trackPosition;
     }
 
     public update(deltaTime: number): void {
-        if (this.track != null) {
+        if (this.trackPosition != null) {
             this.carControl.accelerate();
             const nextPointIndex: number = this.findNextPoint();
             if (nextPointIndex !== -1) {
@@ -47,7 +48,7 @@ export class AIController extends Object3D {
         if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
             const nextPointIndex: number = this.findNextPoint();
             const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
-            const p1: Vector3 = this.track[nextPointIndex];
+            const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
             if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
                 const trackDir: Vector3 = p1.clone().sub(p0);
                 const carRelativePos: Vector3 = this.getPosition().sub(p0);
@@ -85,12 +86,12 @@ export class AIController extends Object3D {
     }
 
     private getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
-        return this.track[(pointIndex + offsetIndex + this.track.length) % this.track.length];
+        return this.trackPosition.getPoint((pointIndex + offsetIndex + this.trackPosition.length) % this.trackPosition.length);
     }
 
     private pointAngle(nextPointIndex: number): number {
         const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
-        const p1: Vector3 = this.track[nextPointIndex];
+        const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
         const p2: Vector3 = this.getSurroundingPoint(nextPointIndex, 1);
         const direction1: Vector3 = p1.clone().sub(p0);
         const direction2: Vector3 = p2.clone().sub(p1);
@@ -99,17 +100,18 @@ export class AIController extends Object3D {
     }
 
     private findTargetPoint(nextPointIndex: number): number {
-        const p1: Vector3 = this.track[nextPointIndex];
+        const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
         let minimumDistance: number = this.pointAngle(nextPointIndex) * MINIMUM_STEERING_DISTANCE_FACTOR;
         minimumDistance = this.isZigZag(nextPointIndex) ? minimumDistance / 2 : minimumDistance;
 
-        return this.getPosition().sub(p1).length() < minimumDistance ? (nextPointIndex + 1) % (this.track.length - 1) : nextPointIndex;
+        return this.getPosition().sub(p1).length() < minimumDistance ?
+            (nextPointIndex + 1) % (this.trackPosition.length - 1) : nextPointIndex;
     }
 
     private isZigZag(nextPointIndex: number): boolean {
         const previous: Vector3 = this.getSurroundingPoint(nextPointIndex, -2);
         const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
-        const p1: Vector3 = this.track[nextPointIndex];
+        const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
         const p2: Vector3 = this.getSurroundingPoint(nextPointIndex, 1);
 
         const l1: Vector3 = p0.clone().sub(previous);
@@ -126,10 +128,10 @@ export class AIController extends Object3D {
         const pos: Vector3 = this.getPosition();
         let minDistance: number = Number.MAX_VALUE;
         let point: number = -1;
-        for (let i: number = 0; i < this.track.length; i++) {
-            const nextIndex: number = (i === this.track.length - 1) ? 1 : i + 1;
-            const p1: Vector3 = this.track[i];
-            const p2: Vector3 = this.track[nextIndex];
+        for (let i: number = 0; i < this.trackPosition.length; i++) {
+            const nextIndex: number = (i === this.trackPosition.length - 1) ? 1 : i + 1;
+            const p1: Vector3 = this.trackPosition.getPoint(i);
+            const p2: Vector3 = this.trackPosition.getPoint(nextIndex);
             const distance: number = this.distanceToLine(p1, p2, pos);
 
             if (distance < minDistance) {
@@ -150,7 +152,7 @@ export class AIController extends Object3D {
     }
 
     private applySteering(target: number, nextPointIndex: number): void {
-        const targetDirection: Vector3 = this.getPosition().sub(this.track[target]);
+        const targetDirection: Vector3 = this.getPosition().sub(this.trackPosition.getPoint(target));
         const steeringDirection: number = this.getDirection().cross(targetDirection).y * Math.sign(this.getSpeed());
         if (steeringDirection > 0) {
             this.carControl.releaseSteeringLeft();
@@ -167,7 +169,7 @@ export class AIController extends Object3D {
             this.carControl.brake();
         } else {
             const angle: number = this.pointAngle(nextPointIndex);
-            const distanceToNext: number = this.getPosition().sub(this.track[nextPointIndex]).length();
+            const distanceToNext: number = this.getPosition().sub(this.trackPosition.getPoint(nextPointIndex)).length();
             let slowingDistance: number = (angle * this.getSpeed() / SLOWING_DISTANCE_FACTOR);
             slowingDistance = slowingDistance < MINIMUM_SLOWING_DISTANCE ? 0 : slowingDistance;
 

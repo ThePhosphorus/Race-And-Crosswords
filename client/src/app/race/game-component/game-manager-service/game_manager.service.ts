@@ -32,6 +32,7 @@ import { AiPlayer } from "../player/ai-player";
 import { SpawnPoint, SpawnPointFinder } from "./spawn-point/spawn-point";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
+import { TrackPosition } from "../player/track-position/track-position";
 
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
@@ -133,14 +134,15 @@ export class GameManagerService extends Renderer {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
         const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
+        const trackPosition: TrackPosition = new TrackPosition(track);
 
-        this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener);
+        this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener, trackPosition);
         this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
         for (let i: number = 0; i < N_AI_CONTROLLED_CARS; i++) {
-            this._aiControlledCars.push(new AiPlayer(this.cameraManager, track));
+            this._aiControlledCars.push(new AiPlayer(this.cameraManager));
             this._aiControlledCars[i].init(spawnPoints[i + 1].position, this._loader, COLORS[(i + 1) % COLORS.length],
-                                           this.cameraManager.audioListener);
+                                           this.cameraManager.audioListener, trackPosition);
             this._aiControlledCars[i].car.mesh.lookAt(spawnPoints[i + 1].direction);
         }
     }
