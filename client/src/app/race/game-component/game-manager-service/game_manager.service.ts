@@ -93,6 +93,10 @@ export class GameManagerService extends Renderer {
         return this._soundManager;
     }
 
+    public get isStarted(): boolean {
+        return this._isStarted;
+    }
+
     public subscribeToUpdate(callback: (deltaTime: number) => void): void {
         this._updateSubscribers.push(callback);
     }

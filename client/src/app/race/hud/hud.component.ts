@@ -40,10 +40,12 @@ export class HudComponent implements OnInit {
     }
 
     private update(deltaTime: number): void {
-        this._lapTimer.update(deltaTime);
-        this._globalTimer.update(deltaTime);
-        if (this.gameManagerService.playerInfos.lap > this.lapCount) {
-            this.nextLap();
+        if (this.gameManagerService.isStarted) {
+            this._lapTimer.update(deltaTime);
+            this._globalTimer.update(deltaTime);
+            if (this.gameManagerService.playerInfos.lap > this.lapCount && this.lapCount < this.totalLap) {
+                this.nextLap();
+            }
         }
     }
 }
