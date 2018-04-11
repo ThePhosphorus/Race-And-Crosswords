@@ -1,5 +1,5 @@
 import { RacePlayer } from "./race-player";
-import { AIController } from "../ai-controller/ai-controller";
+import { AIController } from "../player/ai-controller/ai-controller";
 import { Car } from "../car/car";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { Vector3, AudioListener } from "three";

@@ -1,7 +1,7 @@
 import { Object3D, Vector3 } from "three";
-import { CarControl } from "../car/car-control";
-import { Car } from "../car/car";
-import { RigidBody } from "../rigid-body/rigid-body";
+import { CarControl } from "../../car/car-control";
+import { Car } from "../../car/car";
+import { RigidBody } from "../../rigid-body/rigid-body";
 
 const MINIMUM_STEERING_DISTANCE_FACTOR: number = 20;
 const COLLISION_SPEED_THRESHOLD: number = 30;
