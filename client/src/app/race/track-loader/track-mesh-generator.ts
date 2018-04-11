@@ -24,14 +24,12 @@ export class TrackMeshGenerator {
         const rightPoints: Array<Vector3> = new Array<Vector3>();
 
         for (let i: number = 0; i < this._track.points.length - 1; i++) {
-            const p3Index: number = (i + 2) === this._track.points.length ? 1 : (i + 2);
             const p0Index: number = (i - 1) === -1 ? (this._track.points.length - 2) : (i - 1);
             const p0: Vector3 = TrackLoaderService.toVector(this._track.points[p0Index]); // Previous
             const p1: Vector3 = TrackLoaderService.toVector(this._track.points[i]);
-            const p2: Vector3 = TrackLoaderService.toVector(this._track.points[i + 1]);
-            const p3: Vector3 = TrackLoaderService.toVector(this._track.points[p3Index]); // Next
-            rightPoints.push(this.getSegmentWall(p0, p1, p2, p3, -1));
-            leftPoints.push(this.getSegmentWall(p0, p1, p2, p3, 1));
+            const p2: Vector3 = TrackLoaderService.toVector(this._track.points[i + 1]); // Next
+            rightPoints.push(this.getSegmentWall(p0, p1, p2, -1));
+            leftPoints.push(this.getSegmentWall(p0, p1, p2, 1));
         }
 
         if (leftPoints.length !== rightPoints.length) {
@@ -46,16 +44,13 @@ export class TrackMeshGenerator {
         }
     }
 
-    private  getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, pointN: Vector3, relativeOffset: number): Vector3 {
+    private  getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, relativeOffset: number): Vector3 {
         const vecPA: Vector3 = pointA.clone().sub(pointP);
         const vecAB: Vector3 = pointB.clone().sub(pointA);
-        const vecBN: Vector3 = pointN.clone().sub(pointB);
 
         const perpAB: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
             .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
         const perpPA: Vector3 = new Vector3(vecPA.z, vecPA.y, -vecPA.x).normalize()
-            .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
-        const perpBN: Vector3 = new Vector3(vecBN.z, vecBN.y, -vecBN.x).normalize()
             .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
 
         return this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
