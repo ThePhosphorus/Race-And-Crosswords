@@ -40,7 +40,7 @@ export abstract class RacePlayer {
                 audioListener: AudioListener,
                 track: TrackPosition): void {
         this._track = track;
-        this._lastTrackIndex = this._track.length - 1;
+        this._lastTrackIndex = track != null ? this._track.length - 1 : 0;
         this.onInit(position, loader, type, audioListener);
     }
 
