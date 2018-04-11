@@ -47,7 +47,6 @@ export class AiPlayer extends RacePlayer {
             }
             this.lapTimes.push(0);
         }
-        console.log(this.lapTimes);
     }
 
     private calculateAvgAiTime(): number {
