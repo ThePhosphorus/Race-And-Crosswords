@@ -6,13 +6,14 @@ import { Track } from "../../../../../common/race/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
-import { BACKEND_URL, HALF, PI_OVER_2, DOUBLE, TRIPLE } from "../../global-constants/constants";
+import { BACKEND_URL, HALF, PI_OVER_2, TRIPLE } from "../../global-constants/constants";
 import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS, DEFAULT_WALL_WIDTH } from "../race.constants";
 import { Collider } from "../game-component/collision/collider";
 import { RigidBody } from "../game-component/rigid-body/rigid-body";
 import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 import { LoaderService } from "../game-component/loader-service/loader.service";
 import { LoadedTexture } from "../game-component/loader-service/load-types.enum";
+import { TrackMeshGenerator } from "./track-mesh-generator";
 
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const TRACK_SAVER_INCPLAY_URL: string = TRACK_SAVER_URL + "play/";
@@ -39,23 +40,27 @@ export class TrackLoaderService {
     }
 
     public getTrackMeshs(track: Track): Mesh[] {
-        const vectorTrack: Array<Vector3> = TrackLoaderService.toVectors(track.points);
+        // const vectorTrack: Array<Vector3> = TrackLoaderService.toVectors(track.points);
         const meshs: Array<Mesh> = new Array<Mesh>();
-        const startMesh: Mesh = this.getStartMesh(vectorTrack[0], vectorTrack[1]);
-        meshs.push(startMesh);
-        for (let i: number = 0; i < track.points.length - 1; i++) {
-            const roadMesh: Mesh = this.getRoad(vectorTrack[i], vectorTrack[i + 1]);
-            if (i === 0) {
-                roadMesh.position.setY(DOUBLE * Y_OFFSET);
-            } else if (i % DOUBLE) { roadMesh.position.setY(Y_OFFSET); }
-            meshs.push(roadMesh);
 
-            meshs.push(this.getCornerAprox(
-                vectorTrack[i],
-                vectorTrack[(i === 0) ? track.points.length - 1 : i - 1],
-                vectorTrack[(i === track.points.length - 1) ? 0 : i + 1]
-            ));
-        }
+        const generator: TrackMeshGenerator = new TrackMeshGenerator(track);
+
+        meshs.push(generator.newMesh);
+        // const startMesh: Mesh = this.getStartMesh(vectorTrack[0], vectorTrack[1]);
+        // meshs.push(startMesh);
+        // for (let i: number = 0; i < track.points.length - 1; i++) {
+        //     const roadMesh: Mesh = this.getRoad(vectorTrack[i], vectorTrack[i + 1]);
+        //     if (i === 0) {
+        //         roadMesh.position.setY(DOUBLE * Y_OFFSET);
+        //     } else if (i % DOUBLE) { roadMesh.position.setY(Y_OFFSET); }
+        //     meshs.push(roadMesh);
+
+        //     meshs.push(this.getCornerAprox(
+        //         vectorTrack[i],
+        //         vectorTrack[(i === 0) ? track.points.length - 1 : i - 1],
+        //         vectorTrack[(i === track.points.length - 1) ? 0 : i + 1]
+        //     ));
+        // }
 
         return meshs;
     }
