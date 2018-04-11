@@ -68,10 +68,6 @@ export class TrackPosition {
         return point;
     }
 
-    private minPointsDistance(p1: Vector3, p2: Vector3, pos: Vector3): number {
-        return Math.max(p2.clone().sub(pos).length(), pos.clone().sub(p1).length());
-    }
-
     private distanceToLine(p1: Vector3, p2: Vector3, pos: Vector3): number {
         return Math.abs((p2.z - p1.z) * pos.x - (p2.x - p1.x) * pos.z + p2.x * p1.z - p2.z * p1.x) /
             p1.clone().distanceTo(p2);
