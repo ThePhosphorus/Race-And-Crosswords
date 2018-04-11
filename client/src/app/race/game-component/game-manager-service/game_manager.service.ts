@@ -45,7 +45,7 @@ export class CarInfos {
         public speed: number,
         public gear: number,
         public rpm: number,
-        public positionInRace?: number
+        public positionInRace: number
     ) { }
 }
 
@@ -83,7 +83,8 @@ export class GameManagerService extends Renderer {
     public get playerInfos(): CarInfos {
         return new CarInfos(this._player.car.speed,
                             this._player.car.currentGear,
-                            this._player.car.rpm);
+                            this._player.car.rpm,
+                            this.getPlayerPlace());
     }
 
     public get soundManager(): SoundManagerService {
@@ -189,5 +190,15 @@ export class GameManagerService extends Renderer {
         plane.receiveShadow = true;
 
         return plane;
+    }
+
+    private getPlayerPlace(): number {
+        const positions: Array<number> = this._aiControlledCars.map((aiPlayer) => aiPlayer.findDistanceOnTrack());
+        const position: number = this._player.findDistanceOnTrack();
+
+        let place: number = 1;
+        positions.forEach((p: number) => place += p > position ? 1 : 0);
+
+        return place;
     }
 }
