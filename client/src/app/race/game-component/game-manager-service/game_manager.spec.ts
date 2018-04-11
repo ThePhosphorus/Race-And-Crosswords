@@ -9,6 +9,7 @@ import { LoaderService } from "../loader-service/loader.service";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { NB_LAPS } from "../../../global-constants/constants";
 
+// tslint:disable:no-magic-numbers
 describe("GameManager", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -44,4 +45,8 @@ describe("GameManager", () => {
         service.startGame();
         expect(service.playerInfos.lap).toBeLessThan(NB_LAPS);
     }));
+
+    it("should have 3 laps", () => {
+        expect(NB_LAPS).toBe(3);
+    });
 });
