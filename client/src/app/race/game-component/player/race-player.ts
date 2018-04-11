@@ -7,9 +7,9 @@ import { TrackPosition } from "./track-position/track-position";
 export abstract class RacePlayer {
     private _track: TrackPosition;
     private _lap: number;
-    private _distanceOnTrack: number;
     private _lastTrackIndex: number;
     private _lapTimes: Array<number>;
+    private _distanceOnTrack: number;
 
     public constructor(public car: Car) {
         this._track = null;

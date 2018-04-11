@@ -118,6 +118,11 @@ export class GameManagerService extends Renderer {
         this._isStarted = true;
     }
 
+    private stopGame(): void {
+        this._isStarted = false;
+        this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
+    }
+
     protected update(deltaTime: number): void {
         this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
 
@@ -127,7 +132,7 @@ export class GameManagerService extends Renderer {
             this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
 
             if (this._player.lap > NB_LAPS) {
-                this._isStarted = false;
+                this.stopGame();
             }
         }
 

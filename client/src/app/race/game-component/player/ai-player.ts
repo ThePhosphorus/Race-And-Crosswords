@@ -5,6 +5,7 @@ import { CameraManagerService } from "../../camera-manager-service/camera-manage
 import { Vector3, AudioListener } from "three";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
+import { NB_LAPS } from "../../../global-constants/constants";
 
 export class AiPlayer extends RacePlayer {
     private aiController: AIController;
@@ -29,5 +30,34 @@ export class AiPlayer extends RacePlayer {
     public onUpdate(deltaTime: number): void {
         this.aiController.update(deltaTime);
         this.car.update(deltaTime);
+    }
+
+    public finishRace(): void {
+        const avg: number = this.calculateAvgAiTime();
+        while (this.lapTimes.length < NB_LAPS + 1) {
+            if (this.lapTimes[this.lapTimes.length - 1] > 0) {
+                const distance: number = this.track.findDistanceOnTrack(this.car.getPosition());
+                const total: number = this.track.trackLength;
+                const missingTime: number = (1 - (distance / total)) * avg;
+                this.lapTimes[this.lapTimes.length - 1] += missingTime;
+            } else {
+                if (avg > 0) {
+                    this.lapTimes[this.lapTimes.length - 1] = avg;
+                }
+            }
+            this.lapTimes.push(0);
+        }
+        console.log(this.lapTimes);
+    }
+
+    private calculateAvgAiTime(): number {
+        let sample: number = 0;
+        let totalTime: number = 0;
+        for (let i: number = 0; i < this.lapTimes.length - 1; i++) {
+            sample++;
+            totalTime += this.lapTimes[i];
+        }
+
+        return (sample !== 0 ) ? totalTime / sample : 0;
     }
 }
