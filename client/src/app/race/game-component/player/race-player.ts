@@ -9,12 +9,15 @@ export abstract class RacePlayer {
     private _lap: number;
     private _distanceOnTrack: number;
     private _lastTrackIndex: number;
+    private _lapTimes: Array<number>;
 
     public constructor(public car: Car) {
         this._track = null;
         this._lap = 0;
         this._distanceOnTrack = 0;
         this._lastTrackIndex = 0;
+        this._lapTimes = new Array<number>();
+        this._lapTimes.push(0);
     }
 
     public get track(): TrackPosition {
@@ -29,6 +32,10 @@ export abstract class RacePlayer {
         return this._distanceOnTrack;
     }
 
+    public get lapTimes(): Array<number> {
+        return this._lapTimes;
+    }
+
     public init(position: Vector3,
                 loader: LoaderService,
                 type: LoadedObject,
@@ -40,6 +47,7 @@ export abstract class RacePlayer {
     }
 
     public update(deltaTime: number): void {
+        this._lapTimes[this._lapTimes.length - 1] += deltaTime;
         this.calculateLap();
         this.calculateDistanceOnTrack();
         this.onUpdate(deltaTime);
@@ -63,6 +71,9 @@ export abstract class RacePlayer {
 
         if (Math.abs(deltaTrack) > this._track.length / 2) {
             this._lap += Math.sign(deltaTrack);
+            if (this._lap > this._lapTimes.length) {
+                this._lapTimes.push(0);
+            }
         }
     }
 

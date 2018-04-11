@@ -121,14 +121,14 @@ export class GameManagerService extends Renderer {
     protected update(deltaTime: number): void {
         this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
 
-        if (this._player.lap > NB_LAPS) {
-            this._isStarted = false;
-        }
-
         if (this._isStarted) {
             this._collisionDetector.detectCollisions(this.scene);
             this._player.update(deltaTime);
             this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
+
+            if (this._player.lap > NB_LAPS) {
+                this._isStarted = false;
+            }
         }
 
         this.cameraTargetDirection = this._player.car.direction;
