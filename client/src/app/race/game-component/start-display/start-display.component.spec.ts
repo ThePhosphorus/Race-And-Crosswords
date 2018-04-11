@@ -1,6 +1,13 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { StartDisplayComponent } from "./start-display.component";
+import { GameManagerService } from "../game-manager-service/game_manager.service";
+import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
+import { InputManagerService } from "../../input-manager-service/input-manager.service";
+import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
+import { LoaderService } from "../loader-service/loader.service";
+import { CollisionDetectorService } from "../collision/collision-detector.service";
+import { LightManagerService } from "../light-manager/light-manager.service";
 
 describe("StartDisplayComponent", () => {
     let component: StartDisplayComponent;
@@ -8,7 +15,14 @@ describe("StartDisplayComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [StartDisplayComponent]
+            declarations: [StartDisplayComponent],
+            providers: [GameManagerService,
+                        CameraManagerService,
+                        InputManagerService,
+                        SoundManagerService,
+                        LoaderService,
+                        CollisionDetectorService,
+                        LightManagerService]
         })
             .compileComponents();
     }));
