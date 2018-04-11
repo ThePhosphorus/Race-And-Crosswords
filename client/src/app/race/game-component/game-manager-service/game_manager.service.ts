@@ -44,17 +44,18 @@ export class CarInfos {
     public constructor(
         public speed: number,
         public gear: number,
-        public rpm: number
+        public rpm: number,
+        public positionInRace?: number
     ) { }
 }
 
-const COLORS: LoadedObject[] =  [
-LoadedObject.carYellow,
-LoadedObject.carGreen,
-LoadedObject.carRed,
-LoadedObject.carOrange,
-LoadedObject.carPurple,
-LoadedObject.carPink
+const COLORS: LoadedObject[] = [
+    LoadedObject.carYellow,
+    LoadedObject.carGreen,
+    LoadedObject.carRed,
+    LoadedObject.carOrange,
+    LoadedObject.carPurple,
+    LoadedObject.carPink
 ];
 
 @Injectable()
