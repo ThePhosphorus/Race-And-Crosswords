@@ -34,7 +34,7 @@ export class AIController extends Object3D {
     public update(deltaTime: number): void {
         if (this.trackPosition != null) {
             this.carControl.accelerate();
-            const nextPointIndex: number = this.findNextPoint();
+            const nextPointIndex: number = this.trackPosition.findClosestNextPointIndex(this.getPosition());
             if (nextPointIndex !== -1) {
                 const target: number = this.findTargetPoint(nextPointIndex);
                 this.wallCollisionTimer -= this.wallCollisionTimer > 0 ? deltaTime : 0;
@@ -46,7 +46,7 @@ export class AIController extends Object3D {
 
     private onCollision(otherRb: RigidBody): void {
         if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
-            const nextPointIndex: number = this.findNextPoint();
+            const nextPointIndex: number = this.trackPosition.findClosestNextPointIndex(this.getPosition());
             const p0: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, -1);
             const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
             if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
@@ -118,33 +118,6 @@ export class AIController extends Object3D {
         const isSmallEnough: boolean = l2.length() < MAXIMUM_ZIG_ZAG;
 
         return hasBigAngle && isSmallEnough;
-    }
-
-    private findNextPoint(): number {
-        const pos: Vector3 = this.getPosition();
-        let minDistance: number = Number.MAX_VALUE;
-        let point: number = -1;
-        for (let i: number = 0; i < this.trackPosition.length; i++) {
-            const nextIndex: number = (i === this.trackPosition.length - 1) ? 1 : i + 1;
-            const p1: Vector3 = this.trackPosition.getPoint(i);
-            const p2: Vector3 = this.trackPosition.getPoint(nextIndex);
-            const distance: number = this.distanceToLine(p1, p2, pos);
-
-            if (distance < minDistance) {
-                const dotProduct: number = p2.clone().sub(p1).dot(pos.clone().sub(p1));
-                if (dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq()) {
-                    point = nextIndex;
-                    minDistance = distance;
-                }
-            }
-        }
-
-        return point;
-    }
-
-    private distanceToLine(p1: Vector3, p2: Vector3, pos: Vector3): number {
-        return Math.abs((p2.z - p1.z) * pos.x - (p2.x - p1.x) * pos.z + p2.x * p1.z - p2.z * p1.x) /
-            p1.clone().distanceTo(p2);
     }
 
     private applySteering(target: number, nextPointIndex: number): void {
