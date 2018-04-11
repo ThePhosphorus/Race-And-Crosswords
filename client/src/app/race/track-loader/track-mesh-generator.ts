@@ -13,6 +13,9 @@ export class TrackMeshGenerator {
     public constructor (private _track: Track) {
         this._geometry = new Geometry();
         this._length = 0;
+
+        this.generatePoints();
+        this.linkPoints();
     }
 
     private generatePoints(): void {
@@ -25,8 +28,12 @@ export class TrackMeshGenerator {
             const pointB: Vector3 = TrackLoaderService.toVector(this._track.points[(index + 1 ) % this._track.points.length]);
 
             const direction: Vector3 = pointB.clone().sub(pointA);
+            const rightVec: Vector3 = direction.clone().cross(vecUp);
+            const leftVec: Vector3 = vecUp.clone().cross(direction);
 
-            
+            rightPoints.push(pointA.clone().add(rightVec));
+            leftPoints.push(pointA.clone().add(leftVec));
+
         });
 
         if (leftPoints.length !== rightPoints.length) {
