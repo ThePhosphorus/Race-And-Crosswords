@@ -51,9 +51,6 @@ export const MIDDLE_CLICK_CODE: number = 1;
 export const RIGHT_CLICK_CODE: number = 2;
 export const DELETE_KEY: number = 46;
 
-// timer constants
-export const CENTISECOND: number = 10;
-export const TWO_SECONDS: number = 2000;
 export const NB_LAPS: number = 3;
 
 // physics constants
