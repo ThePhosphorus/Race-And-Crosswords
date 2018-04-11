@@ -22,17 +22,22 @@ export class TrackPosition {
     }
 
     public getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
-        return this.track[(pointIndex + offsetIndex + this.track.length) % this.track.length];
+        return this.track[this.getSurroundingPointIndex(pointIndex, offsetIndex)];
+    }
+
+    public getSurroundingPointIndex(pointIndex: number, offsetIndex: number): number {
+        return (pointIndex + offsetIndex + this.track.length) % this.track.length;
     }
 
     public findDistanceOnTrack(position: Vector3): number {
-        const p1Index: number = this.findClosestNextPointIndex(position);
+        const p2Index: number = this.findClosestNextPointIndex(position);
+        const p1Index: number = this.getSurroundingPointIndex(p2Index, -1);
         const p1: Vector3 = this.getPoint(p1Index);
-        const p2: Vector3 = this.getSurroundingPoint(p1Index, -1);
+        const p2: Vector3 = this.getPoint(p2Index);
 
         const line: Vector3 = p2.clone().sub(p1);
         const projection: Vector3 = position.clone().projectOnVector(line);
-        const distanceToPoint: number = projection.clone().sub(line).length();
+        const distanceToPoint: number = projection.clone().sub(p1).length();
 
         return this.distances[p1Index] + distanceToPoint;
     }
