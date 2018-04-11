@@ -30,13 +30,14 @@ describe("AIController", () => {
     let car: Car;
     let ai: AIController;
 
-    beforeEach( () => {
+    beforeEach(() => {
         TestBed.configureTestingModule({providers: [CameraManagerService, LoaderService]});
         car = new Car(new MockEngine());
         ai = new AIController();
         car.add(ai);
 
         car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener);
+        car.initCarLights(false);
         ai.init(track);
     });
 

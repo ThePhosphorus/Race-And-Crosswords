@@ -1,0 +1,24 @@
+#container {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 10;
+}
+
+.light-box {
+    display: inline-block;
+    margin: 5rem;
+}
+
+.light {
+    z-index: 50;
+    width: 5rem;
+    height: 5rem;
+    background-color: rgb(255, 36, 36);
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset rgb(102, 0, 0) 0 -1px 9px, rgb(252, 1, 1) 0 2px 14px;
+}
+
+.invisible {
+    background-color: transparent;
+}

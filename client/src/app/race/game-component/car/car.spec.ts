@@ -22,10 +22,8 @@ describe("Car", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({providers: [CameraManagerService, LoaderService]});
         car = new Car( new MockEngine());
-        car.init(
-            CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener, );
-
-        car.update(MS_BETWEEN_FRAMES);
+        car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener);
+        car.initCarLights(false);
     });
 
     it("should be instantiable using default constructor", inject([CameraManagerService], (cameraManager: CameraManagerService) => {
@@ -35,6 +33,7 @@ describe("Car", () => {
     }));
 
     it("should accelerate when accelerator is pressed", () => {
+        car.update(MS_BETWEEN_FRAMES);
         const initialSpeed: number = car.speed;
         car.carControl.accelerate();
         car.update(MS_BETWEEN_FRAMES);

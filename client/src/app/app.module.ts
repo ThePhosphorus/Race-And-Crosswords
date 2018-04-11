@@ -23,6 +23,7 @@ import { HudComponent } from "./race/hud/hud.component";
 import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
 import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end-game/modal-end-game.component";
 import { LoadingComponent } from "./race/game-component/loading/loading.component";
+import { StartDisplayComponent } from "./race/game-component/start-display/start-display.component";
 
 @NgModule({
     declarations: [
@@ -45,7 +46,8 @@ import { LoadingComponent } from "./race/game-component/loading/loading.componen
         ModalEndGameComponent,
         GameMenuComponent,
         RpmBarComponent,
-        LoadingComponent
+        LoadingComponent,
+        StartDisplayComponent
     ],
     imports: [
         BrowserModule,
