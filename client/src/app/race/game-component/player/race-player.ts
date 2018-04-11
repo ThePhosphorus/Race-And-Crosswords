@@ -53,6 +53,7 @@ export abstract class RacePlayer {
     }
 
     private calculateDistanceOnTrack(): void {
-        this._distanceOnTrack = (this._track != null) ? this._track.findDistanceOnTrack(this.car.getPosition()) : 0;
+        this._distanceOnTrack = (this._track != null) ?
+            this._track.findDistanceOnTrack(this.car.getPosition()) + this._lap * this.track.trackLength : 0;
     }
 }

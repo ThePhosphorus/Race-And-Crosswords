@@ -4,6 +4,9 @@ export class TrackPosition {
     private distances: Array<number>;
 
     public constructor(private track: Array<Vector3>) {
+        if (this.track == null) {
+            this.track = new Array<Vector3>();
+        }
         this.distances = new Array<number>();
         this.distances.push(0);
         for (let i: number = 1; i < track.length; i++) {
@@ -15,6 +18,10 @@ export class TrackPosition {
 
     public get length(): number {
         return this.track.length;
+    }
+
+    public get trackLength(): number {
+        return this.distances[this.distances.length - 1];
     }
 
     public getPoint(index: number): Vector3 {
@@ -44,7 +51,7 @@ export class TrackPosition {
 
     public findClosestNextPointIndex(position: Vector3): number {
         let minDistance: number = Number.MAX_VALUE;
-        let point: number = -1;
+        let point: number = 0;
         for (let i: number = 0; i < this.track.length; i++) {
             const nextIndex: number = (i === this.track.length - 1) ? 1 : i + 1;
             const p1: Vector3 = this.track[i];
