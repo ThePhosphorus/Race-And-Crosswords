@@ -21,6 +21,10 @@ export class TrackPosition {
         return this.track[index];
     }
 
+    public getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
+        return this.track[(pointIndex + offsetIndex + this.track.length) % this.track.length];
+    }
+
     public findDistanceOnTrack(position: Vector3): number {
         return 0;
     }
@@ -31,9 +35,5 @@ export class TrackPosition {
 
     public findClosestNextPointIndex(position: Vector3): number {
         return 0;
-    }
-
-    public getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
-        return this.track[(pointIndex + offsetIndex + this.track.length) % this.track.length];
     }
 }

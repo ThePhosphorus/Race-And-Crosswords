@@ -47,7 +47,7 @@ export class AIController extends Object3D {
     private onCollision(otherRb: RigidBody): void {
         if (otherRb.fixed && this.wallCollisionTimer <= 0 && this.getSpeed() < COLLISION_SPEED_THRESHOLD) {
             const nextPointIndex: number = this.findNextPoint();
-            const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
+            const p0: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, -1);
             const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
             if (this.getDirection().angleTo(p1.clone().sub(p0)) > WALL_COLLISION_ANGLE) {
                 const trackDir: Vector3 = p1.clone().sub(p0);
@@ -85,14 +85,10 @@ export class AIController extends Object3D {
         return 0;
     }
 
-    private getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
-        return this.trackPosition.getPoint((pointIndex + offsetIndex + this.trackPosition.length) % this.trackPosition.length);
-    }
-
     private pointAngle(nextPointIndex: number): number {
-        const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
+        const p0: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, -1);
         const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
-        const p2: Vector3 = this.getSurroundingPoint(nextPointIndex, 1);
+        const p2: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, 1);
         const direction1: Vector3 = p1.clone().sub(p0);
         const direction2: Vector3 = p2.clone().sub(p1);
 
@@ -109,10 +105,10 @@ export class AIController extends Object3D {
     }
 
     private isZigZag(nextPointIndex: number): boolean {
-        const previous: Vector3 = this.getSurroundingPoint(nextPointIndex, -2);
-        const p0: Vector3 = this.getSurroundingPoint(nextPointIndex, -1);
+        const previous: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, -2);
+        const p0: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, -1);
         const p1: Vector3 = this.trackPosition.getPoint(nextPointIndex);
-        const p2: Vector3 = this.getSurroundingPoint(nextPointIndex, 1);
+        const p2: Vector3 = this.trackPosition.getSurroundingPoint(nextPointIndex, 1);
 
         const l1: Vector3 = p0.clone().sub(previous);
         const l2: Vector3 = p1.clone().sub(p0);
