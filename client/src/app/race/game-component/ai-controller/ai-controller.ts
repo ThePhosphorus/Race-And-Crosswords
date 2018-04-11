@@ -131,6 +131,7 @@ export class AIController extends Object3D {
             const p1: Vector3 = this.track[i];
             const p2: Vector3 = this.track[nextIndex];
             const distance: number = this.distanceToLine(p1, p2, pos);
+
             if (distance < minDistance) {
                 const dotProduct: number = p2.clone().sub(p1).dot(pos.clone().sub(p1));
                 if (dotProduct > 1 && dotProduct < p2.clone().sub(p1).lengthSq()) {
