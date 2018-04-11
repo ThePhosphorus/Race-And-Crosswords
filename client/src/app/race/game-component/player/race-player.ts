@@ -8,10 +8,13 @@ export abstract class RacePlayer {
     private _track: TrackPosition;
     private _lap: number;
     private _distanceOnTrack: number;
+    private _lastDistanceOnTrack: number;
 
     public constructor(public car: Car) {
         this._track = null;
-        this._lap = 1;
+        this._lap = 0;
+        this._distanceOnTrack = 0;
+        this._lastDistanceOnTrack = 0;
     }
 
     public get track(): TrackPosition {
@@ -36,8 +39,8 @@ export abstract class RacePlayer {
     }
 
     public update(deltaTime: number): void {
-        this.calculateDistanceOnTrack();
         this.calculateLap();
+        this.calculateDistanceOnTrack();
         this.onUpdate(deltaTime);
     }
 
@@ -49,11 +52,18 @@ export abstract class RacePlayer {
     protected abstract onUpdate(deltaTime: number): void;
 
     private calculateLap(): void {
-        this._lap = 1;
+        if (this._track == null) {
+            return;
+        }
+
+        const deltaPosition: number = this._distanceOnTrack - this._lastDistanceOnTrack;
+        if (Math.abs(deltaPosition) > this._track.trackLength / 2) {
+            this._lap += Math.sign(deltaPosition);
+        }
     }
 
     private calculateDistanceOnTrack(): void {
-        this._distanceOnTrack = (this._track != null) ?
-            this._track.findDistanceOnTrack(this.car.getPosition()) + this._lap * this.track.trackLength : 0;
+        this._lastDistanceOnTrack = this._distanceOnTrack;
+        this._distanceOnTrack = (this._track != null) ? this._track.findDistanceOnTrack(this.car.getPosition()) : 0;
     }
 }
