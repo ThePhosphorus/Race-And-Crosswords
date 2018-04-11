@@ -26,11 +26,15 @@ export class TrackPosition {
     }
 
     public findDistanceOnTrack(position: Vector3): number {
-        return 0;
-    }
+        const p1Index: number = this.findClosestNextPointIndex(position);
+        const p1: Vector3 = this.getPoint(p1Index);
+        const p2: Vector3 = this.getSurroundingPoint(p1Index, -1);
 
-    public findClosestNextPoint(position: Vector3): Vector3 {
-        return this.track[this.findClosestNextPointIndex(position)];
+        const line: Vector3 = p2.clone().sub(p1);
+        const projection: Vector3 = position.clone().projectOnVector(line);
+        const distanceToPoint: number = projection.clone().sub(line).length();
+
+        return this.distances[p1Index] + distanceToPoint;
     }
 
     public findClosestNextPointIndex(position: Vector3): number {
