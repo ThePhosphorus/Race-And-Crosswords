@@ -12,7 +12,19 @@ export class TrackPosition {
         }
     }
 
-    public getDistanceOnTrack(position: Vector3): number {
+    public findDistanceOnTrack(position: Vector3): number {
         return 0;
+    }
+
+    public findClosestNextPoint(position: Vector3): Vector3 {
+        return this.track[this.findClosestNextPointIndex(position)];
+    }
+
+    public findClosestNextPointIndex(position: Vector3): number {
+        return 0;
+    }
+
+    public getSurroundingPoint(pointIndex: number, offsetIndex: number): Vector3 {
+        return this.track[(pointIndex + offsetIndex + this.track.length) % this.track.length];
     }
 }
