@@ -5,27 +5,24 @@ import { InputManagerService } from "../../input-manager-service/input-manager.s
 import { ACCELERATE_KEYCODE, BRAKE_KEYCODE, LEFT_KEYCODE, RIGHT_KEYCODE, HANDBRAKE_KEYCODE } from "../../../global-constants/constants";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
-import { TrackPosition } from "./track-position/track-position";
 
 export class UserPlayer extends RacePlayer {
     public constructor(private inputManager: InputManagerService) {
         super(new Car());
     }
 
-    public init(
+    public onInit(
         position: Vector3,
         loader: LoaderService,
         type: LoadedObject,
-        audioListener: AudioListener,
-        track: TrackPosition
+        audioListener: AudioListener
     ): void {
         this.car.init(position, loader, type, audioListener);
         this.car.initCarLights(false);
-        this.track = track;
         this.initKeyBindings();
     }
 
-    public update(deltaTime: number): void {
+    public onUpdate(deltaTime: number): void {
         this.car.update(deltaTime);
     }
 

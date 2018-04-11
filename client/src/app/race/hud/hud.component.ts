@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Timer } from "./timer";
-import { GameManagerService, CarInfos } from "../game-component/game-manager-service/game_manager.service";
+import { GameManagerService } from "../game-component/game-manager-service/game_manager.service";
 
 const NB_LAPS: number = 3;
 @Component({
@@ -31,10 +31,6 @@ export class HudComponent implements OnInit {
         this.lapCount++;
     }
 
-    public get carInfos(): CarInfos {
-        return this.gameManagerService.playerInfos;
-    }
-
     public get globalTimer(): Timer {
         return this._globalTimer;
     }
@@ -46,5 +42,8 @@ export class HudComponent implements OnInit {
     private update(deltaTime: number): void {
         this._lapTimer.update(deltaTime);
         this._globalTimer.update(deltaTime);
+        if (this.gameManagerService.playerInfos.lap > this.lapCount) {
+            this.nextLap();
+        }
     }
 }
