@@ -11,7 +11,6 @@ export class TrackPosition {
             const previous: Vector3 = track[i - 1];
             this.distances.push(point.clone().sub(previous).length() + this.distances[i - 1]);
         }
-        console.log(this.distances);
     }
 
     public get length(): number {
