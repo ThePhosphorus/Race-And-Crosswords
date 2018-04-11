@@ -22,6 +22,7 @@ import {
     ZOOM_OUT_KEYCODE,
     TOGGLE_NIGHT_MODE_KEYCODE,
     TOGGLE_SUNLIGHT_KEYCODE,
+    NB_LAPS,
 } from "../../../global-constants/constants";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { GameConfiguration } from "../game-configuration/game-configuration";
@@ -119,6 +120,10 @@ export class GameManagerService extends Renderer {
 
     protected update(deltaTime: number): void {
         this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
+
+        if (this._player.lap > NB_LAPS) {
+            this._isStarted = false;
+        }
 
         if (this._isStarted) {
             this._collisionDetector.detectCollisions(this.scene);

@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Timer } from "./timer";
 import { GameManagerService } from "../game-component/game-manager-service/game_manager.service";
+import { NB_LAPS } from "../../global-constants/constants";
 
-const NB_LAPS: number = 3;
 @Component({
     selector: "app-hud",
     templateUrl: "./hud.component.html",
