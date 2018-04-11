@@ -13,11 +13,9 @@ export abstract class RacePlayer {
 
     public constructor(public car: Car) {
         this._track = null;
-        this._lap = 0;
         this._distanceOnTrack = 0;
         this._lastTrackIndex = 0;
-        this._lapTimes = new Array<number>();
-        this._lapTimes.push(0);
+        this.initializeLap();
     }
 
     public get track(): TrackPosition {
@@ -59,6 +57,12 @@ export abstract class RacePlayer {
                               audioListener: AudioListener): void;
 
     protected abstract onUpdate(deltaTime: number): void;
+
+    private initializeLap(): void {
+        this._lap = 0;
+        this._lapTimes = new Array<number>();
+        this._lapTimes.push(0);
+    }
 
     private calculateLap(): void {
         if (this._track == null) {
