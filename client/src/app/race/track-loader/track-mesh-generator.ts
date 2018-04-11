@@ -16,20 +16,6 @@ export class TrackMeshGenerator {
         this._length = 0;
 
         this.generatePoints();
-
-        // this._geometry.vertices.push(new Vector3(0, 0, 0));
-        // this._geometry.vertices.push(new Vector3(0, 0, 10));
-
-        // this._geometry.vertices.push(new Vector3(10, 0, 0));
-        // this._geometry.vertices.push(new Vector3(10, 0, 10));
-
-        // this._geometry.vertices.push(new Vector3(20, 0, 0));
-        // this._geometry.vertices.push(new Vector3(20, 0, 10));
-
-        // this._geometry.vertices.push(new Vector3(30, 0 , 10));
-        // this._geometry.vertices.push(new Vector3(30, 0 , 20));
-        // this._length = 4;
-
         this.linkPoints();
     }
 
@@ -37,21 +23,16 @@ export class TrackMeshGenerator {
         const leftPoints: Array<Vector3> = new Array<Vector3>();
         const rightPoints: Array<Vector3> = new Array<Vector3>();
 
-        this._track.points.forEach(( point: Vector3Struct, index: number ) => {
-            const vecUp: Vector3 = new Vector3(0, 1, 0);
-            const pointCurrent: Vector3 = TrackLoaderService.toVector(this._track.points[index]);
-            const pointAfter: Vector3 = TrackLoaderService.toVector(this._track.points[(index + 1 ) % this._track.points.length]);
-            const pointBefore: Vector3 = TrackLoaderService.toVector(this._track.points[(index + this._track.points.length - 2 ) % this._track.points.length]);
-            console.log((index - 1 ) % this._track.points.length);
-
-            const direction: Vector3 = pointAfter.clone().sub(pointCurrent).add( pointCurrent.clone().sub(pointBefore));
-            const rightVec: Vector3 = direction.clone().cross(vecUp).normalize().multiplyScalar( HALF * DEFAULT_TRACK_WIDTH);
-            const leftVec: Vector3 = vecUp.clone().cross(direction).normalize().multiplyScalar( HALF * DEFAULT_TRACK_WIDTH);
-
-            rightPoints.push(pointCurrent.clone().add(rightVec));
-            leftPoints.push(pointCurrent.clone().add(leftVec));
-
-        });
+        for (let i: number = 0; i < this._track.points.length - 1; i++) {
+            const p3Index: number = (i + 2) === this._track.points.length ? 1 : (i + 2);
+            const p0Index: number = (i - 1) === -1 ? (this._track.points.length - 2) : (i - 1);
+            const p0: Vector3 = TrackLoaderService.toVector(this._track.points[p0Index]); // Previous
+            const p1: Vector3 = TrackLoaderService.toVector(this._track.points[i]);
+            const p2: Vector3 = TrackLoaderService.toVector(this._track.points[i + 1]);
+            const p3: Vector3 = TrackLoaderService.toVector(this._track.points[p3Index]); // Next
+            rightPoints.push(this.getSegmentWall(p0, p1, p2, p3, -1));
+            leftPoints.push(this.getSegmentWall(p0, p1, p2, p3, 1));
+        }
 
         if (leftPoints.length !== rightPoints.length) {
             throw new LengthMismatchException();
@@ -65,8 +46,40 @@ export class TrackMeshGenerator {
         }
     }
 
-    private generatesidePoints() {
-        
+    private  getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, pointN: Vector3, relativeOffset: number): Vector3 {
+        const vecPA: Vector3 = pointA.clone().sub(pointP);
+        const vecAB: Vector3 = pointB.clone().sub(pointA);
+        const vecBN: Vector3 = pointN.clone().sub(pointB);
+
+        const perpAB: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
+            .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
+        const perpPA: Vector3 = new Vector3(vecPA.z, vecPA.y, -vecPA.x).normalize()
+            .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
+        const perpBN: Vector3 = new Vector3(vecBN.z, vecBN.y, -vecBN.x).normalize()
+            .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
+
+        return this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
+                                     pointA.clone().add(perpAB), pointB.clone().add(perpAB));
+    }
+
+    private  findIntersection(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): Vector3 {
+        if (p2.equals(p3)) {
+            return p2.clone();
+        }
+        const x1: number = p1.x;
+        const y1: number = p1.z;
+        const x2: number = p2.x;
+        const y2: number = p2.z;
+        const x3: number = p3.x;
+        const y3: number = p3.z;
+        const x4: number = p4.x;
+        const y4: number = p4.z;
+        const intersectionX: number = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) /
+                                      ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+        const intersectionY: number = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) /
+                                      ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+
+        return new Vector3(intersectionX, p1.y, intersectionY);
     }
 
     private linkPoints(): void {
