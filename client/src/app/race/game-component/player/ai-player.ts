@@ -38,7 +38,7 @@ export class AiPlayer extends RacePlayer {
             if (this.lapTimes[this.lapTimes.length - 1] > 0) {
                 const distance: number = this.track.findDistanceOnTrack(this.car.getPosition());
                 const total: number = this.track.trackLength;
-                const missingTime: number = (1 - (distance / total)) * avg;
+                const missingTime: number = Math.round((1 - (distance / total)) * avg);
                 this.lapTimes[this.lapTimes.length - 1] += missingTime;
             } else {
                 if (avg > 0) {

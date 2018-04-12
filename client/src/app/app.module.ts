@@ -26,6 +26,7 @@ import { LoadingComponent } from "./race/game-component/loading/loading.componen
 import { StartDisplayComponent } from "./race/game-component/start-display/start-display.component";
 import { HighscoreComponent } from "./race/game-component/highscore/highscore.component";
 import { HighscoreAdderComponent } from "./race/game-component/highscore-adder/highscore-adder.component";
+import { GameResultComponentComponent } from "./race/game-component/game-result-component/game-result-component.component";
 
 @NgModule({
     declarations: [
@@ -51,7 +52,8 @@ import { HighscoreAdderComponent } from "./race/game-component/highscore-adder/h
         LoadingComponent,
         StartDisplayComponent,
         HighscoreComponent,
-        HighscoreAdderComponent
+        HighscoreAdderComponent,
+        GameResultComponentComponent
     ],
     imports: [
         BrowserModule,
