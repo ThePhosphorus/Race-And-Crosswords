@@ -1,0 +1,13 @@
+#container {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 10;
+}
+
+#box {
+    width: 50rem;
+    height: 30rem;
+    background-color: green;
+    margin: 10rem auto;
+}
