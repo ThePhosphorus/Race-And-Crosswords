@@ -2,13 +2,12 @@ import { Component, OnInit } from "@angular/core";
 import { Highscore } from "../../../../../../common/race/highscore";
 import { Track } from "../../../../../../common/race/track";
 
+const MAX_SAVED_HIGHSCORES: number = 5;
 @Component({
   selector: "app-highscore-adder",
   templateUrl: "./highscore-adder.component.html",
   styleUrls: ["./highscore-adder.component.css"]
 })
-
-const MAX_SAVED_HIGHSCORES: number = 5;
 
 export class HighscoreAdderComponent implements OnInit {
   private time: number;
