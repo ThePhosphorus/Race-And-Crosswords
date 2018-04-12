@@ -11,20 +11,23 @@ import { Track } from "../../../../../common/race/track";
 const MAX_SAVED_HIGHSCORES: number = 5;
 
 export class HighscoreAdderComponent implements OnInit {
-
-  private highscore: Highscore;
+  private time: number;
   private track: Track;
   public constructor() { }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
   }
-  private addHighscore(): void {
+  public addHighscore(name: string): void {
 
     if (this.track.highscores == null) {
       this.track.highscores = new Array<Highscore>();
     }
+    this.track.highscores.push(new Highscore(name, this.time));
+    this.track.highscores.sort((a: Highscore, b: Highscore) => a.time - b.time);
     if ( this.track.highscores.length <= MAX_SAVED_HIGHSCORES) {
-      this.track.highscores.push();
+      this.track.highscores.pop();
     }
+    // TODO: close page
+  }
 
 }
