@@ -40,6 +40,14 @@ const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const N_AI_CONTROLLED_CARS: number = 3;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
+const COLORS: LoadedObject[] = [
+    LoadedObject.carYellow,
+    LoadedObject.carGreen,
+    LoadedObject.carRed,
+    LoadedObject.carOrange,
+    LoadedObject.carPurple,
+    LoadedObject.carPink
+];
 
 export class CarInfos {
     public constructor(
@@ -50,15 +58,6 @@ export class CarInfos {
         public lap: number
     ) { }
 }
-
-const COLORS: LoadedObject[] = [
-    LoadedObject.carYellow,
-    LoadedObject.carGreen,
-    LoadedObject.carRed,
-    LoadedObject.carOrange,
-    LoadedObject.carPurple,
-    LoadedObject.carPink
-];
 
 @Injectable()
 export class GameManagerService extends Renderer {
