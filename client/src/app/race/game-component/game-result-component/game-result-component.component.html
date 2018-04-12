@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let result of endGameService.gameResults; let i = index"  [ngClass]="{'isPlayer': !result.isAi}" >
-            <td>i</td>
+            <td>{{i + 1}}</td>
             <td>{{result.name}}</td>
             <td>{{result.times[0]}}</td>
             <td>{{result.times[1]}}</td>
