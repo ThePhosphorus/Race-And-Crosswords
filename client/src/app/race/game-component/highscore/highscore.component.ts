@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { Highscore } from "../../../../../../common/race/highscore";
-import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { ActivatedRoute} from "@angular/router";
 import { EndGameService } from "../end-game-service/end-game.service";
 
