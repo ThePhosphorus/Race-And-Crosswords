@@ -12,7 +12,7 @@ export abstract class RacePlayer {
     private _lastTrackIndex: number;
     private _lapTimes: Array<number>;
     private _distanceOnTrack: number;
-    private _name: string;
+    protected _name: string;
 
     public constructor(public car: Car) {
         this._track = null;

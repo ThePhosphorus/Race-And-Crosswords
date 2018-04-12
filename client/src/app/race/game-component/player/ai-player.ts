@@ -7,6 +7,8 @@ import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
 import { NB_LAPS } from "../../../global-constants/constants";
 
+const AI_NAME: string = "AI";
+
 export class AiPlayer extends RacePlayer {
     private aiController: AIController;
 
@@ -21,6 +23,7 @@ export class AiPlayer extends RacePlayer {
         type: LoadedObject,
         audioListener: AudioListener
     ): void {
+        this._name = AI_NAME;
         this.car.add(this.aiController);
         this.car.init(position, loader, type, audioListener);
         this.car.initCarLights(true);
