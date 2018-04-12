@@ -3,6 +3,7 @@ import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import { Track } from "../../../../common/race/track";
 import { DbClient } from "../../mongo/DbClient";
+import { Highscore } from "../../../../common/race/highscore";
 import {
     Collection,
     InsertOneWriteOpResult,
@@ -12,6 +13,7 @@ import {
 } from "mongodb";
 
 const TRACK_COLLECTION: string = "tracks";
+const MAX_NUMBER_OF_HIGHSCORES: number = 5;
 
 @injectable()
 export class TrackSaver extends WebService {
@@ -63,6 +65,12 @@ export class TrackSaver extends WebService {
         this._router.put("/play/:id", (req: Request, res: Response, next: NextFunction) => {
             const id: string = req.params.id;
             this.incrementPlayTrack(id).then((result: UpdateWriteOpResult) => res.send(result));
+        });
+
+        this._router.put("/highscore/:id", (req: Request, res: Response, next: NextFunction) => {
+            const id: string = req.params.id;
+            const highScore: Highscore = req.body["highscore"];
+            this.updateHighScore(id, highScore).then((result: UpdateWriteOpResult) => res.send(result));
         });
     }
 
@@ -117,5 +125,24 @@ export class TrackSaver extends WebService {
         this.connect();
 
         return this._collection.updateOne({ _id: new ObjectId(id) }, { $inc: { nbPlayed: 1 } });
+    }
+
+    private async updateHighScore(id: string, highScore: Highscore): Promise<UpdateWriteOpResult> {
+        this.connect();
+
+        const track: Track = await this.getTrack(id);
+
+        if (track != null && highScore != null) {
+            if (track.highscores == null) {
+                track.highscores = new Array<Highscore>();
+            }
+            track.highscores.push(highScore);
+            track.highscores.sort((a: Highscore, b: Highscore) => a.time - b.time );
+            if (track.highscores.length > MAX_NUMBER_OF_HIGHSCORES ) {
+                track.highscores.pop();
+            }
+        }
+
+        return this._collection.updateOne({_id : new ObjectId(id)}, { $set : { highscores : track.highscores }});
     }
 }
