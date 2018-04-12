@@ -1,11 +1,12 @@
-<div class="row w-80 pl-4 align-items-center pr-2 mt-4" id="boxBody">
-    <div class="col-block justify-content-md-left mt-2  text-right col-2 ">
+<div>
+<div class="row w-80 pl-4 align-items-center pr-2 " id="boxBody">
+    <div class="col justify-content-md-left mt-2  text-right col-2 ">
         <div>
             <span id="position">{{position}}</span>
         </div>
 
     </div>
-    <div class="col-block align-self-right col-10 ">
+    <div class="col align-self-right col-10 ">
         <div class="row w-100 pl-5 ml-1 mt-4" id="rpmBar">
             <span *ngIf="rpm > 500" id="greenBar"></span>
             <span *ngIf="rpm > 1000" id="greenBar"></span>
@@ -23,13 +24,14 @@
             <span *ngIf="rpm > 7000" id="redBar"></span>
         </div>
         <div class="row w-100 ml-2 mt-3" id="speed">
-            <div class="col-block text-right justify-content-start p-0 col-5 ">
+            <div class="col text-right justify-content-start p-0 col-5 ">
                 <span *ngIf="speed >= 0"id="numberSpeed">{{speed}}</span>
                 <span *ngIf="speed < 0"id="numberSpeed">{{-speed}}</span>
             </div>
-            <div class="col-block justify-content-start align-self-end col-7 ">
+            <div class="col justify-content-start align-self-end col-7 ">
                 <span id="kmh"> km/h</span>
             </div>
         </div>
     </div>
+</div>
 </div>
