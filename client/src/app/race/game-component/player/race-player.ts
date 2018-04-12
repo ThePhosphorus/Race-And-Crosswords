@@ -4,17 +4,21 @@ import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
 import { TrackPosition } from "./track-position/track-position";
 
+const DEFAULT_NAME: string = "Player";
+
 export abstract class RacePlayer {
     private _track: TrackPosition;
     private _lap: number;
     private _lastTrackIndex: number;
     private _lapTimes: Array<number>;
     private _distanceOnTrack: number;
+    private _name: string;
 
     public constructor(public car: Car) {
         this._track = null;
         this._distanceOnTrack = 0;
         this._lastTrackIndex = 0;
+        this._name = DEFAULT_NAME;
         this.initializeLap();
     }
 
@@ -32,6 +36,10 @@ export abstract class RacePlayer {
 
     public get lapTimes(): Array<number> {
         return this._lapTimes;
+    }
+
+    public get name(): string {
+        return this._name;
     }
 
     public init(position: Vector3,
