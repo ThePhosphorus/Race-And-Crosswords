@@ -39,6 +39,7 @@ h1 {
 }
 
 .table .isPlayer {
+    font-weight: bold;
     background-color:  #b3ffb3;
     box-shadow: 0 0 1vmin 0.6vmin #00ff00;
     border: solid  #b3ffb3 ;

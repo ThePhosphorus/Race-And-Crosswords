@@ -28,16 +28,26 @@ export class EndGameService {
     }
 
     public handleEndGame(userPlayer: UserPlayer, aiPlayers: Array<AiPlayer>): void {
-        this.gameResults.push(new GameResult(userPlayer.name,
-                                             false,
-                                             this.msToTimes(userPlayer.lapTimes),
-                                             this.msToTime(this.sumTimes(userPlayer.lapTimes))));
-        aiPlayers.forEach((ai: AiPlayer) => this.gameResults.push(new GameResult(ai.name,
-                                                                                 true,
-                                                                                 this.msToTimes(ai.lapTimes),
-                                                                                 this.msToTime(this.sumTimes(ai.lapTimes)))));
+        if (userPlayer != null) {
+            this.gameResults.push(new GameResult(userPlayer.name,
+                                                 false,
+                                                 this.msToTimes(userPlayer.lapTimes),
+                                                 this.msToTime(this.sumTimes(userPlayer.lapTimes))));
+        }
+        if (aiPlayers != null) {
+            aiPlayers.forEach((ai: AiPlayer) => this.gameResults.push(new GameResult(ai.name,
+                                                                                     true,
+                                                                                     this.msToTimes(ai.lapTimes),
+                                                                                     this.msToTime(this.sumTimes(ai.lapTimes)))));
+        }
+
         this.gameResults.sort((a, b) => a.total.localeCompare(b.total));
         this._displayResult = true;
+    }
+
+    public closeResult(): void {
+        this._displayResult = false;
+        this._displayHighscore = true;
     }
 
     private sumTimes(times: Array<number>): number {
@@ -64,5 +74,5 @@ export class EndGameService {
         const mins: number = time % MIN_TO_S;
 
         return ("0" + mins).slice(-2) + ":" + ("0" + secs).slice(-2) + "." + (ms + "00").substring(0, MS_DECIMALS);
-      }
+    }
 }
