@@ -25,6 +25,7 @@ import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end
 import { LoadingComponent } from "./race/game-component/loading/loading.component";
 import { StartDisplayComponent } from "./race/game-component/start-display/start-display.component";
 import { HighscoreComponent } from "./race/highscore/highscore.component";
+import { HighscoreAdderComponent } from './race/highscore-adder/highscore-adder.component';
 
 @NgModule({
     declarations: [
@@ -49,7 +50,8 @@ import { HighscoreComponent } from "./race/highscore/highscore.component";
         RpmBarComponent,
         LoadingComponent,
         StartDisplayComponent,
-        HighscoreComponent
+        HighscoreComponent,
+        HighscoreAdderComponent
     ],
     imports: [
         BrowserModule,
