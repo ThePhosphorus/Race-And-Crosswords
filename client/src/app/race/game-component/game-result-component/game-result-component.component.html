@@ -2,7 +2,7 @@
   <div class="col-8 align-self-center mt-4 " id="box">
     <div *ngIf="endGameService.displayResult">
       <h1>[ScoreS]</h1>
-      <table class="table">
+      <table class="table table-striped ">
         <thead>
           <th>Name</th>
           <th>Lap 1</th>
@@ -11,7 +11,7 @@
           <th>Total time</th>
         </thead>
         <tbody>
-          <tr *ngFor="let result of endGameService.gameResults">
+          <tr *ngFor="let result of endGameService.gameResults"  [ngClass]="{'isPlayer': !endGameService.gameResults.isAi()}" >
             <td>{{result.name}}</td>
             <td>{{result.times[0]}}</td>
             <td>{{result.times[1]}}</td>

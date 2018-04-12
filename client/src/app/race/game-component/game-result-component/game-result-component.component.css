@@ -6,31 +6,65 @@
     z-index: 10;
     top: 0;
     left: 0;
-    margin:0;
+    margin: 0;
 }
 
 #box {
-    background-color:#a6ff4d;
-    border: #212529 solid 2vmin;
-    border-radius:3%;
+    background-color: rgb(218, 216, 216);
+    border: #e60000 solid 2vmin;
+    border-radius: 3vmin;
     font-family: "Track Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     text-align: center;
-    color: rgb(99, 98, 98);
+    color: rgb(99, 98, 98, 0.9);
 }
-h1{
+
+h1 {
     font-family: "Race Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     text-align: center;
-    color: whitesmoke;
-    padding: 2%;
+    color: #00ff00;
+    padding: 4%;
+    font-size: 300%;
+    text-shadow: 0px 0px 1vmin black;
+}
+
+.table {
+    background-color: white;
+    border-radius: 2vmin;
+    box-shadow: 0 0 1vmin 0.6vmin #00ff00a2;
+    overflow-y: auto;
+}
+
+.table th {
+    border: none;
+}
+
+.table .isPlayer {
+    background-color:  #b3ffb3;
+    box-shadow: 0 0 1vmin 0.6vmin #00ff00;
+    border: solid  #b3ffb3 ;
 }
 
 @font-face {
     font-family: "Track Font";
     src: url("/assets/fonts/Geometos Rounded.ttf ") format("truetype")
-  }
-  @font-face {
+}
+
+@font-face {
     font-family: "Race Font";
     src: url("/assets/fonts/Railway to Hells.ttf") format("truetype");
-  }
+}
+::-webkit-scrollbar {
+    width: 1vmin;
+}
 
+::-webkit-scrollbar-track {
+    background: darkgray;
+}
 
+::-webkit-scrollbar-thumb {
+    background: grey;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #545555;
+}
