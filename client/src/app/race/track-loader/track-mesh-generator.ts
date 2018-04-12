@@ -1,12 +1,14 @@
 import { Track } from "../../../../../common/race/track";
-import { Vector3, Geometry, Face3, Mesh, CubicBezierCurve3 } from "three";
+import { Vector3, Geometry, Face3, Mesh, CubicBezierCurve3, CatmullRomCurve3 } from "three";
 import { LengthMismatchException } from "../../exceptions/length-mismatch-exception";
 import { DOUBLE, HALF } from "../../global-constants/constants";
 import { WHITE_MATERIAL } from "../admin/track-editor.constants";
 import { TrackLoaderService } from "./track-loader.service";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
-const NB_SMOOTHING_VERTECIES: number = 5;
+const NB_SMOOTHING_VERTECIES: number = 200;
+// tslint:disable-next-line:no-magic-numbers
+const SMOOTHING_LENGTH: number = DEFAULT_TRACK_WIDTH / 3;
 
 export class TrackMeshGenerator {
     private _length: number;
@@ -21,7 +23,7 @@ export class TrackMeshGenerator {
 
     private initMeshInfos(): void {
         this.generatePoints();
-        this.smoothEdges();
+        this.smoothEdges2();
         this.linkPoints();
     }
 
@@ -59,7 +61,7 @@ export class TrackMeshGenerator {
             const normal: Vector3 = inner.clone().sub(innerPoint);
             const offset: number = normal.length() - DEFAULT_TRACK_WIDTH;
 
-            return innerPoint.add(normal.normalize().multiplyScalar(offset));
+            return innerPoint;
 
         } else {
             return innerPoint;
@@ -103,9 +105,25 @@ export class TrackMeshGenerator {
         this.fillVertecies(leftVertecies, rightVertecies);
     }
 
+    private smoothEdges2(): void {
+        const rightVertecies: Array<Vector3> = new Array<Vector3>();
+        const leftVertecies: Array<Vector3> = new Array<Vector3>();
+
+        for (let i: number = 0; i < this._track.points.length - 1; i++) {
+            rightVertecies.push(this._geometry.vertices[this.getRightPoint(i)]);
+            leftVertecies.push(this._geometry.vertices[this.getLeftPoint(i)]);
+        }
+
+        const rightCurve: CatmullRomCurve3 = new CatmullRomCurve3(rightVertecies);
+        const leftCurve: CatmullRomCurve3 = new CatmullRomCurve3(leftVertecies);
+
+        this.fillVertecies(leftCurve.getPoints(NB_SMOOTHING_VERTECIES * this.nbPoints),
+                           rightCurve.getPoints(NB_SMOOTHING_VERTECIES * this.nbPoints));
+    }
+
     private smoothEdge(pointP: Vector3, pointA: Vector3, pointB: Vector3, edgeId: number): Array<Vector3> {
-        const PB: Vector3 = pointB.clone().sub(pointP).normalize().multiplyScalar(DEFAULT_TRACK_WIDTH);
-        const PA: Vector3 = pointA.clone().sub(pointP).normalize().multiplyScalar(DEFAULT_TRACK_WIDTH);
+        const PB: Vector3 = pointB.clone().sub(pointP).normalize().multiplyScalar(SMOOTHING_LENGTH);
+        const PA: Vector3 = pointA.clone().sub(pointP).normalize().multiplyScalar(SMOOTHING_LENGTH);
 
         const edge: Vector3 = this._geometry.vertices[edgeId];
 
