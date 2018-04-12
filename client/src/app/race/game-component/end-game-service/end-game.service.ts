@@ -6,16 +6,19 @@ import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../global-constants/constants"
 
 const MS_DECIMALS: number = 3;
 // const MAX_SAVED_HIGHSCORES: number = 5;
+
 @Injectable()
 export class EndGameService {
 
     private _displayResult: boolean;
     private _displayHighscore: boolean;
+    private _player: UserPlayer;
     public gameResults: Array<GameResult>;
 
     public constructor() {
         this._displayResult = false;
         this._displayHighscore = false;
+        this._player = null;
         this.gameResults = new Array<GameResult>();
     }
 
@@ -29,6 +32,7 @@ export class EndGameService {
 
     public handleEndGame(userPlayer: UserPlayer, aiPlayers: Array<AiPlayer>): void {
         if (userPlayer != null) {
+            this._player = userPlayer;
             this.gameResults.push(new GameResult(userPlayer.name,
                                                  false,
                                                  this.msToTimes(userPlayer.lapTimes),
@@ -47,7 +51,7 @@ export class EndGameService {
 
     public closeResult(): void {
         this._displayResult = false;
-        if (!this.gameResults[0].isAi && this.isNewHighscore(0)) { //TODO : add real time
+        if (!this.gameResults[0].isAi && this.isNewHighscore(this.sumTimes(this._player.lapTimes))) {
             // TODO: enter highscore
         } else {
             this._displayHighscore = true;
