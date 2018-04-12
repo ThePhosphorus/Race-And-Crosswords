@@ -12,31 +12,6 @@
           <th>Total time</th>
         </thead>
         <tbody>
-
-              <tr >
-                  <td>3</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                </tr>
-                <tr class= "isPlayer">
-                    <td>3</td>
-                    <td>pr</td>
-                    <td>pr</td>
-                    <td>pr</td>
-                    <td>pr</td>
-                    <td>pr</td>
-                  </tr>
-              <tr >
-                  <td>3</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                  <td>pr</td>
-                </tr>
           <tr *ngFor="let result of endGameService.gameResults; let i = index"  [ngClass]="{'isPlayer': !result.isAi}" >
             <td>{{i + 1}}</td>
             <td>{{result.name}}</td>
