@@ -1,23 +1,25 @@
-<div id="container" *ngIf="endGameService.displayResult">
-  <div id="box">
-    <h1>Game result</h1>
-    <table class="table">
-      <thead>
-        <th>Name</th>
-        <th>Lap 1</th>
-        <th>Lap 2</th>
-        <th>Lap 3</th>
-        <th>Total time</th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let result of endGameService.gameResults">
-          <td>{{result.name}}</td>
-          <td>{{result.times[0]}}</td>
-          <td>{{result.times[1]}}</td>
-          <td>{{result.times[2]}}</td>
-          <td>{{result.total}}</td>
-        </tr>
-      </tbody>
-    </table>
+<div class="row justify-content-center" id="container" >
+  <div class="col-8 align-self-center mt-4 " id="box">
+    <div *ngIf="endGameService.displayResult">
+      <h1>[ScoreS]</h1>
+      <table class="table">
+        <thead>
+          <th>Name</th>
+          <th>Lap 1</th>
+          <th>Lap 2</th>
+          <th>Lap 3</th>
+          <th>Total time</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let result of endGameService.gameResults">
+            <td>{{result.name}}</td>
+            <td>{{result.times[0]}}</td>
+            <td>{{result.times[1]}}</td>
+            <td>{{result.times[2]}}</td>
+            <td>{{result.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

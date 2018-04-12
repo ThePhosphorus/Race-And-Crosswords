@@ -1,13 +1,36 @@
 #container {
-    position: absolute;
-    text-align: center;
+    background-color: rgba(105, 105, 105, 0.9);
+    position: fixed;
     width: 100%;
+    height: 100%;
     z-index: 10;
+    top: 0;
+    left: 0;
+    margin:0;
 }
 
 #box {
-    width: 50rem;
-    height: 30rem;
-    background-color: green;
-    margin: 10rem auto;
+    background-color:#a6ff4d;
+    border: #212529 solid 2vmin;
+    border-radius:3%;
+    font-family: "Track Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    text-align: center;
+    color: rgb(99, 98, 98);
 }
+h1{
+    font-family: "Race Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    text-align: center;
+    color: whitesmoke;
+    padding: 2%;
+}
+
+@font-face {
+    font-family: "Track Font";
+    src: url("/assets/fonts/Geometos Rounded.ttf ") format("truetype")
+  }
+  @font-face {
+    font-family: "Race Font";
+    src: url("/assets/fonts/Railway to Hells.ttf") format("truetype");
+  }
+
+
