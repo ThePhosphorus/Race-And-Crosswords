@@ -45,6 +45,11 @@ export class EndGameService {
         this._displayResult = true;
     }
 
+    public closeResult(): void {
+        this._displayResult = false;
+        this._displayHighscore = true;
+    }
+
     private sumTimes(times: Array<number>): number {
         let time: number = 0;
         for (let i: number = 0; i < NB_LAPS; i++) {
@@ -69,5 +74,5 @@ export class EndGameService {
         const mins: number = time % MIN_TO_S;
 
         return ("0" + mins).slice(-2) + ":" + ("0" + secs).slice(-2) + "." + (ms + "00").substring(0, MS_DECIMALS);
-      }
+    }
 }
