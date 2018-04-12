@@ -8,7 +8,7 @@ import { EndGameService } from "../end-game-service/end-game.service";
   templateUrl: "./highscore.component.html",
   styleUrls: ["./highscore.component.css"]
 })
-
+//TODO : Highlight the current player
 export class HighscoreComponent implements OnInit {
   private _id: string;
 
