@@ -7,7 +7,7 @@ describe("Service Lexical", () => {
 
     describe("When the api is called", () => {
         it("should receive our request", (done: MochaDone) => {
-            assert.doesNotThrow(() => { datamuse.getWord("????", true).catch((err: Error) => {throw err; }); }, Error);
+            assert.doesNotThrow(() => { datamuse.getWord("????", true).catch((err: Error) => { throw err; }); }, Error);
             done();
         });
     });
@@ -74,24 +74,20 @@ describe("Service Lexical", () => {
             });
         });
 
-        it("should have definitions that don't containt the word itself", (done: MochaDone) => {
+        it("should have definitions that don't containt the word itself", async () => {
             const testString: string = "????";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+            const strResponse: string = await datamuse.getWord(testString, true);
+            const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
 
-                word.defs.forEach((definition: string) => {
-                    const defWords: string[] = definition.split(" ");
-                    defWords.forEach((defWord: string) => {
-                        assert.notStrictEqual(defWord, word.word,
-                                              "Definition \"" + definition + "\" contains the word \"" + word.word + "\"");
-                    });
+            word.defs.forEach((definition: string) => {
+                const defWords: string[] = definition.split(" ");
+                defWords.forEach((defWord: string) => {
+                    assert.notStrictEqual(defWord, word.word,
+                                          "Definition \"" + definition + "\" contains the word \"" + word.word + "\"");
                 });
-                assert.notEqual(word.defs.length, 0, "Received no definition for the word : " + word.word);
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
-                done();
             });
+            assert.notEqual(word.defs.length, 0, "Received no definition for the word : " + word.word);
+
         });
 
     });
