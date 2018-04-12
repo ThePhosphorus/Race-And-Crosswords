@@ -19,8 +19,9 @@
 #boxBody {
     background-color: rgba(0, 0, 0, 0.5);
     border: solid black;
-    margin-left: 1%;
+    margin-left: 5%;
     margin-right: 0%;
+    margin-bottom: 16%;
 }
 
 #speed {
