@@ -53,5 +53,9 @@ export const DELETE_KEY: number = 46;
 
 export const NB_LAPS: number = 3;
 
-// physics constants
+// Physics constants
 export const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
+
+// Timer constants
+export const S_TO_MS: number = 1000;
+export const MIN_TO_S: number = 60;

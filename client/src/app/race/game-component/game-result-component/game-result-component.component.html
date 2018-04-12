@@ -9,6 +9,15 @@
         <th>Lap 3</th>
         <th>Total time</th>
       </thead>
+      <tbody>
+        <tr *ngFor="let result of endGameService.gameResults">
+          <td>{{result.name}}</td>
+          <td>{{result.times[0]}}</td>
+          <td>{{result.times[1]}}</td>
+          <td>{{result.times[2]}}</td>
+          <td>{{result.total}}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>
