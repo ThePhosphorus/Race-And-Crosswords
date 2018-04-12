@@ -20,8 +20,8 @@ export class HighscoreComponent implements OnInit {
   public get highscores(): Array<Highscore> {
     return this._highscores;
   }
-  public get id(): string {
-    return this._id;
+  public get route(): string {
+    return /race/ + this._id;
   }
   public ngOnInit(): void {
     this._route.params.map((p) => p.id).subscribe((id: string) => {
@@ -29,8 +29,6 @@ export class HighscoreComponent implements OnInit {
       this._id = id;
     });
 
-  }
-  public replay(): void {
   }
   private loadHighscores(id: string): void {
     this._trackLoader.loadOne(id).subscribe((track: Track) => {

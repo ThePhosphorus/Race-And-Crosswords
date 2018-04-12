@@ -1,4 +1,4 @@
-<div *ngIf="true" class="row justify-content-center" id="container" >
+<div *ngIf="true" class="row justify-content-center" id="container">
   <div class="col-8 align-self-center mt-4 " id="box">
     <div>
       <h1>[HighscoreS]</h1>
@@ -9,7 +9,7 @@
           <th>Total time</th>
         </thead>
         <tbody>
-          <tr *ngFor="let highscore of highscores; let i = index" >
+          <tr *ngFor="let highscore of highscores; let i = index">
             <td>{{i + 1}}</td>
             <td>{{highscore.name}}</td>
             <td>{{highscore.time}}</td>
@@ -17,7 +17,11 @@
         </tbody>
       </table>
     </div>
-   <button type="button" (click)="replay()" class="btn btn-secondary m-2">REPLAY</button>
-    <a routerLink= "/race"><button type="button" class="btn btn-secondary m-2">NEXT</button></a>
+    <a href={{route}}>
+      <button type="button" class="btn btn-secondary m-2">REPLAY</button>
+    </a>
+    <a routerLink="/race">
+      <button type="button" class="btn btn-secondary m-2">NEXT</button>
+    </a>
   </div>
 </div>
