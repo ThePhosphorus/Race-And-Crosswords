@@ -3,6 +3,9 @@ import { Vector3, AudioListener } from "three";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
 import { TrackPosition } from "./track-position/track-position";
+import { PLAYER_NAMES } from "../../../global-constants/constants";
+
+const DEFAULT_NAME: string = "Player";
 
 export abstract class RacePlayer {
     private _track: TrackPosition;
@@ -10,11 +13,13 @@ export abstract class RacePlayer {
     private _lastTrackIndex: number;
     private _lapTimes: Array<number>;
     private _distanceOnTrack: number;
+    protected _name: string;
 
     public constructor(public car: Car) {
         this._track = null;
         this._distanceOnTrack = 0;
         this._lastTrackIndex = 0;
+        this._name = DEFAULT_NAME;
         this.initializeLap();
     }
 
@@ -34,11 +39,16 @@ export abstract class RacePlayer {
         return this._lapTimes;
     }
 
+    public get name(): string {
+        return this._name;
+    }
+
     public init(position: Vector3,
                 loader: LoaderService,
                 type: LoadedObject,
                 audioListener: AudioListener,
                 track: TrackPosition): void {
+        this._name = PLAYER_NAMES.get(type);
         this._track = track;
         this._lastTrackIndex = track != null ? this._track.length - 1 : 0;
         this.onInit(position, loader, type, audioListener);

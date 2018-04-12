@@ -1,0 +1,28 @@
+<div *ngIf="endGameService.displayResult" class="row justify-content-center" id="container" >
+  <div class="col-8 align-self-center mt-4 " id="box">
+    <div>
+      <h1>[ScoreS]</h1>
+      <table class="table table-striped ">
+        <thead>
+          <th>#</th>
+          <th>Name</th>
+          <th>Lap 1</th>
+          <th>Lap 2</th>
+          <th>Lap 3</th>
+          <th>Total time</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let result of endGameService.gameResults; let i = index"  [ngClass]="{'isPlayer': !result.isAi}" >
+            <td>{{i + 1}}</td>
+            <td>{{result.name}}</td>
+            <td>{{result.times[0]}}</td>
+            <td>{{result.times[1]}}</td>
+            <td>{{result.times[2]}}</td>
+            <td>{{result.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button type="button" (click)="endGameService.closeResult()" class="btn btn-secondary m-2">NEXT</button>
+  </div>
+</div>
