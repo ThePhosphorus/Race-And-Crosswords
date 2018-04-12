@@ -4,6 +4,8 @@ import { AiPlayer } from "../player/ai-player";
 import { GameResult } from "./game-result";
 import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../global-constants/constants";
 
+const MS_DECIMALS: number = 3;
+
 @Injectable()
 export class EndGameService {
 
@@ -60,6 +62,6 @@ export class EndGameService {
         time = (time - secs) / MIN_TO_S;
         const mins: number = time % MIN_TO_S;
 
-        return mins + ":" + secs + "." + ms;
+        return ("0" + mins).slice(-2) + ":" + ("0" + secs).slice(-2) + "." + (ms + "00").substring(0, MS_DECIMALS);
       }
 }
