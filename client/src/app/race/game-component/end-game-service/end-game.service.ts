@@ -14,7 +14,7 @@ export class EndGameService {
     public gameResults: Array<GameResult>;
 
     public constructor() {
-        this._displayResult = false;
+        this._displayResult =true;
         this._displayHighscore = false;
         this.gameResults = new Array<GameResult>();
     }
