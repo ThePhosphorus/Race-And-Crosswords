@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Highscore } from "../../../../../../common/race/highscore";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute} from "@angular/router";
 import { Track } from "../../../../../../common/race/track";
 
 @Component({
@@ -11,19 +11,30 @@ import { Track } from "../../../../../../common/race/track";
 })
 
 export class HighscoreComponent implements OnInit {
-  public highscores: Array<Highscore>;
+  private _highscores: Array<Highscore>;
+  private _id: string;
 
   public constructor(private _trackLoader: TrackLoaderService,
                      private _route: ActivatedRoute) {
   }
-
+  public get highscores(): Array<Highscore> {
+    return this._highscores;
+  }
+  public get id(): string {
+    return this._id;
+  }
   public ngOnInit(): void {
-    this._route.params.map((p) => p.id).subscribe((id: string) => this.loadHighscores(id));
+    this._route.params.map((p) => p.id).subscribe((id: string) => {
+      this.loadHighscores(id);
+      this._id = id;
+    });
 
+  }
+  public replay(): void {
   }
   private loadHighscores(id: string): void {
     this._trackLoader.loadOne(id).subscribe((track: Track) => {
-      this.highscores = track.highscores ? track.highscores : new Array<Highscore>();
+      this._highscores = track.highscores ? track.highscores : new Array<Highscore>();
     });
   }
 }
