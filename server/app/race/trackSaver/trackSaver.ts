@@ -3,6 +3,7 @@ import { injectable } from "inversify";
 import { WebService } from "../../webServices";
 import { Track } from "../../../../common/race/track";
 import { DbClient } from "../../mongo/DbClient";
+import { Highscore } from "../../../../common/race/highscore";
 import {
     Collection,
     InsertOneWriteOpResult,
@@ -64,6 +65,12 @@ export class TrackSaver extends WebService {
             const id: string = req.params.id;
             this.incrementPlayTrack(id).then((result: UpdateWriteOpResult) => res.send(result));
         });
+
+        this._router.put("/highscore/:id", (req: Request, res: Response, next: NextFunction) => {
+            const id: string = req.params.id;
+            const highScore: Highscore = req.body["highScore"];
+            this.updateHighScore(id, highScore).then((result: UpdateWriteOpResult) => res.send(result));
+        });
     }
 
     private postReq(): void {
@@ -117,5 +124,11 @@ export class TrackSaver extends WebService {
         this.connect();
 
         return this._collection.updateOne({ _id: new ObjectId(id) }, { $inc: { nbPlayed: 1 } });
+    }
+
+    private updateHighScore(id: string, highScore: Highscore): Promise<UpdateWriteOpResult> {
+        this.connect();
+
+        return this._collection.updateOne({_id : new ObjectId(id)}, { $set : { highscores : highScore }});
     }
 }
