@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { EndGameService } from "../end-game-service/end-game.service";
 
 @Component({
   selector: "app-game-result-component",
@@ -7,7 +8,7 @@ import { Component, OnInit } from "@angular/core";
 })
 export class GameResultComponentComponent implements OnInit {
 
-  public constructor() { }
+  public constructor(public endGameService: EndGameService) {}
 
   public ngOnInit(): void {}
 
