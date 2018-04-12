@@ -41,7 +41,6 @@ const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const N_AI_CONTROLLED_CARS: number = 3;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
-const MAX_SAVED_HIGHSCORES: number = 5;
 const COLORS: LoadedObject[] = [
     LoadedObject.carYellow,
     LoadedObject.carGreen,
@@ -123,10 +122,6 @@ export class GameManagerService extends Renderer {
     private stopGame(): void {
         this._isStarted = false;
         this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
-        if (this.isNewHighscore(0)) { // TODO: get real time
-            // TODO: enter highscore
-        }
-        // TODO: show highscores
         this._endGame.handleEndGame(this._player, this._aiControlledCars);
     }
 
@@ -226,20 +221,4 @@ export class GameManagerService extends Renderer {
         return place;
     }
 
-    private isNewHighscore(time: number): boolean {
-        if (this.getPlayerPlace() !== 1) {
-            return false;
-        }
-        if ( this._gameConfiguration.track.highscores == null ||
-            this._gameConfiguration.track.highscores.length <= MAX_SAVED_HIGHSCORES) {
-            return true;
-        }
-        for (const highscore of this._gameConfiguration.track.highscores) {
-            if ( time < highscore.time ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

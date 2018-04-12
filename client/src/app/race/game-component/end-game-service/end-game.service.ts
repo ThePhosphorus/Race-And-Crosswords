@@ -5,7 +5,7 @@ import { GameResult } from "./game-result";
 import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../global-constants/constants";
 
 const MS_DECIMALS: number = 3;
-
+// const MAX_SAVED_HIGHSCORES: number = 5;
 @Injectable()
 export class EndGameService {
 
@@ -47,7 +47,26 @@ export class EndGameService {
 
     public closeResult(): void {
         this._displayResult = false;
-        this._displayHighscore = true;
+        if (!this.gameResults[0].isAi && this.isNewHighscore(0)) { //TODO : add real time
+            // TODO: enter highscore
+        } else {
+            this._displayHighscore = true;
+        }
+    }
+
+    private isNewHighscore(time: number): boolean {
+        /*
+        if ( this._gameConfiguration.track.highscores == null ||
+            this._gameConfiguration.track.highscores.length <= MAX_SAVED_HIGHSCORES) {
+            return true;
+        }
+        for (const highscore of this._gameConfiguration.track.highscores) {
+            if ( time < highscore.time ) {
+                return true;
+            }
+        }
+        */
+        return false;
     }
 
     private sumTimes(times: Array<number>): number {
