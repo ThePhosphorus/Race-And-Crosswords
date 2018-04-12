@@ -3,6 +3,10 @@ import { UserPlayer } from "../player/user-player";
 import { AiPlayer } from "../player/ai-player";
 import { GameResult } from "./game-result";
 import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../global-constants/constants";
+import { Track } from "../../../../../../common/race/track";
+import { Highscore } from "../../../../../../common/race/highscore";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { ActivatedRoute } from "@angular/router";
 
 const MS_DECIMALS: number = 3;
 // const MAX_SAVED_HIGHSCORES: number = 5;
@@ -13,16 +17,24 @@ export class EndGameService {
     private _displayResult: boolean;
     private _displayHighscore: boolean;
     private _displayHighscoreAdder: boolean;
+    private _trackHighscores: Array<Highscore>;
     private _player: UserPlayer;
     public gameResults: Array<GameResult>;
 
-    public constructor() {
+    public constructor(private _route: ActivatedRoute,
+                       private _trackLoader: TrackLoaderService) {
         this._displayResult = false;
         this._displayHighscore = false;
         this._player = null;
         this.gameResults = new Array<GameResult>();
+        this._route.params.map((p) => p.id).subscribe((id: string) => {
+            this.loadHighscores(id);
+          });
     }
 
+    public get trackHighscores(): Array<Highscore> {
+        return this._trackHighscores;
+    }
     public get displayResult(): boolean {
         return this._displayResult;
     }
@@ -63,6 +75,11 @@ export class EndGameService {
         }
     }
 
+    private loadHighscores(id: string): void {
+        this._trackLoader.loadOne(id).subscribe((track: Track) => {
+            this._trackHighscores = track.highscores ? track.highscores : new Array<Highscore>();
+        });
+    }
     private isNewHighscore(time: number): boolean {
         /*
         if ( this._gameConfiguration.track.highscores == null ||
