@@ -36,6 +36,7 @@ export class EndGameService {
                                                                                  true,
                                                                                  this.msToTimes(ai.lapTimes),
                                                                                  this.msToTime(this.sumTimes(ai.lapTimes)))));
+        this.gameResults.sort((a, b) => a.total.localeCompare(b.total));
         this._displayResult = true;
     }
 
