@@ -6,7 +6,7 @@ import { WHITE_MATERIAL } from "../admin/track-editor.constants";
 import { TrackLoaderService } from "./track-loader.service";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
-const NB_SMOOTHING_VERTECIES: number = 20;
+const NB_SMOOTHING_VERTECIES: number = 5;
 
 export class TrackMeshGenerator {
     private _length: number;
@@ -51,8 +51,19 @@ export class TrackMeshGenerator {
         const perpPA: Vector3 = new Vector3(vecPA.z, vecPA.y, -vecPA.x).normalize()
             .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
 
-        return this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
-                                     pointA.clone().add(perpAB), pointB.clone().add(perpAB));
+        const innerPoint: Vector3 = this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
+                                                          pointA.clone().add(perpAB), pointB.clone().add(perpAB));
+
+        if (relativeOffset > 0) {
+            const inner: Vector3 = this.getCornerPoint(pointP, pointA, pointB, - relativeOffset);
+            const normal: Vector3 = inner.clone().sub(innerPoint);
+            const offset: number = normal.length() - DEFAULT_TRACK_WIDTH;
+
+            return innerPoint.add(normal.normalize().multiplyScalar(offset));
+
+        } else {
+            return innerPoint;
+        }
     }
 
     private findIntersection(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): Vector3 {
