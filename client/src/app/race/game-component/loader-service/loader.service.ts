@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
-import { DefaultLoadingManager, Object3D, AudioBuffer, Texture,
+import {
+    DefaultLoadingManager, Object3D, AudioBuffer, Texture,
     CubeTexture, ObjectLoader, AudioLoader, TextureLoader, CubeTextureLoader
 } from "three";
 import { LoadedObject, LoadedAudio, LoadedTexture, LoadedCubeTexture } from "./load-types.enum";
@@ -37,7 +38,7 @@ const OFF_ROAD_TEXTURE_FILE: string = TEXTURE_PATH + "orange.jpg";
 const SKYBOX_PATH: string = ASSETS + "skybox/";
 const NIGHT_SKYBOX_FOLDER: string = SKYBOX_PATH + "sky3/";
 const DAY_SKYBOX_FOLDER: string = SKYBOX_PATH + "sky1/";
-const SKYBOX_FILES: string[] = [ "posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png"];
+const SKYBOX_FILES: string[] = ["posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png"];
 
 const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
 
@@ -52,7 +53,7 @@ export class LoaderService {
     private _loadingMsg: BehaviorSubject<string>;
     // Audio is loaded differently, therfore it does notice the ending of the loading at the right time.
     // so we use this variable to keep track of audio loading
-    private _audioloaded: number ;
+    private _audioloaded: number;
     private _loadingDone: boolean;
     private _nbAudio: number;
 
@@ -99,6 +100,7 @@ export class LoaderService {
             return null;
         }
     }
+
     public getTexture(type: LoadedTexture): Texture {
         if (this._textures[type]) {
             const tex: Texture = this._textures[type].clone();
@@ -112,6 +114,7 @@ export class LoaderService {
         }
 
     }
+
     public getCubeTexture(type: LoadedCubeTexture): CubeTexture {
         if (this._cubeTextures[type]) {
             return this._cubeTextures[type];
@@ -150,7 +153,7 @@ export class LoaderService {
         for (const audioType of Object.keys(LoadedAudio)) {
             const type: number = Number(audioType);
             if (type) {
-                this._audios[type - 1 ] = null;
+                this._audios[type - 1] = null;
             }
         }
 
