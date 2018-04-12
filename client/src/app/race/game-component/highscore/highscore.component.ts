@@ -21,7 +21,7 @@ export class HighscoreComponent implements OnInit {
     return this._highscores;
   }
   public get route(): string {
-    return /race/ + this._id;
+    return "/race/" + this._id;
   }
   public ngOnInit(): void {
     this._route.params.map((p) => p.id).subscribe((id: string) => {
