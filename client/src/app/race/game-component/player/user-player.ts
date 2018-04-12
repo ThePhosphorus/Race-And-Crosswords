@@ -11,7 +11,7 @@ export class UserPlayer extends RacePlayer {
         super(new Car());
     }
 
-    public init(
+    public onInit(
         position: Vector3,
         loader: LoaderService,
         type: LoadedObject,
@@ -22,7 +22,7 @@ export class UserPlayer extends RacePlayer {
         this.initKeyBindings();
     }
 
-    public update(deltaTime: number): void {
+    public onUpdate(deltaTime: number): void {
         this.car.update(deltaTime);
     }
 

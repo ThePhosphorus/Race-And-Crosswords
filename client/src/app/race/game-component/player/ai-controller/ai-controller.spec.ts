@@ -1,11 +1,12 @@
-import { Car } from "../car/car";
+import { Car } from "../../car/car";
 import { AIController } from "./ai-controller";
 import { TestBed } from "@angular/core/testing";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
-import { Engine } from "../car/engine";
+import { CameraManagerService } from "../../../camera-manager-service/camera-manager.service";
+import { Engine } from "../../car/engine";
 import { Vector3 } from "three";
-import { LoaderService } from "../loader-service/loader.service";
-import { LoadedObject } from "../loader-service/load-types.enum";
+import { LoaderService } from "../../loader-service/loader.service";
+import { LoadedObject } from "../../loader-service/load-types.enum";
+import { TrackPosition } from "../track-position/track-position";
 
 /* tslint:disable: no-magic-numbers */
 const MS_BETWEEN_FRAMES: number = 15;
@@ -38,7 +39,7 @@ describe("AIController", () => {
 
         car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener);
         car.initCarLights(false);
-        ai.init(track);
+        ai.init(new TrackPosition(track));
     });
 
     it("should move by itself", () => {

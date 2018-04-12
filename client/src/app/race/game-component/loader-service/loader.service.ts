@@ -20,7 +20,7 @@ const ORANGE_CAR_FILE: string = CAR_FOLDER + "orange.json";
 
 const SOUND_PATH: string = ASSETS + "sounds/";
 const START_SOUND_FILE: string = SOUND_PATH + "starting.ogg";
-const MUSIC_SOUND_FILE: string = SOUND_PATH + "runnin.ogg";
+const MUSIC_SOUND_FILE: string = SOUND_PATH + "dejavu.ogg";
 const ENGINE_SOUND_FILE: string = SOUND_PATH + "engine/engine2.ogg";
 const DRIFT_SOUND_FILE: string = SOUND_PATH + "drift/drift1.ogg";
 const COLLISION_SOUNDS_PATH: string = SOUND_PATH + "crash/";

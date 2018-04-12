@@ -22,6 +22,7 @@ import {
     ZOOM_OUT_KEYCODE,
     TOGGLE_NIGHT_MODE_KEYCODE,
     TOGGLE_SUNLIGHT_KEYCODE,
+    NB_LAPS,
 } from "../../../global-constants/constants";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { GameConfiguration } from "../game-configuration/game-configuration";
@@ -32,6 +33,7 @@ import { AiPlayer } from "../player/ai-player";
 import { SpawnPoint, SpawnPointFinder } from "./spawn-point/spawn-point";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
+import { TrackPosition } from "../player/track-position/track-position";
 
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
@@ -43,17 +45,19 @@ export class CarInfos {
     public constructor(
         public speed: number,
         public gear: number,
-        public rpm: number
+        public rpm: number,
+        public positionInRace: number,
+        public lap: number
     ) { }
 }
 
-const COLORS: LoadedObject[] =  [
-LoadedObject.carYellow,
-LoadedObject.carGreen,
-LoadedObject.carRed,
-LoadedObject.carOrange,
-LoadedObject.carPurple,
-LoadedObject.carPink
+const COLORS: LoadedObject[] = [
+    LoadedObject.carYellow,
+    LoadedObject.carGreen,
+    LoadedObject.carRed,
+    LoadedObject.carOrange,
+    LoadedObject.carPurple,
+    LoadedObject.carPink
 ];
 
 @Injectable()
@@ -81,11 +85,17 @@ export class GameManagerService extends Renderer {
     public get playerInfos(): CarInfos {
         return new CarInfos(this._player.car.speed,
                             this._player.car.currentGear,
-                            this._player.car.rpm);
+                            this._player.car.rpm,
+                            this.getPlayerPlace(),
+                            this._player.lap);
     }
 
     public get soundManager(): SoundManagerService {
         return this._soundManager;
+    }
+
+    public get isStarted(): boolean {
+        return this._isStarted;
     }
 
     public subscribeToUpdate(callback: (deltaTime: number) => void): void {
@@ -108,6 +118,11 @@ export class GameManagerService extends Renderer {
         this._isStarted = true;
     }
 
+    private stopGame(): void {
+        this._isStarted = false;
+        this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
+    }
+
     protected update(deltaTime: number): void {
         this._updateSubscribers.forEach((callback: (deltaTime: number) => void) => callback(deltaTime));
 
@@ -115,6 +130,10 @@ export class GameManagerService extends Renderer {
             this._collisionDetector.detectCollisions(this.scene);
             this._player.update(deltaTime);
             this._aiControlledCars.forEach((aiCar) => aiCar.update(deltaTime));
+
+            if (this._player.lap > NB_LAPS) {
+                this.stopGame();
+            }
         }
 
         this.cameraTargetDirection = this._player.car.direction;
@@ -133,14 +152,15 @@ export class GameManagerService extends Renderer {
         const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
         const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
+        const trackPosition: TrackPosition = this._gameConfiguration.track != null ? new TrackPosition(track) : null;
 
-        this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener);
+        this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener, trackPosition);
         this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
         for (let i: number = 0; i < N_AI_CONTROLLED_CARS; i++) {
-            this._aiControlledCars.push(new AiPlayer(this.cameraManager, track));
+            this._aiControlledCars.push(new AiPlayer(this.cameraManager));
             this._aiControlledCars[i].init(spawnPoints[i + 1].position, this._loader, COLORS[(i + 1) % COLORS.length],
-                                           this.cameraManager.audioListener);
+                                           this.cameraManager.audioListener, trackPosition);
             this._aiControlledCars[i].car.mesh.lookAt(spawnPoints[i + 1].direction);
         }
     }
@@ -186,5 +206,15 @@ export class GameManagerService extends Renderer {
         plane.receiveShadow = true;
 
         return plane;
+    }
+
+    private getPlayerPlace(): number {
+        const positions: Array<number> = this._aiControlledCars.map((aiPlayer) => aiPlayer.distanceOnTrack);
+        const position: number = this._player.distanceOnTrack;
+
+        let place: number = 1;
+        positions.forEach((p: number) => place += p > position ? 1 : 0);
+
+        return place;
     }
 }
