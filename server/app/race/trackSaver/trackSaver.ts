@@ -13,6 +13,7 @@ import {
 } from "mongodb";
 
 const TRACK_COLLECTION: string = "tracks";
+const MAX_NUMBER_OF_HIGHSCORES: number = 5;
 
 @injectable()
 export class TrackSaver extends WebService {
@@ -68,7 +69,7 @@ export class TrackSaver extends WebService {
 
         this._router.put("/highscore/:id", (req: Request, res: Response, next: NextFunction) => {
             const id: string = req.params.id;
-            const highScore: Highscore = req.body["highScore"];
+            const highScore: Highscore = req.body["highscore"];
             this.updateHighScore(id, highScore).then((result: UpdateWriteOpResult) => res.send(result));
         });
     }
@@ -131,11 +132,15 @@ export class TrackSaver extends WebService {
 
         const track: Track = await this.getTrack(id);
 
-        if (track != null ) {
-
+        if (track != null && highScore != null) {
+            if (track.highscores == null) {
+                track.highscores = new Array<Highscore>();
+            }
             track.highscores.push(highScore);
             track.highscores.sort((a: Highscore, b: Highscore) => a.time - b.time );
-            track.highscores.pop();
+            if (track.highscores.length > MAX_NUMBER_OF_HIGHSCORES ) {
+                track.highscores.pop();
+            }
         }
 
         return this._collection.updateOne({_id : new ObjectId(id)}, { $set : { highscores : track.highscores }});
