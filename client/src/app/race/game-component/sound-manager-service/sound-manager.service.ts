@@ -36,6 +36,9 @@ export class SoundManagerService {
     }
 
     public stopAllSounds(): void {
+        this._music.stop();
+        this._startSound.stop();
+        this._audioListener.setMasterVolume(0);
     }
 
 }

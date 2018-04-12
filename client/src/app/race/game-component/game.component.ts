@@ -83,6 +83,12 @@ export class GameComponent implements OnDestroy, AfterViewInit {
 
     public ngOnDestroy(): void {
         this._soundManager.stopAllSounds();
+        this._loader.clearArrays();
+        this._gameManagerService.unload();
+        this._gameManagerService = null;
+        this._soundManager = null;
+        this._trackLoader = null;
+        this._loader = null;
     }
 
     private loadTrack(id: string): void {

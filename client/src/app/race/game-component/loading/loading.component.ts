@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, AfterViewInit, ElementRef, HostListener, SimpleChanges, OnChanges } from "@angular/core";
+import { Component, Input, ViewChild, AfterViewInit, ElementRef, HostListener, SimpleChanges, OnChanges, OnDestroy } from "@angular/core";
 import { Track } from "../../../../../../common/race/track";
 import { LoaderService } from "../loader-service/loader.service";
 import { TrackPreviewService } from "../../track-preview/track-preview.service";
@@ -13,7 +13,7 @@ const DEFAULT_LOADING_MESSAGE: string = "Preparing the loading";
     styleUrls: ["./loading.component.css"],
     providers: [TrackPreviewService, CameraManagerService]
 })
-export class LoadingComponent implements AfterViewInit, OnChanges {
+export class LoadingComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() public track: Track;
 
     public loadingMessage: string;
@@ -50,5 +50,10 @@ export class LoadingComponent implements AfterViewInit, OnChanges {
                 this._trackPreview.onResize();
             }
         }
+    }
+
+    public ngOnDestroy(): void {
+        this._trackPreview.unload();
+        this._trackPreview = null;
     }
 }
