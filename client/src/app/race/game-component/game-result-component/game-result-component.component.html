@@ -1,6 +1,6 @@
-<div class="row justify-content-center" id="container" >
+<div *ngIf="endGameService.displayResult" class="row justify-content-center" id="container" >
   <div class="col-8 align-self-center mt-4 " id="box">
-    <div *ngIf="endGameService.displayResult">
+    <div>
       <h1>[ScoreS]</h1>
       <table class="table table-striped ">
         <thead>
