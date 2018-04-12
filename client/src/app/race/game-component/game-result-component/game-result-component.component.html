@@ -11,7 +11,8 @@
           <th>Total time</th>
         </thead>
         <tbody>
-          <tr *ngFor="let result of endGameService.gameResults"  [ngClass]="{'isPlayer': !endGameService.gameResults.isAi()}" >
+          <tr *ngFor="let result of endGameService.gameResults; let i = index"  [ngClass]="{'isPlayer': !result.isAi}" >
+            <td>i</td>
             <td>{{result.name}}</td>
             <td>{{result.times[0]}}</td>
             <td>{{result.times[1]}}</td>
