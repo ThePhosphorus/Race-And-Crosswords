@@ -62,10 +62,10 @@ export const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
 export const S_TO_MS: number = 1000;
 export const MIN_TO_S: number = 60;
 
-export const PLAYER_NAMES: Map<LoadedObject, string> = new Map<LoadedObject, string>([[LoadedObject.carBlue, "Jarvis"],
-                                                                                      [LoadedObject.carGreen, "Skynet"],
-                                                                                      [LoadedObject.carOrange, "GLaDOS"],
-                                                                                      [LoadedObject.carPink, "Cortana"],
-                                                                                      [LoadedObject.carPurple, "K-2SO"],
-                                                                                      [LoadedObject.carRed, "HAL9000"],
-                                                                                      [LoadedObject.carYellow, "Viki"]]);
+export const PLAYER_NAMES: Map<LoadedObject, string> = new Map<LoadedObject, string>([[LoadedObject.carBlue, "Jarvis (Blue)"],
+                                                                                      [LoadedObject.carGreen, "Skynet (Green)"],
+                                                                                      [LoadedObject.carOrange, "GLaDOS (Orange)"],
+                                                                                      [LoadedObject.carPink, "Cortana (Pink)"],
+                                                                                      [LoadedObject.carPurple, "K-2SO (Purple)"],
+                                                                                      [LoadedObject.carRed, "HAL9000 (Red)"],
+                                                                                      [LoadedObject.carYellow, "Viki (Yellow)"]]);
