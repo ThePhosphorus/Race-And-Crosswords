@@ -29,6 +29,8 @@ export class EndGameService {
     }
 
     public handleEndGame(userPlayer: UserPlayer, aiPlayers: Array<AiPlayer>): void {
+        this._gameResults.push(new GameResult(userPlayer.name, false, userPlayer.lapTimes));
+        aiPlayers.forEach((ai: AiPlayer) => this._gameResults.push(new GameResult(ai.name, true, ai.lapTimes)));
         this._displayResult = true;
     }
 }
