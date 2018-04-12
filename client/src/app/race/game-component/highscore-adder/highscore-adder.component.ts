@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Highscore } from "../../../../../../common/race/highscore";
-import { Track } from "../../../../../../common/race/track";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { ActivatedRoute } from "@angular/router";
 
-const MAX_SAVED_HIGHSCORES: number = 5;
 @Component({
   selector: "app-highscore-adder",
   templateUrl: "./highscore-adder.component.html",
@@ -10,22 +10,19 @@ const MAX_SAVED_HIGHSCORES: number = 5;
 })
 
 export class HighscoreAdderComponent implements OnInit {
-  private time: number;
-  private track: Track;
-  public constructor() { }
+  private _time: number;
+  private _id: string;
+  public constructor(private _trackLoader: TrackLoaderService,
+                     private _route: ActivatedRoute) { }
 
   public ngOnInit(): void {
+    this._route.params.map((p) => p.id).subscribe((id: string) => {
+      this._id = id;
+    });
   }
   public addHighscore(name: string): void {
 
-    if (this.track.highscores == null) {
-      this.track.highscores = new Array<Highscore>();
-    }
-    this.track.highscores.push(new Highscore(name, this.time));
-    this.track.highscores.sort((a: Highscore, b: Highscore) => a.time - b.time);
-    if ( this.track.highscores.length <= MAX_SAVED_HIGHSCORES) {
-      this.track.highscores.pop();
-    }
+    this._trackLoader.updateHighScore(this._id, new Highscore(name, this._time));
     // TODO: close page
   }
 
