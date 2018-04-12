@@ -8,6 +8,7 @@ import { LightManagerService } from "../light-manager/light-manager.service";
 import { LoaderService } from "../loader-service/loader.service";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { NB_LAPS } from "../../../global-constants/constants";
+import { EndGameService } from "../end-game-service/end-game.service";
 
 // tslint:disable:no-magic-numbers
 describe("GameManager", () => {
@@ -19,7 +20,8 @@ describe("GameManager", () => {
                         SoundManagerService,
                         CollisionDetectorService,
                         LightManagerService,
-                        LoaderService]
+                        LoaderService,
+                        EndGameService]
         });
     });
 
