@@ -9,7 +9,7 @@ import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { ActivatedRoute } from "@angular/router";
 
 const MS_DECIMALS: number = 3;
-// const MAX_SAVED_HIGHSCORES: number = 5;
+const MAX_SAVED_HIGHSCORES: number = 5;
 
 @Injectable()
 export class EndGameService {
@@ -81,17 +81,16 @@ export class EndGameService {
         });
     }
     private isNewHighscore(time: number): boolean {
-        /*
-        if ( this._gameConfiguration.track.highscores == null ||
-            this._gameConfiguration.track.highscores.length <= MAX_SAVED_HIGHSCORES) {
+        if ( this.trackHighscores == null ||
+            this.trackHighscores.length <= MAX_SAVED_HIGHSCORES) {
             return true;
         }
-        for (const highscore of this._gameConfiguration.track.highscores) {
+        for (const highscore of this.trackHighscores) {
             if ( time < highscore.time ) {
                 return true;
             }
         }
-        */
+
         return false;
     }
 
