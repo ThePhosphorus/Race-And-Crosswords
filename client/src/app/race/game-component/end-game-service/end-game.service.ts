@@ -12,6 +12,7 @@ export class EndGameService {
 
     private _displayResult: boolean;
     private _displayHighscore: boolean;
+    private _displayHighscoreAdder: boolean;
     private _player: UserPlayer;
     public gameResults: Array<GameResult>;
 
@@ -28,6 +29,10 @@ export class EndGameService {
 
     public get displayHighscore(): boolean {
         return this._displayHighscore;
+    }
+
+    public get displayHighscoreAdder(): boolean {
+        return this._displayHighscoreAdder;
     }
 
     public handleEndGame(userPlayer: UserPlayer, aiPlayers: Array<AiPlayer>): void {
@@ -52,7 +57,7 @@ export class EndGameService {
     public closeResult(): void {
         this._displayResult = false;
         if (!this.gameResults[0].isAi && this.isNewHighscore(this.sumTimes(this._player.lapTimes))) {
-            // TODO: enter highscore
+            this._displayHighscoreAdder = true;
         } else {
             this._displayHighscore = true;
         }
