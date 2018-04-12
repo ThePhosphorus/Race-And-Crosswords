@@ -3,6 +3,7 @@
     <div #container id="container" *ngIf="!isLoading">
       <app-hud></app-hud>
       <app-start-display></app-start-display>
+      <app-highcore-adder></app-highcore-adder>
     </div>
     <app-loading *ngIf="isLoading" [track]="track" ></app-loading>
   </div>

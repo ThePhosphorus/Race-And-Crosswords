@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { Highscore } from "../../../../../common/race/highscore";
-import { Track } from "../../../../../common/race/track";
+import { Highscore } from "../../../../../../common/race/highscore";
+import { Track } from "../../../../../../common/race/track";
 
 @Component({
   selector: "app-highscore-adder",

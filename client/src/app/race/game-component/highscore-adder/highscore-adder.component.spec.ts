@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { HighscoreAdderComponent } from './highscore-adder.component';
+import { HighscoreAdderComponent } from "./highscore-adder.component";
 
-describe('HighscoreAdderComponent', () => {
+describe("HighscoreAdderComponent", () => {
   let component: HighscoreAdderComponent;
   let fixture: ComponentFixture<HighscoreAdderComponent>;
 
@@ -19,7 +19,7 @@ describe('HighscoreAdderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

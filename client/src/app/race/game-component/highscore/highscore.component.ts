@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Highscore } from "../../../../../common/race/highscore";
+import { Highscore } from "../../../../../../common/race/highscore";
 
 @Component({
   selector: "app-highscore",
