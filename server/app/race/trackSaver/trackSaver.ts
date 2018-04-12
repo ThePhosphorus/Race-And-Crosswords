@@ -126,9 +126,18 @@ export class TrackSaver extends WebService {
         return this._collection.updateOne({ _id: new ObjectId(id) }, { $inc: { nbPlayed: 1 } });
     }
 
-    private updateHighScore(id: string, highScore: Highscore): Promise<UpdateWriteOpResult> {
+    private async updateHighScore(id: string, highScore: Highscore): Promise<UpdateWriteOpResult> {
         this.connect();
 
-        return this._collection.updateOne({_id : new ObjectId(id)}, { $set : { highscores : highScore }});
+        const track: Track = await this.getTrack(id);
+
+        if (track != null ) {
+
+            track.highscores.push(highScore);
+            track.highscores.sort((a: Highscore, b: Highscore) => a.time - b.time );
+            track.highscores.pop();
+        }
+
+        return this._collection.updateOne({_id : new ObjectId(id)}, { $set : { highscores : track.highscores }});
     }
 }
