@@ -80,8 +80,12 @@
     background-color: #61b446;
 }
 
+
 #noRace{
     background-color:	 #d9eac8;
+}
+#noRace:hover{
+    background-color:	 #adce8c;
 }
 
 h1{
