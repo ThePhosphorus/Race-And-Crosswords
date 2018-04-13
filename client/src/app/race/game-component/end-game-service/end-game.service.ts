@@ -74,8 +74,13 @@ export class EndGameService {
             this._displayHighscore = true;
         }
     }
+    public closeHighscoreAdder(): void {
+        this._displayHighscoreAdder = false;
+        this._displayHighscore = true;
+    }
     public addHighscore(name: string): void {
         this._trackLoader.updateHighScore(this._track._id, new Highscore(name, this.sumTimes(this._player.lapTimes)));
+        this.loadTrack(this._track._id);
     }
     private loadTrack(id: string): void {
         this._trackLoader.loadOne(id).subscribe((track: Track) => {
