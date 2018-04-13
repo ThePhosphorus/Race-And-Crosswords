@@ -122,7 +122,7 @@ export class GameManagerService extends Renderer {
     private stopGame(): void {
         this._isStarted = false;
         this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
-        this._endGame.handleEndGame(this._player, this._aiControlledCars);
+        this._endGame.handleEndGame(this._player, this._aiControlledCars, this._gameConfiguration.track);
     }
 
     protected update(deltaTime: number): void {

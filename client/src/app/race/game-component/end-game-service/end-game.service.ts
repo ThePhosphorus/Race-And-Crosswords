@@ -21,15 +21,11 @@ export class EndGameService {
     private _player: UserPlayer;
     public gameResults: Array<GameResult>;
 
-    public constructor(private _route: ActivatedRoute,
-                       private _trackLoader: TrackLoaderService) {
+    public constructor(private _trackLoader: TrackLoaderService) {
         this._displayResult = false;
         this._displayHighscore = false;
         this._player = null;
         this.gameResults = new Array<GameResult>();
-        this._route.params.map((p) => p.id).subscribe((id: string) => {
-            this.loadTrack(id);
-          });
     }
 
     public get trackHighscores(): Array<Highscore> {
@@ -47,7 +43,7 @@ export class EndGameService {
         return this._displayHighscoreAdder;
     }
 
-    public handleEndGame(userPlayer: UserPlayer, aiPlayers: Array<AiPlayer>): void {
+    public handleEndGame(userPlayer: UserPlayer, aiPlayers: Array<AiPlayer>, track: Track): void {
         if (userPlayer != null) {
             this._player = userPlayer;
             this.gameResults.push(new GameResult(userPlayer.name,
@@ -64,6 +60,7 @@ export class EndGameService {
 
         this.gameResults.sort((a, b) => a.total.localeCompare(b.total));
         this._displayResult = true;
+        this._track = track;
     }
 
     public closeResult(): void {
