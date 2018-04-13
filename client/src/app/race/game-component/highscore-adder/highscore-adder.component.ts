@@ -1,7 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Highscore } from "../../../../../../common/race/highscore";
-import { TrackLoaderService } from "../../track-loader/track-loader.service";
-import { ActivatedRoute } from "@angular/router";
+import { EndGameService } from "../end-game-service/end-game.service";
 
 @Component({
   selector: "app-highscore-adder",
@@ -10,20 +8,12 @@ import { ActivatedRoute } from "@angular/router";
 })
 
 export class HighscoreAdderComponent implements OnInit {
-  private _time: number;
-  private _id: string;
-  public constructor(private _trackLoader: TrackLoaderService,
-                     private _route: ActivatedRoute) { }
+
+  public constructor(private _endGameService: EndGameService) { }
 
   public ngOnInit(): void {
-    this._route.params.map((p) => p.id).subscribe((id: string) => {
-      this._id = id;
-    });
   }
-  public addHighscore(name: string): void {
-
-    this._trackLoader.updateHighScore(this._id, new Highscore(name, this._time));
-    // TODO: close page
+  public get showHighscoreAdder(): boolean {
+    return this._endGameService.displayHighscoreAdder;
   }
-
 }

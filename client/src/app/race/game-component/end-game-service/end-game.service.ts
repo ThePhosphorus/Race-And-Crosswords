@@ -17,7 +17,7 @@ export class EndGameService {
     private _displayResult: boolean;
     private _displayHighscore: boolean;
     private _displayHighscoreAdder: boolean;
-    private _trackHighscores: Array<Highscore>;
+    private _track: Track;
     private _player: UserPlayer;
     public gameResults: Array<GameResult>;
 
@@ -28,12 +28,12 @@ export class EndGameService {
         this._player = null;
         this.gameResults = new Array<GameResult>();
         this._route.params.map((p) => p.id).subscribe((id: string) => {
-            this.loadHighscores(id);
+            this.loadTrack(id);
           });
     }
 
     public get trackHighscores(): Array<Highscore> {
-        return this._trackHighscores;
+        return this._track.highscores;
     }
     public get displayResult(): boolean {
         return this._displayResult;
@@ -74,10 +74,12 @@ export class EndGameService {
             this._displayHighscore = true;
         }
     }
-
-    private loadHighscores(id: string): void {
+    public addHighscore(name: string): void {
+        this._trackLoader.updateHighScore(this._track._id, new Highscore(name, this.sumTimes(this._player.lapTimes)));
+    }
+    private loadTrack(id: string): void {
         this._trackLoader.loadOne(id).subscribe((track: Track) => {
-            this._trackHighscores = track.highscores ? track.highscores : new Array<Highscore>();
+            this._track = track;
         });
     }
     private isNewHighscore(time: number): boolean {
