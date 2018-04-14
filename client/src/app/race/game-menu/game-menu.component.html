@@ -29,8 +29,8 @@
         <div class="card-header text-center">
           <h5>Highscores</h5>
         </div>
-        <ul *ngIf="openTrack && openedTrack.highscores" class="list-group list-group-flush">
-          <li *ngFor="let score of openedTrack.highscores" class="list-group-item">{{score.username}}: &nbsp; {{score.time}}</li>
+        <ul *ngIf="hasDetailsOpen && openedTrack.highscores" class="list-group list-group-flush">
+          <li *ngFor="let score of openedTrack.highscores" class="list-group-item">{{score.name}}: &nbsp; {{score.time}}</li>
         </ul>
       </div>
       <div class="card">
