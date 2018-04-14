@@ -1,8 +1,10 @@
 import { CameraManagerService, TargetInfos } from "../camera-manager-service/camera-manager.service";
-import { WebGLRenderer, Scene, Vector2, Vector3, PCFShadowMap } from "three";
+import { WebGLRenderer, Scene, Vector2, Vector3, PCFShadowMap, Geometry, Material, Texture } from "three";
 import Stats = require("stats.js");
-import {HALF, DOUBLE} from "../../global-constants/constants";
+import { HALF, DOUBLE } from "../../global-constants/constants";
 import { CAMERA_STARTING_DIRECTION, CAMERA_STARTING_POSITION, LINE_Y_POSITION } from "../admin/track-editor.constants";
+
+const MAX_DELTA_TIME: number = 100; // 10 FPS
 
 export abstract class Renderer {
     private _container: HTMLDivElement;
@@ -10,11 +12,13 @@ export abstract class Renderer {
     private _lastDate: number;
     private _stats: Stats;
     private _cameraManager: CameraManagerService;
+    private _isActive: boolean;
     protected _scene: Scene;
     protected cameraTargetPosition: Vector3;
     protected cameraTargetDirection: Vector3;
 
-    public constructor( cameraManager: CameraManagerService, private statsEnabled: boolean) {
+    public constructor(cameraManager: CameraManagerService, private statsEnabled: boolean) {
+        this._isActive = true;
         this._cameraManager = cameraManager;
     }
 
@@ -25,12 +29,12 @@ export abstract class Renderer {
 
         this.initStats();
         this.createScene();
-        this._cameraManager.updateTargetInfos( new TargetInfos(
+        this._cameraManager.updateTargetInfos(new TargetInfos(
             this.cameraTargetPosition,
             this.cameraTargetDirection
         ));
         this.onInit();
-     }
+    }
 
     public onResize(): void {
         this._cameraManager.onResize(this.getAspectRatio());
@@ -38,11 +42,11 @@ export abstract class Renderer {
             this.container.clientWidth,
             this.container.clientHeight
         );
-     }
+    }
 
     public startRenderingLoop(): void {
         this._webGlRenderer = new WebGLRenderer();
-        this._webGlRenderer.shadowMapEnabled = true;
+        this._webGlRenderer.shadowMap.enabled = true;
         this._webGlRenderer.shadowMap.type = PCFShadowMap;
         this.renderer.setPixelRatio(devicePixelRatio);
         this.renderer.setSize(
@@ -53,27 +57,42 @@ export abstract class Renderer {
         this._lastDate = Date.now();
         this.container.appendChild(this.renderer.domElement);
         this.render();
-     }
+    }
+
+    public unload(): void {
+        this._isActive = false;
+        this._scene.traverse((obj) => {
+            if ((obj instanceof Geometry) || (obj instanceof Material) || (obj instanceof Texture)) {
+                obj.dispose();
+            }
+        });
+
+        for (let i: number = this._scene.children.length - 1; i >= 0; i--) {
+            this._scene.remove(this._scene.children[i]);
+        }
+        this._scene = null;
+        this._cameraManager = null;
+    }
 
     // for child classes to use: this function is called at each frame
-    protected update(timesinceLastFrame: number): void {}
+    protected update(timesinceLastFrame: number): void { }
     // for child classes to use : this function is called before the rendering loop but after the scene creation
-    protected onInit(): void {}
+    protected onInit(): void { }
     protected get renderer(): WebGLRenderer {
         return this._webGlRenderer;
-     }
+    }
 
     protected get scene(): Scene {
         return this._scene;
-     }
+    }
 
     protected get container(): HTMLDivElement {
         return this._container;
-     }
+    }
 
     protected getAspectRatio(): number {
         return this.container.clientWidth / this.container.clientHeight;
-     }
+    }
 
     private initStats(): void {
         if (this.statsEnabled) {
@@ -81,32 +100,35 @@ export abstract class Renderer {
             this._stats.dom.style.position = "absolute";
             this.container.appendChild(this._stats.dom);
         }
-     }
+    }
 
     private createScene(): void {
         this._scene = new Scene();
         this._cameraManager.onResize(this.getAspectRatio());
-     }
+    }
 
     private render(): void {
-        requestAnimationFrame(() => this.render());
-        this.rendererUpdate();
-        this.renderer.render(this.scene, this._cameraManager.camera);
-        if (this.statsEnabled) {
-            this._stats.update();
+        if (this._isActive) {
+            requestAnimationFrame(() => this.render());
+            this.rendererUpdate();
+            this.renderer.render(this.scene, this._cameraManager.camera);
+            if (this.statsEnabled) {
+                this._stats.update();
+            }
         }
-     }
+    }
 
     private rendererUpdate(): void {
-        const timeSinceLastFrame: number = Date.now() - this._lastDate;
+        const timeSinceLastFrame: number = Math.min(Date.now() - this._lastDate, MAX_DELTA_TIME);
+
         this.update(timeSinceLastFrame);
-        this._cameraManager.updateTargetInfos( new TargetInfos(
-            this.cameraTargetPosition,
-            this.cameraTargetDirection
+        this._cameraManager.updateTargetInfos(new TargetInfos(
+            this.cameraTargetPosition.clone(),
+            this.cameraTargetDirection.clone()
         ));
         this._cameraManager.update(timeSinceLastFrame);
         this._lastDate = Date.now();
-     }
+    }
 
     public getRelativePosition(pos: Vector2): Vector3 {
         const distanceToCenter: Vector3 = this.getDistanceCenterScreen(pos);
@@ -114,7 +136,7 @@ export abstract class Renderer {
         distanceToCenter.setZ(distanceToCenter.z + this.cameraTargetPosition.z);
 
         return distanceToCenter;
-     }
+    }
 
     public getDistanceCenterScreen(pos: Vector2): Vector3 {
         const htmlElem: HTMLCanvasElement = this.renderer.domElement;
@@ -133,7 +155,7 @@ export abstract class Renderer {
             LINE_Y_POSITION,
             clientClickPos.y * cameraClientRatio.y
         );
-     }
+    }
 
     public getClientPosition(pos: Vector3): Vector2 {
         const htmlElem: HTMLCanvasElement = this.renderer.domElement;
@@ -144,13 +166,17 @@ export abstract class Renderer {
         );
 
         const clientClickPos: Vector2 = new Vector2(
-            (pos.x - this.cameraTargetPosition.x ) /  cameraClientRatio.x,
-            (pos.z - this.cameraTargetPosition.z ) / cameraClientRatio.y
+            (pos.x - this.cameraTargetPosition.x) / cameraClientRatio.x,
+            (pos.z - this.cameraTargetPosition.z) / cameraClientRatio.y
         );
 
         return new Vector2(
             clientClickPos.x + HALF * htmlElem.clientWidth,
             clientClickPos.y + HALF * htmlElem.clientHeight
         );
-     }
+    }
+
+    protected get cameraManager(): CameraManagerService {
+        return this._cameraManager;
+    }
 }

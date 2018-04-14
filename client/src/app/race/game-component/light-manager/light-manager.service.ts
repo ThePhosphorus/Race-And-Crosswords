@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Scene, AmbientLight, DirectionalLight, CubeTextureLoader, Vector3 } from "three";
+import { Scene, AmbientLight, DirectionalLight, Vector3 } from "three";
 import { Car } from "../car/car";
+import { LoaderService } from "../loader-service/loader.service";
 import {
     HALF,
     WHITE,
@@ -10,10 +11,9 @@ import {
     QUARTER,
     SHADOWMAP_SIZE
 } from "../../../global-constants/constants";
+import { LoadedCubeTexture } from "../loader-service/load-types.enum";
 
 const DIRECTIONAL_LIGHT_OFFSET: number = 50;
-const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
-const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const SUNLIGHT_INTENSITY: number = 0.2;
 const D_LIGHT_PLANE_SIZE: number = 200;
 const SHADOW_BIAS: number = 0.0001;
@@ -28,7 +28,7 @@ export class LightManagerService {
     private _scene: Scene;
     private _player: Car;
     private _aiControlledCars: Array<Car>;
-    public constructor() {
+    public constructor(private loader: LoaderService) {
             this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
             this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
             this._isNightMode = false;
@@ -39,7 +39,7 @@ export class LightManagerService {
         this._player = player;
         this._aiControlledCars = aiControlledCars;
         this._scene.add(this._dayAmbientLight);
-        this.loadSkybox(BACKGROUND_PATH);
+        this.loadSkybox(LoadedCubeTexture.daySkyBox);
         this.loadSunlight();
     }
     public  updateSunlight(): void {
@@ -58,17 +58,8 @@ export class LightManagerService {
         }
     }
 
-    public loadSkybox(path: string): void {
-        this._scene.background = new CubeTextureLoader()
-            .setPath(path)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
+    public loadSkybox(type: LoadedCubeTexture): void {
+        this._scene.background = this.loader.getCubeTexture(type);
     }
     public toggleNightMode(): void {
 
@@ -79,7 +70,7 @@ export class LightManagerService {
         if (this._isNightMode) {
             this._scene.remove(this._nightAmbientLight);
             this._scene.add(this._dayAmbientLight);
-            this.loadSkybox(BACKGROUND_PATH);
+            this.loadSkybox(LoadedCubeTexture.daySkyBox);
             this._isNightMode = false;
             if (this._isShadowMode) {
                 this._scene.add(this._directionalLight);
@@ -87,7 +78,7 @@ export class LightManagerService {
         } else {
             this._scene.remove(this._dayAmbientLight);
             this._scene.add(this._nightAmbientLight);
-            this.loadSkybox(NIGHT_BACKGROUND_PATH);
+            this.loadSkybox(LoadedCubeTexture.nightSkyBox);
             this._isNightMode = true;
             if (this._isShadowMode) {
                 this._scene.remove(this._directionalLight);
@@ -106,7 +97,7 @@ export class LightManagerService {
         this._directionalLight.shadow.camera.far = D_LIGHT_PLANE_SIZE;
         this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
         this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
-        this._directionalLight.shadowBias = SHADOW_BIAS;
+        this._directionalLight.shadow.bias = SHADOW_BIAS;
     }
 
 }

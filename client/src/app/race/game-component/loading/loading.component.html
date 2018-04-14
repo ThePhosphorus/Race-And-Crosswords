@@ -1,0 +1,27 @@
+<div id="loading">
+    <div id="loadImg">
+        <div #preview id="preview"></div>
+    </div>
+    <div id="laodDetails" class="halfHeight">
+      <div class="row halfHeight" >
+        <div class="col-md-4">
+          <h1>
+            {{ track.name }}
+          </h1>
+        </div>
+      </div>
+      <div class="row halfHeight">
+        <div id="description" class="col-md-4">
+          <p>
+            {{ track.description }}
+          </p>
+        </div>
+        <div class="col-md-4 text-center">
+          <span>{{ loadingMessage }}</span>
+          <div id="loadingBarHolder">
+            <div id="loadingBar" [ngStyle]="{'width.%': loadingStatus * 100}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

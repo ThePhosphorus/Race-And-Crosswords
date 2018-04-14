@@ -9,6 +9,8 @@ import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { DefinitionTileComponent } from "../definition-tile/definition-tile.component";
 
+// tslint:disable:no-magic-numbers
+
 describe("DefinitionComponent", () => {
     let component: DefinitionComponent;
     let fixture: ComponentFixture<DefinitionComponent>;

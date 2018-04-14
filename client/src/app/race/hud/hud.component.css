@@ -1,52 +1,65 @@
-.hudBody{
+.hudBody {
     background-color: transparent;
     z-index: 10;
-    position: absolute;
+    position: fixed;
     font-family: "HUD Font", 'Times New Roman', Times, serif;
     line-height: 1;
+    user-select: none;
+    padding: 0%;
+    margin: 0%;
+    width: 97%;
+    height: 90%;
 }
-#timerStart{
-    font-family: "Timer Font",'Times New Roman', Times, serif;
+
+#timerStart {
+    font-family: "Timer Font", 'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 300%;
     color: whitesmoke;
     text-shadow: 0px 0px 1vmin black;
 }
-#timerLap{
-    font-family: "Timer Font",'Times New Roman', Times, serif;
+
+#timerLap {
+    font-family: "Timer Font", 'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 200%;
     color: crimson;
     text-shadow: 0px 0px 1vmin black;
 }
-#timers{
+
+#timers {
     padding-top: 1%;
     padding-left: 8%;
+    padding-right: 0%;
 }
-#cent{
-    font-family: "Timer Font",'Times New Roman', Times, serif;
+
+#cent {
+    font-family: "Timer Font", 'Times New Roman', Times, serif;
     margin: 0%;
     font-size: 75%;
 }
-#chron{
+
+#chron {
     white-space: nowrap;
 }
-#lap{
-    font-family: "HUD Font",'Times New Roman', Times, serif;
+
+#lap {
+    font-family: "HUD Font", 'Times New Roman', Times, serif;
     font-size: 50%;
 }
-#currentLap{
+
+#currentLap {
     font-size: 400%;
     color: whitesmoke;
     text-shadow: 0px 0px 1vmin black;
 }
 
-
 @font-face {
     font-family: "Timer Font";
     src: url("/assets/fonts/DS-DIGIB.TTF") format("truetype")
-  }
-  @font-face {
+}
+
+@font-face {
     font-family: "HUD Font";
     src: url("/assets/fonts/Slope Opera.otf") format("opentype")
-  }
+}

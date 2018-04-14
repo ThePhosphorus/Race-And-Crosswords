@@ -28,7 +28,7 @@ export class Engine {
     }
 
     public constructor(
-        gearRatios: number[] = DEFAULT_GEAR_RATIOS,
+        gearRatios: Array<number> = DEFAULT_GEAR_RATIOS,
         driveRatio: number = DEFAULT_DRIVE_RATIO,
         downshiftRPM: number = DEFAULT_DOWNSHIFT_RPM,
         minimumRpm: number = DEFAULT_MINIMUM_RPM,
@@ -53,7 +53,6 @@ export class Engine {
             transmissionEfficiency = DEFAULT_TRANSMISSION_EFFICIENCY;
         }
 
-        // TODO: check all interactions with RPM values, such as downshift vs minimumrpm, upshift maximum, etc.
         this._gearRatios = gearRatios;
         this._driveRatio = driveRatio;
         this._downshiftRPM = downshiftRPM;
@@ -94,7 +93,6 @@ export class Engine {
         }
 
         const wheelAngularVelocity: number = speed / wheelRadius;
-        // tslint:disable-next-line: no-magic-numbers
         let rpm: number = (wheelAngularVelocity / (Math.PI * 2)) * MIN_TO_SEC * this._driveRatio * this._gearRatios[this._currentGear];
         rpm = rpm < this._minimumRPM ? this._minimumRPM : rpm;
 

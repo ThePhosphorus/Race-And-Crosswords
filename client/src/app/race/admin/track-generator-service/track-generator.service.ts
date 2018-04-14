@@ -36,7 +36,7 @@ export class TrackGenerator extends Renderer {
     private _translateStartingPosition: Vector3;
     private constraintValidator: ConstraintValidator;
 
-    public constructor(private cameraManager: CameraManagerService, private inputManager: InputManagerService) {
+    public constructor(cameraManager: CameraManagerService, private inputManager: InputManagerService) {
         super(cameraManager, false);
         this.points = new PointsHandler(this);
         this.onMouseMoveListner = this.onMouseMove.bind(this);
@@ -71,7 +71,7 @@ export class TrackGenerator extends Renderer {
         }
     }
 
-    private mouseEventRightClick = (event: MouseEvent): void => {
+    private mouseEventRightClick(event: MouseEvent): void {
         if (this.points.length > 0) {
             this.points.removePoint(this.points.length - 1);
         }
@@ -102,7 +102,7 @@ export class TrackGenerator extends Renderer {
         }
     }
 
-    private mouseEventMiddleClick = (event: MouseEvent): void => {
+    private mouseEventMiddleClick(event: MouseEvent): void {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.points.removePoint(possiblePointId);

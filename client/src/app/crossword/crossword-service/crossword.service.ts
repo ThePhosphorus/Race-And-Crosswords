@@ -3,14 +3,11 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
 import { GridState, OtherPlayersSelect } from "../grid-state/grid-state";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player } from "../../../../../common/communication/Player";
 import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
-// Put true tu use mock grid instead of generated one
-const USE_MOCK_GRID: boolean = false;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const INPUT_REGEX: RegExp = /^[a-z]$/i;
@@ -27,9 +24,6 @@ export class CrosswordService {
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._isSinglePlayer = true;
         this._isGameOver = new BehaviorSubject<boolean>(false);
-        if (USE_MOCK_GRID) {
-            this._gameManager.grid = MOCK;
-        }
     }
 
     public get gameManager(): GameManager {
@@ -61,17 +55,15 @@ export class CrosswordService {
     }
 
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean): void {
-        if (!USE_MOCK_GRID) {
-            this._isSinglePlayer = isSinglePlayer;
-            this._gameManager.newGame(difficulty);
-            this.setIsGameOver(false);
-            this._gridState.next(new GridState());
+        this._isSinglePlayer = isSinglePlayer;
+        this._gameManager.newGame(difficulty);
+        this.isGameOver.next(false);
+        this._gridState.next(new GridState());
 
-            if (isSinglePlayer) {
-                this.setUpSingleplayer(difficulty);
-            } else {
-                this.setUpMultiplayer(difficulty);
-            }
+        if (isSinglePlayer) {
+            this.setUpSingleplayer(difficulty);
+        } else {
+            this.setUpMultiplayer(difficulty);
         }
     }
 

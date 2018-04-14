@@ -62,8 +62,4 @@ export class OrthographicCameraContainer extends CameraContainer {
     public position(): Vector3 {
         return this._orthoCamera.position;
     }
-
-    public toggleEffectMode(): void {
-        return;
-    }
 }
