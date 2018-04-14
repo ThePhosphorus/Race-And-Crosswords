@@ -5,6 +5,8 @@ import { CrosswordCommunicationService } from "../../crossword-communication-ser
 import { Player } from "../../../../../../common/communication/Player";
 import { GameInfoService } from "../game-info-service/game-info.service";
 
+const NB_PLAYERS: number = 2;
+
 @Component({
     selector: "app-modal-end-game",
     templateUrl: "./modal-end-game.component.html",
@@ -41,7 +43,7 @@ export class ModalEndGameComponent implements OnInit {
 
     public ngOnInit(): void {
         this._crosswordService.gameManager.playersSubject.subscribe((players: Array<Player>) => {
-            if (players.length < 2 && !this.isSinglePlayer) {
+            if (players.length < NB_PLAYERS && !this.isSinglePlayer) {
                 this._isDisconnected = true;
             }
             this._players = players;
