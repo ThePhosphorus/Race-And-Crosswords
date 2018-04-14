@@ -9,7 +9,10 @@ import { EndGameService } from "../end-game-service/end-game.service";
 
 export class HighscoreAdderComponent implements OnInit {
 
-  public constructor(private _endGameService: EndGameService) { }
+  public playerName: string;
+  public constructor(private _endGameService: EndGameService) {
+    this.playerName = "";
+  }
 
   public ngOnInit(): void {
   }
@@ -20,8 +23,8 @@ export class HighscoreAdderComponent implements OnInit {
   public close(): void {
     this._endGameService.closeHighscoreAdder();
   }
-  public addHighscore(name: string): void {
-    this._endGameService.addHighscore(name);
+  public addHighscore(): void {
+    this._endGameService.addHighscore(this.playerName);
     this.close();
   }
 }
