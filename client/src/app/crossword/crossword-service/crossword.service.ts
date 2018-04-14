@@ -180,9 +180,9 @@ export class CrosswordService {
             players.push(this._gameManager.myPlayer.id);
         }
 
-        this._gridState.getValue().otherPlayersSelect.forEach((oph: OtherPlayersSelect) => {
-            if (oph.selectedLetters.indexOf(letterId) > -1) {
-                players.push(oph.playerId);
+        this._gridState.getValue().otherPlayersSelect.forEach((selection: OtherPlayersSelect) => {
+            if (selection.selectedLetters.indexOf(letterId) > -1) {
+                players.push(selection.playerId);
             }
         });
 
@@ -204,7 +204,7 @@ export class CrosswordService {
 
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersSelect = this._gridState.getValue().otherPlayersSelect.find(
-            (oph: OtherPlayersSelect) => oph.playerId === playerId);
+            (selection: OtherPlayersSelect) => selection.playerId === playerId);
         if (player == null) {
             player = new OtherPlayersSelect(playerId, []);
             this._gridState.getValue().otherPlayersSelect.push(player);
