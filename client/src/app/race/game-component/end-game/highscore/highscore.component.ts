@@ -9,7 +9,6 @@ import { Router } from "@angular/router";
     templateUrl: "./highscore.component.html",
     styleUrls: ["./highscore.component.css"]
 })
-// TODO : Highlight the current player
 export class HighscoreComponent {
 
     public constructor( private _router: Router,
