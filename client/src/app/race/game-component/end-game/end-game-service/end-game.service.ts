@@ -95,11 +95,11 @@ export class EndGameService {
 
     private isNewHighscore(time: number): boolean {
         if (this.trackHighscores == null ||
-            this.trackHighscores.length <= MAX_SAVED_HIGHSCORES) {
-            return true;
+            this.trackHighscores.length < MAX_SAVED_HIGHSCORES) {
+                return true;
         }
-        for (const highscore of this._track.highscores) {
-            if (time < highscore.time) {
+        for (let i: number; i < MAX_SAVED_HIGHSCORES; i++) {
+            if (time < this.trackHighscores[i].time) {
                 return true;
             }
         }
