@@ -20,7 +20,6 @@ const SHADOW_BIAS: number = 0.0001;
 
 @Injectable()
 export class LightManagerService {
-    private _isShadowMode: boolean;
     private _isNightMode: boolean;
     private _directionalLight: DirectionalLight;
     private _dayAmbientLight: AmbientLight;
@@ -32,7 +31,6 @@ export class LightManagerService {
             this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
             this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
             this._isNightMode = false;
-            this._isShadowMode = false;
          }
     public init(scene: Scene, player: Car, aiControlledCars: Array<Car>): void {
         this._scene = scene;
@@ -48,13 +46,18 @@ export class LightManagerService {
         this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 
-    public toggleSunlight(): void {
+    public toggleShadows(): void {
         if (this._scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
             this._scene.remove(this._directionalLight);
-            this._isShadowMode = false;
         } else if (!this._isNightMode) {
             this._scene.add(this._directionalLight);
-            this._isShadowMode = true;
+        } else {
+            if (this._isNightMode) {
+                this._player.toggleNightLightShadows();
+                this._aiControlledCars.forEach((aiCar) => {
+                    aiCar.toggleNightLightShadows();
+                });
+            }
         }
     }
 
@@ -63,10 +66,12 @@ export class LightManagerService {
     }
 
     public toggleNightShadows(): void {
-        this._player.toggleNightLightShadows();
-        this._aiControlledCars.forEach((aiCar) => {
-            aiCar.toggleNightLightShadows();
-        });
+        if (this._isNightMode) {
+            this._player.toggleNightLightShadows();
+            this._aiControlledCars.forEach((aiCar) => {
+                aiCar.toggleNightLightShadows();
+            });
+        }
     }
 
     public toggleNightMode(): void {
@@ -79,15 +84,12 @@ export class LightManagerService {
             this._scene.add(this._dayAmbientLight);
             this.loadSkybox(LoadedCubeTexture.daySkyBox);
             this._isNightMode = false;
-            if (this._isShadowMode) {
-                this._scene.add(this._directionalLight);
-            }
         } else {
             this._scene.remove(this._dayAmbientLight);
             this._scene.add(this._nightAmbientLight);
             this.loadSkybox(LoadedCubeTexture.nightSkyBox);
             this._isNightMode = true;
-            if (this._isShadowMode) {
+            if (this._directionalLight !== undefined) {
                 this._scene.remove(this._directionalLight);
             }
         }
