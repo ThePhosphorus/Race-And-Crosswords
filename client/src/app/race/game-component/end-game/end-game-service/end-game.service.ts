@@ -82,11 +82,11 @@ export class EndGameService {
 
     public addHighscore(name: string): void {
         this._trackLoader.updateHighScore(this._track._id, new Highscore(name, this.sumTimes(this._player.lapTimes))).subscribe(() => {
-            this.loadTrack(this._track._id);
+            this.reloadTrack(this._track._id);
         });
     }
 
-    private loadTrack(id: string): void {
+    private reloadTrack(id: string): void {
         this._trackLoader.loadOne(id).subscribe((track: Track) => {
             this._track = track;
         });
