@@ -29,9 +29,12 @@
         <div class="card-header text-center">
           <h5>Highscores</h5>
         </div>
-        <ul *ngIf="hasDetailsOpen && openedTrack.highscores" class="list-group list-group-flush">
-          <li *ngFor="let score of openedTrack.highscores" class="list-group-item">{{score.name}}: &nbsp; {{toStringHighscore(score).time}}</li>
-        </ul>
+        <table class="text-center table table-hover table-light" *ngIf="hasDetailsOpen && openedTrack.highscores">
+          <tr *ngFor="let score of openedTrack.highscores">
+            <td>{{score.name}}</td>
+            <td>{{toStringHighscore(score).time}}</td>
+          </tr>
+        </table>
       </div>
       <div class="card">
         <div #preview id="preview"></div>
