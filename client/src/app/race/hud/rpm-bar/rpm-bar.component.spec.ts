@@ -8,7 +8,9 @@ import { SoundManagerService } from "../../game-component/sound-manager-service/
 import { CollisionDetectorService } from "../../game-component/collision/collision-detector.service";
 import { LightManagerService } from "../../game-component/light-manager/light-manager.service";
 import { LoaderService } from "../../game-component/loader-service/loader.service";
-import { EndGameService } from "../../game-component/end-game-service/end-game.service";
+import { EndGameService } from "../../game-component/end-game/end-game-service/end-game.service";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 
 describe("RpmBarComponent", () => {
   let component: RpmBarComponent;
@@ -24,7 +26,11 @@ describe("RpmBarComponent", () => {
                   CollisionDetectorService,
                   LightManagerService,
                   LoaderService,
-                  EndGameService]
+                  EndGameService,
+                  TrackLoaderService,
+                  HttpClient,
+                  HttpHandler
+                ]
     })
     .compileComponents();
   }));

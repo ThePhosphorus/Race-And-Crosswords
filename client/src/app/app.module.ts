@@ -23,7 +23,9 @@ import { RpmBarComponent } from "./race//hud/rpm-bar/rpm-bar.component";
 import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end-game/modal-end-game.component";
 import { LoadingComponent } from "./race/game-component/loading/loading.component";
 import { StartDisplayComponent } from "./race/game-component/start-display/start-display.component";
-import { GameResultComponentComponent } from "./race/game-component/game-result-component/game-result-component.component";
+import { HighscoreComponent } from "./race/game-component/end-game/highscore/highscore.component";
+import { HighscoreAdderComponent } from "./race/game-component/end-game/highscore-adder/highscore-adder.component";
+import { GameResultComponentComponent } from "./race/game-component/end-game/game-result-component/game-result-component.component";
 import { DefinitionTileComponent } from "./crossword/definition-tile/definition-tile.component";
 
 @NgModule({
@@ -48,6 +50,8 @@ import { DefinitionTileComponent } from "./crossword/definition-tile/definition-
         RpmBarComponent,
         LoadingComponent,
         StartDisplayComponent,
+        HighscoreComponent,
+        HighscoreAdderComponent,
         GameResultComponentComponent,
         DefinitionTileComponent
     ],

@@ -1,0 +1,25 @@
+<div *ngIf="showHighscoreComponent" class="row justify-content-center" id="container">
+  <div class="col-8 align-self-center mt-4 " id="box">
+    <div>
+      <h1>[HighscoreS]</h1>
+      <table class="table table-striped ">
+        <thead>
+          <th>#</th>
+          <th>Name</th>
+          <th>Total time</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let highscore of highscores; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{highscore.name}}</td>
+            <td>{{highscore.time}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button type="button" routerLink="/race" class="btn btn-secondary m-2">MENU</button>
+    <a href={{route}}>
+      <button type="button" class="btn btn-secondary m-2">REPLAY</button>
+    </a>
+  </div>
+</div>
