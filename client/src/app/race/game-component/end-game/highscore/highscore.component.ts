@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { EndGameService } from "../end-game-service/end-game.service";
 import { StringHighscore } from "../string-highscore";
 import { Highscore } from "../../../../../../../common/race/highscore";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-highscore",
@@ -11,7 +12,8 @@ import { Highscore } from "../../../../../../../common/race/highscore";
 // TODO : Highlight the current player
 export class HighscoreComponent {
 
-    public constructor(private _endGameService: EndGameService) {
+    public constructor( private _router: Router,
+                        private _endGameService: EndGameService) {
     }
 
     public get showHighscoreComponent(): boolean {
@@ -23,5 +25,9 @@ export class HighscoreComponent {
         this._endGameService.trackHighscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs)));
 
         return stringHighscores;
+    }
+
+    public get route(): string {
+        return this._router.url;
     }
 }

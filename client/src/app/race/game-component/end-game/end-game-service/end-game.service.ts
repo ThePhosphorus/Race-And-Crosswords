@@ -23,6 +23,7 @@ export class EndGameService {
     public constructor(private _trackLoader: TrackLoaderService) {
         this._displayResult = false;
         this._displayHighscore = false;
+        this._displayHighscoreAdder = false;
         this._player = null;
         this.gameResults = new Array<GameResult>();
     }

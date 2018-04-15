@@ -5,6 +5,8 @@ import { EndGameService } from "../end-game-service/end-game.service";
 import { LoaderService } from "../../loader-service/loader.service";
 import { HttpHandler, HttpClient } from "@angular/common/http";
 import { TrackLoaderService } from "../../../track-loader/track-loader.service";
+import { Router } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe("HighscoreComponent", () => {
     let component: HighscoreComponent;
@@ -19,6 +21,10 @@ describe("HighscoreComponent", () => {
                 HttpClient,
                 HttpHandler,
                 LoaderService,
+                {
+                    provide: Router,
+                    useClass: class { public navigate: jasmine.Spy = jasmine.createSpy("navigate"); }
+                }
             ]
         })
             .compileComponents();
