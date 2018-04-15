@@ -30,6 +30,7 @@ export class EndGameService {
     public get trackHighscores(): Array<Highscore> {
         return this._track.highscores;
     }
+
     public get displayResult(): boolean {
         return this._displayResult;
     }
@@ -70,27 +71,31 @@ export class EndGameService {
             this._displayHighscore = true;
         }
     }
+
     public closeHighscoreAdder(): void {
         this._displayHighscoreAdder = false;
         this._displayHighscore = true;
     }
+
     public addHighscore(name: string): void {
         this._trackLoader.updateHighScore(this._track._id, new Highscore(name, this.sumTimes(this._player.lapTimes))).subscribe(() => {
             this.loadTrack(this._track._id);
         });
     }
+
     private loadTrack(id: string): void {
         this._trackLoader.loadOne(id).subscribe((track: Track) => {
             this._track = track;
         });
     }
+
     private isNewHighscore(time: number): boolean {
-        if ( this.trackHighscores == null ||
+        if (this.trackHighscores == null ||
             this.trackHighscores.length <= MAX_SAVED_HIGHSCORES) {
             return true;
         }
         for (const highscore of this.trackHighscores) {
-            if ( time < highscore.time ) {
+            if (time < highscore.time) {
                 return true;
             }
         }
