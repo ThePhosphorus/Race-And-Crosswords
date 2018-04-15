@@ -6,7 +6,6 @@ import { LoaderService } from "../../loader-service/loader.service";
 import { HttpHandler, HttpClient } from "@angular/common/http";
 import { TrackLoaderService } from "../../../track-loader/track-loader.service";
 import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
 
 describe("HighscoreComponent", () => {
     let component: HighscoreComponent;
