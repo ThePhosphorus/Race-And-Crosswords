@@ -14,7 +14,7 @@ export class TileColorDirective implements AfterContentChecked {
 
     private style: CSSStyleDeclaration;
 
-    public constructor(el: ElementRef, private crosswordService: CrosswordService) {
+    public constructor(el: ElementRef, private _crosswordService: CrosswordService) {
         this.style = el.nativeElement.style;
     }
 
@@ -35,21 +35,21 @@ export class TileColorDirective implements AfterContentChecked {
     private get colors(): string[] {
         const colors: Array<string> = new Array<string>();
         const players: number[] = (this.isDisabled) ?
-            this.crosswordService.playersDisablingLetter(this.letterId) :
-            this.crosswordService.playersSelectingLetter(this.letterId);
+            this._crosswordService.playersDisablingLetter(this.letterId) :
+            this._crosswordService.playersSelectingLetter(this.letterId);
 
         if (players.length > 0) {
-            colors[COLOR_1] = this.crosswordService.getPlayerColor(
+            colors[COLOR_1] = this._crosswordService.getPlayerColor(
                 players[0],
                 !this.isDisabled
             );
-            colors[BG_COLOR] = this.crosswordService.getPlayerColor(
+            colors[BG_COLOR] = this._crosswordService.getPlayerColor(
                 players[0],
-                false
+                this.isDisabled
             );
 
             if (players.length > 1) {
-                colors[COLOR_2] = this.crosswordService.getPlayerColor(
+                colors[COLOR_2] = this._crosswordService.getPlayerColor(
                     players[1],
                     !this.isDisabled
                 );

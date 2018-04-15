@@ -7,6 +7,7 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { TileColorDirective } from "../input-letter/tile-color.directive";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { GameManager } from "../crossword-game-manager/crossword-game-manager";
+import { GameInfoService } from "../crossword-game-info/game-info-service/game-info.service";
 // tslint:disable:no-magic-numbers
 
 describe("InputGridComponent", () => {
@@ -16,9 +17,8 @@ describe("InputGridComponent", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [InputGridComponent, InputLetterComponent, TileColorDirective],
-            providers: [CrosswordService, CrosswordCommunicationService, GameManager],
-            imports: [HttpClientModule],
-
+            providers: [CrosswordService, CrosswordCommunicationService, GameManager, GameInfoService],
+            imports: [HttpClientModule]
         })
             .compileComponents();
     }));

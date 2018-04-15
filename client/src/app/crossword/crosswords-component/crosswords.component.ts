@@ -14,13 +14,16 @@ export class CrosswordsComponent implements OnInit {
     public searching: boolean;
 
     public constructor(private _gameInfo: GameInfoService) {
-        this.loading = true;
-        this.searching = true;
+        this.loading = false;
+        this.searching = false;
     }
 
     public ngOnInit(): void {
         this._gameInfo.showSearching.subscribe((showSearching: boolean) => {
             this.searching = showSearching;
+        });
+        this._gameInfo.showLoading.subscribe((showLoading: boolean) => {
+            this.loading = showLoading;
         });
     }
 }
