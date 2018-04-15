@@ -22,6 +22,7 @@ const NIGHT_AMBIENT_LIGHT: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_
 
 @Injectable()
 export class LightManagerService {
+    private _isFancyMode: boolean;
     private _isNightMode: boolean;
     private _directionalLight: DirectionalLight;
     private _scene: Scene;
@@ -29,7 +30,9 @@ export class LightManagerService {
     private _aiControlledCars: Array<Car>;
     public constructor(private loader: LoaderService) {
             this._isNightMode = false;
+            this._isFancyMode = false;
          }
+
     public init(scene: Scene, player: Car, aiControlledCars: Array<Car>): void {
         this._scene = scene;
         this._player = player;
@@ -44,17 +47,24 @@ export class LightManagerService {
         this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 
-    public toggleShadows(): void {
+    public toggleFancyMode(): void {
+        if (this._isNightMode) {
+            this._player.toggleNightLightShadows();
+            this._aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLightShadows();
+        });
+        } else {
+            this.toggleSunShadows();
+        }
+    }
+
+    private toggleSunShadows(): void {
         if (this._scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
             this._scene.remove(this._directionalLight);
         } else if (!this._isNightMode) {
             this._scene.add(this._directionalLight);
         }
-        this._player.toggleNightLightShadows();
-        this._aiControlledCars.forEach((aiCar) => {
-            aiCar.toggleNightLightShadows();
-        });
-
+        this._isFancyMode = !this._isFancyMode;
     }
 
     public loadSkybox(type: LoadedCubeTexture): void {
@@ -79,6 +89,9 @@ export class LightManagerService {
             this._scene.remove(NIGHT_AMBIENT_LIGHT);
             this._scene.add(DAY_AMBIENT_LIGHT);
             this.loadSkybox(LoadedCubeTexture.daySkyBox);
+            if (this._isFancyMode) {
+                this._scene.add(this._directionalLight);
+            }
             this._isNightMode = false;
         } else {
             this._scene.remove(DAY_AMBIENT_LIGHT);
