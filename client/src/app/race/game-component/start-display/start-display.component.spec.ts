@@ -9,6 +9,8 @@ import { LoaderService } from "../loader-service/loader.service";
 import { CollisionDetectorService } from "../collision/collision-detector.service";
 import { LightManagerService } from "../light-manager/light-manager.service";
 import { EndGameService } from "../end-game/end-game-service/end-game.service";
+import { HttpHandler, HttpClient } from "@angular/common/http";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
 
 describe("StartDisplayComponent", () => {
     let component: StartDisplayComponent;
@@ -24,7 +26,10 @@ describe("StartDisplayComponent", () => {
                         LoaderService,
                         CollisionDetectorService,
                         LightManagerService,
-                        EndGameService]
+                        EndGameService,
+                        TrackLoaderService,
+                        HttpClient,
+                        HttpHandler]
         })
             .compileComponents();
     }));

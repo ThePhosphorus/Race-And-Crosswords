@@ -9,6 +9,8 @@ import { LoaderService } from "../loader-service/loader.service";
 import { GameConfiguration } from "../game-configuration/game-configuration";
 import { NB_LAPS } from "../../../global-constants/constants";
 import { EndGameService } from "../end-game/end-game-service/end-game.service";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 
 // tslint:disable:no-magic-numbers
 describe("GameManager", () => {
@@ -21,7 +23,11 @@ describe("GameManager", () => {
                         CollisionDetectorService,
                         LightManagerService,
                         LoaderService,
-                        EndGameService]
+                        EndGameService,
+                        TrackLoaderService,
+                        HttpClient,
+                        HttpHandler
+                    ]
         });
     });
 

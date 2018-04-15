@@ -1,25 +1,48 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { HighscoreComponent } from "./highscore.component";
+import { EndGameService } from "../end-game-service/end-game.service";
+import { LoaderService } from "../../loader-service/loader.service";
+import { HttpHandler, HttpClient } from "@angular/common/http";
+import { TrackLoaderService } from "../../../track-loader/track-loader.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Observable } from "rxjs/Observable";
 
 describe("HighscoreComponent", () => {
-  let component: HighscoreComponent;
-  let fixture: ComponentFixture<HighscoreComponent>;
+    let component: HighscoreComponent;
+    let fixture: ComponentFixture<HighscoreComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ HighscoreComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [HighscoreComponent],
+            providers: [
+                EndGameService,
+                TrackLoaderService,
+                HttpClient,
+                HttpHandler,
+                LoaderService,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        params: Observable.of({})
+                    }
+                },
+                {
+                    provide: Router,
+                    useClass: class { public navigate: jasmine.Spy = jasmine.createSpy("navigate"); }
+                }
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HighscoreComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(HighscoreComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

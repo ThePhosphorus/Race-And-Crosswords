@@ -1,11 +1,14 @@
 import { TestBed, inject } from "@angular/core/testing";
 
 import { EndGameService } from "./end-game.service";
+import { TrackLoaderService } from "../../../track-loader/track-loader.service";
+import { HttpClient, HttpHandler } from "@angular/common/http";
+import { LoaderService } from "../../loader-service/loader.service";
 
 describe("EndGameService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [EndGameService]
+            providers: [EndGameService, TrackLoaderService, HttpClient, HttpHandler, LoaderService]
         });
     });
 

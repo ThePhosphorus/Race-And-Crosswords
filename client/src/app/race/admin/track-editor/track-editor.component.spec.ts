@@ -12,41 +12,41 @@ import { InputManagerService } from "../../input-manager-service/input-manager.s
 import { LoaderService } from "../../game-component/loader-service/loader.service";
 
 describe("TrackEditorComponent", () => {
-  let component: TrackEditorComponent;
-  let fixture: ComponentFixture<TrackEditorComponent>;
+    let component: TrackEditorComponent;
+    let fixture: ComponentFixture<TrackEditorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TrackEditorComponent, ReversePipe ],
-      imports: [HttpClientModule],
-      schemas : [NO_ERRORS_SCHEMA],
-      providers: [
-          TrackLoaderService,
-          TrackSaverService,
-          InputManagerService,
-          LoaderService,
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              params: Observable.of({ })
-            }
-          },
-          {
-            provide: Router,
-            useClass: class { public navigate: jasmine.Spy = jasmine.createSpy("navigate"); }
-        }
-        ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [TrackEditorComponent, ReversePipe],
+            imports: [HttpClientModule],
+            schemas: [NO_ERRORS_SCHEMA],
+            providers: [
+                TrackLoaderService,
+                TrackSaverService,
+                InputManagerService,
+                LoaderService,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        params: Observable.of({})
+                    }
+                },
+                {
+                    provide: Router,
+                    useClass: class { public navigate: jasmine.Spy = jasmine.createSpy("navigate"); }
+                }
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TrackEditorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TrackEditorComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });
