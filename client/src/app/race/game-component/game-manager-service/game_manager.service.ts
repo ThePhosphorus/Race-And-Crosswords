@@ -177,6 +177,7 @@ export class GameManagerService extends Renderer {
         this._inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this._inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
         this._inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this._lightManager.toggleSunlight());
+        this._inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this._lightManager.toggleNightShadows());
     }
 
     private initSoundManager(): void {

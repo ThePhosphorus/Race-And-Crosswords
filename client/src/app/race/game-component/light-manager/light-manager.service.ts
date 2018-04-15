@@ -61,8 +61,15 @@ export class LightManagerService {
     public loadSkybox(type: LoadedCubeTexture): void {
         this._scene.background = this.loader.getCubeTexture(type);
     }
-    public toggleNightMode(): void {
 
+    public toggleNightShadows(): void {
+        this._player.toggleNightLightShadows();
+        this._aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLightShadows();
+        });
+    }
+
+    public toggleNightMode(): void {
         this._player.toggleNightLight();
         this._aiControlledCars.forEach((aiCar) => {
             aiCar.toggleNightLight();
