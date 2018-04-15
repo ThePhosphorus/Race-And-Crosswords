@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { Highscore } from "../../../../../../common/race/highscore";
 import { ActivatedRoute } from "@angular/router";
 import { EndGameService } from "../end-game-service/end-game.service";
+import { StringHighscore } from "../end-game-service/string-highscore";
 
 @Component({
     selector: "app-highscore",
@@ -26,7 +26,7 @@ export class HighscoreComponent implements OnInit {
         return this._endGameService.displayHighscore;
     }
 
-    public get highscores(): Array<Highscore> {
+    public get highscores(): Array<StringHighscore> {
         return this._endGameService.trackHighscores;
     }
 

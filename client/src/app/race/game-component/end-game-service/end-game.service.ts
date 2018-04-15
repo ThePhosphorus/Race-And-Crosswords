@@ -6,6 +6,7 @@ import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../global-constants/constants"
 import { Track } from "../../../../../../common/race/track";
 import { Highscore } from "../../../../../../common/race/highscore";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { StringHighscore } from "./string-highscore";
 
 const MS_DECIMALS: number = 3;
 const MAX_SAVED_HIGHSCORES: number = 5;
@@ -27,8 +28,11 @@ export class EndGameService {
         this.gameResults = new Array<GameResult>();
     }
 
-    public get trackHighscores(): Array<Highscore> {
-        return this._track.highscores;
+    public get trackHighscores(): Array<StringHighscore> {
+        const stringHighscores: Array<StringHighscore> = new Array<StringHighscore>();
+        this._track.highscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs.name, this.msToTime(hs.time))));
+
+        return stringHighscores;
     }
 
     public get displayResult(): boolean {
@@ -94,7 +98,7 @@ export class EndGameService {
             this.trackHighscores.length <= MAX_SAVED_HIGHSCORES) {
             return true;
         }
-        for (const highscore of this.trackHighscores) {
+        for (const highscore of this._track.highscores) {
             if (time < highscore.time) {
                 return true;
             }
