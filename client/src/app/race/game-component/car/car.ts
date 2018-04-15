@@ -37,6 +37,7 @@ const DRIFT_SOUND_MAX: number = 150000;
 const MIN_DRIFT_SPEED: number = METER_TO_KM_SPEED_CONVERSION * DOUBLE;
 const WALL_FRICTION: number = -8000;
 const BRAKE_MULTIPLIER: number = 3;
+const HANDICAP_FACTOR: number = 0.75;
 
 export class Car extends Object3D {
     public carControl: CarControl;
@@ -133,7 +134,9 @@ export class Car extends Object3D {
         const direction: Vector2 = this.direction2D;
         const perpDirection: Vector2 = (new Vector2(direction.y, -direction.x));
         const perpSpeedComponent: number = this._rigidBody.velocity.clone().normalize().dot(perpDirection);
-        this._frictionCoefficient = Math.min(this._frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT, this.isAi ? DEFAULT_FRICTION : DEFAULT_FRICTION * 0.75; );
+        this._frictionCoefficient = Math.min(
+            this._frictionCoefficient + PROGRESSIVE_DRIFT_COEFFICIENT,
+            this.isAi ? DEFAULT_FRICTION : DEFAULT_FRICTION * HANDICAP_FACTOR);
         if (this.carControl.hasHandbrakeOn) {
             this._frictionCoefficient = HANDBRAKE_FRICTION;
             this._carLights.brake();
@@ -147,7 +150,7 @@ export class Car extends Object3D {
         const resultingForce: Vector2 = new Vector2();
         const dragForce: Vector2 = this.getDragForce();
         const rollingResistance: Vector2 = this.getRollingResistance();
-        const tractionForce: number = this.isAi ? this.getTractionForce() : this.getTractionForce() * 0.75;
+        const tractionForce: number = this.isAi ? this.getTractionForce() : this.getTractionForce() * HANDICAP_FACTOR;
         const accelerationForce: Vector2 = this.direction2D;
 
         resultingForce.add(dragForce).add(rollingResistance);
