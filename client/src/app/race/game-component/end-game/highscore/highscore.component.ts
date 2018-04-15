@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component } from "@angular/core";
 import { EndGameService } from "../end-game-service/end-game.service";
 import { StringHighscore } from "../string-highscore";
 import { Highscore } from "../../../../../../../common/race/highscore";
@@ -10,17 +9,9 @@ import { Highscore } from "../../../../../../../common/race/highscore";
     styleUrls: ["./highscore.component.css"]
 })
 // TODO : Highlight the current player
-export class HighscoreComponent implements OnInit {
-    private _id: string;
+export class HighscoreComponent {
 
-    public constructor(private _route: ActivatedRoute,
-                       private _endGameService: EndGameService) {
-    }
-
-    public ngOnInit(): void {
-        this._route.params.map((p) => p.id).subscribe((id: string) => {
-            this._id = id;
-        });
+    public constructor(private _endGameService: EndGameService) {
     }
 
     public get showHighscoreComponent(): boolean {
@@ -33,9 +24,4 @@ export class HighscoreComponent implements OnInit {
 
         return stringHighscores;
     }
-
-    public get route(): string {
-        return "/race/" + this._id;
-    }
-
 }
