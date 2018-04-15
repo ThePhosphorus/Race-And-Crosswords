@@ -98,9 +98,8 @@ export class LightManagerService {
             this._scene.add(NIGHT_AMBIENT_LIGHT);
             this.loadSkybox(LoadedCubeTexture.nightSkyBox);
             this._isNightMode = true;
-            if (this._directionalLight !== undefined) {
-                this._scene.remove(this._directionalLight);
-            }
+            this._scene.remove(this._directionalLight);
+
         }
     }
 
