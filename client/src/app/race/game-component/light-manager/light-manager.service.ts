@@ -17,26 +17,24 @@ const DIRECTIONAL_LIGHT_OFFSET: number = 50;
 const SUNLIGHT_INTENSITY: number = 0.2;
 const D_LIGHT_PLANE_SIZE: number = 200;
 const SHADOW_BIAS: number = 0.0001;
+const DAY_AMBIENT_LIGHT: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+const NIGHT_AMBIENT_LIGHT: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
 
 @Injectable()
 export class LightManagerService {
     private _isNightMode: boolean;
     private _directionalLight: DirectionalLight;
-    private _dayAmbientLight: AmbientLight;
-    private _nightAmbientLight: AmbientLight;
     private _scene: Scene;
     private _player: Car;
     private _aiControlledCars: Array<Car>;
     public constructor(private loader: LoaderService) {
-            this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
-            this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
             this._isNightMode = false;
          }
     public init(scene: Scene, player: Car, aiControlledCars: Array<Car>): void {
         this._scene = scene;
         this._player = player;
         this._aiControlledCars = aiControlledCars;
-        this._scene.add(this._dayAmbientLight);
+        this._scene.add(DAY_AMBIENT_LIGHT);
         this.loadSkybox(LoadedCubeTexture.daySkyBox);
         this.loadSunlight();
     }
@@ -51,14 +49,12 @@ export class LightManagerService {
             this._scene.remove(this._directionalLight);
         } else if (!this._isNightMode) {
             this._scene.add(this._directionalLight);
-        } else {
-            if (this._isNightMode) {
-                this._player.toggleNightLightShadows();
-                this._aiControlledCars.forEach((aiCar) => {
-                    aiCar.toggleNightLightShadows();
-                });
-            }
         }
+        this._player.toggleNightLightShadows();
+        this._aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLightShadows();
+        });
+
     }
 
     public loadSkybox(type: LoadedCubeTexture): void {
@@ -80,13 +76,13 @@ export class LightManagerService {
             aiCar.toggleNightLight();
         });
         if (this._isNightMode) {
-            this._scene.remove(this._nightAmbientLight);
-            this._scene.add(this._dayAmbientLight);
+            this._scene.remove(NIGHT_AMBIENT_LIGHT);
+            this._scene.add(DAY_AMBIENT_LIGHT);
             this.loadSkybox(LoadedCubeTexture.daySkyBox);
             this._isNightMode = false;
         } else {
-            this._scene.remove(this._dayAmbientLight);
-            this._scene.add(this._nightAmbientLight);
+            this._scene.remove(DAY_AMBIENT_LIGHT);
+            this._scene.add(NIGHT_AMBIENT_LIGHT);
             this.loadSkybox(LoadedCubeTexture.nightSkyBox);
             this._isNightMode = true;
             if (this._directionalLight !== undefined) {
