@@ -30,7 +30,7 @@
           <h5>Highscores</h5>
         </div>
         <ul *ngIf="hasDetailsOpen && openedTrack.highscores" class="list-group list-group-flush">
-          <li *ngFor="let score of openedTrack.highscores" class="list-group-item">{{score.name}}: &nbsp; {{score.time}}</li>
+          <li *ngFor="let score of openedTrack.highscores" class="list-group-item">{{score.name}}: &nbsp; {{toStringHighscore(score).time}}</li>
         </ul>
       </div>
       <div class="card">

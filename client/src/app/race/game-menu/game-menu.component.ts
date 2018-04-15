@@ -4,6 +4,8 @@ import { Track } from "../../../../../common/race/track";
 import { TrackPreviewService } from "../track-preview/track-preview.service";
 import { CameraManagerService } from "../camera-manager-service/camera-manager.service";
 import { LoaderService } from "../game-component/loader-service/loader.service";
+import { StringHighscore } from "../game-component/end-game/string-highscore";
+import { Highscore } from "../../../../../common/race/highscore";
 
 @Component({
     selector: "app-game-menu",
@@ -50,6 +52,10 @@ export class GameMenuComponent implements AfterViewInit, AfterContentChecked {
         this.openedTrack = null;
         this.hasDetailsOpen = false;
         this.trackPreview.resetDisplay();
+    }
+
+    public toStringHighscore(hs: Highscore): StringHighscore {
+        return new StringHighscore(hs);
     }
 
 }

@@ -27,11 +27,8 @@ export class EndGameService {
         this.gameResults = new Array<GameResult>();
     }
 
-    public get trackHighscores(): Array<StringHighscore> {
-        const stringHighscores: Array<StringHighscore> = new Array<StringHighscore>();
-        this._track.highscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs)));
-
-        return stringHighscores;
+    public get trackHighscores(): Array<Highscore> {
+        return this._track.highscores;
     }
 
     public get displayResult(): boolean {
