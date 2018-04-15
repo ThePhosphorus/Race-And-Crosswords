@@ -14,7 +14,7 @@ describe("EndGameService", () => {
     }));
 
     it("should display end game", inject([EndGameService], (service: EndGameService) => {
-        service.handleEndGame(null, null);
+        service.handleEndGame(null, null, null);
         expect(service.displayResult).toBeTruthy();
     }));
 });

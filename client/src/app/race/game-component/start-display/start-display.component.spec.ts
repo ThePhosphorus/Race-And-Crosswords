@@ -8,7 +8,7 @@ import { SoundManagerService } from "../sound-manager-service/sound-manager.serv
 import { LoaderService } from "../loader-service/loader.service";
 import { CollisionDetectorService } from "../collision/collision-detector.service";
 import { LightManagerService } from "../light-manager/light-manager.service";
-import { EndGameService } from "../end-game-service/end-game.service";
+import { EndGameService } from "../end-game/end-game-service/end-game.service";
 
 describe("StartDisplayComponent", () => {
     let component: StartDisplayComponent;

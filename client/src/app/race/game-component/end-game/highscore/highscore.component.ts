@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { EndGameService } from "../end-game-service/end-game.service";
-import { StringHighscore } from "../end-game-service/string-highscore";
+import { StringHighscore } from "../string-highscore";
 
 @Component({
     selector: "app-highscore",

@@ -9,7 +9,7 @@ import { CollisionDetectorService } from "../game-component/collision/collision-
 import { LightManagerService } from "../game-component/light-manager/light-manager.service";
 import { RpmBarComponent } from "./rpm-bar/rpm-bar.component";
 import { LoaderService } from "../game-component/loader-service/loader.service";
-import { EndGameService } from "../game-component/end-game-service/end-game.service";
+import { EndGameService } from "../game-component/end-game/end-game-service/end-game.service";
 
 // tslint:disable:no-magic-numbers
 describe("HudComponent", () => {

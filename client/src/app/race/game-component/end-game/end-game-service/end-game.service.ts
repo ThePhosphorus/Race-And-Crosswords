@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { UserPlayer } from "../player/user-player";
-import { AiPlayer } from "../player/ai-player";
+import { UserPlayer } from "../../player/user-player";
+import { AiPlayer } from "../../player/ai-player";
 import { GameResult } from "./game-result";
-import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../global-constants/constants";
-import { Track } from "../../../../../../common/race/track";
-import { Highscore } from "../../../../../../common/race/highscore";
-import { TrackLoaderService } from "../../track-loader/track-loader.service";
-import { StringHighscore } from "./string-highscore";
+import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../../global-constants/constants";
+import { Track } from "../../../../../../../common/race/track";
+import { Highscore } from "../../../../../../../common/race/highscore";
+import { TrackLoaderService } from "../../../track-loader/track-loader.service";
+import { StringHighscore } from "../string-highscore";
 
 const MS_DECIMALS: number = 3;
 const MAX_SAVED_HIGHSCORES: number = 5;

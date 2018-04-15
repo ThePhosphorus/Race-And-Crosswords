@@ -34,7 +34,7 @@ import { SpawnPoint, SpawnPointFinder } from "./spawn-point/spawn-point";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 import { TrackPosition } from "../player/track-position/track-position";
-import { EndGameService } from "../end-game-service/end-game.service";
+import { EndGameService } from "../end-game/end-game-service/end-game.service";
 
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
