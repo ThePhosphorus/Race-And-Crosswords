@@ -2,13 +2,12 @@ import { Injectable } from "@angular/core";
 import { UserPlayer } from "../../player/user-player";
 import { AiPlayer } from "../../player/ai-player";
 import { GameResult } from "./game-result";
-import { NB_LAPS, S_TO_MS, MIN_TO_S } from "../../../../global-constants/constants";
+import { NB_LAPS } from "../../../../global-constants/constants";
 import { Track } from "../../../../../../../common/race/track";
 import { Highscore } from "../../../../../../../common/race/highscore";
 import { TrackLoaderService } from "../../../track-loader/track-loader.service";
 import { StringHighscore } from "../string-highscore";
 
-const MS_DECIMALS: number = 3;
 const MAX_SAVED_HIGHSCORES: number = 5;
 
 @Injectable()
@@ -30,7 +29,7 @@ export class EndGameService {
 
     public get trackHighscores(): Array<StringHighscore> {
         const stringHighscores: Array<StringHighscore> = new Array<StringHighscore>();
-        this._track.highscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs.name, this.msToTime(hs.time))));
+        this._track.highscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs)));
 
         return stringHighscores;
     }
@@ -53,13 +52,16 @@ export class EndGameService {
             this.gameResults.push(new GameResult(userPlayer.name,
                                                  false,
                                                  this.msToTimes(userPlayer.lapTimes),
-                                                 this.msToTime(this.sumTimes(userPlayer.lapTimes))));
+                                                 StringHighscore.msToTime(this.sumTimes(userPlayer.lapTimes))));
         }
         if (aiPlayers != null) {
-            aiPlayers.forEach((ai: AiPlayer) => this.gameResults.push(new GameResult(ai.name,
-                                                                                     true,
-                                                                                     this.msToTimes(ai.lapTimes),
-                                                                                     this.msToTime(this.sumTimes(ai.lapTimes)))));
+            aiPlayers.forEach((ai: AiPlayer) => {
+                this.gameResults.push(new GameResult(ai.name,
+                                                     true,
+                                                     this.msToTimes(ai.lapTimes),
+                                                     StringHighscore.msToTime(this.sumTimes(ai.lapTimes)))
+                );
+            });
         }
 
         this.gameResults.sort((a, b) => a.total.localeCompare(b.total));
@@ -118,18 +120,8 @@ export class EndGameService {
 
     private msToTimes(times: Array<number>): Array<string> {
         const stringArr: Array<string> = new Array<string>();
-        times.forEach((ms: number) => stringArr.push(this.msToTime(ms)));
+        times.forEach((ms: number) => stringArr.push(StringHighscore.msToTime(ms)));
 
         return stringArr;
-    }
-
-    private msToTime(time: number): string {
-        const ms: number = time % S_TO_MS;
-        time = (time - ms) / S_TO_MS;
-        const secs: number = time % MIN_TO_S;
-        time = (time - secs) / MIN_TO_S;
-        const mins: number = time % MIN_TO_S;
-
-        return ("0" + mins).slice(-2) + ":" + ("0" + secs).slice(-2) + "." + (ms + "00").substring(0, MS_DECIMALS);
     }
 }
