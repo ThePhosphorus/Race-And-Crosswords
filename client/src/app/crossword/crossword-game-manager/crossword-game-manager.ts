@@ -129,7 +129,7 @@ export class GameManager {
         }
     }
 
-    private initializeEmptyGrid(): void {
+    public initializeEmptyGrid(): void {
         this._playerGrid.value.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._playerGrid.value.size * this._playerGrid.value.size); i++) {
             this._playerGrid.getValue().grid.push(new Letter(EMPTY_TILE_CHARACTER));
@@ -158,15 +158,26 @@ export class GameManager {
         return "hsl(" + hue + ", " + SATURAION + "%, " + lightness + "%)";
     }
 
-    public isWordSolved(letterId: number, orientaion: Orientation): boolean {
+    public isWordSolved(letterId: number, orientation: Orientation): boolean {
         let isSelected: boolean = false;
         this._solvedWords.getValue().forEach((sw: SolvedWord) => {
 
-            if (sw.id === letterId && sw.orientation === orientaion) {
+            if (sw.id === letterId && sw.orientation === orientation) {
                 isSelected = true;
             }
         });
 
         return isSelected;
     }
+
+    public solvedWordPlayer(letterId: number, orientation: Orientation): number {
+        for (const sw of this._solvedWords.getValue()) {
+            if (sw.id === letterId && sw.orientation === orientation) {
+                return sw.player;
+            }
+        }
+
+        return null;
+    }
+
 }

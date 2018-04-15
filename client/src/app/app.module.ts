@@ -25,6 +25,7 @@ import { ModalEndGameComponent } from "./crossword/crossword-game-info/modal-end
 import { LoadingComponent } from "./race/game-component/loading/loading.component";
 import { StartDisplayComponent } from "./race/game-component/start-display/start-display.component";
 import { GameResultComponentComponent } from "./race/game-component/game-result-component/game-result-component.component";
+import { DefinitionTileComponent } from "./crossword/definition-tile/definition-tile.component";
 
 @NgModule({
     declarations: [
@@ -49,7 +50,8 @@ import { GameResultComponentComponent } from "./race/game-component/game-result-
         RpmBarComponent,
         LoadingComponent,
         StartDisplayComponent,
-        GameResultComponentComponent
+        GameResultComponentComponent,
+        DefinitionTileComponent
     ],
     imports: [
         BrowserModule,

@@ -11,9 +11,7 @@
     <tr *ngFor="let letters of twoDimensionGrid;let row = index">
       <th scope="row">{{ row+1 }}</th>
       <td *ngFor="let letter of letters; let col = index" [ngClass]="{'black': letter.isBlackTile}">
-        <span *ngIf="letter.char">
-          <app-input-letter [id]="(twoDimensionGrid.length*row)+col"></app-input-letter>
-        </span>
+          <app-input-letter *ngIf="letter.char" [id]="(twoDimensionGrid.length*row)+col"></app-input-letter>
       </td>
     </tr>
   </tbody>
