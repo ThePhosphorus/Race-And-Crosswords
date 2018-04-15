@@ -5,7 +5,6 @@ import { FormsModule } from "@angular/forms";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HomePageComponent } from "./home-page/home-page.component";
-import { ReversePipe } from "./reverse-pipe/reverse.pipe";
 import { GameComponent } from "./race/game-component/game.component";
 import { GameMenuComponent } from "./race/game-menu/game-menu.component";
 import { TrackEditorComponent } from "./race/admin/track-editor/track-editor.component";
@@ -37,7 +36,6 @@ import { DefinitionTileComponent } from "./crossword/definition-tile/definition-
         AdminComponent,
         TrackListComponent,
         TrackEditorComponent,
-        ReversePipe,
         HomePageComponent,
         InputGridComponent,
         DefinitionComponent,
