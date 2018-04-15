@@ -11,7 +11,7 @@ export class AiPlayer extends RacePlayer {
     private aiController: AIController;
 
     public constructor(cameraManager: CameraManagerService) {
-        super(new Car());
+        super(new Car(true));
         this.aiController = new AIController();
     }
 
