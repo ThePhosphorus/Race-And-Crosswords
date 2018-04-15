@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { TrackEditorComponent } from "./track-editor.component";
-import { ReversePipe } from "../../../reverse-pipe/reverse.pipe";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { HttpClientModule } from "@angular/common/http/";
 import { TrackSaverService } from "../track-saver/track-saver.service";
@@ -17,7 +16,7 @@ describe("TrackEditorComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TrackEditorComponent, ReversePipe],
+            declarations: [TrackEditorComponent],
             imports: [HttpClientModule],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [

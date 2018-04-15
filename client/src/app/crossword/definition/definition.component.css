@@ -4,6 +4,7 @@
 
 #hints td {
     text-align: left;
+    padding: 0%;
 }
 
 label {
@@ -18,12 +19,4 @@ label {
 @font-face {
     font-family: "Hints Font";
     src: url("/assets/fonts/atwriter.ttf") format("truetype")
-}
-
-.disabled {
-    text-decoration-line: line-through;
-}
-
-.enabled:hover{
-    background-color: #e7e7e7;
 }

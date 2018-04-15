@@ -19,10 +19,8 @@ export class ModalNewGameComponent implements OnInit {
 
     private _matchesAvailable: Array<InWaitMatch>;
 
-    public constructor(
-            private _crosswordService: CrosswordService,
-            private _infoService: GameInfoService,
-            private commService: CrosswordCommunicationService) {
+    public constructor(private _crosswordService: CrosswordService,
+                       private _infoService: GameInfoService, private commService: CrosswordCommunicationService) {
         this.isCollapsedAvailablePlayer = false;
         this.username = null;
         this.isSinglePlayer = null;
@@ -33,9 +31,11 @@ export class ModalNewGameComponent implements OnInit {
     public ngOnInit(): void {
         this.getMatchesFromServer();
     }
+
     public get showModal(): boolean {
         return this._infoService.showModal.getValue();
     }
+
     public get level(): Difficulty {
         return this._infoService.lvl.getValue();
     }
@@ -56,9 +56,19 @@ export class ModalNewGameComponent implements OnInit {
 
     public get isReadyToPlay(): boolean {
         return (this.isSinglePlayer != null &&
-            this.username != null &&
-            this.username !== "" &&
+            this.verifyUsername() &&
             this.level != null);
+    }
+
+    public verifyUsername(): boolean {
+        if (this.username === null) {
+            return false;
+        }
+        if (this.username.split(" ").join("").length === 0 || this.username.split(" ").join("") === this.joinedPlayer) {
+            return false;
+        }
+
+        return true;
     }
 
     public closeGameOptions(): void {
@@ -72,9 +82,12 @@ export class ModalNewGameComponent implements OnInit {
         if (!this.isSinglePlayer) {
             if (this.joinedPlayer === null) {
                 this.commService.createMatch(this.level);
+                this._infoService.setShowSearching(true);
             } else {
                 this.commService.joinMatch(this.joinedPlayer);
             }
+        } else {
+            this._infoService.setShowSearching(false);
         }
         this._crosswordService.newGame(this.level, this.isSinglePlayer);
         this.closeGameOptions();
@@ -87,7 +100,7 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public showLevelChoice(bool: boolean): void {
-        this.isCollapsedAvailablePlayer = (bool) ? false : !this.isCollapsedAvailablePlayer;
+        this.isCollapsedAvailablePlayer = !bool;
         this.showLevelGame = bool;
     }
 
@@ -96,8 +109,6 @@ export class ModalNewGameComponent implements OnInit {
         this.showLevelChoice(isSinglePlayer);
         if (!isSinglePlayer) {
             this.getMatchesFromServer();
-            this._infoService.setShowSearching(true);
         }
     }
-
 }
