@@ -30,7 +30,7 @@ export class CrosswordGameInfoComponent implements OnInit {
     }
 
     public get lvl(): Difficulty {
-        return this._infoService.lvl.getValue();
+        return this._crosswordService.gameManager.difficultySubject.getValue();
     }
 
     public get showModal(): boolean {

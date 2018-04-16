@@ -102,6 +102,10 @@ export class GameManager {
         this._players.next(players);
     }
 
+    public set difficulty(diff: Difficulty) {
+        this._difficulty.next(diff);
+    }
+
     public getChar(index: number): string {
         return this._playerGrid.getValue().grid[index].char;
     }
