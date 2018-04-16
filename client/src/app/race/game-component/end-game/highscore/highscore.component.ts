@@ -21,7 +21,9 @@ export class HighscoreComponent {
 
     public get highscores(): Array<StringHighscore> {
         const stringHighscores: Array<StringHighscore> = new Array<StringHighscore>();
-        this._endGameService.trackHighscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs)));
+        if (this._endGameService.trackHighscores != null) {
+            this._endGameService.trackHighscores.forEach((hs: Highscore) => stringHighscores.push(new StringHighscore(hs)));
+        }
 
         return stringHighscores;
     }
