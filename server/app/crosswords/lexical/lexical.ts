@@ -38,7 +38,7 @@ export class Lexical extends WebService {
             const isEasy: boolean = req.body["easy"];
 
             this.getWord(constraint, isEasy).then((word: string) => {
-                res.setHeader("Content-Type", "application/json");
+                // res.setHeader("Content-Type", "application/json");
                 res.send(word);
             }).catch((err: Error) => {
                 console.error(err.message);
@@ -49,8 +49,8 @@ export class Lexical extends WebService {
         this._router.post("/query-definitions", (req: Request, res: Response, next: NextFunction) => {
             const word: string = req.body["word"];
 
-            this._datamuse.getDefinitions(word).then((words: string) => {
-                res.setHeader("Content-Type", "application/json");
+            this._datamuse.getDefinitions(word).then((words: string[]) => {
+                // res.setHeader("Content-Type", "application/json");
                 res.send(words);
             }).catch((err: Error) => {
                 console.error(err.message);
@@ -61,16 +61,16 @@ export class Lexical extends WebService {
 
     private async getWord(constraint: string, isEasy: boolean): Promise<string> {
         const str: {word: string}[] = await this.getMongoWords(constraint);
+        console.log(str.length);
 
         if (str != null && str.length !== 0) {
-            const id: number = Math.floor(Math.random() % str.length);
-            const datamuseword: DatamuseWord = new DatamuseWord();
-            datamuseword.word = str[id].word;
+            const id: number = Math.floor(Math.random() * str.length);
+            console.log(id);
 
-            return JSON.stringify(datamuseword);
+            return str[id].word;
         } else {
             const word: string = await this._datamuse.getWord(constraint, isEasy);
-            console.log("filling");
+            console.log("filling : " + word);
             if (word != null) {
                 this._collection.insertOne({word : word});
             }

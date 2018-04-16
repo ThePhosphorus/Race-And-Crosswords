@@ -18,7 +18,7 @@ export class Datamuse {
         const word: DatamuseWord = words[Math.floor(Math.random() * (words.length - 1))];
         if (word == null) { return undefined; }
 
-        return JSON.stringify(word);
+        return word.word;
     }
 
     private selectWordsFromDifficulty(words: Array<DatamuseWord>, isEasy: boolean): Array<DatamuseWord> {
@@ -53,7 +53,7 @@ export class Datamuse {
         return word.word.indexOf(" ") === -1 && word.word.indexOf("-") === -1;
     }
 
-    public async getDefinitions(word: string): Promise<string> {
+    public async getDefinitions(word: string): Promise<string[]> {
         const datamuseWords: Array<DatamuseWord> = await this.makeRequest(word);
 
         if (datamuseWords !== undefined) {
@@ -62,10 +62,10 @@ export class Datamuse {
                 dmWord.word === word &&
                 this.testHasDefinitions(dmWord) &&
                 this.testRemoveDefsWithWord(dmWord)) {
-                    return JSON.stringify(dmWord);
+                    return dmWord.defs;
                 }
         }
 
-        return undefined;
+        return null;
     }
 }

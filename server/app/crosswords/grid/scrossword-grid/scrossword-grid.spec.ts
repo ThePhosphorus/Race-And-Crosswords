@@ -25,7 +25,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word)
+                crossword.addWord(wordString, word)
             );
 
         });
@@ -68,7 +68,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word)
+                crossword.addWord(wordString, word)
             );
 
         });
@@ -99,7 +99,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word)
+                crossword.addWord(wordString, word)
             );
 
         });
@@ -132,10 +132,10 @@ describe(" Server Crossword Grid", () => {
             i++;
         }
 
-        crossword.addWord(wordString, defs, oldWord);
+        crossword.addWord(wordString, oldWord);
         it("should not succeed", () => {
             assert.ok(
-                !crossword.addWord(wordString, defs, word)
+                !crossword.addWord(wordString, word)
             );
 
         });
@@ -150,7 +150,6 @@ describe(" Server Crossword Grid", () => {
         const crossword: SCrosswordGrid = new SCrosswordGrid();
         const word: Word = new Word();
         const wordString: string = "word";
-        const defs: string[] = new Array<string>();
 
         let i: number  = 0;
         while (i < wordString.length) {
@@ -162,7 +161,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should not succeed", () => {
             assert.ok(
-                !crossword.addWord(wordString, defs, word)
+                !crossword.addWord(wordString, word)
             );
 
         });
@@ -189,7 +188,7 @@ describe(" Server Crossword Grid", () => {
             i++;
         }
         word.id = word.letters[0].id;
-        crossword.addWord(wordString, defs, word);
+        crossword.addWord(wordString, word);
 
         it("should get removed word", () => {
             assert.equal(
