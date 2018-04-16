@@ -33,7 +33,7 @@ describe("AIController", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({providers: [CameraManagerService, LoaderService]});
-        car = new Car(new MockEngine());
+        car = new Car(true, new MockEngine());
         ai = new AIController();
         car.add(ai);
 

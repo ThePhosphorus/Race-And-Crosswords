@@ -34,12 +34,21 @@ import { SpawnPoint, SpawnPointFinder } from "./spawn-point/spawn-point";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 import { TrackPosition } from "../player/track-position/track-position";
+import { EndGameService } from "../end-game/end-game-service/end-game.service";
 
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
 const FLOOR_TEXTURE_RATIO: number = 0.1;
 const N_AI_CONTROLLED_CARS: number = 3;
 const NO_TRACK_POINTS: Array<Vector3Struct> = [new Vector3Struct(0, 0, 0), new Vector3Struct(0, 0, 1), new Vector3Struct(0, 0, 0)];
+const COLORS: LoadedObject[] = [
+    LoadedObject.carYellow,
+    LoadedObject.carGreen,
+    LoadedObject.carRed,
+    LoadedObject.carOrange,
+    LoadedObject.carPurple,
+    LoadedObject.carPink
+];
 
 export class CarInfos {
     public constructor(
@@ -50,15 +59,6 @@ export class CarInfos {
         public lap: number
     ) { }
 }
-
-const COLORS: LoadedObject[] = [
-    LoadedObject.carYellow,
-    LoadedObject.carGreen,
-    LoadedObject.carRed,
-    LoadedObject.carOrange,
-    LoadedObject.carPurple,
-    LoadedObject.carPink
-];
 
 @Injectable()
 export class GameManagerService extends Renderer {
@@ -73,7 +73,8 @@ export class GameManagerService extends Renderer {
                        private _soundManager: SoundManagerService,
                        private _collisionDetector: CollisionDetectorService,
                        private _lightManager: LightManagerService,
-                       private _loader: LoaderService) {
+                       private _loader: LoaderService,
+                       private _endGame: EndGameService) {
         super(cameraManager, false);
         this._updateSubscribers = new Array<(deltaTime: number) => void>();
         this._gameConfiguration = new GameConfiguration();
@@ -121,6 +122,9 @@ export class GameManagerService extends Renderer {
     private stopGame(): void {
         this._isStarted = false;
         this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
+        this._soundManager.stopAllSounds();
+        this._inputManager.resetBindings();
+        this._endGame.handleEndGame(this._player, this._aiControlledCars, this._gameConfiguration.track);
     }
 
     protected update(deltaTime: number): void {
@@ -153,13 +157,14 @@ export class GameManagerService extends Renderer {
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
         const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
         const trackPosition: TrackPosition = this._gameConfiguration.track != null ? new TrackPosition(track) : null;
+        const randomColors: Array<LoadedObject> = COLORS.sort(() => Math.random() - 1 / 2);
 
-        this._player.init(spawnPoints[0].position, this._loader, COLORS[0], this.cameraManager.audioListener, trackPosition);
+        this._player.init(spawnPoints[0].position, this._loader, randomColors[0], this.cameraManager.audioListener, trackPosition);
         this._player.car.mesh.lookAt(spawnPoints[0].direction);
 
         for (let i: number = 0; i < N_AI_CONTROLLED_CARS; i++) {
             this._aiControlledCars.push(new AiPlayer(this.cameraManager));
-            this._aiControlledCars[i].init(spawnPoints[i + 1].position, this._loader, COLORS[(i + 1) % COLORS.length],
+            this._aiControlledCars[i].init(spawnPoints[i + 1].position, this._loader, randomColors[(i + 1) % randomColors.length],
                                            this.cameraManager.audioListener, trackPosition);
             this._aiControlledCars[i].car.mesh.lookAt(spawnPoints[i + 1].direction);
         }
@@ -173,7 +178,7 @@ export class GameManagerService extends Renderer {
         this._inputManager.registerKeyDown(TOGGLE_NIGHT_MODE_KEYCODE, () => this._lightManager.toggleNightMode());
         this._inputManager.registerKeyUp(ZOOM_IN_KEYCODE, () => this.cameraManager.zoomRelease());
         this._inputManager.registerKeyUp(ZOOM_OUT_KEYCODE, () => this.cameraManager.zoomRelease());
-        this._inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this._lightManager.toggleSunlight());
+        this._inputManager.registerKeyUp(TOGGLE_SUNLIGHT_KEYCODE, () => this._lightManager.toggleFancyMode());
     }
 
     private initSoundManager(): void {
@@ -217,4 +222,5 @@ export class GameManagerService extends Renderer {
 
         return place;
     }
+
 }

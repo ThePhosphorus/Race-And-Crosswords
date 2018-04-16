@@ -24,7 +24,7 @@ export class PerspectiveCameraContainer extends CameraContainer {
 
     public constructor(audioListener: AudioListener, targetInfos: TargetInfos, cameraDistance: number, zoomLimit: ZoomLimit) {
         super(audioListener, targetInfos, cameraDistance, zoomLimit, CameraType.Perspective);
-        this._effectModeisEnabled = false;
+        this._effectModeisEnabled = true;
         this._thirdPersonPoint = new Vector3(0, 0, 0);
         this._perspCamera = new PerspectiveCamera(
             FIELD_OF_VIEW,

@@ -79,6 +79,10 @@ export class CarLights extends Object3D {
         this._frontLight.intensity = (this._frontLight.intensity === 0 ? FRONT_LIGHT_INTENSITY : 0);
     }
 
+    public toggleShadows(): void {
+        this._frontLight.castShadow = !this._frontLight.castShadow;
+    }
+
     public brake(): void {
         this._brakeLights.forEach((smallLight) => {
             if (smallLight !== this._brakeLights[0]) {

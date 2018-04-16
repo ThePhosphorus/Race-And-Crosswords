@@ -17,28 +17,27 @@ const DIRECTIONAL_LIGHT_OFFSET: number = 50;
 const SUNLIGHT_INTENSITY: number = 0.2;
 const D_LIGHT_PLANE_SIZE: number = 200;
 const SHADOW_BIAS: number = 0.0001;
+const DAY_AMBIENT_LIGHT: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+const NIGHT_AMBIENT_LIGHT: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
 
 @Injectable()
 export class LightManagerService {
-    private _isShadowMode: boolean;
+    private _isFancyMode: boolean;
     private _isNightMode: boolean;
     private _directionalLight: DirectionalLight;
-    private _dayAmbientLight: AmbientLight;
-    private _nightAmbientLight: AmbientLight;
     private _scene: Scene;
     private _player: Car;
     private _aiControlledCars: Array<Car>;
     public constructor(private loader: LoaderService) {
-            this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
-            this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
             this._isNightMode = false;
-            this._isShadowMode = false;
+            this._isFancyMode = false;
          }
+
     public init(scene: Scene, player: Car, aiControlledCars: Array<Car>): void {
         this._scene = scene;
         this._player = player;
         this._aiControlledCars = aiControlledCars;
-        this._scene.add(this._dayAmbientLight);
+        this._scene.add(DAY_AMBIENT_LIGHT);
         this.loadSkybox(LoadedCubeTexture.daySkyBox);
         this.loadSunlight();
     }
@@ -48,41 +47,59 @@ export class LightManagerService {
         this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 
-    public toggleSunlight(): void {
+    public toggleFancyMode(): void {
+        if (this._isNightMode) {
+            this._player.toggleNightLightShadows();
+            this._aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLightShadows();
+        });
+        } else {
+            this.toggleSunShadows();
+        }
+    }
+
+    private toggleSunShadows(): void {
         if (this._scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
             this._scene.remove(this._directionalLight);
-            this._isShadowMode = false;
         } else if (!this._isNightMode) {
             this._scene.add(this._directionalLight);
-            this._isShadowMode = true;
         }
+        this._isFancyMode = !this._isFancyMode;
     }
 
     public loadSkybox(type: LoadedCubeTexture): void {
         this._scene.background = this.loader.getCubeTexture(type);
     }
-    public toggleNightMode(): void {
 
+    public toggleNightShadows(): void {
+        if (this._isNightMode) {
+            this._player.toggleNightLightShadows();
+            this._aiControlledCars.forEach((aiCar) => {
+                aiCar.toggleNightLightShadows();
+            });
+        }
+    }
+
+    public toggleNightMode(): void {
         this._player.toggleNightLight();
         this._aiControlledCars.forEach((aiCar) => {
             aiCar.toggleNightLight();
         });
         if (this._isNightMode) {
-            this._scene.remove(this._nightAmbientLight);
-            this._scene.add(this._dayAmbientLight);
+            this._scene.remove(NIGHT_AMBIENT_LIGHT);
+            this._scene.add(DAY_AMBIENT_LIGHT);
             this.loadSkybox(LoadedCubeTexture.daySkyBox);
-            this._isNightMode = false;
-            if (this._isShadowMode) {
+            if (this._isFancyMode) {
                 this._scene.add(this._directionalLight);
             }
+            this._isNightMode = false;
         } else {
-            this._scene.remove(this._dayAmbientLight);
-            this._scene.add(this._nightAmbientLight);
+            this._scene.remove(DAY_AMBIENT_LIGHT);
+            this._scene.add(NIGHT_AMBIENT_LIGHT);
             this.loadSkybox(LoadedCubeTexture.nightSkyBox);
             this._isNightMode = true;
-            if (this._isShadowMode) {
-                this._scene.remove(this._directionalLight);
-            }
+            this._scene.remove(this._directionalLight);
+
         }
     }
 

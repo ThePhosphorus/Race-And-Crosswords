@@ -11,7 +11,7 @@ export class AiPlayer extends RacePlayer {
     private aiController: AIController;
 
     public constructor(cameraManager: CameraManagerService) {
-        super(new Car());
+        super(new Car(true));
         this.aiController = new AIController();
     }
 
@@ -33,13 +33,14 @@ export class AiPlayer extends RacePlayer {
     }
 
     public finishRace(): void {
-        const avg: number = this.calculateAvgAiTime();
+        let avg: number = this.calculateAvgAiTime();
         while (this.lapTimes.length < NB_LAPS + 1) {
             if (this.lapTimes[this.lapTimes.length - 1] > 0) {
                 const distance: number = this.track.findDistanceOnTrack(this.car.getPosition());
                 const total: number = this.track.trackLength;
-                const missingTime: number = (1 - (distance / total)) * avg;
+                const missingTime: number = Math.round((1 - (distance / total)) * avg);
                 this.lapTimes[this.lapTimes.length - 1] += missingTime;
+                avg = (avg + this.lapTimes[this.lapTimes.length - 1]) / 2;
             } else {
                 if (avg > 0) {
                     this.lapTimes[this.lapTimes.length - 1] = avg;

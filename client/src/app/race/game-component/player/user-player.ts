@@ -6,9 +6,11 @@ import { ACCELERATE_KEYCODE, BRAKE_KEYCODE, LEFT_KEYCODE, RIGHT_KEYCODE, HANDBRA
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
 
+const USER_NAME: string = "You";
+
 export class UserPlayer extends RacePlayer {
     public constructor(private inputManager: InputManagerService) {
-        super(new Car());
+        super(new Car(false));
     }
 
     public onInit(
@@ -17,6 +19,7 @@ export class UserPlayer extends RacePlayer {
         type: LoadedObject,
         audioListener: AudioListener
     ): void {
+        this._name = USER_NAME;
         this.car.init(position, loader, type, audioListener);
         this.car.initCarLights(false);
         this.initKeyBindings();

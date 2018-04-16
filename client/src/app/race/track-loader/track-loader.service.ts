@@ -203,7 +203,7 @@ export class TrackLoaderService {
         return this._http.put<void>(TRACK_SAVER_INCPLAY_URL + id, null);
     }
 
-    public updateHighScore(id: string, highscore: Highscore): Observable<void> {
-        return this._http.put<void>(TRACK_SAVER_UPDATE_HIGHSCORE + id, {highscore : highscore});
+    public updateHighScore(id: string, score: Highscore): Observable<void> {
+        return this._http.put<void>(TRACK_SAVER_UPDATE_HIGHSCORE + id, { highscore : score });
     }
 }
