@@ -3,6 +3,8 @@ import { ExternalCommunications } from "./external-communications";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
 
+// tslint:disable: no-floating-promises
+
 const externalCommunication: ExternalCommunications = new ExternalCommunications();
 let testWord: string;
 

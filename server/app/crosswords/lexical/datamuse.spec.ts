@@ -1,6 +1,7 @@
 import { Datamuse } from "./datamuse";
 import * as assert from "assert";
-import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+
+// tslint:disable: no-floating-promises
 
 describe("Service Lexical", () => {
     const datamuse: Datamuse = new Datamuse();
