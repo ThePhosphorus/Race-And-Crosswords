@@ -20,7 +20,7 @@ export class SCrosswordGrid extends CrosswordGrid {
     public addWord(newWord: string, word: Word): boolean {
         if (this.isUnique(newWord)) {
             this.setWord(newWord, word);
-            console.log(this.toString());
+
             return true;
         }
 

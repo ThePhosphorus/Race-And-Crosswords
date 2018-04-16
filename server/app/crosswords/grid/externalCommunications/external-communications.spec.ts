@@ -16,7 +16,7 @@ describe("External Communications", () => {
             constraint += "?";
         }
 
-        externalCommunication.getWordsFromServer(constraint, word, true).then((str: string) => {
+        externalCommunication.getWordsFromServer(constraint, true).then((str: string) => {
             if (str != null) {
                 testWord = str;
             } else {
@@ -55,7 +55,7 @@ describe("External Communications", () => {
             constraint += "?";
         }
 
-        externalCommunication.getWordsFromServer(constraint, word, true).then((str: string) => {
+        externalCommunication.getWordsFromServer(constraint, true).then((str: string) => {
             if (str == null)  {
                 assert.fail("could not find easy word");
             }
@@ -75,7 +75,7 @@ describe("External Communications", () => {
             constraint += "?";
         }
 
-        externalCommunication.getWordsFromServer(constraint, word, false).then((datamuseWord: string) => {
+        externalCommunication.getWordsFromServer(constraint, false).then((datamuseWord: string) => {
             if (datamuseWord === undefined) {
                 assert.fail("could not find hard word");
             }

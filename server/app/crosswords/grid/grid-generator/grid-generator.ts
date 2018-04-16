@@ -8,6 +8,11 @@ export class GridGenerator extends BaseGridGenerator {
 
     protected rollbackCount: number;
 
+    public constructor() {
+        super();
+        this.rollbackCount = 0;
+    }
+
     protected getWordWeight(word: Word): number {
         let weight: number = 0;
         for (const letter of word.letters) {
@@ -30,7 +35,7 @@ export class GridGenerator extends BaseGridGenerator {
 
     protected async findWords(difficulty: Difficulty): Promise<void> {
 
-        await this.findWord(this.notPlacedWords.pop(), difficulty);
+        // await this.findWord(this.notPlacedWords.pop(), difficulty);
 
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_TOTAL_ROLLBACKS) {
@@ -49,13 +54,7 @@ export class GridGenerator extends BaseGridGenerator {
     protected async findWord(word: Word, difficulty: Difficulty): Promise<boolean> {
         const constraint: string = this.getConstraints(word);
         const isEasyWord: boolean = difficulty !== Difficulty.Hard;
-        const newWord: string = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
-
-        // if (constraint.indexOf(CONSTRAINT_CHAR) === -1) {
-        //     receivedWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
-        // } else {
-        //     receivedWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
-        // }
+        const newWord: string = await this.externalCommunications.getWordsFromServer(constraint, isEasyWord);
 
         return (newWord != null) ? this.crossword.addWord(newWord, word) : false;
     }
