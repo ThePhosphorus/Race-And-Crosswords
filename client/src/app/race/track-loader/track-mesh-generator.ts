@@ -6,7 +6,7 @@ import { WHITE_MATERIAL } from "../admin/track-editor.constants";
 import { TrackLoaderService } from "./track-loader.service";
 import { DEFAULT_TRACK_WIDTH } from "../race.constants";
 
-const NB_SMOOTHING_VERTECIES: number = 200;
+const NB_SMOOTHING_VERTECIES: number = 20;
 // tslint:disable-next-line:no-magic-numbers
 const SMOOTHING_LENGTH: number = DEFAULT_TRACK_WIDTH / 3;
 
@@ -23,7 +23,7 @@ export class TrackMeshGenerator {
 
     private initMeshInfos(): void {
         this.generatePoints();
-        this.smoothEdges2();
+        this.smoothEdges();
         this.linkPoints();
     }
 
@@ -53,19 +53,8 @@ export class TrackMeshGenerator {
         const perpPA: Vector3 = new Vector3(vecPA.z, vecPA.y, -vecPA.x).normalize()
             .multiplyScalar((DEFAULT_TRACK_WIDTH * HALF) * relativeOffset);
 
-        const innerPoint: Vector3 = this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
-                                                          pointA.clone().add(perpAB), pointB.clone().add(perpAB));
-
-        if (relativeOffset > 0) {
-            const inner: Vector3 = this.getCornerPoint(pointP, pointA, pointB, - relativeOffset);
-            const normal: Vector3 = inner.clone().sub(innerPoint);
-            const offset: number = normal.length() - DEFAULT_TRACK_WIDTH;
-
-            return innerPoint;
-
-        } else {
-            return innerPoint;
-        }
+        return this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
+                                     pointA.clone().add(perpAB), pointB.clone().add(perpAB));
     }
 
     private findIntersection(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): Vector3 {
@@ -103,22 +92,6 @@ export class TrackMeshGenerator {
         }
 
         this.fillVertecies(leftVertecies, rightVertecies);
-    }
-
-    private smoothEdges2(): void {
-        const rightVertecies: Array<Vector3> = new Array<Vector3>();
-        const leftVertecies: Array<Vector3> = new Array<Vector3>();
-
-        for (let i: number = 0; i < this._track.points.length - 1; i++) {
-            rightVertecies.push(this._geometry.vertices[this.getRightPoint(i)]);
-            leftVertecies.push(this._geometry.vertices[this.getLeftPoint(i)]);
-        }
-
-        const rightCurve: CatmullRomCurve3 = new CatmullRomCurve3(rightVertecies);
-        const leftCurve: CatmullRomCurve3 = new CatmullRomCurve3(leftVertecies);
-
-        this.fillVertecies(leftCurve.getPoints(NB_SMOOTHING_VERTECIES * this.nbPoints),
-                           rightCurve.getPoints(NB_SMOOTHING_VERTECIES * this.nbPoints));
     }
 
     private smoothEdge(pointP: Vector3, pointA: Vector3, pointB: Vector3, edgeId: number): Array<Vector3> {
