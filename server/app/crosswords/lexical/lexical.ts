@@ -2,10 +2,11 @@ import { injectable } from "inversify";
 import { Request, Response, NextFunction } from "express";
 import { Datamuse } from "./datamuse";
 import { WebService } from "../../webServices";
-import { Collection, ObjectId, Cursor, IteratorCallback } from "mongodb";
+import { Collection, MongoError } from "mongodb";
 import { DbClient } from "../../mongo/DbClient";
 
 const LEXICAL_COLLECTION: string = "words";
+const MAX_WORD_LENGTH: number = 12;
 
 @injectable()
 export class Lexical extends WebService {
@@ -28,10 +29,6 @@ export class Lexical extends WebService {
     }
 
     protected defineRoutes(): void {
-        this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            res.send("Lexical service enpoint");
-        });
-
         this._router.post("/query-word", (req: Request, res: Response, next: NextFunction) => {
             const constraint: string = req.body["constraint"];
             const isEasy: boolean = req.body["easy"];
@@ -57,9 +54,9 @@ export class Lexical extends WebService {
             });
         });
 
-        // this._router.get("/clean", (req: Request, res: Response, next: NextFunction) => {
-        //     this.cleanDB().then((nb: number) => res.send(nb));
-        // });
+        this._router.post("/fill", (req: Request, res: Response, next: NextFunction) => {
+            this.fillDB().then((nb: number) => res.send("Added up to " + nb + " words."));
+        });
     }
 
     private async getWord(constraint: string, isEasy: boolean): Promise<string> {
@@ -73,7 +70,7 @@ export class Lexical extends WebService {
             return str[id].word;
         } else {
             const word: string = await this._datamuse.getWord(constraint, isEasy);
-            console.log("filling : " + word);
+            console.error("filling : " + word);
             if (word != null) {
                 this._collection.insertOne({word : word});
             }
@@ -102,22 +99,22 @@ export class Lexical extends WebService {
                                                             { $match : { word :  { $regex : regex }}}]).toArray();
     }
 
-    // public async cleanDB(): Promise<number> {
-    //     this.connect();
+    private async fillDB(): Promise<number> {
+        let count: number = 0;
 
-    //     const words: Cursor<{_id: ObjectId, word: string}> = this._collection.find({});
+        for (let i: number = 2; i < MAX_WORD_LENGTH; i++) {
+            let constraint: string = "";
+            for (let j: number = 0; j < i; j++) {
+                constraint += "?";
+            }
+            const words: Array<string> = await this._datamuse.getWords(constraint);
+            count += words.length;
+            this.connect();
 
-    //     const iterator: IteratorCallback<{_id: ObjectId, word: string}> = (obj: {_id: ObjectId, word: string}) => {
-    //         this._datamuse.getDefinitions(obj.word).then((defs: string[]) => {
-    //             if (defs == null || defs.length === 0) {
-    //                 this._collection.deleteOne({_id : obj._id});
-    //                 console.log("removed: " + obj.word );
-    //             }
-    //         });
-    //     };
+            words.forEach((word: string) => this._collection.insertOne({ word: word})
+                .catch((e: MongoError) => console.error(e.message)));
+        }
 
-    //     words.forEach(iterator, () => console.log("done"));
-
-    //     return (await this._collection.find({}).toArray()).length;
-    // }
+        return count;
+    }
 }
