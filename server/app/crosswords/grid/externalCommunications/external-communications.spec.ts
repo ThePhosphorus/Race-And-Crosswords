@@ -8,11 +8,9 @@ let testWord: string;
 
 describe("External Communications", () => {
     it("should find word with constraints", (done: MochaDone) => {
-        const word: Word = new Word();
         const wordLength: number = 5;
         let constraint: string = "";
         for (let i: number = 0; i < wordLength; i++) {
-            word.letters.push(new Letter());
             constraint += "?";
         }
 
@@ -22,9 +20,6 @@ describe("External Communications", () => {
             } else {
                 assert.fail("could not find easy word");
             }
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
             done();
         });
     });
@@ -39,9 +34,6 @@ describe("External Communications", () => {
 
         externalCommunication.getDefinitionsFromServer(testWord).then((defs: string[]) => {
             assert.notEqual(defs, undefined, "Did not fetch definitions");
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
             done();
         });
     });
@@ -60,9 +52,6 @@ describe("External Communications", () => {
                 assert.fail("could not find easy word");
             }
             done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
-            done();
         });
     });
 
@@ -80,9 +69,6 @@ describe("External Communications", () => {
                 assert.fail("could not find hard word");
             }
             done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
-            done();
         });
     });
 
@@ -97,9 +83,6 @@ describe("External Communications", () => {
 
         externalCommunication.getDefinitionsFromServer(fakeWord).then((defs: string[]) => {
             assert.equal(defs, undefined, "Found word for : " + fakeWord);
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
             done();
         });
     });

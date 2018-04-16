@@ -54,7 +54,7 @@ export class Datamuse {
     }
 
     private testHasDefinitions(word: DatamuseWord): boolean {
-        return word.defs != null && word.defs.length > 1;
+        return word.defs != null && word.defs.length > 0;
     }
 
     private testDontContainBadChar(word: DatamuseWord): boolean {
@@ -68,8 +68,7 @@ export class Datamuse {
             const dmWord: DatamuseWord = datamuseWords[0];
             if (dmWord != null &&
                 dmWord.word === word &&
-                this.testHasDefinitions(dmWord) &&
-                this.testRemoveDefsWithWord(dmWord)) {
+                this.isValidWord(dmWord)) {
                     return dmWord.defs;
                 }
         }

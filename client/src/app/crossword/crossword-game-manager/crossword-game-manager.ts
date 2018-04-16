@@ -25,7 +25,7 @@ export class GameManager {
 
     public constructor() {
         this._playerGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
-        this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
+        this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());\
         this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
