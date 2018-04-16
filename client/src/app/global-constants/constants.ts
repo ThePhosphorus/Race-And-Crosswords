@@ -1,3 +1,5 @@
+import { LoadedObject } from "../race/game-component/loader-service/load-types.enum";
+
 // tslint:disable:no-magic-numbers
 // global
 export const HALF: number = 0.5;
@@ -53,5 +55,17 @@ export const DELETE_KEY: number = 46;
 
 export const NB_LAPS: number = 3;
 
-// physics constants
+// Physics constants
 export const METER_TO_KM_SPEED_CONVERSION: number = 3.6;
+
+// Timer constants
+export const S_TO_MS: number = 1000;
+export const MIN_TO_S: number = 60;
+
+export const PLAYER_NAMES: Map<LoadedObject, string> = new Map<LoadedObject, string>([[LoadedObject.carBlue, "Jarvis (Blue)"],
+                                                                                      [LoadedObject.carGreen, "Skynet (Green)"],
+                                                                                      [LoadedObject.carOrange, "GLaDOS (Orange)"],
+                                                                                      [LoadedObject.carPink, "Cortana (Pink)"],
+                                                                                      [LoadedObject.carPurple, "K-2SO (Purple)"],
+                                                                                      [LoadedObject.carRed, "HAL9000 (Red)"],
+                                                                                      [LoadedObject.carYellow, "Viki (Yellow)"]]);

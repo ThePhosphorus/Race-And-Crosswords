@@ -1,0 +1,10 @@
+<div *ngIf="showHighscoreAdder" class="row justify-content-center" id="container">
+  <form #form="ngForm" class="col-8 align-self-center mt-4" id="box">
+    <div>
+      <h1>NEW BEST TIME!</h1>
+      <input name="name" required maxlength="20" [(ngModel)]="playerName" type="text" class="form-control" id="name" placeholder="Enter your name">
+    </div>
+      <button (click)="close()" class="btn btn-secondary m-2">SKIP</button>
+      <button (click)="addHighscore()" class="btn btn-secondary m-2" [disabled]="!form.valid">ADD</button>
+  </form>
+</div>

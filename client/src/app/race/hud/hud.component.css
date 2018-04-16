@@ -1,7 +1,7 @@
 .hudBody {
     background-color: transparent;
     z-index: 10;
-    position: absolute;
+    position: fixed;
     font-family: "HUD Font", 'Times New Roman', Times, serif;
     line-height: 1;
     user-select: none;
@@ -30,6 +30,7 @@
 #timers {
     padding-top: 1%;
     padding-left: 8%;
+    padding-right: 0%;
 }
 
 #cent {
