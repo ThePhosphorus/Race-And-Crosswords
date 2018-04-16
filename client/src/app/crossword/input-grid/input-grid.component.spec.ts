@@ -20,7 +20,7 @@ describe("InputGridComponent", () => {
             providers: [CrosswordService, CrosswordCommunicationService, GameManager, GameInfoService],
             imports: [HttpClientModule]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {

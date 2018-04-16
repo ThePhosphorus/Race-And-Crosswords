@@ -21,7 +21,7 @@ describe("CrosswordGameInfoComponent", () => {
             declarations: [CrosswordGameInfoComponent, ModalEndGameComponent, ModalNewGameComponent],
             providers: [CrosswordCommunicationService, CrosswordService, GameInfoService]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {

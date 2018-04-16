@@ -19,7 +19,7 @@ describe("DefinitionTileComponent", () => {
             providers: [CrosswordService, CrosswordCommunicationService],
             imports: [HttpClientModule]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {
