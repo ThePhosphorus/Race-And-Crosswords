@@ -1,4 +1,5 @@
 #loading {
+    font-family:  "Track Font", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     background-color: black;
     width: 100%;
     height: 100%;
@@ -7,7 +8,6 @@
 #laodDetails {
     color: white;
     margin: 0.5rem 2rem 0.5rem 2rem;
-
 }
 
 #loadImg {
@@ -34,7 +34,14 @@
 }
 
 #loadingBar {
-    background-color: currentColor;
+    background: repeating-linear-gradient( 45deg, 	#b44646, 	#b44646 1vmin, 	 #933939 1vmin, 	 #933939 2vmin);
+    border-radius: 1vmin;
     width: 100%;
     height: 100%;
 }
+
+@font-face {
+    font-family: "Track Font";
+    src: url("/assets/fonts/Geometos Rounded.ttf ") format("truetype")
+  }
+
