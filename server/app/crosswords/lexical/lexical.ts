@@ -68,8 +68,8 @@ export class Lexical extends WebService {
             return str[id].word;
         } else {
             const word: string = await this._datamuse.getWord(constraint, isEasy);
-            console.error("filling : " + word);
             if (word != null) {
+                console.error("filling : " + word);
                 this._collection.insertOne({word : word});
             }
 
