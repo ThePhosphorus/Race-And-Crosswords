@@ -5,7 +5,7 @@ const HALF: number = 0.5;
 
 export class Datamuse {
     public async makeRequest(constraint: string): Promise<Array<DatamuseWord>> {
-        const htmlString: string = await Request("http://api.datamuse.com/words?sp=" + constraint + "&md=d");
+        const htmlString: string = await Request("http://api.datamuse.com/words?sp=" + constraint + "&md=d").promise();
 
         return JSON.parse(htmlString) as Array<DatamuseWord>;
     }
@@ -13,7 +13,7 @@ export class Datamuse {
     public async getWord(constraint: string, isEasy: boolean): Promise<string> {
         const words: Array<string> = await this.getWords(constraint, isEasy);
 
-        const word: string = await words[Math.floor(Math.random() * (words.length - 1))];
+        const word: string = words[Math.floor(Math.random() * (words.length - 1))];
         if (word == null) { return undefined; }
 
         return word;

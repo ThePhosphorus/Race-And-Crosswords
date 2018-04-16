@@ -55,7 +55,8 @@ export class Lexical extends WebService {
         });
 
         this._router.post("/fill", (req: Request, res: Response, next: NextFunction) => {
-            this.fillDB().then((nb: number) => res.send("Added up to " + nb + " words."));
+            this.fillDB().then((nb: number) => res.send("Added up to " + nb + " words."))
+                         .catch( (e: Error) => console.error(e.message));
         });
     }
 
@@ -70,7 +71,7 @@ export class Lexical extends WebService {
             const word: string = await this._datamuse.getWord(constraint, isEasy);
             if (word != null) {
                 console.error("filling : " + word);
-                this._collection.insertOne({word : word});
+                this._collection.insertOne({word : word}).catch((e: MongoError) => console.error(e.message));
             }
 
             return word;
@@ -88,7 +89,7 @@ export class Lexical extends WebService {
         return regex;
     }
 
-    private getMongoWords(constraint: string): Promise<{word: string}[]> {
+    private async getMongoWords(constraint: string): Promise<{word: string}[]> {
         this.connect();
 
         const regex: string = this.getRegex(constraint);
@@ -109,7 +110,7 @@ export class Lexical extends WebService {
             count += words.length;
             this.connect();
 
-            words.forEach((word: string) => this._collection.insertOne({ word: word})
+            words.forEach( async (word: string) => this._collection.insertOne({ word: word})
                 .catch((e: MongoError) => console.error(e.message)));
         }
 
