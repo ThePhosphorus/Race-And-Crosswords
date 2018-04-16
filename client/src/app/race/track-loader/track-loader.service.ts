@@ -13,10 +13,12 @@ import { RigidBody } from "../game-component/rigid-body/rigid-body";
 import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 import { LoaderService } from "../game-component/loader-service/loader.service";
 import { LoadedTexture } from "../game-component/loader-service/load-types.enum";
+import { Highscore } from "../../../../../common/race/highscore";
 import { TrackMeshGenerator } from "./track-mesh-generator";
 
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const TRACK_SAVER_INCPLAY_URL: string = TRACK_SAVER_URL + "play/";
+const TRACK_SAVER_UPDATE_HIGHSCORE: string = TRACK_SAVER_URL + "highscore/";
 const FLOOR_RATIO: number = 0.1;
 const Y_OFFSET: number = 0.00001;
 const START_Y_OFFSET: number = 0.02;
@@ -204,5 +206,9 @@ export class TrackLoaderService {
 
     public playTrack(id: string): Observable<void> {
         return this._http.put<void>(TRACK_SAVER_INCPLAY_URL + id, null);
+    }
+
+    public updateHighScore(id: string, score: Highscore): Observable<void> {
+        return this._http.put<void>(TRACK_SAVER_UPDATE_HIGHSCORE + id, { highscore : score });
     }
 }

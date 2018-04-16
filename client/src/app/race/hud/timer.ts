@@ -1,5 +1,5 @@
-const S_TO_MS: number = 1000;
-const MIN_TO_S: number = 60;
+import { MIN_TO_S, S_TO_MS } from "../../global-constants/constants";
+
 const MS_TO_CS: number = 10;
 const S_TO_CS: number = 100;
 export class Timer {

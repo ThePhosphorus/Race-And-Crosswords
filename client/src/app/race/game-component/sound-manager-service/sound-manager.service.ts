@@ -20,7 +20,6 @@ export class SoundManagerService {
     public startRace(): void {
           this._startSound = new GlobalSoundFacade(this._audioListener, false, START_VOLUME);
           this._startSound.init(this.loader, LoadedAudio.start);
-          this._startSound.play();
           this._music = new GlobalSoundFacade(this._audioListener, true, MUSIC_VOLUME);
           this._music.init(this.loader, LoadedAudio.backgroundMusic);
           this._music.play();
@@ -30,7 +29,16 @@ export class SoundManagerService {
         this._audioListener = audioListener;
     }
 
+    public playStartingSound(): void {
+        if (!this._startSound.isPlaying()) {
+            this._startSound.play();
+        }
+    }
+
     public stopAllSounds(): void {
+        this._music.stop();
+        this._startSound.stop();
+        this._audioListener.setMasterVolume(0);
     }
 
 }

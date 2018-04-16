@@ -17,13 +17,13 @@ export class CrosswordService {
     private _gameManager: GameManager;
     private _gridState: BehaviorSubject<GridState>;
     private _isSinglePlayer: boolean;
-    public isGameOver: boolean;
+    private _isGameOver: BehaviorSubject<boolean>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._isSinglePlayer = true;
-        this.isGameOver = false;
+        this._isGameOver = new BehaviorSubject<boolean>(false);
     }
 
     public get gameManager(): GameManager {
@@ -42,6 +42,14 @@ export class CrosswordService {
         return this._gridState;
     }
 
+    public get isGameOver(): BehaviorSubject<boolean> {
+        return this._isGameOver;
+    }
+
+    public setIsGameOver(bool: boolean): void {
+        this._isGameOver.next(bool);
+    }
+
     public getPlayerColor(playerId: number, isFrontGround: boolean): string {
         return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
     }
@@ -49,7 +57,7 @@ export class CrosswordService {
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean): void {
         this._isSinglePlayer = isSinglePlayer;
         this._gameManager.newGame(difficulty);
-        this.isGameOver = false;
+        this.isGameOver.next(false);
         this._gridState.next(new GridState());
 
         if (isSinglePlayer) {
@@ -164,9 +172,9 @@ export class CrosswordService {
             players.push(this._gameManager.myPlayer.id);
         }
 
-        this._gridState.getValue().otherPlayersSelect.forEach((oph: OtherPlayersSelect) => {
-            if (oph.selectedLetters.indexOf(letterId) > -1) {
-                players.push(oph.playerId);
+        this._gridState.getValue().otherPlayersSelect.forEach((selection: OtherPlayersSelect) => {
+            if (selection.selectedLetters.indexOf(letterId) > -1) {
+                players.push(selection.playerId);
             }
         });
 
@@ -188,7 +196,7 @@ export class CrosswordService {
 
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersSelect = this._gridState.getValue().otherPlayersSelect.find(
-                                                        (oph: OtherPlayersSelect) => oph.playerId === playerId);
+            (selection: OtherPlayersSelect) => selection.playerId === playerId);
         if (player == null) {
             player = new OtherPlayersSelect(playerId, []);
             this._gridState.getValue().otherPlayersSelect.push(player);
@@ -202,6 +210,7 @@ export class CrosswordService {
 
     public resetGrid(): void {
         this._gameManager.grid = new CrosswordGrid();
+        this._gameManager.initializeEmptyGrid();
     }
 
     private setUpSingleplayer(diff: Difficulty): void {
@@ -214,16 +223,16 @@ export class CrosswordService {
     }
 
     private setUpMultiplayer(diff: Difficulty): void {
-        this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
+        this.commService.listenerGridReceived = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 
-        this.commService.listenerReceivePlayers = (players: Player[]) => {
+        this.commService.listenerPlayersReceived = (players: Player[]) =>
             this._gameManager.players = players;
-        };
-        this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
+
+        this.commService.listenerWordSelected = (playerId: number, letterId: number, orientation: Orientation) =>
             this.selectWordFromOtherPlayer(playerId, letterId, orientation);
 
-        this.commService.listenerIsCompletedFirst = (playerId: number, word: Word) =>
+        this.commService.listenerWordSolved = (playerId: number, word: Word) =>
             this.disableWord(word, playerId);
     }
 
@@ -255,7 +264,7 @@ export class CrosswordService {
         }
         this.unselectWord();
         if (this._gameManager.addSolvedWord(word, playerId)) {
-            this.isGameOver = true;
+            this.setIsGameOver(true);
         }
     }
 

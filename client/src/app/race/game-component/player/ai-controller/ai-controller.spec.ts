@@ -1,11 +1,12 @@
-import { Car } from "../car/car";
+import { Car } from "../../car/car";
 import { AIController } from "./ai-controller";
 import { TestBed } from "@angular/core/testing";
-import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
-import { Engine } from "../car/engine";
+import { CameraManagerService } from "../../../camera-manager-service/camera-manager.service";
+import { Engine } from "../../car/engine";
 import { Vector3 } from "three";
-import { LoaderService } from "../loader-service/loader.service";
-import { LoadedObject } from "../loader-service/load-types.enum";
+import { LoaderService } from "../../loader-service/loader.service";
+import { LoadedObject } from "../../loader-service/load-types.enum";
+import { TrackPosition } from "../track-position/track-position";
 
 /* tslint:disable: no-magic-numbers */
 const MS_BETWEEN_FRAMES: number = 15;
@@ -30,14 +31,15 @@ describe("AIController", () => {
     let car: Car;
     let ai: AIController;
 
-    beforeEach( () => {
+    beforeEach(() => {
         TestBed.configureTestingModule({providers: [CameraManagerService, LoaderService]});
-        car = new Car(new MockEngine());
+        car = new Car(true, new MockEngine());
         ai = new AIController();
         car.add(ai);
 
         car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener);
-        ai.init(track);
+        car.initCarLights(false);
+        ai.init(new TrackPosition(track));
     });
 
     it("should move by itself", () => {
