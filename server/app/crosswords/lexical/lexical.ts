@@ -2,9 +2,8 @@ import { injectable } from "inversify";
 import { Request, Response, NextFunction } from "express";
 import { Datamuse } from "./datamuse";
 import { WebService } from "../../webServices";
-import { Collection } from "mongodb";
+import { Collection, ObjectId, Cursor, IteratorCallback } from "mongodb";
 import { DbClient } from "../../mongo/DbClient";
-import { DatamuseWord } from "../../../../common/communication/datamuse-word";
 
 const LEXICAL_COLLECTION: string = "words";
 
@@ -57,6 +56,10 @@ export class Lexical extends WebService {
                 res.send(null);
             });
         });
+
+        // this._router.get("/clean", (req: Request, res: Response, next: NextFunction) => {
+        //     this.cleanDB().then((nb: number) => res.send(nb));
+        // });
     }
 
     private async getWord(constraint: string, isEasy: boolean): Promise<string> {
@@ -83,7 +86,9 @@ export class Lexical extends WebService {
         let regex: string = "^";
 
         constraint.split("").forEach((char: string) =>
-                regex = regex.concat((char === "?") ? "." : char));
+                regex += (char === "?") ? "." : char);
+
+        regex += "$";
 
         return regex;
     }
@@ -96,4 +101,23 @@ export class Lexical extends WebService {
         return this._collection.aggregate<{word: string}>([ { $project: {_id : 0, word: 1} },
                                                             { $match : { word :  { $regex : regex }}}]).toArray();
     }
+
+    // public async cleanDB(): Promise<number> {
+    //     this.connect();
+
+    //     const words: Cursor<{_id: ObjectId, word: string}> = this._collection.find({});
+
+    //     const iterator: IteratorCallback<{_id: ObjectId, word: string}> = (obj: {_id: ObjectId, word: string}) => {
+    //         this._datamuse.getDefinitions(obj.word).then((defs: string[]) => {
+    //             if (defs == null || defs.length === 0) {
+    //                 this._collection.deleteOne({_id : obj._id});
+    //                 console.log("removed: " + obj.word );
+    //             }
+    //         });
+    //     };
+
+    //     words.forEach(iterator, () => console.log("done"));
+
+    //     return (await this._collection.find({}).toArray()).length;
+    // }
 }
