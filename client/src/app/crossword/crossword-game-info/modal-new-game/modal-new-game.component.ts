@@ -37,11 +37,11 @@ export class ModalNewGameComponent implements OnInit {
     }
 
     public get level(): Difficulty {
-        return this._crosswordService.gameManager.difficultySubject.getValue();
+        return this._infoService.lvl.getValue();
     }
 
     public setLevel(diff: Difficulty): void {
-        this._crosswordService.gameManager.difficulty = diff;
+        this._infoService.setLvl(diff);
     }
 
     public getMatchesFromServer(): void {
