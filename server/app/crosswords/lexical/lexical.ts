@@ -61,11 +61,9 @@ export class Lexical extends WebService {
 
     private async getWord(constraint: string, isEasy: boolean): Promise<string> {
         const str: {word: string}[] = await this.getMongoWords(constraint);
-        console.log(str.length);
 
         if (str != null && str.length !== 0) {
             const id: number = Math.floor(Math.random() * str.length);
-            console.log(id);
 
             return str[id].word;
         } else {

@@ -1,6 +1,7 @@
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Word } from "../../../../../common/crossword/word";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
+import { Letter } from "../../../../../common/crossword/letter";
 
 export class SCrosswordGrid extends CrosswordGrid {
 
@@ -19,7 +20,7 @@ export class SCrosswordGrid extends CrosswordGrid {
     public addWord(newWord: string, word: Word): boolean {
         if (this.isUnique(newWord)) {
             this.setWord(newWord, word);
-
+            console.log(this.toString());
             return true;
         }
 
@@ -78,6 +79,19 @@ export class SCrosswordGrid extends CrosswordGrid {
         } else {
             gridWord.definitions.push(receivedDefs[1]);
         }
+    }
+
+    public toString(): string {
+        let str: string = "";
+
+        this.grid.forEach((letter: Letter, index: number) => {
+            if (index % this.size === 0 ) {
+                str += "\n";
+            }
+            str += (letter.isBlackTile) ? "#" : (letter.char === "") ? "-" : letter.char;
+        });
+
+        return str;
     }
 
 }
