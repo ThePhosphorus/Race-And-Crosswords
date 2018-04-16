@@ -263,6 +263,9 @@ export class CrosswordService {
             this._gameManager.setChar(letter.id, letter.char);
         }
         this.unselectWord();
+        if (this.isSinglePlayer) {
+            this._gameManager.myPlayer.score++;
+        }
         if (this._gameManager.addSolvedWord(word, playerId)) {
             this.setIsGameOver(true);
         }
