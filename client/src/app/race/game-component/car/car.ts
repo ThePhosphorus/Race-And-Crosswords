@@ -242,6 +242,10 @@ export class Car extends Object3D {
         this._carLights.toggleFrontLight();
     }
 
+    public toggleNightLightShadows(): void {
+        this._carLights.toggleShadows();
+    }
+
     private onCollision(otherRb: RigidBody): void {
         this.collisionSound();
         if (otherRb.fixed) {
