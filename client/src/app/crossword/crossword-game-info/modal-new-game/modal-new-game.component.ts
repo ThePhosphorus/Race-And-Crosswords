@@ -95,7 +95,7 @@ export class ModalNewGameComponent implements OnInit {
 
     public joinMatch(match: InWaitMatch): void {
         this.joinedPlayer = match.name;
-        this.setLevel(this.level);
+        this.setLevel(match.difficulty);
         this.showLevelChoice(true);
     }
 
