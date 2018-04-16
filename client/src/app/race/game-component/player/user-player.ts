@@ -10,7 +10,7 @@ const USER_NAME: string = "You";
 
 export class UserPlayer extends RacePlayer {
     public constructor(private inputManager: InputManagerService) {
-        super(new Car());
+        super(new Car(false));
     }
 
     public onInit(

@@ -21,13 +21,13 @@ describe("Car", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({providers: [CameraManagerService, LoaderService]});
-        car = new Car( new MockEngine());
+        car = new Car( true, new MockEngine());
         car.init(CAR_DEFAULT_POSITION, TestBed.get(LoaderService), LoadedObject.carYellow, TestBed.get(CameraManagerService).audioListener);
         car.initCarLights(false);
     });
 
     it("should be instantiable using default constructor", inject([CameraManagerService], (cameraManager: CameraManagerService) => {
-        car = new Car(new MockEngine());
+        car = new Car(true, new MockEngine());
         expect(car).toBeDefined();
         expect(car.speed).toBe(0);
     }));
