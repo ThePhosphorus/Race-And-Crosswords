@@ -10,7 +10,7 @@ import { Track } from "../../../../../common/race/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
 import { GameConfiguration } from "./game-configuration/game-configuration";
 import { LoaderService } from "./loader-service/loader.service";
-import { EndGameService } from "./end-game-service/end-game.service";
+import { EndGameService } from "./end-game/end-game-service/end-game.service";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
 const EMPTY_TRACK_ID: string = "empty";

@@ -34,7 +34,7 @@ import { SpawnPoint, SpawnPointFinder } from "./spawn-point/spawn-point";
 import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 import { TrackPosition } from "../player/track-position/track-position";
-import { EndGameService } from "../end-game-service/end-game.service";
+import { EndGameService } from "../end-game/end-game-service/end-game.service";
 
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
@@ -122,7 +122,9 @@ export class GameManagerService extends Renderer {
     private stopGame(): void {
         this._isStarted = false;
         this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
-        this._endGame.handleEndGame(this._player, this._aiControlledCars);
+        this._soundManager.stopAllSounds();
+        this._inputManager.resetBindings();
+        this._endGame.handleEndGame(this._player, this._aiControlledCars, this._gameConfiguration.track);
     }
 
     protected update(deltaTime: number): void {
@@ -220,4 +222,5 @@ export class GameManagerService extends Renderer {
 
         return place;
     }
+
 }
