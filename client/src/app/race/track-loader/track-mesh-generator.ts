@@ -1,7 +1,7 @@
 import { Track } from "../../../../../common/race/track";
-import { Vector3, Geometry, Face3, Mesh, CubicBezierCurve3, Object3D } from "three";
+import { Vector3, Geometry, Face3, Mesh, CubicBezierCurve3, Object3D, PlaneGeometry, MeshPhongMaterial } from "three";
 import { LengthMismatchException } from "../../exceptions/length-mismatch-exception";
-import { DOUBLE, HALF } from "../../global-constants/constants";
+import { DOUBLE, HALF, PI_OVER_2 } from "../../global-constants/constants";
 import { WHITE_MATERIAL } from "../admin/track-editor.constants";
 import { TrackLoaderService } from "./track-loader.service";
 import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS, DEFAULT_WALL_WIDTH } from "../race.constants";
@@ -11,6 +11,10 @@ import { RigidBody } from "../game-component/rigid-body/rigid-body";
 const NB_SMOOTHING_VERTECIES: number = 8;
 // tslint:disable-next-line:no-magic-numbers
 const SMOOTHING_LENGTH: number = DEFAULT_TRACK_WIDTH / 3;
+const START_Y_OFFSET: number = 0.02;
+const FINISH_LINE_LENGTH_RATIO: number = 4;
+
+const DEFAULT_TRACK_MATERIAL: MeshPhongMaterial = new MeshPhongMaterial({color: "#222"});
 
 export class TrackMeshGenerator {
     private _length: number;
@@ -132,8 +136,10 @@ export class TrackMeshGenerator {
 
         const vecUp: Vector3 = new Vector3(0, 1, 0);
         for (let i: number = 0; i < this.nbPoints; i++) {
-            this._geometry.faces.push(new Face3(this.getRightPointIndex(i), this.getLeftPointIndex(i + 1), this.getLeftPointIndex(i), vecUp));
-            this._geometry.faces.push(new Face3(this.getRightPointIndex(i), this.getRightPointIndex(i + 1), this.getLeftPointIndex(i + 1), vecUp));
+            this._geometry.faces.push(
+                new Face3(this.getRightPointIndex(i), this.getLeftPointIndex(i + 1), this.getLeftPointIndex(i), vecUp));
+            this._geometry.faces.push(
+                new Face3(this.getRightPointIndex(i), this.getRightPointIndex(i + 1), this.getLeftPointIndex(i + 1), vecUp));
         }
 
         this._geometry.computeBoundingSphere();
@@ -160,7 +166,10 @@ export class TrackMeshGenerator {
     }
 
     public get newMesh(): Mesh {
-        return new Mesh(this._geometry, WHITE_MATERIAL);
+        const mesh: Mesh = new Mesh(this._geometry, DEFAULT_TRACK_MATERIAL);
+        mesh.receiveShadow = true;
+
+        return mesh;
     }
 
     public get track(): Track {
@@ -194,4 +203,19 @@ export class TrackMeshGenerator {
         return wall;
     }
 
+    public get startMesh(): Mesh {
+        const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH / FINISH_LINE_LENGTH_RATIO);
+        geo.rotateX(DOUBLE * PI_OVER_2);
+        geo.rotateZ(PI_OVER_2);
+
+        const mesh: Mesh = new Mesh(geo, WHITE_MATERIAL);
+
+        mesh.position.copy(TrackLoaderService.toVector(this.track.points[0]));
+        mesh.position.setY(START_Y_OFFSET);
+        mesh.lookAt(TrackLoaderService.toVector(this.track.points[0]));
+
+        mesh.receiveShadow = true;
+
+        return mesh;
+    }
 }
