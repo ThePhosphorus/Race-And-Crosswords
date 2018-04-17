@@ -15,5 +15,5 @@ p {
 }
 
 .selected {
-    color: red;
+    box-shadow: inset 0vmin 0vmin 2vmin var(--bgcolor,white);
 }

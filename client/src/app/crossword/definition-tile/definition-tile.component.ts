@@ -46,6 +46,9 @@ export class DefinitionTileComponent implements OnInit {
         this._style.setProperty("--color", this._crosswordService.getPlayerColor(
                                             this._crosswordService.gameManager.solvedWordPlayer(this.item.id, this.item.orientation),
                                             false));
+        this._style.setProperty("--bgcolor", this._crosswordService.getPlayerColor(
+                                                this._crosswordService.gameManager.solvedWordPlayer(this.item.id, this.item.orientation),
+                                                true));
 
         return this._crosswordService.gameManager.isWordSolved(this.item.id, this.item.orientation);
     }
