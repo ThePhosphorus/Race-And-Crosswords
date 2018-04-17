@@ -7,8 +7,8 @@ import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Letter } from "../../../../../common/crossword/letter";
 
 export class DisplayedDefinition {
-    public constructor(public definition: string, public word: string, public id: number,
-                       public rowNumber: number, public orientation: Orientation) { }
+    public constructor(public definition: string, public word: string, public id: number, public nextId: number,
+                       public rowNumber: number, public orientation: Orientation, public letters: Letter[]) { }
 }
 
 @Component({
@@ -54,14 +54,18 @@ export class DefinitionComponent implements OnInit {
             this.acrossDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id - b.id);
             this.downDefinitions.sort((a: DisplayedDefinition, b: DisplayedDefinition) => a.id % this.gridSize - b.id % this.gridSize);
         });
+
+        this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
+            this._gridState = gridState;
+        });
     }
 
     public wordToDefinition(word: Word): DisplayedDefinition {
         return new DisplayedDefinition(this.upperFirstLetter(word.definitions[0].substring(word.definitions[0].indexOf("\t") + 1)),
                                        this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")),
-                                       word.id,
+                                       word.letters[0].id, word.letters[1].id,
                                        this.getRowNumber(word.id, word.orientation),
-                                       word.orientation);
+                                       word.orientation, word.letters);
     }
 
     private upperFirstLetter(str: string): string {

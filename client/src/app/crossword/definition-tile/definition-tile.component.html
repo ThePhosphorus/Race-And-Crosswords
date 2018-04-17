@@ -1,4 +1,4 @@
 <p (mouseenter)="hover()" (mouseleave)="unHover()" (click)="select($event)"
-[ngClass]="{'enabled': !isWordSolved(), 'disabled' : isWordSolved(), 'selected': isWordSelected()}">
+[ngClass]="{'disabled' : isWordSolved(), 'selected': isWordSelected(),'enabled':!isWordSolved()&& !isWordSelected()}">
   {{ item.rowNumber }}. {{ cheatmode ? item.word : item.definition }}
 </p>

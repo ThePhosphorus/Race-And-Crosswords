@@ -7,7 +7,7 @@ p {
 
 .disabled {
     text-decoration-line: line-through;
-    background-color: var(--color, whitesmoke);
+    background-color: var(--color, black);
 }
 
 .enabled:hover {
@@ -15,5 +15,5 @@ p {
 }
 
 .selected {
-    box-shadow: inset 0vmin 0vmin 2vmin var(--bgcolor,white);
+    box-shadow: inset 0vmin 0vmin 2vmin var(--bgColor, gray);
 }
