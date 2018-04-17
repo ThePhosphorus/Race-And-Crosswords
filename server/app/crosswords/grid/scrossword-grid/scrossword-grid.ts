@@ -80,18 +80,4 @@ export class SCrosswordGrid extends CrosswordGrid {
             gridWord.definitions.push(receivedDefs[1]);
         }
     }
-
-    public toString(): string {
-        let str: string = "";
-
-        this.grid.forEach((letter: Letter, index: number) => {
-            if (index % this.size === 0 ) {
-                str += "\n";
-            }
-            str += (letter.isBlackTile) ? "#" : (letter.char === "") ? "-" : letter.char;
-        });
-
-        return str;
-    }
-
 }
