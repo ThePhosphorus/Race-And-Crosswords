@@ -75,7 +75,7 @@ export class GameManagerService extends Renderer {
                        private _lightManager: LightManagerService,
                        private _loader: LoaderService,
                        private _endGame: EndGameService) {
-        super(cameraManager, false);
+        super(cameraManager, true);
         this._updateSubscribers = new Array<(deltaTime: number) => void>();
         this._gameConfiguration = new GameConfiguration();
         this._player = new UserPlayer(this._inputManager);

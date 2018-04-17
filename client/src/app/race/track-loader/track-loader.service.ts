@@ -42,93 +42,22 @@ export class TrackLoaderService {
     }
 
     public getTrackMeshs(track: Track): Mesh[] {
-        // const vectorTrack: Array<Vector3> = TrackLoaderService.toVectors(track.points);
+        const vectorTrack: Array<Vector3> = TrackLoaderService.toVectors(track.points);
         const meshs: Array<Mesh> = new Array<Mesh>();
 
         const generator: TrackMeshGenerator = new TrackMeshGenerator(track);
 
         meshs.push(generator.newMesh);
-        // const startMesh: Mesh = this.getStartMesh(vectorTrack[0], vectorTrack[1]);
-        // meshs.push(startMesh);
-        // for (let i: number = 0; i < track.points.length - 1; i++) {
-        //     const roadMesh: Mesh = this.getRoad(vectorTrack[i], vectorTrack[i + 1]);
-        //     if (i === 0) {
-        //         roadMesh.position.setY(DOUBLE * Y_OFFSET);
-        //     } else if (i % DOUBLE) { roadMesh.position.setY(Y_OFFSET); }
-        //     meshs.push(roadMesh);
-
-        //     meshs.push(this.getCornerAprox(
-        //         vectorTrack[i],
-        //         vectorTrack[(i === 0) ? track.points.length - 1 : i - 1],
-        //         vectorTrack[(i === track.points.length - 1) ? 0 : i + 1]
-        //     ));
-        // }
+        const startMesh: Mesh = this.getStartMesh(vectorTrack[0], vectorTrack[1]);
+        meshs.push(startMesh);
 
         return meshs;
     }
 
     public  getTrackWalls(track: Track): Array<Object3D> {
-        const walls: Array<Object3D> = new Array<Object3D>();
-        for (let i: number = 0; i < track.points.length - 1; i++) {
-            const p3Index: number = (i + 2) === track.points.length ? 1 : (i + 2);
-            const p0Index: number = (i - 1) === -1 ? (track.points.length - 2) : (i - 1);
-            const p0: Vector3 = TrackLoaderService.toVector(track.points[p0Index]); // Previous
-            const p1: Vector3 = TrackLoaderService.toVector(track.points[i]);
-            const p2: Vector3 = TrackLoaderService.toVector(track.points[i + 1]);
-            const p3: Vector3 = TrackLoaderService.toVector(track.points[p3Index]); // Next
-            walls.push(this.getSegmentWall(p0, p1, p2, p3, -1));
-            walls.push(this.getSegmentWall(p0, p1, p2, p3, 1));
-        }
+        const generator: TrackMeshGenerator = new TrackMeshGenerator(track);
 
-        return walls;
-    }
-
-    private  getSegmentWall(pointP: Vector3, pointA: Vector3, pointB: Vector3, pointN: Vector3, relativeOffset: number): Object3D {
-        const vecPA: Vector3 = pointA.clone().sub(pointP);
-        const vecAB: Vector3 = pointB.clone().sub(pointA);
-        const vecBN: Vector3 = pointN.clone().sub(pointB);
-
-        const perpAB: Vector3 = new Vector3(vecAB.z, vecAB.y, -vecAB.x).normalize()
-            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (DEFAULT_WALL_WIDTH * HALF)) * relativeOffset);
-        const perpPA: Vector3 = new Vector3(vecPA.z, vecPA.y, -vecPA.x).normalize()
-            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (DEFAULT_WALL_WIDTH * HALF)) * relativeOffset);
-        const perpBN: Vector3 = new Vector3(vecBN.z, vecBN.y, -vecBN.x).normalize()
-            .multiplyScalar(((DEFAULT_TRACK_WIDTH * HALF) + (DEFAULT_WALL_WIDTH * HALF)) * relativeOffset);
-
-        const p1: Vector3 = this.findIntersection(pointP.clone().add(perpPA), pointA.clone().add(perpPA),
-                                                  pointA.clone().add(perpAB), pointB.clone().add(perpAB));
-
-        const p2: Vector3 = this.findIntersection(pointA.clone().add(perpAB), pointB.clone().add(perpAB),
-                                                  pointB.clone().add(perpBN), pointN.clone().add(perpBN));
-        const vecP1P2: Vector3 = p2.clone().sub(p1);
-        const wall: Object3D = new Object3D();
-        wall.add(new Collider(DEFAULT_WALL_WIDTH, vecP1P2.length()),
-                 new RigidBody(DEFAULT_MASS, true));
-
-        wall.position.copy(p1.clone().add(vecP1P2.clone().multiplyScalar(HALF)));
-        wall.lookAt(p2);
-
-        return wall;
-    }
-
-    private  findIntersection(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): Vector3 {
-        if (p2.equals(p3)) {
-            return p2.clone();
-        }
-        const x1: number = p1.x;
-        const y1: number = p1.z;
-        const x2: number = p2.x;
-        const y2: number = p2.z;
-        const x3: number = p3.x;
-        const y3: number = p3.z;
-        const x4: number = p4.x;
-        const y4: number = p4.z;
-        const intersectionX: number = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) /
-                                      ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
-        const intersectionY: number = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) /
-                                      ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
-
-        return new Vector3(intersectionX, p1.y, intersectionY);
+        return generator.generateWalls();
     }
 
     private  getTrackMaterial(width: number, length: number): MeshPhongMaterial {
@@ -152,16 +81,6 @@ export class TrackLoaderService {
         return mat;
     }
 
-    private getCornerAprox(center: Vector3, before: Vector3, after: Vector3): Mesh {
-        const circleGeo: CircleGeometry = new CircleGeometry(HALF * DEFAULT_TRACK_WIDTH, CORNER_NB_SEGMENTS);
-        circleGeo.rotateX(- PI_OVER_2);
-        const circleMesh: Mesh = new Mesh(circleGeo, this.getTrackMaterial(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH));
-        circleMesh.position.copy(new Vector3(center.x, center.y + TRIPLE * Y_OFFSET, center.z));
-        circleMesh.receiveShadow = true;
-
-        return circleMesh;
-    }
-
     private getStartMesh(point: Vector3, pointB: Vector3, width?: number): Mesh {
         const geo: PlaneGeometry = new PlaneGeometry(DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_WIDTH / FINISH_LINE_LENGTH_RATIO);
         geo.rotateX(- PI_OVER_2);
@@ -170,25 +89,6 @@ export class TrackLoaderService {
 
         mesh.position.copy(point);
         mesh.position.setY(START_Y_OFFSET);
-        mesh.lookAt(pointB);
-
-        mesh.receiveShadow = true;
-
-        return mesh;
-    }
-
-    private getRoad(pointA: Vector3, pointB: Vector3, width?: number): Mesh {
-        const trackWidth: number = width ? width : DEFAULT_TRACK_WIDTH;
-        const vecAB: Vector3 = pointB.clone().sub(pointA);
-        const distanceAB: number = vecAB.length();
-        const geo: PlaneGeometry = new PlaneGeometry(trackWidth, distanceAB);
-        geo.rotateX(- PI_OVER_2);
-
-        const mesh: Mesh = new Mesh(geo, this.getTrackMaterial(trackWidth, distanceAB));
-        const positionOfTheRoad: Vector3 = pointA.clone().add(vecAB.clone().multiplyScalar(HALF));
-
-        mesh.position.copy(positionOfTheRoad);
-        mesh.position.setY(0);
         mesh.lookAt(pointB);
 
         mesh.receiveShadow = true;

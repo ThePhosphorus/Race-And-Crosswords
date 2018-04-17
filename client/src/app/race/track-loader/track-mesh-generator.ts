@@ -1,12 +1,14 @@
 import { Track } from "../../../../../common/race/track";
-import { Vector3, Geometry, Face3, Mesh, CubicBezierCurve3, CatmullRomCurve3 } from "three";
+import { Vector3, Geometry, Face3, Mesh, CubicBezierCurve3, Object3D } from "three";
 import { LengthMismatchException } from "../../exceptions/length-mismatch-exception";
 import { DOUBLE, HALF } from "../../global-constants/constants";
 import { WHITE_MATERIAL } from "../admin/track-editor.constants";
 import { TrackLoaderService } from "./track-loader.service";
-import { DEFAULT_TRACK_WIDTH } from "../race.constants";
+import { DEFAULT_TRACK_WIDTH, DEFAULT_MASS, DEFAULT_WALL_WIDTH } from "../race.constants";
+import { Collider } from "../game-component/collision/collider";
+import { RigidBody } from "../game-component/rigid-body/rigid-body";
 
-const NB_SMOOTHING_VERTECIES: number = 20;
+const NB_SMOOTHING_VERTECIES: number = 8;
 // tslint:disable-next-line:no-magic-numbers
 const SMOOTHING_LENGTH: number = DEFAULT_TRACK_WIDTH / 3;
 
@@ -87,8 +89,8 @@ export class TrackMeshGenerator {
             const p1: Vector3 = TrackLoaderService.toVector(this._track.points[i]);
             const p2: Vector3 = TrackLoaderService.toVector(this._track.points[i + 1]); // Next
 
-            rightVertecies = rightVertecies.concat(this.smoothEdge(p1, p2, p0, this.getRightPoint(i)));
-            leftVertecies = leftVertecies.concat(this.smoothEdge(p1, p2, p0, this.getLeftPoint(i)));
+            rightVertecies = rightVertecies.concat(this.smoothEdge(p1, p2, p0, this.getRightPointIndex(i)));
+            leftVertecies = leftVertecies.concat(this.smoothEdge(p1, p2, p0, this.getLeftPointIndex(i)));
         }
 
         this.fillVertecies(leftVertecies, rightVertecies);
@@ -130,8 +132,8 @@ export class TrackMeshGenerator {
 
         const vecUp: Vector3 = new Vector3(0, 1, 0);
         for (let i: number = 0; i < this.nbPoints; i++) {
-            this._geometry.faces.push(new Face3(this.getRightPoint(i), this.getLeftPoint(i + 1), this.getLeftPoint(i), vecUp));
-            this._geometry.faces.push(new Face3(this.getRightPoint(i), this.getRightPoint(i + 1), this.getLeftPoint(i + 1), vecUp));
+            this._geometry.faces.push(new Face3(this.getRightPointIndex(i), this.getLeftPointIndex(i + 1), this.getLeftPointIndex(i), vecUp));
+            this._geometry.faces.push(new Face3(this.getRightPointIndex(i), this.getRightPointIndex(i + 1), this.getLeftPointIndex(i + 1), vecUp));
         }
 
         this._geometry.computeBoundingSphere();
@@ -141,12 +143,20 @@ export class TrackMeshGenerator {
         return this._length;
     }
 
-    private getRightPoint(index: number): number {
+    private getRightPointIndex(index: number): number {
         return DOUBLE * (index % this.nbPoints) + 1;
     }
 
-    private getLeftPoint(index: number): number {
+    private getLeftPointIndex(index: number): number {
         return DOUBLE * (index % this.nbPoints);
+    }
+
+    private getRightPoint(index: number): Vector3 {
+        return this._geometry.vertices[this.getRightPointIndex(index)];
+    }
+
+    private getLeftPoint(index: number): Vector3 {
+        return this._geometry.vertices[this.getLeftPointIndex(index)];
     }
 
     public get newMesh(): Mesh {
@@ -155,6 +165,33 @@ export class TrackMeshGenerator {
 
     public get track(): Track {
         return this._track;
+    }
+
+    public generateWalls(): Array<Object3D> {
+        const walls: Array<Object3D> = new Array<Object3D>();
+        for (let i: number = 0; i < this._length; i++) {
+            walls.push(this.createWallBetween(this.getLeftPoint(i), this.getLeftPoint(i + 1), true));
+            walls.push(this.createWallBetween(this.getRightPoint(i), this.getRightPoint(i + 1), false));
+        }
+
+        return walls;
+    }
+
+    private createWallBetween(pointA: Vector3, pointB: Vector3, isLeft: boolean): Object3D {
+        const wall: Object3D = new Object3D();
+        const direction: Vector3 = pointB.clone().sub(pointA);
+
+        wall.add(new Collider(DEFAULT_WALL_WIDTH, direction.length()),
+                 new RigidBody(DEFAULT_MASS, true));
+
+        wall.position.copy(pointA.clone().add(pointB).multiplyScalar(HALF));
+        wall.lookAt(pointB);
+
+        const perp: Vector3 = new Vector3(0, 1, 0).cross(direction).normalize();
+
+        wall.position.add(perp.multiplyScalar(HALF * DEFAULT_WALL_WIDTH * (isLeft ? 1 : -1)));
+
+        return wall;
     }
 
 }
