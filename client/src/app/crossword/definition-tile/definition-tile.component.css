@@ -10,6 +10,10 @@ p {
     background-color: var(--color, whitesmoke);
 }
 
-.enabled:hover{
+.enabled:hover {
     background-color: #e7e7e7;
+}
+
+.selected {
+    color: red;
 }

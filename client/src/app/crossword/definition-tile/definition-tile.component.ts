@@ -1,19 +1,28 @@
-import { Component, Input, ElementRef } from "@angular/core";
+import { Component, Input, ElementRef, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { DisplayedDefinition } from "../definition/definition.component";
+import { GridState } from "../grid-state/grid-state";
 
 @Component({
     selector: "app-definition-tile",
     templateUrl: "./definition-tile.component.html",
     styleUrls: ["./definition-tile.component.css"]
 })
-export class DefinitionTileComponent {
+export class DefinitionTileComponent implements OnInit {
     @Input() public item: DisplayedDefinition;
     @Input() public cheatmode: boolean;
-    private style: CSSStyleDeclaration;
+    private _gridState: GridState;
+    private _style: CSSStyleDeclaration;
 
     public constructor(el: ElementRef, private _crosswordService: CrosswordService) {
-        this.style = el.nativeElement.style;
+        this._style = el.nativeElement.style;
+        this._gridState = new GridState();
+    }
+
+    public ngOnInit(): void {
+        this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
+            this._gridState = gridState;
+        });
     }
 
     public select(event: MouseEvent): void {
@@ -29,8 +38,12 @@ export class DefinitionTileComponent {
         this._crosswordService.setHoveredWord(null, null);
     }
 
+    public isWordSelected(): boolean {
+        return this._gridState.isLetterSelected(this.item.id) && this._gridState.isCurrentOrientation(this.item.orientation);
+    }
+
     public isWordSolved(): boolean {
-        this.style.setProperty("--color", this._crosswordService.getPlayerColor(
+        this._style.setProperty("--color", this._crosswordService.getPlayerColor(
                                             this._crosswordService.gameManager.solvedWordPlayer(this.item.id, this.item.orientation),
                                             false));
 
