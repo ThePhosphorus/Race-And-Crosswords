@@ -7,6 +7,8 @@ import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject } from "../loader-service/load-types.enum";
 import { NB_LAPS } from "../../../global-constants/constants";
 
+const SIMULTATION_MS_OFFSET: number = 2000;
+
 export class AiPlayer extends RacePlayer {
     private aiController: AIController;
 
@@ -32,7 +34,7 @@ export class AiPlayer extends RacePlayer {
         this.car.update(deltaTime);
     }
 
-    public finishRace(): void {
+    public finishRace(playerTime: number): void {
         let avg: number = this.calculateAvgAiTime();
         while (this.lapTimes.length < NB_LAPS + 1) {
             if (this.lapTimes[this.lapTimes.length - 1] > 0) {
@@ -45,6 +47,9 @@ export class AiPlayer extends RacePlayer {
                 if (avg > 0) {
                     this.lapTimes[this.lapTimes.length - 1] = avg;
                 }
+            }
+            while (this.lapTimes.length === NB_LAPS && this.lapTimes[NB_LAPS - 1] < playerTime) {
+                this.lapTimes[NB_LAPS - 1] += SIMULTATION_MS_OFFSET;
             }
             this.lapTimes.push(0);
         }
