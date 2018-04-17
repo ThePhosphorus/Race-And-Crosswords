@@ -56,14 +56,14 @@ export class CrosswordService {
 
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean): void {
         this._isSinglePlayer = isSinglePlayer;
-        this._gameManager.newGame(difficulty);
+        this._gameManager.newGame();
         this.isGameOver.next(false);
         this._gridState.next(new GridState());
 
         if (isSinglePlayer) {
             this.setUpSingleplayer(difficulty);
         } else {
-            this.setUpMultiplayer(difficulty);
+            this.setUpMultiplayer();
         }
     }
 
@@ -222,7 +222,7 @@ export class CrosswordService {
             });
     }
 
-    private setUpMultiplayer(diff: Difficulty): void {
+    private setUpMultiplayer(): void {
         this.commService.listenerGridReceived = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 
@@ -263,6 +263,9 @@ export class CrosswordService {
             this._gameManager.setChar(letter.id, letter.char);
         }
         this.unselectWord();
+        if (this.isSinglePlayer) {
+            this._gameManager.myPlayer.score++;
+        }
         if (this._gameManager.addSolvedWord(word, playerId)) {
             this.setIsGameOver(true);
         }

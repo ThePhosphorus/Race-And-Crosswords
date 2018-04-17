@@ -2,7 +2,7 @@ import { TestBed, inject } from "@angular/core/testing";
 import { GameManager } from "./crossword-game-manager";
 import { Player } from "../../../../../common/communication/Player";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
-import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
 
@@ -22,19 +22,12 @@ describe("CrosswordGameManager", () => {
         const newGrid: CrosswordGrid = new CrosswordGrid();
         newGrid.size = 5;
         gameManager.grid = newGrid;
-        gameManager.newGame(Difficulty.Easy);
+        gameManager.newGame();
         expect(gameManager.solvedGridSubject.getValue()).not.toBe(newGrid);
         const grid: CrosswordGrid = new CrosswordGrid();
         expect(gameManager.solvedGridSubject.getValue().grid.length).toBe(grid.grid.length);
         expect(gameManager.solvedGridSubject.getValue().size).toBe(grid.size);
         expect(gameManager.solvedGridSubject.getValue().words.length).toBe(grid.words.length);
-    }));
-
-    it("should put the right difficulty when creating a new game", inject([GameManager], (gameManager: GameManager) => {
-        const diff: Difficulty = Difficulty.Medium;
-        gameManager.newGame(diff);
-
-        expect(gameManager.difficultySubject.getValue()).toBe(diff);
     }));
 
     it("should be able set players", inject([GameManager], (service: GameManager) => {

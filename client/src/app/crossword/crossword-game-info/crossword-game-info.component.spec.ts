@@ -14,6 +14,7 @@ describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
     let fixture: ComponentFixture<CrosswordGameInfoComponent>;
     let crosswordService: CrosswordService;
+    let gameInfoService: GameInfoService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -21,13 +22,14 @@ describe("CrosswordGameInfoComponent", () => {
             declarations: [CrosswordGameInfoComponent, ModalEndGameComponent, ModalNewGameComponent],
             providers: [CrosswordCommunicationService, CrosswordService, GameInfoService]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CrosswordGameInfoComponent);
         component = fixture.componentInstance;
         crosswordService = TestBed.get(CrosswordService);
+        gameInfoService = TestBed.get(GameInfoService);
         fixture.detectChanges();
     });
 
@@ -36,7 +38,7 @@ describe("CrosswordGameInfoComponent", () => {
     });
 
     it("should receive a promise for Difficulty", () => {
-        crosswordService.gameManager.difficultySubject.subscribe( (difficulty: Difficulty) => {
+        gameInfoService.lvl.subscribe( (difficulty: Difficulty) => {
           expect(difficulty).toBeDefined();
         });
     });

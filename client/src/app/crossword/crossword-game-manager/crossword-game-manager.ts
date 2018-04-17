@@ -1,6 +1,6 @@
 import { Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Orientation, Difficulty } from "../../../../../common/crossword/enums-constants";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Letter } from "../../../../../common/crossword/letter";
 import { Word } from "../../../../../common/crossword/word";
@@ -22,29 +22,22 @@ export class GameManager {
     private _playerGrid: BehaviorSubject<CrosswordGrid>;
     private _solvedWords: BehaviorSubject<SolvedWord[]>;
     private _solvedGrid: BehaviorSubject<CrosswordGrid>;
-    private _difficulty: BehaviorSubject<Difficulty>;
 
     public constructor() {
         this._playerGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
         this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
-        this._difficulty = new BehaviorSubject<Difficulty>(Difficulty.Easy);
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
         this.initializeEmptyGrid();
     }
 
-    public newGame(difficulty: Difficulty): void {
+    public newGame(): void {
         this._solvedGrid.next(new CrosswordGrid());
         this._playerGrid.next(new CrosswordGrid());
         this._players.next(new Array<Player>());
         this._solvedWords.next(new Array<SolvedWord>());
-        this._difficulty.next(difficulty);
         this.initializeEmptyGrid();
-    }
-
-    public get difficultySubject(): BehaviorSubject<Difficulty> {
-        return this._difficulty;
     }
 
     public get solvedWordsSubject(): BehaviorSubject<SolvedWord[]> {

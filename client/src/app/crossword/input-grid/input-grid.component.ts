@@ -11,7 +11,6 @@ import { GameInfoService } from "../crossword-game-info/game-info-service/game-i
 })
 export class InputGridComponent implements OnInit {
 
-
     public twoDimensionGrid: Letter[][];
 
     public constructor(private _crosswordService: CrosswordService, private _infoService: GameInfoService) {
