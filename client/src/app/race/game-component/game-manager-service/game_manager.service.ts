@@ -150,6 +150,7 @@ export class GameManagerService extends Renderer {
         const trackMesh: Mesh = this._trackGen.newMesh;
         if (trackMesh != null ) {
             this.scene.add(trackMesh);
+            this.scene.add(this._trackGen.startMesh);
             this._trackGen.generateWalls().forEach((wall: Object3D) => this.scene.add(wall));
         }
     }
