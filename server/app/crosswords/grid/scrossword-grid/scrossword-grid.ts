@@ -1,7 +1,6 @@
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Word } from "../../../../../common/crossword/word";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
-import { Letter } from "../../../../../common/crossword/letter";
 
 export class SCrosswordGrid extends CrosswordGrid {
 
