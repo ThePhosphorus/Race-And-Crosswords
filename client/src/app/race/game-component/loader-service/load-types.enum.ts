@@ -11,7 +11,8 @@ export enum LoadedObject {
 export enum LoadedAudio {
     backgroundMusic,
     engine,
-    start,
+    beep1,
+    beep2,
     drift,
     collision1,
     collision2,
