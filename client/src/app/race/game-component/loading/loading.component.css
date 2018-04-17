@@ -43,6 +43,9 @@ h2{
     border-radius: 1vmin;
     height: 100%;
 }
+#loadingMessage {
+    max-width: 80%;
+}
 
 @font-face {
     font-family: "Track Font";

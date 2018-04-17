@@ -18,7 +18,7 @@
         <div id="loadingBarHolder">
           <div  id="loadingBar" [ngStyle]="{'width.%': loadingStatus *100}"></div>
         </div>
-        <p>{{ loadingMessage |  slice:0:30 }}</p>
+        <p id="loadingMessage" class="d-inline-block text-truncate">{{ loadingMessage }}</p>
       </div>
     </div>
   </div>
