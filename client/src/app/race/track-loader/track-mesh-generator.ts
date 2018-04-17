@@ -218,4 +218,30 @@ export class TrackMeshGenerator {
 
         return mesh;
     }
+
+    public get center(): Vector3 {
+        const topRight: Vector3 = new Vector3(0, 0, 0);
+        const bottomLeft: Vector3 = new Vector3(0, 0, 0);
+
+        this._geometry.vertices.forEach((point: Vector3) => {
+            topRight.setX(Math.max(topRight.x, point.x));
+            topRight.setZ(Math.max(topRight.z, point.z));
+            bottomLeft.setX(Math.min(bottomLeft.x, point.x));
+            bottomLeft.setZ(Math.min(bottomLeft.z, point.z));
+        });
+
+        return topRight.add(bottomLeft).multiplyScalar(HALF);
+    }
+
+    public get height(): number {
+        let top: number = 0;
+        let bottom: number = 0;
+
+        this._geometry.vertices.forEach((point: Vector3) => {
+            top = Math.max(top, point.z);
+            bottom = Math.min(bottom, point.z);
+        });
+
+        return top - bottom;
+    }
 }

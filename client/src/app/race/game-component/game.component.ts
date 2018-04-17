@@ -8,9 +8,9 @@ import { ActivatedRoute } from "@angular/router";
 import { TrackLoaderService } from "../track-loader/track-loader.service";
 import { Track } from "../../../../../common/race/track";
 import { LightManagerService } from "./light-manager/light-manager.service";
-import { GameConfiguration } from "./game-configuration/game-configuration";
 import { LoaderService } from "./loader-service/loader.service";
 import { EndGameService } from "./end-game/end-game-service/end-game.service";
+import { TrackMeshGenerator } from "../track-loader/track-mesh-generator";
 
 const FULLSCREEN_KEYCODE: number = 70; // F
 const EMPTY_TRACK_ID: string = "empty";
@@ -86,7 +86,7 @@ export class GameComponent implements OnDestroy, AfterViewInit {
     public ngOnDestroy(): void {
         this._soundManager.stopAllSounds();
         this._loader.clearArrays();
-        this._gameManagerService.unload();
+        // this._gameManagerService.unload();
         this._gameManagerService = null;
         this._soundManager = null;
         this._trackLoader = null;
@@ -108,13 +108,10 @@ export class GameComponent implements OnDestroy, AfterViewInit {
 
     private finishedLoading(): void {
         if (this.track != null && this.track._id !== "") {
-            const gameConfig: GameConfiguration = new GameConfiguration(this.track,
-                                                                        this._trackLoader.getTrackMeshs(this.track),
-                                                                        this._trackLoader.getTrackWalls(this.track));
-            this._gameManagerService.start(this.containerRef.nativeElement, gameConfig);
+            this._gameManagerService.start(this.containerRef.nativeElement, new TrackMeshGenerator(this.track));
             this._trackLoader.playTrack(this.track._id).subscribe();
         } else {
-            this._gameManagerService.start(this.containerRef.nativeElement, new GameConfiguration());
+            this._gameManagerService.start(this.containerRef.nativeElement, new TrackMeshGenerator(this.track));
         }
         this.onResize();
     }

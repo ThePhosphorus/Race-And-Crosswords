@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Vector3, Mesh, Object3D } from "three";
+import { Vector3 } from "three";
 import { Track } from "../../../../../common/race/track";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
@@ -7,7 +7,6 @@ import "rxjs/add/operator/map";
 import { BACKEND_URL } from "../../global-constants/constants";
 import { Vector3Struct } from "../../../../../common/race/vector3-struct";
 import { Highscore } from "../../../../../common/race/highscore";
-import { TrackMeshGenerator } from "./track-mesh-generator";
 
 const TRACK_SAVER_URL: string = BACKEND_URL + "race/saver/";
 const TRACK_SAVER_INCPLAY_URL: string = TRACK_SAVER_URL + "play/";
@@ -26,23 +25,6 @@ export class TrackLoaderService {
         vectors.forEach((vec) => vectorArr.push(TrackLoaderService.toVector(vec)));
 
         return vectorArr;
-    }
-
-    public getTrackMeshs(track: Track): Mesh[] {
-        const meshs: Array<Mesh> = new Array<Mesh>();
-
-        const generator: TrackMeshGenerator = new TrackMeshGenerator(track);
-
-        meshs.push(generator.newMesh);
-        meshs.push(generator.startMesh);
-
-        return meshs;
-    }
-
-    public  getTrackWalls(track: Track): Array<Object3D> {
-        const generator: TrackMeshGenerator = new TrackMeshGenerator(track);
-
-        return generator.generateWalls();
     }
 
     public loadAll(): Observable<Track[]> {

@@ -25,7 +25,6 @@ import {
     NB_LAPS,
 } from "../../../global-constants/constants";
 import { LightManagerService } from "../light-manager/light-manager.service";
-import { GameConfiguration } from "../game-configuration/game-configuration";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { Vector3Struct } from "../../../../../../common/race/vector3-struct";
 import { UserPlayer } from "../player/user-player";
@@ -35,6 +34,8 @@ import { LoaderService } from "../loader-service/loader.service";
 import { LoadedObject, LoadedTexture } from "../loader-service/load-types.enum";
 import { TrackPosition } from "../player/track-position/track-position";
 import { EndGameService } from "../end-game/end-game-service/end-game.service";
+import { TrackMeshGenerator } from "../../track-loader/track-mesh-generator";
+import { Object3D } from "three";
 
 const OFF_ROAD_Z_TRANSLATION: number = 0.1;
 const FLOOR_DIMENSION: number = 10000;
@@ -64,7 +65,7 @@ export class CarInfos {
 export class GameManagerService extends Renderer {
     private _player: UserPlayer;
     private _aiControlledCars: Array<AiPlayer>;
-    private _gameConfiguration: GameConfiguration;
+    private _trackGen: TrackMeshGenerator;
     private _updateSubscribers: Array<(deltaTime: number) => void>;
     private _isStarted: boolean;
 
@@ -77,7 +78,7 @@ export class GameManagerService extends Renderer {
                        private _endGame: EndGameService) {
         super(cameraManager, true);
         this._updateSubscribers = new Array<(deltaTime: number) => void>();
-        this._gameConfiguration = new GameConfiguration();
+        this._trackGen = null;
         this._player = new UserPlayer(this._inputManager);
         this._aiControlledCars = new Array<AiPlayer>();
         this._isStarted = false;
@@ -103,8 +104,8 @@ export class GameManagerService extends Renderer {
         this._updateSubscribers.push(callback);
     }
 
-    public start(container: HTMLDivElement, config: GameConfiguration): void {
-        this._gameConfiguration = config;
+    public start(container: HTMLDivElement, trackGen: TrackMeshGenerator): void {
+        this._trackGen = trackGen;
         this.init(container);
         this.initKeyBindings();
         this.initSoundManager();
@@ -124,7 +125,7 @@ export class GameManagerService extends Renderer {
         this._aiControlledCars.forEach((ai: AiPlayer) => ai.finishRace());
         this._soundManager.stopAllSounds();
         this._inputManager.resetBindings();
-        this._endGame.handleEndGame(this._player, this._aiControlledCars, this._gameConfiguration.track);
+        this._endGame.handleEndGame(this._player, this._aiControlledCars, this._trackGen.track);
     }
 
     protected update(deltaTime: number): void {
@@ -146,17 +147,18 @@ export class GameManagerService extends Renderer {
     }
 
     public initTrack(): void {
-        if (this._gameConfiguration.trackMeshs != null && this._gameConfiguration.trackWalls != null) {
-            this._gameConfiguration.trackMeshs.forEach((m) => this.scene.add(m));
-            this._gameConfiguration.trackWalls.forEach((w) => this.scene.add(w));
+        const trackMesh: Mesh = this._trackGen.newMesh;
+        if (trackMesh != null ) {
+            this.scene.add(trackMesh);
+            this._trackGen.generateWalls().forEach((wall: Object3D) => this.scene.add(wall));
         }
     }
 
     private initCars(): void {
-        const points: Array<Vector3Struct> = this._gameConfiguration.track != null ? this._gameConfiguration.track.points : NO_TRACK_POINTS;
+        const points: Array<Vector3Struct> = this._trackGen.track != null ? this._trackGen.track.points : NO_TRACK_POINTS;
         const track: Array<Vector3> = TrackLoaderService.toVectors(points);
         const spawnPoints: Array<SpawnPoint> = SpawnPointFinder.findSpawnPoints(track, N_AI_CONTROLLED_CARS + 1);
-        const trackPosition: TrackPosition = this._gameConfiguration.track != null ? new TrackPosition(track) : null;
+        const trackPosition: TrackPosition = this._trackGen.track != null ? new TrackPosition(track) : null;
         const randomColors: Array<LoadedObject> = COLORS.sort(() => Math.random() - 1 / 2);
 
         this._player.init(spawnPoints[0].position, this._loader, randomColors[0], this.cameraManager.audioListener, trackPosition);
