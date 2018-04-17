@@ -19,7 +19,8 @@ const PINK_CAR_FILE: string = CAR_FOLDER + "pink.json";
 const ORANGE_CAR_FILE: string = CAR_FOLDER + "orange.json";
 
 const SOUND_PATH: string = ASSETS + "sounds/";
-const START_SOUND_FILE: string = SOUND_PATH + "starting.ogg";
+const START_SOUND_FILE1: string = SOUND_PATH + "beep1.ogg";
+const START_SOUND_FILE2: string = SOUND_PATH + "beep2.ogg";
 const MUSIC_SOUND_FILE: string = SOUND_PATH + "dejavu.ogg";
 const ENGINE_SOUND_FILE: string = SOUND_PATH + "engine/engine2.ogg";
 const DRIFT_SOUND_FILE: string = SOUND_PATH + "drift/drift1.ogg";
@@ -262,9 +263,10 @@ export class LoaderService {
     }
 
     private startLoadAudio(): void {
-        this.loadAudio(START_SOUND_FILE, LoadedAudio.start);
         this.loadAudio(MUSIC_SOUND_FILE, LoadedAudio.backgroundMusic);
         this.loadAudio(ENGINE_SOUND_FILE, LoadedAudio.engine);
+        this.loadAudio(START_SOUND_FILE1, LoadedAudio.beep1);
+        this.loadAudio(START_SOUND_FILE2, LoadedAudio.beep2);
         this.loadAudio(DRIFT_SOUND_FILE, LoadedAudio.drift);
         this.loadAudio(CRASH_PATH_1, LoadedAudio.collision1);
         this.loadAudio(CRASH_PATH_2, LoadedAudio.collision2);
