@@ -21,7 +21,7 @@ describe("GameMenuComponent", () => {
             providers: [TrackLoaderService, HttpClient],
             imports: [HttpClientModule, RouterTestingModule]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {

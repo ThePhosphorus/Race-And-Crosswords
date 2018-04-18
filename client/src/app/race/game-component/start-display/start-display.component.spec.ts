@@ -31,7 +31,7 @@ describe("StartDisplayComponent", () => {
                         HttpClient,
                         HttpHandler]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {
