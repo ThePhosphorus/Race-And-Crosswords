@@ -90,7 +90,7 @@ export class TrackEditorComponent implements AfterViewInit {
             this._trackSaver.save(
                 (this._previousName && this.name === this._previousName) ? this.id : null,
                 this.name, this.description, points
-                ).subscribe((bool: boolean) => { if (bool) { this._router.navigate(["/admin/tracks"]); } });
+                ).subscribe((saveSuccessful: boolean) => { if (saveSuccessful) { this._router.navigate(["/admin/tracks"]); } });
         }
     }
 
@@ -115,7 +115,11 @@ export class TrackEditorComponent implements AfterViewInit {
 
     public deleteTrack(): void {
         if (this.id && confirm("Delete track?")) {
-            this._trackSaver.delete(this.id).subscribe((bool: boolean) => { if (bool) { this._router.navigate(["/admin/tracks"]); } });
+            this._trackSaver.delete(this.id).subscribe((deleteSuccessful: boolean) => {
+                if (deleteSuccessful) {
+                    this._router.navigate(["/admin/tracks"]);
+                }
+            });
         }
     }
 }

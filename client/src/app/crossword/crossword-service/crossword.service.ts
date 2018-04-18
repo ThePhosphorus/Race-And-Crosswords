@@ -46,8 +46,8 @@ export class CrosswordService {
         return this._isGameOver;
     }
 
-    public setIsGameOver(bool: boolean): void {
-        this._isGameOver.next(bool);
+    public setIsGameOver(isGameOver: boolean): void {
+        this._isGameOver.next(isGameOver);
     }
 
     public getPlayerColor(playerId: number, isFrontGround: boolean): string {
