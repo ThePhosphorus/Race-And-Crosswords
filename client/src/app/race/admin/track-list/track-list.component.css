@@ -1,32 +1,51 @@
-th {
-    font-weight: lighter;
-}
+
 
 table {
     border:solid #32383e ;
+    font-family: "Edit Font", 'Times New Roman', Times, serif;
+    background-color: whitesmoke;
+    box-shadow: 0 0 1vmin 1vmin steelblue;
+    border-radius: 5vmin !important;
+    border-style: hidden;
+    border-collapse: collapse;
 }
 
+#edit {
+    border: solid 0.1vmin lightgray;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 5vmin;
+}
+
+.table .thead-dark th:first-child {
+    border-top-left-radius: 5vmin;
+}
+.table .thead-dark th:last-child {
+    border-top-right-radius: 5vmin;
+}
 td {
     width: 33%;
 }
 
+
 #btnAdd{
     height: 100%;
-    font-size: 300%;
+    font-size: 200%;
     font-weight: thin;
     background-color: #61b446;
     color: #e7e7e7;
-    border-bottom-left-radius: 45%;
-    border-bottom-right-radius: 45%;
-    border-top-left-radius: 0%;
-    border-top-right-radius: 0%;
-    padding: 0% 0% 0% 0%;
-    border: #61b446 thick ;
+    border-bottom-left-radius:20vmin;
+    border-bottom-right-radius: 20vmin;
+    border-top-left-radius: 8vmin;
+    border-top-right-radius: 8vmin;
+    padding-bottom: 1vmin;
+    border: #61b446 solid ;
     box-shadow: 0vmin 0.15vmin 0.5vmin 0.25vmin #61b446;
 }
 #btnAdd:hover {
-    box-shadow: 0vmin 0.15vmin 0.5vmin 0.25vmin #3b7029;
-    border: #3b7029 thick;
+    box-shadow: 0vmin 0vmin 1vmin 0.75vmin #3b7029;
+    border: #3b7029 solid;
     color: #3b7029;
 }
 button{
@@ -50,3 +69,7 @@ button{
     border-left: none;
     border-right: none;
 }
+@font-face {
+    font-family: "Edit Font";
+    src: url("/assets/fonts/SVBasicManual.ttf") format("truetype")
+  }

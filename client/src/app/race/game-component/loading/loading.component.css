@@ -5,9 +5,18 @@
     height: 100%;
 }
 
-#laodDetails {
+#loadDetails {
     color: white;
-    margin: 0.5rem 2rem 0.5rem 2rem;
+}
+
+h1{
+    font-family: "Race Font", Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    font-size: 180%;
+}
+h2{
+    font-size: 110%;
+    padding-right: 15vmin;
+    padding-left: 15vmin;
 }
 
 #loadImg {
@@ -19,29 +28,31 @@
     height: 100%;
 }
 
-#description {
-    margin-left: 3rem;
-}
 
 .halfHeight {
     height: 50%;
 }
 
 #loadingBarHolder {
-    width: 80%;
-    height: 1.5rem;
-    margin: 1rem 10% 1rem 10%;
+    height:8vmin;
+    margin-top: 3vmin;
 }
 
 #loadingBar {
     background: repeating-linear-gradient( 45deg, 	#b44646, 	#b44646 1vmin, 	 #933939 1vmin, 	 #933939 2vmin);
     border-radius: 1vmin;
-    width: 100%;
     height: 100%;
+}
+#loadingMessage {
+    max-width: 80%;
 }
 
 @font-face {
     font-family: "Track Font";
     src: url("/assets/fonts/Geometos Rounded.ttf ") format("truetype")
+  }
+  @font-face {
+    font-family: "Race Font";
+    src: url("/assets/fonts/Railway to Hells.ttf") format("truetype");
   }
 

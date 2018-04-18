@@ -4,7 +4,7 @@
       <h1>NEW BEST TIME!</h1>
       <input name="name" required maxlength="20" [(ngModel)]="playerName" type="text" class="form-control" id="name" placeholder="Enter your name">
     </div>
-      <button (click)="close()" class="btn btn-secondary m-2">SKIP</button>
-      <button (click)="addHighscore()" class="btn btn-secondary m-2" [disabled]="!form.valid">ADD</button>
+    <button (click)="addHighscore()" class="btn btn-secondary m-2" [disabled]="!form.valid">ADD</button>
+    <button (click)="close()" class="btn btn-secondary m-2">SKIP</button>
   </form>
 </div>

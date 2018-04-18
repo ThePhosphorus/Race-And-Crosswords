@@ -30,7 +30,9 @@ export abstract class AbstractSoundFacade {
     }
 
     public play(): void {
-        this.sound.play();
+        if (!this.sound.isPlaying) {
+            this.sound.play();
+        }
     }
 
     public isPlaying(): boolean {

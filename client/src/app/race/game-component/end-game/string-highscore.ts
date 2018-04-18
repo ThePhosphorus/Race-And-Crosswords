@@ -19,6 +19,6 @@ export class StringHighscore {
         time = (time - secs) / MIN_TO_S;
         const mins: number = time % MIN_TO_S;
 
-        return ("0" + mins).slice(-2) + ":" + ("0" + secs).slice(-2) + "." + (ms + "00").substring(0, MS_DECIMALS);
+        return ("0" + mins).slice(-2) + ":" + ("0" + secs).slice(-2) + "." + ("00" + ms).slice(-MS_DECIMALS);
     }
 }
