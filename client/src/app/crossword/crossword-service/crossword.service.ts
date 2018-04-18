@@ -159,15 +159,17 @@ export class CrosswordService {
     public playersSelectingWord(letterId: number, orientation: Orientation): Array<number> {
         const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
         let players: Array<number> = new Array<number>();
-        for (const letter of word.letters) {
-            players = players.concat(this.playersSelectingLetter(letter.id));
-        }
         const playersSelecting: Array<number> = new Array<number>();
-        (new Set<number>([...Array.from(players)])).forEach((player: number) => {
-            if (players.indexOf(player) !== players.lastIndexOf(player)) {
-                playersSelecting.push(player);
+        if (word != null) {
+            for (const letter of word.letters) {
+                players = players.concat(this.playersSelectingLetter(letter.id));
             }
-        });
+            (new Set<number>([...Array.from(players)])).forEach((player: number) => {
+                if (players.indexOf(player) !== players.lastIndexOf(player)) {
+                    playersSelecting.push(player);
+                }
+            });
+        }
 
         return playersSelecting;
     }
