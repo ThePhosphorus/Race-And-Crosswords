@@ -55,7 +55,7 @@ export class TrackGenerator extends Renderer {
         this.inputManager.registerKeyUp(DELETE_KEY, this.points.removeSelectedPoint);
     }
 
-    public mouseEventReleaseClick = (event: MouseEvent): void => {
+    public mouseEventReleaseClick(event: MouseEvent): void {
         this.disableDragMode();
         this.disableTranslateMode();
         this.points.updateStartingPosition();
@@ -78,7 +78,7 @@ export class TrackGenerator extends Renderer {
         this.resetValidation();
     }
 
-    private mouseEventLeftClick = (event: MouseEvent): void => {
+    private mouseEventLeftClick(event: MouseEvent): void {
         const possiblePointId: number = this.findPointId(new Vector2(event.offsetX, event.offsetY));
         if (possiblePointId !== null) {
             this.points.selectPoint(possiblePointId);
