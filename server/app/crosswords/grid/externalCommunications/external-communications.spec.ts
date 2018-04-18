@@ -1,31 +1,27 @@
 import * as assert from "assert";
 import { ExternalCommunications } from "./external-communications";
-import { DatamuseWord} from "../../../../../common/communication/datamuse-word";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
+
+// tslint:disable: no-floating-promises
 
 const externalCommunication: ExternalCommunications = new ExternalCommunications();
 let testWord: string;
 
 describe("External Communications", () => {
     it("should find word with constraints", (done: MochaDone) => {
-        const word: Word = new Word();
         const wordLength: number = 5;
         let constraint: string = "";
         for (let i: number = 0; i < wordLength; i++) {
-            word.letters.push(new Letter());
             constraint += "?";
         }
 
-        externalCommunication.getWordsFromServer(constraint, word, true).then((datamuseWord: DatamuseWord) => {
-            if (datamuseWord !== undefined) {
-                testWord = datamuseWord.word;
+        externalCommunication.getWordsFromServer(constraint, true).then((str: string) => {
+            if (str != null) {
+                testWord = str;
             } else {
                 assert.fail("could not find easy word");
             }
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
             done();
         });
     });
@@ -38,12 +34,8 @@ describe("External Communications", () => {
             i++;
         }
 
-        externalCommunication.getDefinitionsFromServer(testWord).then((datamuseWord: DatamuseWord) => {
-            assert.equal(datamuseWord.word, testWord, "Expected : " + testWord + " got : " + datamuseWord.word);
-            assert.notEqual(datamuseWord.defs, undefined, "Did not fetch definitions");
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
+        externalCommunication.getDefinitionsFromServer(testWord).then((defs: string[]) => {
+            assert.notEqual(defs, undefined, "Did not fetch definitions");
             done();
         });
     });
@@ -57,13 +49,10 @@ describe("External Communications", () => {
             constraint += "?";
         }
 
-        externalCommunication.getWordsFromServer(constraint, word, true).then((datamuseWord: DatamuseWord) => {
-            if (datamuseWord === undefined)  {
+        externalCommunication.getWordsFromServer(constraint, true).then((str: string) => {
+            if (str == null)  {
                 assert.fail("could not find easy word");
             }
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
             done();
         });
     });
@@ -77,13 +66,10 @@ describe("External Communications", () => {
             constraint += "?";
         }
 
-        externalCommunication.getWordsFromServer(constraint, word, false).then((datamuseWord: DatamuseWord) => {
+        externalCommunication.getWordsFromServer(constraint, false).then((datamuseWord: string) => {
             if (datamuseWord === undefined) {
                 assert.fail("could not find hard word");
             }
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
             done();
         });
     });
@@ -97,11 +83,8 @@ describe("External Communications", () => {
             i++;
         }
 
-        externalCommunication.getDefinitionsFromServer(fakeWord).then((datamuseWord: DatamuseWord) => {
-            assert.equal(datamuseWord, undefined, "Found word for : " + fakeWord);
-            done();
-        }).catch(() => {
-            assert.fail("Promise Rejection");
+        externalCommunication.getDefinitionsFromServer(fakeWord).then((defs: string[]) => {
+            assert.equal(defs, undefined, "Found word for : " + fakeWord);
             done();
         });
     });

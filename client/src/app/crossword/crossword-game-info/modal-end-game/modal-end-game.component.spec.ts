@@ -16,7 +16,7 @@ describe("ModalEndGameComponent", () => {
             declarations: [ModalEndGameComponent],
             providers: [CrosswordService, CrosswordCommunicationService, GameInfoService]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {

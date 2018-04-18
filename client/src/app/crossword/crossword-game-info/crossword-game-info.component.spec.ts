@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { HttpClientModule } from "@angular/common/http";
 import { CrosswordGameInfoComponent } from "./crossword-game-info.component";
 import { CrosswordCommunicationService } from "../crossword-communication-service/crossword.communication.service";
@@ -13,19 +13,23 @@ import { ModalEndGameComponent } from "./modal-end-game/modal-end-game.component
 describe("CrosswordGameInfoComponent", () => {
     let component: CrosswordGameInfoComponent;
     let fixture: ComponentFixture<CrosswordGameInfoComponent>;
+    let crosswordService: CrosswordService;
+    let gameInfoService: GameInfoService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule, FormsModule],
             declarations: [CrosswordGameInfoComponent, ModalEndGameComponent, ModalNewGameComponent],
             providers: [CrosswordCommunicationService, CrosswordService, GameInfoService]
-    })
-            .compileComponents();
+        })
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CrosswordGameInfoComponent);
         component = fixture.componentInstance;
+        crosswordService = TestBed.get(CrosswordService);
+        gameInfoService = TestBed.get(GameInfoService);
         fixture.detectChanges();
     });
 
@@ -33,16 +37,16 @@ describe("CrosswordGameInfoComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should receive a promise for Difficulty", inject([CrosswordService], (service: CrosswordService) => {
-        service.gameManager.difficultySubject.subscribe( (difficulty: Difficulty) => {
+    it("should receive a promise for Difficulty", () => {
+        gameInfoService.lvl.subscribe( (difficulty: Difficulty) => {
           expect(difficulty).toBeDefined();
         });
-    }));
+    });
 
-    it("should receive a promise for players", inject([CrosswordService], (service: CrosswordService) => {
-        service.gameManager.playersSubject.subscribe( (players: Array<Player>) => {
+    it("should receive a promise for players", () => {
+        crosswordService.gameManager.playersSubject.subscribe( (players: Array<Player>) => {
           expect(players).toBeDefined();
         });
-    }));
+    });
 
 });

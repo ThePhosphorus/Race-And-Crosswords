@@ -4,6 +4,7 @@ import { TrackListComponent } from "./track-list.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { TrackLoaderService } from "../../track-loader/track-loader.service";
 import { HttpClientModule } from "@angular/common/http/";
+import { LoaderService } from "../../game-component/loader-service/loader.service";
 
 describe("TrackListComponent", () => {
   let component: TrackListComponent;
@@ -13,10 +14,10 @@ describe("TrackListComponent", () => {
     TestBed.configureTestingModule({
       declarations: [ TrackListComponent],
       schemas : [NO_ERRORS_SCHEMA],
-      providers: [TrackLoaderService],
+      providers: [TrackLoaderService, LoaderService],
       imports: [HttpClientModule]
     })
-    .compileComponents();
+    .compileComponents().catch((e: Error) => console.error(e.message));
   }));
 
   beforeEach(() => {

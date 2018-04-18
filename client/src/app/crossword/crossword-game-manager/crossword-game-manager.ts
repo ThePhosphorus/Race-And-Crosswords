@@ -1,6 +1,6 @@
 import { Player } from "../../../../../common/communication/Player";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Orientation, Difficulty } from "../../../../../common/crossword/enums-constants";
+import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Letter } from "../../../../../common/crossword/letter";
 import { Word } from "../../../../../common/crossword/word";
@@ -22,29 +22,22 @@ export class GameManager {
     private _playerGrid: BehaviorSubject<CrosswordGrid>;
     private _solvedWords: BehaviorSubject<SolvedWord[]>;
     private _solvedGrid: BehaviorSubject<CrosswordGrid>;
-    private _difficulty: BehaviorSubject<Difficulty>;
 
     public constructor() {
         this._playerGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
         this._solvedWords = new BehaviorSubject<SolvedWord[]>(new Array<SolvedWord>());
         this._solvedGrid = new BehaviorSubject<CrosswordGrid>(new CrosswordGrid());
-        this._difficulty = new BehaviorSubject<Difficulty>(Difficulty.Easy);
         this._players = new BehaviorSubject<Player[]>(new Array<Player>());
 
         this.initializeEmptyGrid();
     }
 
-    public newGame(difficulty: Difficulty): void {
+    public newGame(): void {
         this._solvedGrid.next(new CrosswordGrid());
         this._playerGrid.next(new CrosswordGrid());
         this._players.next(new Array<Player>());
         this._solvedWords.next(new Array<SolvedWord>());
-        this._difficulty.next(difficulty);
         this.initializeEmptyGrid();
-    }
-
-    public get difficultySubject(): BehaviorSubject<Difficulty> {
-        return this._difficulty;
     }
 
     public get solvedWordsSubject(): BehaviorSubject<SolvedWord[]> {
@@ -129,7 +122,7 @@ export class GameManager {
         }
     }
 
-    private initializeEmptyGrid(): void {
+    public initializeEmptyGrid(): void {
         this._playerGrid.value.size = INITIAL_GRID_SIZE;
         for (let i: number = 0; i < (this._playerGrid.value.size * this._playerGrid.value.size); i++) {
             this._playerGrid.getValue().grid.push(new Letter(EMPTY_TILE_CHARACTER));
@@ -158,15 +151,25 @@ export class GameManager {
         return "hsl(" + hue + ", " + SATURAION + "%, " + lightness + "%)";
     }
 
-    public isWordSolved(letterId: number, orientaion: Orientation): boolean {
-        let isSelected: boolean = false;
+    public isWordSolved(letterId: number, orientation: Orientation): boolean {
+        let isSolved: boolean = false;
         this._solvedWords.getValue().forEach((sw: SolvedWord) => {
-
-            if (sw.id === letterId && sw.orientation === orientaion) {
-                isSelected = true;
+            if (sw.id === letterId && sw.orientation === orientation) {
+                isSolved = true;
             }
         });
 
-        return isSelected;
+        return isSolved;
     }
+
+    public solvedWordPlayer(letterId: number, orientation: Orientation): number {
+        for (const sw of this._solvedWords.getValue()) {
+            if (sw.id === letterId && sw.orientation === orientation) {
+                return sw.player;
+            }
+        }
+
+        return null;
+    }
+
 }

@@ -7,6 +7,9 @@ import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { DefinitionTileComponent } from "../definition-tile/definition-tile.component";
+
+// tslint:disable:no-magic-numbers
 
 describe("DefinitionComponent", () => {
     let component: DefinitionComponent;
@@ -14,11 +17,11 @@ describe("DefinitionComponent", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DefinitionComponent],
-            providers : [CrosswordService, CrosswordCommunicationService],
+            declarations: [DefinitionComponent, DefinitionTileComponent],
+            providers: [CrosswordService, CrosswordCommunicationService],
             imports: [HttpClientModule]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {
@@ -37,11 +40,11 @@ describe("DefinitionComponent", () => {
         expect(component.cheatMode).toEqual(!pastCheatmodeState);
     });
 
-    it("should create a Display deffinition right", () => {
+    it("should create a Display definition right", () => {
         const word: Word = new Word();
         word.id = 0;
         word.definitions = ["n\tdef0", "n\tDef1"];
-        word.letters = [new Letter("W", 0), new Letter("o", 1), new Letter("r", 2) , new Letter("d", 3)];
+        word.letters = [new Letter("W", 0), new Letter("o", 1), new Letter("r", 2), new Letter("d", 3)];
         word.orientation = Orientation.Across;
 
         const displayDef: DisplayedDefinition = component.wordToDefinition(word);
@@ -50,9 +53,10 @@ describe("DefinitionComponent", () => {
         expect(displayDef.word).toBe(word.toString());
         expect(displayDef.definition).toBe("Def0");
     });
+
     it("should receive a promise", inject([CrosswordService], (service: CrosswordService) => {
-        service.gameManager.playerGridSubject.subscribe( (grid: CrosswordGrid) => {
-          expect(grid).toBeDefined();
+        service.gameManager.playerGridSubject.subscribe((grid: CrosswordGrid) => {
+            expect(grid).toBeDefined();
         });
     }));
 });

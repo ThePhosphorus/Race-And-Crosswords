@@ -1,0 +1,19 @@
+p {
+    width: 100%;
+    height: 100%;
+    margin: 0%;
+    padding: 2vmin;
+}
+
+.disabled {
+    text-decoration-line: line-through;
+    background-color: var(--color, black);
+}
+
+.enabled:hover {
+    background-color: #e7e7e7;
+}
+
+.selected {
+    box-shadow: inset 0vmin 0vmin 2vmin var(--bgColor, gray);
+}

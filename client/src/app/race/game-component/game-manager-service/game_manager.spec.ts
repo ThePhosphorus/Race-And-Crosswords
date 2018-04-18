@@ -1,12 +1,18 @@
 import { TestBed, inject } from "@angular/core/testing";
-import { GameManagerService, OFF_ROAD_PATH } from "./game_manager.service";
+import { GameManagerService } from "./game_manager.service";
 import { CameraManagerService } from "../../camera-manager-service/camera-manager.service";
 import { InputManagerService } from "../../input-manager-service/input-manager.service";
 import { SoundManagerService } from "../sound-manager-service/sound-manager.service";
 import { CollisionDetectorService } from "../collision/collision-detector.service";
 import { LightManagerService } from "../light-manager/light-manager.service";
-import { TRACK_PATH } from "../../track-loader/track-loader.service";
+import { LoaderService } from "../loader-service/loader.service";
+import { GameConfiguration } from "../game-configuration/game-configuration";
+import { NB_LAPS } from "../../../global-constants/constants";
+import { EndGameService } from "../end-game/end-game-service/end-game.service";
+import { TrackLoaderService } from "../../track-loader/track-loader.service";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 
+// tslint:disable:no-magic-numbers
 describe("GameManager", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -15,18 +21,40 @@ describe("GameManager", () => {
                         InputManagerService,
                         SoundManagerService,
                         CollisionDetectorService,
-                        LightManagerService]
+                        LightManagerService,
+                        LoaderService,
+                        EndGameService,
+                        TrackLoaderService,
+                        HttpClient,
+                        HttpHandler
+                    ]
         });
     });
 
-    it(
-        "should be created",
-        inject([GameManagerService], (service: GameManagerService) => {
-            expect(service).toBeTruthy();
-        })
-    );
+    it("should be created", inject([GameManagerService], (service: GameManagerService) => {
+        expect(service).toBeTruthy();
+    }));
 
-    it("should have different texture for offroad", () => {
-        expect(OFF_ROAD_PATH !== TRACK_PATH).toBeTruthy();
+    it("should initialize the game", inject([GameManagerService], (service: GameManagerService) => {
+        service.start(document.createElement("div"), new GameConfiguration());
+        expect(service.playerInfos.lap).toBeDefined();
+        expect(service.isStarted).toBeFalsy();
+    }));
+
+    it("should start the game", inject([GameManagerService], (service: GameManagerService) => {
+        service.start(document.createElement("div"), new GameConfiguration());
+        expect(service.isStarted).toBeFalsy();
+        service.startGame();
+        expect(service.isStarted).toBeTruthy();
+    }));
+
+    it("should start at lap 0", inject([GameManagerService], (service: GameManagerService) => {
+        service.start(document.createElement("div"), new GameConfiguration());
+        service.startGame();
+        expect(service.playerInfos.lap).toBeLessThan(NB_LAPS);
+    }));
+
+    it("should have 3 laps", () => {
+        expect(NB_LAPS).toBe(3);
     });
 });

@@ -1,0 +1,7 @@
+<div id="container">
+  <div *ngIf="!hasStarted" class="mt-5">
+    <div class="light-box" *ngFor="let light of lights">
+      <div class="light" [ngClass]="{'invisible': !light}"></div>
+    </div>
+  </div>
+</div>

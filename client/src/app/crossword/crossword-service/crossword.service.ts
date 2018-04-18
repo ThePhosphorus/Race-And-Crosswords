@@ -3,14 +3,11 @@ import { CrosswordCommunicationService } from "../crossword-communication-servic
 import { GameManager, EMPTY_TILE_CHARACTER, SolvedWord } from "../crossword-game-manager/crossword-game-manager";
 import { GridState, OtherPlayersSelect } from "../grid-state/grid-state";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { MOCK } from "../mock-crossword/mock-crossword";
 import { Player } from "../../../../../common/communication/Player";
 import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
-// Put true tu use mock grid instead of generated one
-const USE_MOCK_GRID: boolean = false;
 const INITIAL_GRID_SIZE: number = 10;
 const INITIAL_BLACK_TILES_RATIO: number = 0.4;
 const INPUT_REGEX: RegExp = /^[a-z]$/i;
@@ -20,16 +17,13 @@ export class CrosswordService {
     private _gameManager: GameManager;
     private _gridState: BehaviorSubject<GridState>;
     private _isSinglePlayer: boolean;
-    public isGameOver: boolean;
+    private _isGameOver: BehaviorSubject<boolean>;
 
     public constructor(private commService: CrosswordCommunicationService) {
         this._gameManager = new GameManager();
         this._gridState = new BehaviorSubject<GridState>(new GridState());
         this._isSinglePlayer = true;
-        this.isGameOver = false;
-        if (USE_MOCK_GRID) {
-            this._gameManager.grid = MOCK;
-        }
+        this._isGameOver = new BehaviorSubject<boolean>(false);
     }
 
     public get gameManager(): GameManager {
@@ -48,36 +42,34 @@ export class CrosswordService {
         return this._gridState;
     }
 
+    public get isGameOver(): BehaviorSubject<boolean> {
+        return this._isGameOver;
+    }
+
+    public setIsGameOver(isGameOver: boolean): void {
+        this._isGameOver.next(isGameOver);
+    }
+
     public getPlayerColor(playerId: number, isFrontGround: boolean): string {
         return this._gameManager.getColorFromPlayer(playerId, isFrontGround);
     }
 
     public newGame(difficulty: Difficulty, isSinglePlayer: boolean): void {
-        if (!USE_MOCK_GRID) {
-            this._isSinglePlayer = isSinglePlayer;
-            this._gameManager.newGame(difficulty);
-            this.isGameOver = false;
-            this._gridState.next(new GridState());
+        this._isSinglePlayer = isSinglePlayer;
+        this._gameManager.newGame();
+        this.isGameOver.next(false);
+        this._gridState.next(new GridState());
 
-            if (isSinglePlayer) {
-                this.setUpSingleplayer(difficulty);
-            } else {
-                this.setUpMultiplayer(difficulty);
-            }
+        if (isSinglePlayer) {
+            this.setUpSingleplayer(difficulty);
+        } else {
+            this.setUpMultiplayer();
         }
     }
 
     public setHoveredWord(letterId: number, orientation: Orientation): void {
-        this._gridState.value.hoveredLetters = [];
-
         if (letterId != null && orientation != null) {
-            const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, true);
-
-            if (word != null) {
-                for (const letter of word.letters) {
-                    this._gridState.value.hoveredLetters.push(letter.id);
-                }
-            }
+            this._gridState.value.setHoveredWord(this._gameManager.findWordFromLetter(letterId, orientation, true));
         }
     }
 
@@ -89,8 +81,7 @@ export class CrosswordService {
                 this._gridState.value.currentOrientation = Orientation.Across;
             }
 
-            let targetWord: Word = this._gameManager.findWordFromLetter(
-                index, this._gridState.value.currentOrientation, false);
+            let targetWord: Word = this._gameManager.findWordFromLetter(index, this._gridState.value.currentOrientation, false);
 
             if (targetWord === null) {
                 for (const ori of Object.keys(Orientation)) {
@@ -106,32 +97,14 @@ export class CrosswordService {
                 this.setSelectedWord(targetWord.id, targetWord.orientation);
                 this._gridState.value.currentLetter = targetWord.letters[0].id;
                 if (this._gridState.value.isLetterDisabled(this._gridState.value.currentLetter)) {
-                    this._gridState.value.currentLetter = this.findNextLetterId(true);
+                    this._gridState.value.goToNextLetter(true);
                 }
             }
         }
     }
 
     public setSelectedWord(letterId: number, orientation: Orientation): void {
-        let startingIndex: number = null;
-        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
-
-        for (const letter of word.letters) {
-            if (!this._gridState.value.isLetterDisabled(letter.id)) {
-                startingIndex = letter.id;
-                break;
-            }
-        }
-
-        if (startingIndex != null) {
-            this._gridState.value.currentOrientation = orientation;
-            this._gridState.value.selectedLetters = [];
-
-            for (const letter of word.letters) {
-                this._gridState.value.selectedLetters.push(letter.id);
-            }
-
-            this._gridState.value.currentLetter = startingIndex;
+        if (this._gridState.value.setSelectedWord(this._gameManager.findWordFromLetter(letterId, orientation, false))) {
             this.commService.notifySelect(letterId, orientation);
         }
     }
@@ -143,24 +116,13 @@ export class CrosswordService {
     public writeChar(key: string): void {
         if (this._gridState.value.currentLetter != null) {
             if (key.match(INPUT_REGEX) != null) {
-                let nextLetterId: number;
                 this._gameManager.setChar(this._gridState.value.currentLetter, key.toLowerCase());
                 this.verifyWords();
-                nextLetterId = this.findNextLetterId(true);
-
-                if (nextLetterId != null) {
-                    this._gridState.value.currentLetter = nextLetterId;
-                }
+                this._gridState.value.goToNextLetter(true);
             } else if (key === "Backspace") {
-                let nextLetterId: number;
-
                 if (this._gameManager.getChar(this._gridState.value.currentLetter) === EMPTY_TILE_CHARACTER) {
-                    nextLetterId = this.findNextLetterId(false);
-                    if (nextLetterId != null) {
-                        this._gridState.value.currentLetter = nextLetterId;
-                    }
+                    this._gridState.value.goToNextLetter(false);
                 }
-
                 this._gameManager.setChar(this._gridState.value.currentLetter, EMPTY_TILE_CHARACTER);
             }
         }
@@ -172,9 +134,9 @@ export class CrosswordService {
             players.push(this._gameManager.myPlayer.id);
         }
 
-        this._gridState.getValue().otherPlayersSelect.forEach((oph: OtherPlayersSelect) => {
-            if (oph.selectedLetters.indexOf(letterId) > -1) {
-                players.push(oph.playerId);
+        this._gridState.getValue().otherPlayersSelect.forEach((selection: OtherPlayersSelect) => {
+            if (selection.selectedLetters.indexOf(letterId) > -1) {
+                players.push(selection.playerId);
             }
         });
 
@@ -194,11 +156,29 @@ export class CrosswordService {
         return players;
     }
 
+    public playersSelectingWord(letterId: number, orientation: Orientation): Array<number> {
+        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
+        let players: Array<number> = new Array<number>();
+        const playersSelecting: Array<number> = new Array<number>();
+        if (word != null) {
+            for (const letter of word.letters) {
+                players = players.concat(this.playersSelectingLetter(letter.id));
+            }
+            (new Set<number>([...Array.from(players)])).forEach((player: number) => {
+                if (players.indexOf(player) !== players.lastIndexOf(player)) {
+                    playersSelecting.push(player);
+                }
+            });
+        }
+
+        return playersSelecting;
+    }
+
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
         let player: OtherPlayersSelect = this._gridState.getValue().otherPlayersSelect.find(
-                                                        (oph: OtherPlayersSelect) => oph.playerId === playerId);
+            (selection: OtherPlayersSelect) => selection.playerId === playerId);
         if (player == null) {
-            player = new OtherPlayersSelect(playerId, []);
+            player = {playerId : playerId, selectedLetters: []};
             this._gridState.getValue().otherPlayersSelect.push(player);
         }
 
@@ -210,6 +190,7 @@ export class CrosswordService {
 
     public resetGrid(): void {
         this._gameManager.grid = new CrosswordGrid();
+        this._gameManager.initializeEmptyGrid();
     }
 
     private setUpSingleplayer(diff: Difficulty): void {
@@ -221,39 +202,18 @@ export class CrosswordService {
             });
     }
 
-    private setUpMultiplayer(diff: Difficulty): void {
-        this.commService.listenerReceiveGrid = (grid: CrosswordGrid) =>
+    private setUpMultiplayer(): void {
+        this.commService.listenerGridReceived = (grid: CrosswordGrid) =>
             this._gameManager.grid = grid;
 
-        this.commService.listenerReceivePlayers = (players: Player[]) => {
+        this.commService.listenerPlayersReceived = (players: Player[]) =>
             this._gameManager.players = players;
-        };
-        this.commService.listenerReceiveSelect = (playerId: number, letterId: number, orientation: Orientation) =>
+
+        this.commService.listenerWordSelected = (playerId: number, letterId: number, orientation: Orientation) =>
             this.selectWordFromOtherPlayer(playerId, letterId, orientation);
 
-        this.commService.listenerIsCompletedFirst = (playerId: number, word: Word) =>
+        this.commService.listenerWordSolved = (playerId: number, word: Word) =>
             this.disableWord(word, playerId);
-    }
-
-    private findNextLetterId(isForward: boolean): number {
-        if (isForward) {
-            for (let i: number = this._gridState.value.selectedLetters
-                .indexOf(this._gridState.value.currentLetter) + 1;
-                i < this._gridState.value.selectedLetters.length; i++) {
-                if (!this._gridState.value.isLetterDisabled(this._gridState.value.selectedLetters[i])) {
-                    return this._gridState.value.selectedLetters[i];
-                }
-            }
-        } else {
-            for (let i: number = this._gridState.value.selectedLetters
-                .indexOf(this._gridState.value.currentLetter) - 1; i >= 0; i--) {
-                if (!this._gridState.value.isLetterDisabled(this._gridState.value.selectedLetters[i])) {
-                    return this._gridState.value.selectedLetters[i];
-                }
-            }
-        }
-
-        return null;
     }
 
     private disableWord(word: Word, playerId: number): void {
@@ -262,8 +222,11 @@ export class CrosswordService {
             this._gameManager.setChar(letter.id, letter.char);
         }
         this.unselectWord();
+        if (this.isSinglePlayer) {
+            this._gameManager.myPlayer.score++;
+        }
         if (this._gameManager.addSolvedWord(word, playerId)) {
-            this.isGameOver = true;
+            this.setIsGameOver(true);
         }
     }
 

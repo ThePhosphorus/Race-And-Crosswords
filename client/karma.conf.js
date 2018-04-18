@@ -13,7 +13,8 @@ module.exports = function (config) {
       require('@angular/cli/plugins/karma')
     ],
     client:{
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      browserDisconnectTimeout: 60000
     },
     coverageIstanbulReporter: {
       reports: [ 'html', 'lcovonly' ],

@@ -1,7 +1,6 @@
 import * as assert from "assert";
 import { GridGenerator } from "./grid-generator";
 import { ExternalCommunications } from "../externalCommunications/external-communications";
-import { DatamuseWord} from "../../../../../common/communication/datamuse-word";
 import { Difficulty, Orientation } from "../../../../../common/crossword/enums-constants";
 import { Word } from "../../../../../common/crossword/word";
 import { Letter } from "../../../../../common/crossword/letter";
@@ -88,10 +87,9 @@ describe("Grid generation", () => {
 
         it("should have real words", (done: MochaDone) => {
             for (const word of grid.words) {
-                communication.getDefinitionsFromServer(word.toString()).then((datamuseWord: DatamuseWord) => {
-                    assert.notEqual(datamuseWord, null, word.toString() + " does not exist");
-                    assert.equal(datamuseWord.word, word.toString(), " Expected : " + word.toString() + " got : " + datamuseWord.word);
-                    assert.notEqual(datamuseWord.defs, null, word.toString() + " does not have defs");
+                communication.getDefinitionsFromServer(word.toString()).then((defs: string[]) => {
+                    assert.notEqual(defs, null, word.toString() + " does not exist");
+                    assert.notEqual(defs, null, word.toString() + " does not have defs");
                 }).catch(() => {
                     assert.fail("Promise Rejection");
                     done();
@@ -102,11 +100,11 @@ describe("Grid generation", () => {
 
         it("should have correct definition", (done: MochaDone) => {
             for (const word of grid.words) {
-                communication.getDefinitionsFromServer(word.toString()).then((datamuseWord: DatamuseWord) => {
-                    assert.notEqual(datamuseWord, null, word.toString() + " does not exist");
-                    assert.notEqual(datamuseWord.defs, null, word.toString() + " does not have defs");
+                communication.getDefinitionsFromServer(word.toString()).then((defs: string[]) => {
+                    assert.notEqual(defs, null, word.toString() + " does not exist");
+                    assert.notEqual(defs, null, word.toString() + " does not have defs");
                     let isCorrectDefinition: boolean = false;
-                    for (const def of datamuseWord.defs) {
+                    for (const def of defs) {
                         if (def === word.definitions[0]) {
                             isCorrectDefinition = true;
                         }
@@ -121,9 +119,9 @@ describe("Grid generation", () => {
         });
 
         it("should have easy words", (done: MochaDone) => {
-            communication.getDefinitionsFromServer(grid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
+            communication.getDefinitionsFromServer(grid.words[0].toString()).then((defs: string[]) => {
                 assert.equal(grid.words[0].definitions[0],
-                             datamuseWord.defs[0],
+                             defs[0],
                              grid.words[0].toString() + " does not use it's first definition");
                 done();
             }).catch(() => {
@@ -139,10 +137,10 @@ describe("Grid generation", () => {
             gridGenerator.getNewGrid(Difficulty.Medium, GRID_SIZE).then((mediumGrid: CrosswordGrid) => {
                 assert.notEqual(mediumGrid, undefined, "There is no grid");
                 assert.notEqual(mediumGrid.words, undefined, "it does not have words");
-                communication.getDefinitionsFromServer(mediumGrid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
-                    if (datamuseWord.defs.length > 1) {
+                communication.getDefinitionsFromServer(mediumGrid.words[0].toString()).then((defs: string[]) => {
+                    if (defs.length > 1) {
                         assert.notEqual(mediumGrid.words[0].definitions[0],
-                                        datamuseWord.defs[0],
+                                        defs[0],
                                         mediumGrid.words[0].toString() + " uses it's first definition");
                     }
                     done();
@@ -160,10 +158,10 @@ describe("Grid generation", () => {
             gridGenerator.getNewGrid(Difficulty.Medium, GRID_SIZE).then((hardGrid: CrosswordGrid) => {
                 assert.notEqual(hardGrid, undefined, "There is no grid");
                 assert.notEqual(hardGrid.words, undefined, "it does not have words");
-                communication.getDefinitionsFromServer(hardGrid.words[0].toString()).then((datamuseWord: DatamuseWord) => {
-                    if (datamuseWord.defs.length > 1) {
+                communication.getDefinitionsFromServer(hardGrid.words[0].toString()).then((defs: string[]) => {
+                    if (defs.length > 1) {
                         assert.notEqual(hardGrid.words[0].definitions[0],
-                                        datamuseWord.defs[0],
+                                        defs[0],
                                         hardGrid.words[0].toString() + " uses it's first definition");
                     }
                     done();

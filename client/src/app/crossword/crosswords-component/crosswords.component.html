@@ -2,8 +2,6 @@
     <div class="col-6 text-center  justify-content-center align-middle center-block align-items-center mt-5 pt-3">
   <p *ngIf="loading"  id="loading">Crossing the words</p>
   <p *ngIf="searching&&!loading"  id="searching">Looking for a friend</p>
-  <p *ngIf=""  id="searching">Game Canceled :(</p>
-
     </div>
 </div>
 <div class="row text-center  mt-5" (click)="grid.unselectWord($event)">
@@ -13,7 +11,7 @@
   </div>
 
   <div class="col-5 mt-3 align-items-center ">
-    <app-crossword-game-info (showSearching)="searching=($event)"></app-crossword-game-info>
-    <app-input-grid #grid (showLoading)="loading=($event)"></app-input-grid>
+    <app-crossword-game-info ></app-crossword-game-info>
+    <app-input-grid #grid ></app-input-grid>
   </div>
 </div>

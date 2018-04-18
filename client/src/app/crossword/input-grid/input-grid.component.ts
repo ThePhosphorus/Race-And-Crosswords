@@ -1,7 +1,8 @@
-import { Component, OnInit, HostListener, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, HostListener} from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { Letter } from "../../../../../common/crossword/letter";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
+import { GameInfoService } from "../crossword-game-info/game-info-service/game-info.service";
 
 @Component({
     selector: "app-input-grid",
@@ -9,22 +10,19 @@ import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
     styleUrls: ["./input-grid.component.css"]
 })
 export class InputGridComponent implements OnInit {
-    @Output() public showLoading: EventEmitter<boolean>;
 
     public twoDimensionGrid: Letter[][];
 
-    public constructor(private _crosswordService: CrosswordService) {
+    public constructor(private _crosswordService: CrosswordService, private _infoService: GameInfoService) {
         this.twoDimensionGrid = new Array<Array<Letter>>();
-        this.showLoading = new EventEmitter<boolean>();
+
     }
 
     public ngOnInit(): void {
         this._crosswordService.gameManager.playerGridSubject.subscribe((crosswordGrid: CrosswordGrid) => {
             if (crosswordGrid.words.length > 0) {
                 this.makeTwoDimensionGrid(crosswordGrid);
-                this.showLoading.emit(false);
-            } else {
-                this.showLoading.emit(true);
+                this._infoService.setShowLoading(false);
             }
         });
     }

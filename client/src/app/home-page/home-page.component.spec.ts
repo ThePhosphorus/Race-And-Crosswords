@@ -10,7 +10,7 @@ describe("HomePageComponent", () => {
     TestBed.configureTestingModule({
       declarations: [ HomePageComponent ]
     })
-    .compileComponents();
+    .compileComponents().catch((e: Error) => console.error(e.message));
   });
 
   beforeEach(() => {

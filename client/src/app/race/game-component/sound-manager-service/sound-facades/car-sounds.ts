@@ -1,14 +1,12 @@
 import {AudioListener, Object3D} from "three";
 import { PositionalSoundFacade } from "./positional-sound-facade";
-import { CRASH_PATH_1, CRASH_PATH_2, CRASH_PATH_3, CRASH_PATH_4, CRASH_VOLUME } from "../sound-constants";
-import { DEFAULT_VOLUME } from "../../../race.constants";
+import { LoaderService } from "../../loader-service/loader.service";
+import { LoadedAudio } from "../../loader-service/load-types.enum";
+import { CRASH_VOLUME, ENGINE_VOLUME, DRIFT_VOLUME } from "../sound-constants";
 
-const ENGINE_FILE_NAME: string = "./engine/engine2.ogg";
-const DRIFT_FILE_NAME: string = "./drift/drift1.ogg";
 const MAX_RPM: number = 6500;
 const MIN_RPM: number = 800;
 const PLAYBACK_SPEED_FACTOR: number = 2;
-const ENGINE_VOLUME: number = 1;
 
 export class CarSounds {
 
@@ -16,45 +14,50 @@ export class CarSounds {
     private _drift: PositionalSoundFacade;
     private _collisionSounds: Array<PositionalSoundFacade>;
 
-    public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string) {
+    public constructor(soundEmittingObject: Object3D, soundListener: AudioListener, private loader: LoaderService) {
         this._engine = new PositionalSoundFacade(soundEmittingObject, soundListener, true, ENGINE_VOLUME);
-        this._drift = new PositionalSoundFacade(soundEmittingObject, soundListener, true, DEFAULT_VOLUME);
-        this._engine.init(ENGINE_FILE_NAME, sourcePath).then(() => this._engine.play());
-        this._drift.init(DRIFT_FILE_NAME, sourcePath).then(() => this._drift.setVolume(2));
+        this._drift = new PositionalSoundFacade(soundEmittingObject, soundListener, true, DRIFT_VOLUME);
+
+        this._engine.init(this.loader, LoadedAudio.engine);
+        this._engine.play();
+
+        this._drift.init(this.loader, LoadedAudio.drift);
+
         this.initCollisionSounds(soundEmittingObject, soundListener);
     }
     private initCollisionSounds(soundEmittingObject: Object3D, soundListener: AudioListener, sourcePath?: string): void {
         this._collisionSounds = new Array<PositionalSoundFacade>();
-        const crash1: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
-        const crash2: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
-        const crash3: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
-        const crash4: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
-        const crash5: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, DEFAULT_VOLUME);
-        crash1.init(CRASH_PATH_1, sourcePath).then( () => this._collisionSounds[0].setVolume(1));
-        crash2.init(CRASH_PATH_2, sourcePath).then( () => this._collisionSounds[1].setVolume(CRASH_VOLUME));
-        crash3.init(CRASH_PATH_3, sourcePath).then( () => this._collisionSounds[2].setVolume(CRASH_VOLUME));
-        crash4.init(CRASH_PATH_4, sourcePath).then( () => this._collisionSounds[3].setVolume(CRASH_VOLUME));
-        crash5.init(CRASH_PATH_4, sourcePath).then( () => this._collisionSounds[4].setVolume(CRASH_VOLUME));
+        const crash1: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, CRASH_VOLUME);
+        const crash2: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, CRASH_VOLUME);
+        const crash3: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, CRASH_VOLUME);
+        const crash4: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, CRASH_VOLUME);
+        const crash5: PositionalSoundFacade = new PositionalSoundFacade(soundEmittingObject, soundListener, false, CRASH_VOLUME);
+
+        crash1.init(this.loader, LoadedAudio.collision1);
+        crash2.init(this.loader, LoadedAudio.collision2);
+        crash3.init(this.loader, LoadedAudio.collision3);
+        crash4.init(this.loader, LoadedAudio.collision4);
+        crash5.init(this.loader, LoadedAudio.collision5);
+
         this._collisionSounds.push(crash1);
         this._collisionSounds.push(crash2);
         this._collisionSounds.push(crash3);
         this._collisionSounds.push(crash4);
         this._collisionSounds.push(crash5);
+
     }
     public updateRPM(rpm: number): void {
         this._engine.setPlaybackRate(this.getPlaybackRate(rpm));
     }
     private getPlaybackRate(rpm: number): number {
-        return (rpm - 800) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
+        return (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM) + PLAYBACK_SPEED_FACTOR;
     }
     public stop(): void {
         this._engine.stop();
     }
 
     public startDrift(): void {
-        if (!this._drift.isPlaying()) {
             this._drift.play();
-        }
     }
 
     public playCollision(): void {

@@ -1,6 +1,7 @@
 import { Datamuse } from "./datamuse";
 import * as assert from "assert";
-import { DatamuseWord } from "../../../../common/communication/datamuse-word";
+
+// tslint:disable: no-floating-promises
 
 describe("Service Lexical", () => {
     const datamuse: Datamuse = new Datamuse();
@@ -15,82 +16,65 @@ describe("Service Lexical", () => {
     describe("When the words are received", () => {
         it("should not give us an empty array", (done: MochaDone) => {
             const testString: string = "????";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+            datamuse.getWord(testString, true).then((word: string) => {
                 assert.notEqual(word, undefined, "Did not receive array of word.");
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
                 done();
             });
         });
 
         it("should have the correct length", (done: MochaDone) => {
             const testString: string = "????";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+            datamuse.getWord(testString, true).then((word: string) => {
                 assert.notEqual(word, undefined, "Did not receive a word");
-                assert.strictEqual(word.word.length, testString.length, "Did not receive the right length");
+                assert.strictEqual(word.length, testString.length, "Did not receive the right length");
 
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
                 done();
             });
         });
 
         it("should respect the letter criterias", (done: MochaDone) => {
             const testString: string = "a????";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                if (strResponse == null) {
+            datamuse.getWord(testString, true).then((word: string) => {
+                if (word == null) {
                     assert.fail("received null or undefined from datamuse");
                 } else {
-                    const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
 
                     assert.notEqual(word, undefined, "Did not receive a word");
-                    assert.strictEqual(word.word.length, testString.length, "Did not receive the right length");
+                    assert.strictEqual(word.length, testString.length, "Did not receive the right length");
                     for (let i: number = 0; i < testString.length; i++) {
                         if (testString.charAt(i) !== "?") {
-                            assert.strictEqual(word.word.charAt(i), testString.charAt(i), "Letter criteria is not respected.");
+                            assert.strictEqual(word.charAt(i), testString.charAt(i), "Letter criteria is not respected.");
                         }
                     }
                 }
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
                 done();
             });
         });
 
         it("should have definitions", (done: MochaDone) => {
             const testString: string = "????";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
-                assert.notEqual(word.defs.length, 0, "received no definition for the word : " + word.word);
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
-                done();
+            datamuse.getWord(testString, true).then((word: string) => {
+                datamuse.getDefinitions(word).then((defs: string[]) => {
+                    assert.notEqual(defs.length, 0, "received no definition for the word : " + word);
+                    done();
+                });
             });
         });
 
         it("should have definitions that don't containt the word itself", (done: MochaDone) => {
             const testString: string = "????";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
-
-                word.defs.forEach((definition: string) => {
-                    const defWords: string[] = definition.split(" ");
-                    defWords.forEach((defWord: string) => {
-                        assert.notStrictEqual(defWord, word.word,
-                                              "Definition \"" + definition + "\" contains the word \"" + word.word + "\"");
+            datamuse.getWord(testString, true).then((word: string) => {
+                datamuse.getDefinitions(word).then((defs: string[]) => {
+                    defs.forEach((definition: string) => {
+                        const defWords: string[] = definition.split(" ");
+                        defWords.forEach((defWord: string) => {
+                            assert.notStrictEqual(defWord, word,
+                                                  "Definition \"" + definition + "\" contains the word \"" + word + "\"");
+                        });
                     });
+                    assert.notEqual(defs.length, 0, "Received no definition for the word : " + word);
+                    done();
                 });
-                assert.notEqual(word.defs.length, 0, "Received no definition for the word : " + word.word);
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
-                done();
             });
         });
 
@@ -99,45 +83,16 @@ describe("Service Lexical", () => {
     describe("When requested by rarity", () => {
         it("should receive common words", (done: MochaDone) => {
             const testString: string = "???e";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+            datamuse.getWord(testString, true).then((word: string) => {
                 assert.notEqual(word, undefined, "Did not receive any word");
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
                 done();
             });
         });
 
         it("should receive rare words", (done: MochaDone) => {
             const testString: string = "???e";
-            datamuse.getWord(testString, false).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
+            datamuse.getWord(testString, false).then((word: string) => {
                 assert.notEqual(word, undefined, "Did not receive any word");
-                done();
-            }).catch(() => {
-                assert.fail("Promise Rejection");
-                done();
-            });
-        });
-
-        it("should have commun words less rare than rare words", (done: MochaDone) => {
-            const testString: string = "????e";
-            datamuse.getWord(testString, true).then((strResponse: string) => {
-                const word: DatamuseWord = JSON.parse(strResponse) as DatamuseWord;
-                assert.notEqual(word, undefined, "Did not receive any word");
-                datamuse.getWord(testString, false).then((strResponseHard: string) => {
-                    const hardWord: DatamuseWord = JSON.parse(strResponseHard) as DatamuseWord;
-                    assert.notEqual(hardWord, undefined, "Did not receive any hard word");
-                    assert.ok(hardWord.score < word.score, "Hard word : " + hardWord.word + "(" + hardWord.score + ")" +
-                        " is more commun then : " + word.word + "(" + word.score + ")");
-                    done();
-                }).catch(() => {
-                    assert.fail("Promise Rejection");
-                    done();
-                });
-            }).catch(() => {
-                assert.fail("Promise Rejection");
                 done();
             });
         });

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Scene, AmbientLight, DirectionalLight, CubeTextureLoader, Vector3 } from "three";
+import { Scene, AmbientLight, DirectionalLight, Vector3 } from "three";
 import { Car } from "../car/car";
+import { LoaderService } from "../loader-service/loader.service";
 import {
     HALF,
     WHITE,
@@ -10,36 +11,34 @@ import {
     QUARTER,
     SHADOWMAP_SIZE
 } from "../../../global-constants/constants";
+import { LoadedCubeTexture } from "../loader-service/load-types.enum";
 
 const DIRECTIONAL_LIGHT_OFFSET: number = 50;
-const NIGHT_BACKGROUND_PATH: string = "../../assets/skybox/sky3/";
-const BACKGROUND_PATH: string = "../../assets/skybox/sky1/";
 const SUNLIGHT_INTENSITY: number = 0.2;
 const D_LIGHT_PLANE_SIZE: number = 200;
 const SHADOW_BIAS: number = 0.0001;
+const DAY_AMBIENT_LIGHT: AmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
+const NIGHT_AMBIENT_LIGHT: AmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
 
 @Injectable()
 export class LightManagerService {
-    private _isShadowMode: boolean;
+    private _isFancyMode: boolean;
     private _isNightMode: boolean;
     private _directionalLight: DirectionalLight;
-    private _dayAmbientLight: AmbientLight;
-    private _nightAmbientLight: AmbientLight;
     private _scene: Scene;
     private _player: Car;
     private _aiControlledCars: Array<Car>;
-    public constructor() {
-            this._dayAmbientLight = new AmbientLight(SUNSET, AMBIENT_LIGHT_OPACITY);
-            this._nightAmbientLight = new AmbientLight(WHITE, AMBIENT_NIGHT_LIGHT_OPACITY);
+    public constructor(private loader: LoaderService) {
             this._isNightMode = false;
-            this._isShadowMode = false;
+            this._isFancyMode = false;
          }
+
     public init(scene: Scene, player: Car, aiControlledCars: Array<Car>): void {
         this._scene = scene;
         this._player = player;
         this._aiControlledCars = aiControlledCars;
-        this._scene.add(this._dayAmbientLight);
-        this.loadSkybox(BACKGROUND_PATH);
+        this._scene.add(DAY_AMBIENT_LIGHT);
+        this.loadSkybox(LoadedCubeTexture.daySkyBox);
         this.loadSunlight();
     }
     public  updateSunlight(): void {
@@ -48,50 +47,59 @@ export class LightManagerService {
         this._directionalLight.position.copy((this._player.getPosition().clone().add(sunlightoffSet)));
     }
 
-    public toggleSunlight(): void {
-        if (this._scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
-            this._scene.remove(this._directionalLight);
-            this._isShadowMode = false;
-        } else if (!this._isNightMode) {
-            this._scene.add(this._directionalLight);
-            this._isShadowMode = true;
+    public toggleFancyMode(): void {
+        if (this._isNightMode) {
+            this._player.toggleNightLightShadows();
+            this._aiControlledCars.forEach((aiCar) => {
+            aiCar.toggleNightLightShadows();
+        });
+        } else {
+            this.toggleSunShadows();
         }
     }
 
-    public loadSkybox(path: string): void {
-        this._scene.background = new CubeTextureLoader()
-            .setPath(path)
-            .load([
-                "posx.png",
-                "negx.png",
-                "posy.png",
-                "negy.png",
-                "posz.png",
-                "negz.png"
-            ]);
+    private toggleSunShadows(): void {
+        if (this._scene.children.find( (x) => x.id === this._directionalLight.id) !== undefined) {
+            this._scene.remove(this._directionalLight);
+        } else if (!this._isNightMode) {
+            this._scene.add(this._directionalLight);
+        }
+        this._isFancyMode = !this._isFancyMode;
     }
-    public toggleNightMode(): void {
 
+    public loadSkybox(type: LoadedCubeTexture): void {
+        this._scene.background = this.loader.getCubeTexture(type);
+    }
+
+    public toggleNightShadows(): void {
+        if (this._isNightMode) {
+            this._player.toggleNightLightShadows();
+            this._aiControlledCars.forEach((aiCar) => {
+                aiCar.toggleNightLightShadows();
+            });
+        }
+    }
+
+    public toggleNightMode(): void {
         this._player.toggleNightLight();
         this._aiControlledCars.forEach((aiCar) => {
             aiCar.toggleNightLight();
         });
         if (this._isNightMode) {
-            this._scene.remove(this._nightAmbientLight);
-            this._scene.add(this._dayAmbientLight);
-            this.loadSkybox(BACKGROUND_PATH);
-            this._isNightMode = false;
-            if (this._isShadowMode) {
+            this._scene.remove(NIGHT_AMBIENT_LIGHT);
+            this._scene.add(DAY_AMBIENT_LIGHT);
+            this.loadSkybox(LoadedCubeTexture.daySkyBox);
+            if (this._isFancyMode) {
                 this._scene.add(this._directionalLight);
             }
+            this._isNightMode = false;
         } else {
-            this._scene.remove(this._dayAmbientLight);
-            this._scene.add(this._nightAmbientLight);
-            this.loadSkybox(NIGHT_BACKGROUND_PATH);
+            this._scene.remove(DAY_AMBIENT_LIGHT);
+            this._scene.add(NIGHT_AMBIENT_LIGHT);
+            this.loadSkybox(LoadedCubeTexture.nightSkyBox);
             this._isNightMode = true;
-            if (this._isShadowMode) {
-                this._scene.remove(this._directionalLight);
-            }
+            this._scene.remove(this._directionalLight);
+
         }
     }
 
@@ -106,7 +114,7 @@ export class LightManagerService {
         this._directionalLight.shadow.camera.far = D_LIGHT_PLANE_SIZE;
         this._directionalLight.shadow.mapSize.x = SHADOWMAP_SIZE;
         this._directionalLight.shadow.mapSize.y = SHADOWMAP_SIZE;
-        this._directionalLight.shadowBias = SHADOW_BIAS;
+        this._directionalLight.shadow.bias = SHADOW_BIAS;
     }
 
 }

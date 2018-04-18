@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Timer } from "./timer";
-import { GameManagerService, CarInfos } from "../game-component/game-manager-service/game_manager.service";
+import { GameManagerService } from "../game-component/game-manager-service/game_manager.service";
+import { NB_LAPS } from "../../global-constants/constants";
 
 @Component({
     selector: "app-hud",
@@ -17,22 +18,17 @@ export class HudComponent implements OnInit {
         this._globalTimer = new Timer();
         this._lapTimer = new Timer();
         this.lapCount = 1;
-        this.totalLap = 5;
+        this.totalLap = NB_LAPS;
 
     }
 
     public ngOnInit(): void {
-        this.startChronometer();
-        this.gameManagerService.hudLapReset.subscribe(() => this.nextLap());
+        this.gameManagerService.subscribeToUpdate((deltaTime: number) => this.update(deltaTime));
     }
 
     public nextLap(): void {
         this._lapTimer.reset();
         this.lapCount++;
-    }
-
-    public get carInfos(): CarInfos {
-        return this.gameManagerService.playerInfos;
     }
 
     public get globalTimer(): Timer {
@@ -42,13 +38,14 @@ export class HudComponent implements OnInit {
     public get lapTimer(): Timer {
         return this._lapTimer;
     }
-    private startChronometer(): void {
-        this.gameManagerService.hudTimer.subscribe((t: number) => {
-            this._lapTimer.update(t);
-            this._globalTimer.update(t);
 
-        });
-
+    private update(deltaTime: number): void {
+        if (this.gameManagerService.isStarted) {
+            this._lapTimer.update(deltaTime);
+            this._globalTimer.update(deltaTime);
+            if (this.gameManagerService.playerInfos.lap > this.lapCount && this.lapCount < this.totalLap) {
+                this.nextLap();
+            }
+        }
     }
-
 }

@@ -19,7 +19,7 @@ class SPlayer extends Player {
         public socket: Socket
     ) {
         super(id, name, score);
-  }
+    }
 }
 
 export class MatchManager {
@@ -74,9 +74,9 @@ export class MatchManager {
 
     public async getNewGrid(): Promise<void> {
         const link: string =
-        GET_10X10_GRID_LINK + "&difficulty=" + this._difficulty;
+            GET_10X10_GRID_LINK + "&difficulty=" + this._difficulty;
         await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
-            (this.grid = grid));
+            (this.grid = grid)).promise();
 
         this.notifyAll(msg.getGrid, this.grid);
     }
@@ -103,8 +103,8 @@ export class MatchManager {
     private receiveName(id: number, name: string): void {
         const player: SPlayer = this.getPlayerById(id);
         if (player != null) {
-        player.name = name;
-        this.sendPlayers();
+            player.name = name;
+            this.sendPlayers();
         }
     }
 
@@ -112,13 +112,13 @@ export class MatchManager {
         // Check if it's at the right place
         let player: SPlayer = null;
         if (this._players[id].id === id) {
-        player = this._players[id];
+            player = this._players[id];
         } else {
-        this._players.forEach((p: SPlayer) => {
-            if (p.id === id) {
-            player = p;
-            }
-        });
+            this._players.forEach((p: SPlayer) => {
+                if (p.id === id) {
+                    player = p;
+                }
+            });
         }
 
         return player;
@@ -128,18 +128,19 @@ export class MatchManager {
         socket.on(msg.requestName, (name: string) => this.receiveName(id, name));
 
         socket.on(
-        msg.playerSelectTile,
-        (letterId: number, orientation: Orientation) =>
-            this.recieveSelect(id, letterId, orientation)
+            msg.playerSelectTile,
+            (letterId: number, orientation: Orientation) =>
+                this.recieveSelect(id, letterId, orientation)
         );
 
         socket.on(msg.disconnect, () => this.playerLeave(id));
+        socket.on(msg.leaveGame, () => this.playerLeave(id));
         socket.on(msg.completedWord, (w: Word) => this.verifyFirst(w, id));
         socket.on(msg.rematch, () => this.rematch(id));
     }
 
-    private recieveSelect( playerId: number, letterId: number, orientation: Orientation ): void {
-        this.notifyOthers( playerId, msg.playerSelectTile, playerId, letterId, orientation);
+    private recieveSelect(playerId: number, letterId: number, orientation: Orientation): void {
+        this.notifyOthers(playerId, msg.playerSelectTile, playerId, letterId, orientation);
     }
 
     private playerLeave(id: number): void {
@@ -167,8 +168,8 @@ export class MatchManager {
 
     private resetPlayers(): void {
         this._players.forEach((player: SPlayer) => {
-        player.score = 0;
-        player.wantsRematch = false;
+            player.score = 0;
+            player.wantsRematch = false;
         });
         this.sendPlayers();
     }

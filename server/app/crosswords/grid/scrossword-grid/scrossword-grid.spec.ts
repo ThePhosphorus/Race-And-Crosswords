@@ -25,7 +25,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word)
+                crossword.addWord(wordString, word)
             );
 
         });
@@ -68,7 +68,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word)
+                crossword.addWord(wordString, word)
             );
 
         });
@@ -99,7 +99,7 @@ describe(" Server Crossword Grid", () => {
 
         it("should succeed", () => {
             assert.ok(
-                crossword.addWord(wordString, defs, word)
+                crossword.addWord(wordString, word)
             );
 
         });
@@ -132,10 +132,10 @@ describe(" Server Crossword Grid", () => {
             i++;
         }
 
-        crossword.addWord(wordString, defs, oldWord);
+        crossword.addWord(wordString, oldWord);
         it("should not succeed", () => {
             assert.ok(
-                !crossword.addWord(wordString, defs, word)
+                !crossword.addWord(wordString, word)
             );
 
         });
@@ -144,32 +144,6 @@ describe(" Server Crossword Grid", () => {
             assert.ok(crossword.words.length < 2 , "It added the word");
         });
 
-    });
-
-    describe("When a word without definitions is added", () => {
-        const crossword: SCrosswordGrid = new SCrosswordGrid();
-        const word: Word = new Word();
-        const wordString: string = "word";
-        const defs: string[] = new Array<string>();
-
-        let i: number  = 0;
-        while (i < wordString.length) {
-            const letter: Letter = new Letter("", i);
-            crossword.grid.push(letter);
-            word.letters.push(letter);
-            i++;
-        }
-
-        it("should not succeed", () => {
-            assert.ok(
-                !crossword.addWord(wordString, defs, word)
-            );
-
-        });
-
-        it("should not add the word", () => {
-            assert.ok(crossword.words.length < 1 , "It added the word");
-        });
     });
 
     describe("When a word is removed", () => {
@@ -189,7 +163,7 @@ describe(" Server Crossword Grid", () => {
             i++;
         }
         word.id = word.letters[0].id;
-        crossword.addWord(wordString, defs, word);
+        crossword.addWord(wordString, word);
 
         it("should get removed word", () => {
             assert.equal(
