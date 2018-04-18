@@ -15,7 +15,7 @@ describe("AdminComponent", () => {
       providers: [TrackLoaderService, TrackSaverService],
       schemas : [NO_ERRORS_SCHEMA]
     })
-    .compileComponents();
+    .compileComponents().catch((e: Error) => console.error(e.message));
   }));
 
   beforeEach(() => {
