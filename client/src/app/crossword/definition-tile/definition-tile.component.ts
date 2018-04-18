@@ -23,12 +23,11 @@ export class DefinitionTileComponent implements OnInit {
     public ngOnInit(): void {
         this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
             this._gridState = gridState;
-
         });
     }
 
     public select(event: MouseEvent): void {
-        this._crosswordService.setSelectedWord(this.item.nextId, this.item.orientation);
+        this._crosswordService.setSelectedWord(this.item.id, this.item.orientation);
         event.stopPropagation();
     }
 
