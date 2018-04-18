@@ -145,6 +145,7 @@ export class MatchManager {
 
     private playerLeave(id: number): void {
         this._players.splice(id, 1);
+        this.generateid();
         this.sendPlayers();
     }
 
