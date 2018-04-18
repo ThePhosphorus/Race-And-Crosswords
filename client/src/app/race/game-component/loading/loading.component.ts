@@ -45,7 +45,7 @@ export class LoadingComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     public ngOnChanges(changes: SimpleChanges): void {
         for (const propName in changes) {
-            if ( changes[propName].currentValue === this.track && this.track.id !== "" && this.loadingStatus > HALF) {
+            if ( changes[propName].currentValue === this.track && this.track._id !== "" && this.loadingStatus > HALF) {
                 this._trackPreview.displayPreview(this.track);
                 this._trackPreview.onResize();
             }

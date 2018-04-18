@@ -21,7 +21,7 @@ export class TrackSaverService {
         const track: Track = this.getTrack(id, name, description, points);
         const requestHeader: HttpHeaders = new HttpHeaders({"Content-Type": "application/json"});
 
-        if (track.id) {
+        if (track._id) {
             return this.http.put(TRACK_SAVER_URL + id, { track : track}, { headers : requestHeader}).map((obj: MongoObj) => obj.n > 0);
         } else {
             return this.http.post(TRACK_SAVER_URL, {track : track}, { headers : requestHeader}).map((obj: MongoObj) => obj.n > 0);

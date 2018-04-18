@@ -3,7 +3,7 @@ import { Vector3Struct } from "./vector3-struct";
 
 export class Track {
     public constructor (
-        public id: string,
+        public _id: string,
         public name: string,
         public description: string,
         public points: Vector3Struct[],
