@@ -1,8 +1,9 @@
 import { Orientation } from "../../../../../common/crossword/enums-constants";
 import { Word } from "../../../../../common/crossword/word";
 
-export class OtherPlayersSelect {
-    public constructor(public playerId: number, public selectedLetters: Array<number>) { }
+export interface OtherPlayersSelect {
+    playerId: number;
+    selectedLetters: Array<number>;
 }
 
 export class GridState {

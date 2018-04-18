@@ -178,7 +178,7 @@ export class CrosswordService {
         let player: OtherPlayersSelect = this._gridState.getValue().otherPlayersSelect.find(
             (selection: OtherPlayersSelect) => selection.playerId === playerId);
         if (player == null) {
-            player = new OtherPlayersSelect(playerId, []);
+            player = {playerId : playerId, selectedLetters: []};
             this._gridState.getValue().otherPlayersSelect.push(player);
         }
 
