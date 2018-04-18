@@ -1,7 +1,7 @@
 <div class="input-letter" >
 <button  appTileColor [letterId]="id" [isDisabled]="isDisabled()" type="button" (click)="select($event)"
   [ngClass]="{'disabled': isDisabled(), 'hovered': isHovered() &&
-              !isDisabled(), 'current': isCurrentLetter(), 'selected': !isDisabled()&&isSelected()}" >
+              !isDisabled(), 'current': isCurrentLetter(), 'selected': !isDisabled() && isSelected()}" >
     {{ letter | uppercase }}
 </button>
 </div>

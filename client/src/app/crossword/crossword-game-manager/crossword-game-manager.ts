@@ -152,15 +152,14 @@ export class GameManager {
     }
 
     public isWordSolved(letterId: number, orientation: Orientation): boolean {
-        let isSelected: boolean = false;
+        let isSolved: boolean = false;
         this._solvedWords.getValue().forEach((sw: SolvedWord) => {
-
             if (sw.id === letterId && sw.orientation === orientation) {
-                isSelected = true;
+                isSolved = true;
             }
         });
 
-        return isSelected;
+        return isSolved;
     }
 
     public solvedWordPlayer(letterId: number, orientation: Orientation): number {
