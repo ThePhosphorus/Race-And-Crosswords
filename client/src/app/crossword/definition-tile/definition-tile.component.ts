@@ -24,7 +24,6 @@ export class DefinitionTileComponent implements OnInit {
         this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
             this._gridState = gridState;
 
-
         });
     }
 
