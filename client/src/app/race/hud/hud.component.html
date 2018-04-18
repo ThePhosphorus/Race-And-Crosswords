@@ -3,11 +3,11 @@
   <div id="currentLap" class="col col-9 w-100 pl-5 pt-3">LAP {{lapCount}}/{{totalLap}}</div>
   <div class="col jusify-item-end col-3 w-100 " id="timers">
     <div class="display" id="timerStart">
-      <span id="chron">{{_globalTimer.minutes | number :'2.0-0'}}:{{_globalTimer.seconds | number :'2.0-0'}}</span><span id="cent">.{{_globalTimer.centiseconds | number :'2.0-0'}}</span>
+      <span id="chron">{{globalTimer.minutes | number :'2.0-0'}}:{{globalTimer.seconds | number :'2.0-0'}}</span><span id="cent">.{{globalTimer.centiseconds | number :'2.0-0'}}</span>
     </div>
     <div class="display" id="timerLap">
       <span id="lap">LAP: </span>
-      <span id="chron">{{_lapTimer.minutes | number :'2.0-0'}}:{{_lapTimer.seconds | number :'2.0-0'}}</span><span id="cent">.{{_lapTimer.centiseconds | number :'2.0-0'}}</span>
+      <span id="chron">{{lapTimer.minutes | number :'2.0-0'}}:{{lapTimer.seconds | number :'2.0-0'}}</span><span id="cent">.{{lapTimer.centiseconds | number :'2.0-0'}}</span>
     </div>
   </div>
 </div>
