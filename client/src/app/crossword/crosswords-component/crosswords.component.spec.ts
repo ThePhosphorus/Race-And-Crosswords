@@ -26,7 +26,7 @@ describe("CrosswordsComponent", () => {
       imports: [HttpClientModule, FormsModule],
       providers: [ CrosswordCommunicationService, CrosswordService ]
     })
-    .compileComponents();
+    .compileComponents().catch((e: Error) => console.error(e.message));
   });
 
   beforeEach(() => {

@@ -1,5 +1,3 @@
-import { Word } from "../../../../../common/crossword/word";
-import { DatamuseWord } from "../../../../../common/communication/datamuse-word";
 import * as Request from "request-promise-native";
 import { LEXICAL_SERVICE_URL } from "../../../constants";
 
@@ -7,7 +5,7 @@ const LEXICAL_REQUEST_WORDS: string = "query-word/";
 const LEXICAL_TEST_WORD: string = "query-definitions/";
 
 export class ExternalCommunications {
-    public async getWordsFromServer(constraint: string, word: Word, isEasyWord: boolean): Promise<DatamuseWord> {
+    public async getWordsFromServer(constraint: string, isEasyWord: boolean): Promise<string> {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {
@@ -20,7 +18,7 @@ export class ExternalCommunications {
         return Request(LEXICAL_SERVICE_URL + LEXICAL_REQUEST_WORDS, options) ;
     }
 
-    public async getDefinitionsFromServer(word: string): Promise<DatamuseWord> {
+    public async getDefinitionsFromServer(word: string): Promise<string[]> {
         const options: Request.RequestPromiseOptions = {
             method: "POST",
             body: {

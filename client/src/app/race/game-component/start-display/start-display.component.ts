@@ -32,18 +32,20 @@ export class StartDisplayComponent implements OnInit {
     private update(deltaTime: number): void {
         if (!this.hasStarted) {
             this._timer += deltaTime;
-            if (this._timer > 1) {
-                this.gameManagerService.soundManager.playStartingSound();
-            }
 
             for (let i: number = 0; i < this.lights.length; i++) {
+                const lightCheck: boolean = this.lights[i];
                 this.lights[i] = this._timer / TIME_BETWEEN_LEDS > i;
+                if (this.lights[i] !== lightCheck) {
+                    this.gameManagerService.soundManager.playBeep(1);
+                }
             }
 
             if (this._timer > TIME_BETWEEN_LEDS * NUMBER_OF_LIGHTS) {
                 this.hasStarted = true;
                 this.gameManagerService.startGame();
                 this.closeLights();
+                this.gameManagerService.soundManager.playBeep(2);
             }
         }
     }

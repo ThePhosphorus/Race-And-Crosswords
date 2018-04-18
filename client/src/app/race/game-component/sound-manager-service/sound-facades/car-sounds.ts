@@ -57,9 +57,7 @@ export class CarSounds {
     }
 
     public startDrift(): void {
-        if (!this._drift.isPlaying()) {
             this._drift.play();
-        }
     }
 
     public playCollision(): void {

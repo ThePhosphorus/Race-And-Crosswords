@@ -16,8 +16,8 @@ export class SCrosswordGrid extends CrosswordGrid {
         return row * this.size + column;
     }
 
-    public addWord(newWord: string, newDefs: string[], word: Word): boolean {
-        if (this.isUnique(newWord) && newDefs != null && newDefs.length !== 0) {
+    public addWord(newWord: string, word: Word): boolean {
+        if (this.isUnique(newWord)) {
             this.setWord(newWord, word);
 
             return true;
@@ -79,5 +79,4 @@ export class SCrosswordGrid extends CrosswordGrid {
             gridWord.definitions.push(receivedDefs[1]);
         }
     }
-
 }

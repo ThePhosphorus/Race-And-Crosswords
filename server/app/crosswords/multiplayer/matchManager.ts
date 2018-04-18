@@ -76,7 +76,7 @@ export class MatchManager {
         const link: string =
             GET_10X10_GRID_LINK + "&difficulty=" + this._difficulty;
         await Request(link, (err: Error, res: Request.FullResponse, grid: CrosswordGrid) =>
-            (this.grid = grid));
+            (this.grid = grid)).promise();
 
         this.notifyAll(msg.getGrid, this.grid);
     }

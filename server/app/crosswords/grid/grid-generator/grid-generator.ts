@@ -1,13 +1,17 @@
-import { DatamuseWord } from "../../../../../common/communication/datamuse-word";
 import { Word } from "../../../../../common/crossword/word";
 import { Difficulty } from "../../../../../common/crossword/enums-constants";
-import { BaseGridGenerator, CONSTRAINT_CHAR } from "./base-grid-generator";
+import { BaseGridGenerator } from "./base-grid-generator";
 
 const MAX_TOTAL_ROLLBACKS: number = 20;
 
 export class GridGenerator extends BaseGridGenerator {
 
     protected rollbackCount: number;
+
+    public constructor() {
+        super();
+        this.rollbackCount = 0;
+    }
 
     protected getWordWeight(word: Word): number {
         let weight: number = 0;
@@ -31,7 +35,7 @@ export class GridGenerator extends BaseGridGenerator {
 
     protected async findWords(difficulty: Difficulty): Promise<void> {
 
-        await this.findWord(this.notPlacedWords.pop(), difficulty);
+        // await this.findWord(this.notPlacedWords.pop(), difficulty);
 
         while (this.notPlacedWords.length > 0) {
             if (this.rollbackCount > MAX_TOTAL_ROLLBACKS) {
@@ -49,16 +53,10 @@ export class GridGenerator extends BaseGridGenerator {
 
     protected async findWord(word: Word, difficulty: Difficulty): Promise<boolean> {
         const constraint: string = this.getConstraints(word);
-        let receivedWord: DatamuseWord = null;
+        const isEasyWord: boolean = difficulty !== Difficulty.Hard;
+        const newWord: string = await this.externalCommunications.getWordsFromServer(constraint, isEasyWord);
 
-        if (constraint.indexOf(CONSTRAINT_CHAR) === -1) {
-            receivedWord = await this.externalCommunications.getDefinitionsFromServer(word.toString());
-        } else {
-            const isEasyWord: boolean = difficulty !== Difficulty.Hard;
-            receivedWord = await this.externalCommunications.getWordsFromServer(constraint, word, isEasyWord);
-        }
-
-        return !receivedWord ? false : this.crossword.addWord(receivedWord.word, receivedWord.defs, word);
+        return (newWord != null) ? this.crossword.addWord(newWord, word) : false;
     }
 
     protected async backtrack(currentWord: Word, difficulty: Difficulty): Promise<void> {
