@@ -35,7 +35,6 @@ export class SoundManagerService {
     public playBeep(id: number): void {
        const son: GlobalSoundFacade = id === 1 ? this._beep1 : this._beep2;
        son.play();
-       console.log("allo");
     }
 
     public stopAllSounds(): void {
