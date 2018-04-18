@@ -8,6 +8,9 @@
     height: 40vmin;
     overflow-y: auto;
 }
+.container {
+    font-family: "Edit Font", 'Times New Roman', Times, serif;
+}
 .form-group{
     text-align: center;
     margin-bottom: 1.5vmin;
@@ -22,3 +25,8 @@
 .btn-danger{
     background-color: #a3293d;
 }
+
+@font-face {
+    font-family: "Edit Font";
+    src: url("/assets/fonts/SVBasicManual.ttf") format("truetype")
+  }
