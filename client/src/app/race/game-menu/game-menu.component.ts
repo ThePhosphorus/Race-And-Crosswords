@@ -12,7 +12,6 @@ import { Highscore } from "../../../../../common/race/highscore";
     templateUrl: "./game-menu.component.html",
     styleUrls: ["./game-menu.component.css"],
     providers: [TrackLoaderService, TrackPreviewService, CameraManagerService, LoaderService]
-    // Remove laoder Service, when preview don't use textures
 })
 export class GameMenuComponent implements AfterViewInit, AfterContentChecked {
 

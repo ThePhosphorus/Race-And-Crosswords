@@ -12,14 +12,12 @@ import { Word } from "../../../../../common/crossword/word";
 
 const DEFAULT_NAME: string = "John C Doe";
 
-export class SocketToServerInfos {
-    public constructor(
-        public receivePlayersCallBack: Function,
-        public receiveSelectCallBack: Function,
-        public receiveGrid: Function,
-        public receiveIsCompletedWord: Function,
-        public returnName: string
-    ) { }
+export interface SocketToServerInfos {
+    receivePlayersCallBack: Function;
+    receiveSelectCallBack: Function;
+    receiveGrid: Function;
+    receiveIsCompletedWord: Function;
+    returnName: string;
 }
 
 @Injectable()
@@ -30,7 +28,11 @@ export class CrosswordCommunicationService {
 
     public constructor(private http: HttpClient) {
         this.createSocket();
-        this.socketInfos = new SocketToServerInfos(null, null, null, null, DEFAULT_NAME);
+        this.socketInfos = {receivePlayersCallBack : null,
+                            receiveSelectCallBack : null,
+                            receiveGrid : null,
+                            receiveIsCompletedWord : null,
+                            returnName : DEFAULT_NAME};
     }
 
     public getCrossword(difficulty: Difficulty, blackTile: number, size: number): Observable<CrosswordGrid> {
