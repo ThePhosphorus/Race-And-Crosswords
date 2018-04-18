@@ -1,29 +1,19 @@
-import { Component, Input, ElementRef, OnInit } from "@angular/core";
+import { Component, Input, ElementRef } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
 import { DisplayedDefinition } from "../definition/definition.component";
-import { GridState } from "../grid-state/grid-state";
-import { Letter } from "../../../../../common/crossword/letter";
 
 @Component({
     selector: "app-definition-tile",
     templateUrl: "./definition-tile.component.html",
     styleUrls: ["./definition-tile.component.css"]
 })
-export class DefinitionTileComponent implements OnInit {
+export class DefinitionTileComponent {
     @Input() public item: DisplayedDefinition;
     @Input() public cheatmode: boolean;
-    private _gridState: GridState;
     private _style: CSSStyleDeclaration;
 
     public constructor(el: ElementRef, private _crosswordService: CrosswordService) {
         this._style = el.nativeElement.style;
-        this._gridState = new GridState();
-    }
-
-    public ngOnInit(): void {
-        this._crosswordService.gridStateObs.subscribe((gridState: GridState) => {
-            this._gridState = gridState;
-        });
     }
 
     public select(event: MouseEvent): void {
@@ -40,20 +30,12 @@ export class DefinitionTileComponent implements OnInit {
     }
 
     public isWordSelected(): boolean {
-        let isSelected: boolean = true;
-        this.item.letters.forEach((letter: Letter) => {
-            if (!(this._crosswordService.playersSelectingLetter(letter.id).length > 0)) {
-                isSelected = false;
-            }
-            if (!(this._crosswordService.playersSelectingLetter(letter.id).length > 1)) {
-                this._style.setProperty("--bgColor", this._crosswordService.getPlayerColor(
-                    this._crosswordService.playersSelectingLetter(letter.id)[0],
-                    true));
-            }
+        const players: Array<number> = this._crosswordService.playersSelectingWord(this.item.id, this.item.orientation);
+        for (const player of players) {
+            this._style.setProperty("--bgColor", this._crosswordService.getPlayerColor(player, true));
+        }
 
-        });
-
-        return isSelected;
+        return players.length > 0;
     }
 
     public isWordSolved(): boolean {

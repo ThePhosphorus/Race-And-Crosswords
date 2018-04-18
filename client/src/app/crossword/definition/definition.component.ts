@@ -7,7 +7,7 @@ import { Letter } from "../../../../../common/crossword/letter";
 
 export class DisplayedDefinition {
     public constructor(public definition: string, public word: string, public id: number,
-                       public rowNumber: number, public orientation: Orientation, public letters: Letter[]) { }
+                       public rowNumber: number, public orientation: Orientation) { }
 }
 
 @Component({
@@ -56,7 +56,7 @@ export class DefinitionComponent implements OnInit {
                                        this.upperFirstLetter(word.letters.map((letter: Letter) => letter.char).join("")),
                                        word.id,
                                        this.getRowNumber(word.id, word.orientation),
-                                       word.orientation, word.letters);
+                                       word.orientation);
     }
 
     private upperFirstLetter(str: string): string {
