@@ -16,7 +16,7 @@ describe("LoadingComponent", () => {
       declarations: [ LoadingComponent ],
       providers: [TrackLoaderService, LoaderService]
     })
-    .compileComponents();
+    .compileComponents().catch((e: Error) => console.error(e.message));
   }));
 
   beforeEach(() => {

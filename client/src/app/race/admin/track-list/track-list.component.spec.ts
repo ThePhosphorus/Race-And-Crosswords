@@ -17,7 +17,7 @@ describe("TrackListComponent", () => {
       providers: [TrackLoaderService, LoaderService],
       imports: [HttpClientModule]
     })
-    .compileComponents();
+    .compileComponents().catch((e: Error) => console.error(e.message));
   }));
 
   beforeEach(() => {

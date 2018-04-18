@@ -99,9 +99,9 @@ export class ModalNewGameComponent implements OnInit {
         this.showLevelChoice(true);
     }
 
-    public showLevelChoice(bool: boolean): void {
-        this.isCollapsedAvailablePlayer = !bool;
-        this.showLevelGame = bool;
+    public showLevelChoice(showLevelChoice: boolean): void {
+        this.isCollapsedAvailablePlayer = !showLevelChoice;
+        this.showLevelGame = showLevelChoice;
     }
 
     public chooseMode(isSinglePlayer: boolean): void {

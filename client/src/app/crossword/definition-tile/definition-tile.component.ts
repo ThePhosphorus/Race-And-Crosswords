@@ -10,10 +10,10 @@ import { DisplayedDefinition } from "../definition/definition.component";
 export class DefinitionTileComponent {
     @Input() public item: DisplayedDefinition;
     @Input() public cheatmode: boolean;
-    private style: CSSStyleDeclaration;
+    private _style: CSSStyleDeclaration;
 
     public constructor(el: ElementRef, private _crosswordService: CrosswordService) {
-        this.style = el.nativeElement.style;
+        this._style = el.nativeElement.style;
     }
 
     public select(event: MouseEvent): void {
@@ -29,10 +29,19 @@ export class DefinitionTileComponent {
         this._crosswordService.setHoveredWord(null, null);
     }
 
+    public isWordSelected(): boolean {
+        const players: Array<number> = this._crosswordService.playersSelectingWord(this.item.id, this.item.orientation);
+        for (const player of players) {
+            this._style.setProperty("--bgColor", this._crosswordService.getPlayerColor(player, true));
+        }
+
+        return players.length > 0;
+    }
+
     public isWordSolved(): boolean {
-        this.style.setProperty("--color", this._crosswordService.getPlayerColor(
-                                            this._crosswordService.gameManager.solvedWordPlayer(this.item.id, this.item.orientation),
-                                            false));
+        this._style.setProperty("--color", this._crosswordService.getPlayerColor(
+            this._crosswordService.gameManager.solvedWordPlayer(this.item.id, this.item.orientation),
+            false));
 
         return this._crosswordService.gameManager.isWordSolved(this.item.id, this.item.orientation);
     }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { CrosswordService } from "../crossword-service/crossword.service";
-import { GridState } from "../grid-state/grid-state";
 import { Word } from "../../../../../common/crossword/word";
 import { CrosswordGrid } from "../../../../../common/crossword/crossword-grid";
 import { Orientation } from "../../../../../common/crossword/enums-constants";
@@ -17,16 +16,12 @@ export class DisplayedDefinition {
     styleUrls: ["./definition.component.css"]
 })
 export class DefinitionComponent implements OnInit {
-    private _gridState: GridState;
     private _cheatmode: boolean;
     public acrossDefinitions: Array<DisplayedDefinition>;
     public downDefinitions: Array<DisplayedDefinition>;
     private gridSize: number;
 
     public constructor(private _crosswordService: CrosswordService) {
-        this._crosswordService.gridStateObs.subscribe((gs: GridState) =>
-            this._gridState = gs);
-
         this._cheatmode = false;
         this.acrossDefinitions = new Array<DisplayedDefinition>();
         this.downDefinitions = new Array<DisplayedDefinition>();

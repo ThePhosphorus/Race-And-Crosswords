@@ -15,7 +15,7 @@ describe("GameResultComponentComponent", () => {
             declarations: [GameResultComponentComponent],
             providers: [EndGameService, TrackLoaderService, HttpClient, HttpHandler, LoaderService]
         })
-            .compileComponents();
+            .compileComponents().catch((e: Error) => console.error(e.message));
     }));
 
     beforeEach(() => {

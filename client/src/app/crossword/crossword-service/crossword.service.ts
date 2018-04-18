@@ -46,8 +46,8 @@ export class CrosswordService {
         return this._isGameOver;
     }
 
-    public setIsGameOver(bool: boolean): void {
-        this._isGameOver.next(bool);
+    public setIsGameOver(isGameOver: boolean): void {
+        this._isGameOver.next(isGameOver);
     }
 
     public getPlayerColor(playerId: number, isFrontGround: boolean): string {
@@ -68,16 +68,8 @@ export class CrosswordService {
     }
 
     public setHoveredWord(letterId: number, orientation: Orientation): void {
-        this._gridState.value.hoveredLetters = [];
-
         if (letterId != null && orientation != null) {
-            const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, true);
-
-            if (word != null) {
-                for (const letter of word.letters) {
-                    this._gridState.value.hoveredLetters.push(letter.id);
-                }
-            }
+            this._gridState.value.setHoveredWord(this._gameManager.findWordFromLetter(letterId, orientation, true));
         }
     }
 
@@ -89,8 +81,7 @@ export class CrosswordService {
                 this._gridState.value.currentOrientation = Orientation.Across;
             }
 
-            let targetWord: Word = this._gameManager.findWordFromLetter(
-                index, this._gridState.value.currentOrientation, false);
+            let targetWord: Word = this._gameManager.findWordFromLetter(index, this._gridState.value.currentOrientation, false);
 
             if (targetWord === null) {
                 for (const ori of Object.keys(Orientation)) {
@@ -106,32 +97,14 @@ export class CrosswordService {
                 this.setSelectedWord(targetWord.id, targetWord.orientation);
                 this._gridState.value.currentLetter = targetWord.letters[0].id;
                 if (this._gridState.value.isLetterDisabled(this._gridState.value.currentLetter)) {
-                    this._gridState.value.currentLetter = this.findNextLetterId(true);
+                    this._gridState.value.goToNextLetter(true);
                 }
             }
         }
     }
 
     public setSelectedWord(letterId: number, orientation: Orientation): void {
-        let startingIndex: number = null;
-        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
-
-        for (const letter of word.letters) {
-            if (!this._gridState.value.isLetterDisabled(letter.id)) {
-                startingIndex = letter.id;
-                break;
-            }
-        }
-
-        if (startingIndex != null) {
-            this._gridState.value.currentOrientation = orientation;
-            this._gridState.value.selectedLetters = [];
-
-            for (const letter of word.letters) {
-                this._gridState.value.selectedLetters.push(letter.id);
-            }
-
-            this._gridState.value.currentLetter = startingIndex;
+        if (this._gridState.value.setSelectedWord(this._gameManager.findWordFromLetter(letterId, orientation, false))) {
             this.commService.notifySelect(letterId, orientation);
         }
     }
@@ -143,24 +116,13 @@ export class CrosswordService {
     public writeChar(key: string): void {
         if (this._gridState.value.currentLetter != null) {
             if (key.match(INPUT_REGEX) != null) {
-                let nextLetterId: number;
                 this._gameManager.setChar(this._gridState.value.currentLetter, key.toLowerCase());
                 this.verifyWords();
-                nextLetterId = this.findNextLetterId(true);
-
-                if (nextLetterId != null) {
-                    this._gridState.value.currentLetter = nextLetterId;
-                }
+                this._gridState.value.goToNextLetter(true);
             } else if (key === "Backspace") {
-                let nextLetterId: number;
-
                 if (this._gameManager.getChar(this._gridState.value.currentLetter) === EMPTY_TILE_CHARACTER) {
-                    nextLetterId = this.findNextLetterId(false);
-                    if (nextLetterId != null) {
-                        this._gridState.value.currentLetter = nextLetterId;
-                    }
+                    this._gridState.value.goToNextLetter(false);
                 }
-
                 this._gameManager.setChar(this._gridState.value.currentLetter, EMPTY_TILE_CHARACTER);
             }
         }
@@ -192,6 +154,24 @@ export class CrosswordService {
         });
 
         return players;
+    }
+
+    public playersSelectingWord(letterId: number, orientation: Orientation): Array<number> {
+        const word: Word = this._gameManager.findWordFromLetter(letterId, orientation, false);
+        let players: Array<number> = new Array<number>();
+        const playersSelecting: Array<number> = new Array<number>();
+        if (word != null) {
+            for (const letter of word.letters) {
+                players = players.concat(this.playersSelectingLetter(letter.id));
+            }
+            (new Set<number>([...Array.from(players)])).forEach((player: number) => {
+                if (players.indexOf(player) !== players.lastIndexOf(player)) {
+                    playersSelecting.push(player);
+                }
+            });
+        }
+
+        return playersSelecting;
     }
 
     public selectWordFromOtherPlayer(playerId: number, letterId: number, orientation: Orientation): void {
@@ -234,27 +214,6 @@ export class CrosswordService {
 
         this.commService.listenerWordSolved = (playerId: number, word: Word) =>
             this.disableWord(word, playerId);
-    }
-
-    private findNextLetterId(isForward: boolean): number {
-        if (isForward) {
-            for (let i: number = this._gridState.value.selectedLetters
-                .indexOf(this._gridState.value.currentLetter) + 1;
-                i < this._gridState.value.selectedLetters.length; i++) {
-                if (!this._gridState.value.isLetterDisabled(this._gridState.value.selectedLetters[i])) {
-                    return this._gridState.value.selectedLetters[i];
-                }
-            }
-        } else {
-            for (let i: number = this._gridState.value.selectedLetters
-                .indexOf(this._gridState.value.currentLetter) - 1; i >= 0; i--) {
-                if (!this._gridState.value.isLetterDisabled(this._gridState.value.selectedLetters[i])) {
-                    return this._gridState.value.selectedLetters[i];
-                }
-            }
-        }
-
-        return null;
     }
 
     private disableWord(word: Word, playerId: number): void {
