@@ -9,14 +9,14 @@ import { NB_LAPS } from "../../global-constants/constants";
     styleUrls: ["./hud.component.css"]
 })
 export class HudComponent implements OnInit {
-    private _globalTimer: Timer;
-    private _lapTimer: Timer;
+    public globalTimer: Timer;
+    public lapTimer: Timer;
     public lapCount: number;
     public totalLap: number;
 
     public constructor(private gameManagerService: GameManagerService) {
-        this._globalTimer = new Timer();
-        this._lapTimer = new Timer();
+        this.globalTimer = new Timer();
+        this.lapTimer = new Timer();
         this.lapCount = 1;
         this.totalLap = NB_LAPS;
 
@@ -27,22 +27,14 @@ export class HudComponent implements OnInit {
     }
 
     public nextLap(): void {
-        this._lapTimer.reset();
+        this.lapTimer.reset();
         this.lapCount++;
-    }
-
-    public get globalTimer(): Timer {
-        return this._globalTimer;
-    }
-
-    public get lapTimer(): Timer {
-        return this._lapTimer;
     }
 
     private update(deltaTime: number): void {
         if (this.gameManagerService.isStarted) {
-            this._lapTimer.update(deltaTime);
-            this._globalTimer.update(deltaTime);
+            this.lapTimer.update(deltaTime);
+            this.globalTimer.update(deltaTime);
             if (this.gameManagerService.playerInfos.lap > this.lapCount && this.lapCount < this.totalLap) {
                 this.nextLap();
             }
