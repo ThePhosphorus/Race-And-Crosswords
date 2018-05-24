@@ -9,9 +9,11 @@ export class Collider extends Object3D {
 
     private _radius: number;
     private _relativeVertices: Vector3[];
+    private _rigidBody: RigidBody;
 
     public constructor(width: number, length: number) {
         super();
+        this._rigidBody = null;
         this._radius = this.pythagore(width * HALF, length * HALF);
         this._relativeVertices = new Array<Vector3>();
         this.initialiseRelativeVertices(width, length);
@@ -38,7 +40,11 @@ export class Collider extends Object3D {
     }
 
     public get rigidBody(): RigidBody {
-        return this.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        if (this.rigidBody == null) {
+            this._rigidBody = this.parent.children.find((c) => c instanceof RigidBody) as RigidBody;
+        }
+
+        return this.rigidBody;
     }
 
     public getAbsoluteVertices2D(): Vector2[] {
