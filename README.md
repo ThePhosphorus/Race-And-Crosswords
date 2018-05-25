@@ -37,16 +37,24 @@ The following where implemented for the race:
 
 #### Key Bindings
 
-|        Feature    	|   Key  	|
+|        Feature        |   Key  	|
 |:--------------------:	|:------:	|
 |      Accelerate     	|    W   	|
 |     Stop/Reverse    	|    S   	|
 |         Left        	|    A   	|
 |         Right        	|    D   	|
+|         Drift         |   Space   |
 |       Day/Night     	|    N   	|
+|       Fancy Mode      |    M      |
 |        Zoom In      	|    +   	|
 |        Zoom Out     	|    -   	|
 |      Change Camera 	|    C   	|
+
+### Crossword
+
+The crossword is generated using an API called datamuse, words are collected and cached in a database for a boost in performance.
+
+The crossword can be played in single player or against a friend.
 
 ## Authors
 
@@ -54,7 +62,7 @@ Salads team contains 6 Members, who are the following:
 
 * [Sab-Roy Randy](https://github.com/randy-sab-roy)
 * [Aber Aouni Adem](https://github.com/ThePhosphorus)
-* [Lafleur Elisabeth](https://github.com/ElichabethLafleur)git
+* [Lafleur Elisabeth](https://github.com/ElichabethLafleur)
 * [Anhoury Marc](https://github.com/immaybemarc)
 * [Dubois Thierry](https://github.com/ThierryDubois)
 * [Stephen Colin](https://github.com/hommehabile)
