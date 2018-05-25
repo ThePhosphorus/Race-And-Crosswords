@@ -50,6 +50,10 @@ The following where implemented for the race:
 |        Zoom Out     	|    -   	|
 |      Change Camera 	|    C   	|
 
+#### Notes
+
+The background music is [`Bloody Tears`](http://www.tannerhelland.com/4/bloody-tears-castlevania-ii-remix/)
+
 ### Crossword
 
 The crossword is generated using an API called datamuse, words are collected and cached in a database for a boost in performance.
