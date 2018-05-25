@@ -5,11 +5,17 @@ import { Projected } from "./projection";
 import { Collision } from "./collision";
 import { RigidBody } from "../rigid-body/rigid-body";
 const OVERLAP_FACTOR: number = 0.5;
+const COLLIDER_UPDATE_TIMELAPSE: number = 300;
 
 @Injectable()
 export class CollisionDetectorService {
 
-    public constructor() { }
+    private colliders: Array<Collider>;
+    private colliderCount: number; // used to update colliders at each 60 frames
+    public constructor() {
+        this.colliderCount = 0;
+        this.colliders = null;
+     }
 
     public detectCollisions(scene: Scene): void {
         const colliders: Array<Collider> = this.getColliders(scene);
@@ -28,14 +34,19 @@ export class CollisionDetectorService {
     }
 
     private getColliders(scene: Scene): Array<Collider> {
-        const colliders: Array<Collider> = new Array<Collider>();
-        scene.traverse((obj) => {
-            if (obj instanceof Collider) {
-                colliders.push(obj);
-            }
-        });
+        if (this.colliderCount === 0 || this.colliders == null) {
+            console.log("Update");
 
-        return colliders;
+            this.colliders = new Array<Collider>();
+            scene.traverse((obj) => {
+                if (obj instanceof Collider) {
+                    this.colliders.push(obj);
+                }
+            });
+        }
+        this.colliderCount = ( this.colliderCount + 1 ) % COLLIDER_UPDATE_TIMELAPSE;
+
+        return this.colliders;
     }
 
     private broadDetection(coll1: Collider, coll2: Collider): boolean {
